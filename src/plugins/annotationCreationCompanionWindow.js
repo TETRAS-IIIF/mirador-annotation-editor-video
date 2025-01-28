@@ -3,7 +3,6 @@ import { getCompanionWindow } from 'mirador/dist/es/src/state/selectors/companio
 import { getVisibleCanvases } from 'mirador/dist/es/src/state/selectors/canvases';
 import { getPresentAnnotationsOnSelectedCanvases } from 'mirador/dist/es/src/state/selectors/annotations';
 import { OSDReferences } from 'mirador/dist/es/src/plugins/OSDReferences';
-import { withTranslation } from 'react-i18next';
 import annotationForm from '../annotationForm/AnnotationForm';
 import { WindowPlayer } from '../playerReferences';
 import translations from '../locales/locales';
