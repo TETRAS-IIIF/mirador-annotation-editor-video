@@ -53,11 +53,9 @@ function mapStateToProps(state, { id: companionWindowId, windowId }) {
   };
 }
 
-// Enhance annotationForm with i18n support
-const AnnotationFormWithTranslation = withTranslation()(annotationForm);
 const annotationCreationCompanionWindow = {
   companionWindowKey: 'annotationCreation',
-  component: AnnotationFormWithTranslation,
+  component: annotationForm,
   mapDispatchToProps,
   mapStateToProps,
 };
