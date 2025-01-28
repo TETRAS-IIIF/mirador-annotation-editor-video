@@ -12,7 +12,7 @@ export {
   windowSideBarButtonsPlugin,
 };
 
-export default [
+const annotationPlugins = [
   {
     component: miradorAnnotationPlugin,
     config: {
@@ -26,3 +26,5 @@ export default [
   annotationCreationCompanionWindow,
   windowSideBarButtonsPlugin,
 ];
+
+export default annotationPlugins;
