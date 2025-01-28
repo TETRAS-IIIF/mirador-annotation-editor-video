@@ -11,8 +11,8 @@ import SingleCanvasDialog from '../SingleCanvasDialog';
 /** Functional Component */
 function CanvasAnnotationsWrapper({
   addCompanionWindow,
-  annotationsOnCanvases,
-  canvases,
+  annotationsOnCanvases = {},
+  canvases = [],
   config,
   receiveAnnotation,
   switchToSingleCanvasView,
@@ -20,7 +20,7 @@ function CanvasAnnotationsWrapper({
   t,
   targetProps,
   windowViewType,
-  containerRef,
+  containerRef = null,
   annotationEditCompanionWindowIsOpened,
 }) {
   const [singleCanvasDialogOpen, setSingleCanvasDialogOpen] = useState(false);
@@ -87,10 +87,10 @@ CanvasAnnotationsWrapper.propTypes = {
       ),
       type: PropTypes.string,
     }),
-  }),
+  }).isRequired,
   canvases: PropTypes.arrayOf(
     PropTypes.shape({ id: PropTypes.string, index: PropTypes.number }),
-  ),
+  ).isRequired,
   config: PropTypes.shape({
     annotation: PropTypes.shape({
       adapter: PropTypes.func,
@@ -99,7 +99,7 @@ CanvasAnnotationsWrapper.propTypes = {
   containerRef: PropTypes.oneOfType([
     PropTypes.func,
     PropTypes.shape({ current: PropTypes.instanceOf(Element) }),
-  ]),
+  ]).isRequired,
   receiveAnnotation: PropTypes.func.isRequired,
   switchToSingleCanvasView: PropTypes.func.isRequired,
   t: PropTypes.func.isRequired,
@@ -110,12 +110,6 @@ CanvasAnnotationsWrapper.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   targetProps: PropTypes.object.isRequired,
   windowViewType: PropTypes.string.isRequired,
-};
-
-CanvasAnnotationsWrapper.defaultProps = {
-  annotationsOnCanvases: {},
-  canvases: [],
-  containerRef: null,
 };
 
 /** TODO this logic is duplicated */
