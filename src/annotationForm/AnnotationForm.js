@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import CompanionWindow from 'mirador/dist/es/src/containers/CompanionWindow';
+import { CompanionWindow } from 'mirador';
 import PropTypes from 'prop-types';
 import { Grid, Link } from '@mui/material';
 import Typography from '@mui/material/Typography';

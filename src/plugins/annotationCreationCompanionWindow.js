@@ -1,8 +1,7 @@
-import * as actions from 'mirador/dist/es/src/state/actions';
-import { getCompanionWindow } from 'mirador/dist/es/src/state/selectors/companionWindows';
-import { getVisibleCanvases } from 'mirador/dist/es/src/state/selectors/canvases';
-import { getPresentAnnotationsOnSelectedCanvases } from 'mirador/dist/es/src/state/selectors/annotations';
-import { OSDReferences } from 'mirador/dist/es/src/plugins/OSDReferences';
+import * as actions from 'mirador';
+import {
+  OSDReferences, getCompanionWindow, getVisibleCanvases, getPresentAnnotationsOnSelectedCanvases,
+} from 'mirador';
 import { withTranslation } from 'react-i18next';
 import annotationForm from '../annotationForm/AnnotationForm';
 import { WindowPlayer } from '../playerReferences';
