@@ -20,7 +20,6 @@ function CanvasAnnotationsWrapper({
   t,
   targetProps,
   windowViewType,
-  containerRef = null,
   annotationEditCompanionWindowIsOpened,
 }) {
   const [singleCanvasDialogOpen, setSingleCanvasDialogOpen] = useState(false);
@@ -49,7 +48,7 @@ function CanvasAnnotationsWrapper({
         windowViewType,
       }}
     >
-      <TargetComponent {...props} ref={containerRef} />
+      <TargetComponent {...props} />
       {windowViewType !== 'single' && (
         <SingleCanvasDialog
           handleClose={toggleSingleCanvasDialogOpen}
@@ -96,10 +95,6 @@ CanvasAnnotationsWrapper.propTypes = {
       adapter: PropTypes.func,
     }),
   }).isRequired,
-  containerRef: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.shape({ current: PropTypes.instanceOf(Element) }),
-  ]).isRequired,
   receiveAnnotation: PropTypes.func.isRequired,
   switchToSingleCanvasView: PropTypes.func.isRequired,
   t: PropTypes.func.isRequired,
