@@ -6,7 +6,6 @@ import LocalStorageAdapter from '../annotationAdapter/LocalStorageAdapter';
 import AnnototAdapter from '../annotationAdapter/AnnototAdapter';
 import { AnnotationAdapter } from '../annotationAdapter/AnnotationAdapterUtils';
 
-
 /** Functional component version of ExternalStorageAnnotation */
 function ExternalStorageAnnotation({
   canvases = [],
@@ -93,10 +92,12 @@ function mapStateToProps(state, { targetProps }) {
   };
 }
 
-export default {
+const externalStorageAnnotationPlugin = {
   component: ExternalStorageAnnotation,
   mapDispatchToProps,
   mapStateToProps,
   mode: 'wrap',
   target: 'Window',
 };
+
+export default externalStorageAnnotationPlugin;
