@@ -8,10 +8,10 @@ import { AnnotationAdapter } from '../annotationAdapter/AnnotationAdapterUtils';
 
 /** Functional component version of ExternalStorageAnnotation */
 function ExternalStorageAnnotation({
-  canvases,
+  canvases = [],
   config,
   receiveAnnotation,
-  PluginComponents,
+  PluginComponents = [],
   TargetComponent,
   targetProps,
 }) {
@@ -64,24 +64,19 @@ function ExternalStorageAnnotation({
 ExternalStorageAnnotation.propTypes = {
   canvases: PropTypes.arrayOf(
     PropTypes.shape({ id: PropTypes.string, index: PropTypes.number }),
-  ),
+  ).isRequired,
   config: PropTypes.shape({
     annotation: PropTypes.shape({
       adapter: PropTypes.func,
     }),
   }).isRequired,
-  PluginComponents: PropTypes.array, // eslint-disable-line react/forbid-prop-types
+  PluginComponents: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
   receiveAnnotation: PropTypes.func.isRequired,
   TargetComponent: PropTypes.oneOfType([
     PropTypes.func,
     PropTypes.node,
   ]).isRequired,
   targetProps: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
-};
-
-ExternalStorageAnnotation.defaultProps = {
-  canvases: [],
-  PluginComponents: [],
 };
 
 /** */
@@ -97,10 +92,12 @@ function mapStateToProps(state, { targetProps }) {
   };
 }
 
-export default {
+const externalStorageAnnotationPlugin = {
   component: ExternalStorageAnnotation,
   mapDispatchToProps,
   mapStateToProps,
   mode: 'wrap',
   target: 'Window',
 };
+
+export default externalStorageAnnotationPlugin;
