@@ -1,5 +1,4 @@
-import { getVisibleCanvases } from 'mirador/dist/es/src/state/selectors/canvases';
-import { getVisibleCanvasAudioResources, getVisibleCanvasVideoResources } from 'mirador/dist/es/src/state/selectors';
+import { getVisibleCanvases, getVisibleCanvasAudioResources, getVisibleCanvasVideoResources } from 'mirador';
 import { MEDIA_TYPES } from './annotationForm/AnnotationFormUtils';
 
 // TODO All the code related to the video player must be moved in MAEV plugin

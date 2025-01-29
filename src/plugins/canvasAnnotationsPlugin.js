@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { getVisibleCanvases } from 'mirador/dist/es/src/state/selectors/canvases';
-import * as actions from 'mirador/dist/es/src/state/actions';
-import { getWindowViewType } from 'mirador/dist/es/src/state/selectors';
-import { getCompanionWindowsForContent } from 'mirador/dist/es/src/state/selectors/companionWindows';
+import {
+  getVisibleCanvases,
+  getWindowViewType,
+  getCompanionWindowsForContent,
+  setWindowViewType as setWindowViewTypeM3Action,
+  addCompanionWindow as addCompanionWindowM3Action,
+  receiveAnnotation as receiveAnnotationM3Action,
+} from 'mirador';
 import CanvasListItem from '../CanvasListItem';
 import AnnotationActionsContext from '../AnnotationActionsContext';
 import SingleCanvasDialog from '../SingleCanvasDialog';
@@ -132,17 +136,16 @@ function mapStateToProps(state, { targetProps: { windowId } }) {
     windowViewType: getWindowViewType(state, { windowId }),
   };
 }
-
 /** */
 const mapDispatchToProps = (dispatch, props, annotationEditCompanionWindowIsOpened) => ({
   addCompanionWindow: (content, additionalProps) => dispatch(
-    actions.addCompanionWindow(props.targetProps.windowId, { content, ...additionalProps }),
+    addCompanionWindowM3Action(props.targetProps.windowId, { content, ...additionalProps }),
   ),
   receiveAnnotation: (targetId, id, annotation) => dispatch(
-    actions.receiveAnnotation(targetId, id, annotation),
+    receiveAnnotationM3Action(targetId, id, annotation),
   ),
   switchToSingleCanvasView: () => dispatch(
-    actions.setWindowViewType(props.targetProps.windowId, 'single'),
+    setWindowViewTypeM3Action(props.targetProps.windowId, 'single'),
   ),
 });
 

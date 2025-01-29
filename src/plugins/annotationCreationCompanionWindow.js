@@ -1,8 +1,13 @@
-import * as actions from 'mirador/dist/es/src/state/actions';
-import { getCompanionWindow } from 'mirador/dist/es/src/state/selectors/companionWindows';
-import { getVisibleCanvases } from 'mirador/dist/es/src/state/selectors/canvases';
-import { getPresentAnnotationsOnSelectedCanvases } from 'mirador/dist/es/src/state/selectors/annotations';
-import { OSDReferences } from 'mirador/dist/es/src/plugins/OSDReferences';
+import * as actions from 'mirador';
+import {
+  getCompanionWindow,
+  getVisibleCanvases,
+  getPresentAnnotationsOnSelectedCanvases,
+  OSDReferences,
+  removeCompanionWindow as removeCompanionWindowM3Action,
+  receiveAnnotation as receiveAnnotationM3Action,
+} from 'mirador';
+
 import annotationForm from '../annotationForm/AnnotationForm';
 import { WindowPlayer } from '../playerReferences';
 import translations from '../locales/locales';
@@ -10,10 +15,10 @@ import translations from '../locales/locales';
 /** */
 const mapDispatchToProps = (dispatch, { id, windowId }) => ({
   closeCompanionWindow: () => dispatch(
-    actions.removeCompanionWindow(windowId, id),
+    removeCompanionWindowM3Action(windowId, id),
   ),
   receiveAnnotation: (targetId, annoId, annotation) => dispatch(
-    actions.receiveAnnotation(targetId, annoId, annotation),
+    receiveAnnotationM3Action(targetId, annoId, annotation),
   ),
 });
 

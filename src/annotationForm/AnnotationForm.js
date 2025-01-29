@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import CompanionWindow from 'mirador/dist/es/src/containers/CompanionWindow';
+import { ConnectedCompanionWindow } from 'mirador';
 import PropTypes from 'prop-types';
 import { Grid, Link } from '@mui/material';
 import Typography from '@mui/material/Typography';
@@ -100,7 +100,7 @@ function AnnotationForm(
 
   if (!playerReferences?.isInitializedCorrectly()) {
     return (
-      <CompanionWindow title={t('media_not_supported')} windowId={windowId} id={id}>
+      <ConnectedCompanionWindow title={t('media_not_supported')} windowId={windowId} id={id}>
         <Grid container padding={1} spacing={1}>
           <Grid item>
             <Typography>{t('media_not_supported')}</Typography>
@@ -120,7 +120,7 @@ function AnnotationForm(
             </Typography>
           </Grid>
         </Grid>
-      </CompanionWindow>
+      </ConnectedCompanionWindow>
     );
   }
 
@@ -160,7 +160,7 @@ function AnnotationForm(
   };
 
   return (
-    <CompanionWindow
+    <ConnectedCompanionWindow
       title={annotation.id ? t('edit_annotation') : t('new_annotation')}
       windowId={windowId}
       id={id}
@@ -197,7 +197,7 @@ function AnnotationForm(
             </Grid>
           </Grid>
         )}
-    </CompanionWindow>
+    </ConnectedCompanionWindow>
   );
 }
 

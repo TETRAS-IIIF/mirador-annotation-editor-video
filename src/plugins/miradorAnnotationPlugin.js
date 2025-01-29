@@ -2,10 +2,13 @@ import React, { useState, useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import AddBoxIcon from '@mui/icons-material/AddBox';
 import GetAppIcon from '@mui/icons-material/GetApp';
-import { getWindowViewType } from 'mirador/dist/es/src/state/selectors';
-import * as actions from 'mirador/dist/es/src/state/actions';
-import { MiradorMenuButton } from 'mirador/dist/es/src/components/MiradorMenuButton';
-import { getVisibleCanvases } from 'mirador/dist/es/src/state/selectors/canvases';
+import {
+  getWindowViewType,
+  MiradorMenuButton,
+  getVisibleCanvases,
+  addCompanionWindow as addCompanionWindowM3Action,
+  setWindowViewType as setWindowViewTypeM3Action,
+} from 'mirador';
 import { useDispatch, useSelector } from 'react-redux';
 import { Tooltip } from '@mui/material';
 import SingleCanvasDialog from '../SingleCanvasDialog';
@@ -31,14 +34,14 @@ function MiradorAnnotation(
   /** Open the companion window for annotation */
   const addCompanionWindow = (content, additionalProps) => {
     setCurrentCompanionWindowId(targetProps.windowId);
-    dispatch(actions.addCompanionWindow(targetProps.windowId, { content, ...additionalProps }));
+    dispatch(addCompanionWindowM3Action(targetProps.windowId, { content, ...additionalProps }));
   };
 
   useEffect(() => {
   }, [annotationEditCompanionWindowIsOpened]);
   /** */
   const switchToSingleCanvasView = () => {
-    dispatch(actions.setWindowViewType(targetProps.windowId, 'single'));
+    dispatch(setWindowViewTypeM3Action(targetProps.windowId, 'single'));
   };
 
   const windowViewType = useSelector(

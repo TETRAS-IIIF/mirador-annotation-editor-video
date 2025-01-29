@@ -1,8 +1,6 @@
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { getWindowViewType } from 'mirador/dist/es/src/state/selectors';
-import { getVisibleCanvases } from 'mirador/dist/es/src/state/selectors/canvases';
-import { getCompanionWindowsForContent } from 'mirador/dist/es/src/state/selectors/companionWindows';
+import { getWindowViewType, getVisibleCanvases, getCompanionWindowsForContent } from 'mirador';
 import { withTranslation } from 'react-i18next';
 import MiradorAnnotation from '../plugins/miradorAnnotationPlugin';
 
