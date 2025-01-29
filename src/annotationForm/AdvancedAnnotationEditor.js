@@ -39,6 +39,7 @@ AdvancedAnnotationEditor.propTypes = {
   closeFormCompanionWindow: PropTypes.func.isRequired,
   onChange: PropTypes.func.isRequired,
   saveAnnotation: PropTypes.func.isRequired,
+  t: PropTypes.func.isRequired,
   value: PropTypes.PropTypes.shape({
     adapter: PropTypes.func,
     body: PropTypes.arrayOf(
@@ -53,11 +54,11 @@ AdvancedAnnotationEditor.propTypes = {
     ),
     drawingState: PropTypes.string,
     maeData: PropTypes.shape({
+      // eslint-disable-next-line react/forbid-prop-types
       target: PropTypes.object,
       templateType: PropTypes.string,
     }),
     manifestNetwork: PropTypes.string,
     target: PropTypes.string,
   }).isRequired,
-  t: PropTypes.func.isRequired,
 };
