@@ -6,8 +6,8 @@ import {
   getWindowViewType,
   MiradorMenuButton,
   getVisibleCanvases,
-  addCompanionWindow as addCompanionWindowM3Action,
-  setWindowViewType as setWindowViewTypeM3Action,
+  addCompanionWindow as addCompanionWindowAction,
+  setWindowViewType as setWindowViewTypeAction,
 } from 'mirador';
 import { useDispatch, useSelector } from 'react-redux';
 import { Tooltip } from '@mui/material';
@@ -34,14 +34,14 @@ function MiradorAnnotation(
   /** Open the companion window for annotation */
   const addCompanionWindow = (content, additionalProps) => {
     setCurrentCompanionWindowId(targetProps.windowId);
-    dispatch(addCompanionWindowM3Action(targetProps.windowId, { content, ...additionalProps }));
+    dispatch(addCompanionWindowAction(targetProps.windowId, { content, ...additionalProps }));
   };
 
   useEffect(() => {
   }, [annotationEditCompanionWindowIsOpened]);
   /** */
   const switchToSingleCanvasView = () => {
-    dispatch(setWindowViewTypeM3Action(targetProps.windowId, 'single'));
+    dispatch(setWindowViewTypeAction(targetProps.windowId, 'single'));
   };
 
   const windowViewType = useSelector(

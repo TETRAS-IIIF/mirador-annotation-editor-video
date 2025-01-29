@@ -4,8 +4,8 @@ import {
   getVisibleCanvases,
   getPresentAnnotationsOnSelectedCanvases,
   OSDReferences,
-  removeCompanionWindow as removeCompanionWindowM3Action,
-  receiveAnnotation as receiveAnnotationM3Action,
+  removeCompanionWindow as removeCompanionWindowAction,
+  receiveAnnotation as receiveAnnotationAction,
 } from 'mirador';
 
 import annotationForm from '../annotationForm/AnnotationForm';
@@ -15,10 +15,10 @@ import translations from '../locales/locales';
 /** */
 const mapDispatchToProps = (dispatch, { id, windowId }) => ({
   closeCompanionWindow: () => dispatch(
-    removeCompanionWindowM3Action(windowId, id),
+    removeCompanionWindowAction(windowId, id),
   ),
   receiveAnnotation: (targetId, annoId, annotation) => dispatch(
-    receiveAnnotationM3Action(targetId, annoId, annotation),
+    receiveAnnotationAction(targetId, annoId, annotation),
   ),
 });
 

@@ -4,9 +4,9 @@ import {
   getVisibleCanvases,
   getWindowViewType,
   getCompanionWindowsForContent,
-  setWindowViewType as setWindowViewTypeM3Action,
-  addCompanionWindow as addCompanionWindowM3Action,
-  receiveAnnotation as receiveAnnotationM3Action,
+  setWindowViewType as setWindowViewTypeAction,
+  addCompanionWindow as addCompanionWindowAction,
+  receiveAnnotation as receiveAnnotationAction,
 } from 'mirador';
 import CanvasListItem from '../CanvasListItem';
 import AnnotationActionsContext from '../AnnotationActionsContext';
@@ -139,13 +139,13 @@ function mapStateToProps(state, { targetProps: { windowId } }) {
 /** */
 const mapDispatchToProps = (dispatch, props, annotationEditCompanionWindowIsOpened) => ({
   addCompanionWindow: (content, additionalProps) => dispatch(
-    addCompanionWindowM3Action(props.targetProps.windowId, { content, ...additionalProps }),
+    addCompanionWindowAction(props.targetProps.windowId, { content, ...additionalProps }),
   ),
   receiveAnnotation: (targetId, id, annotation) => dispatch(
-    receiveAnnotationM3Action(targetId, id, annotation),
+    receiveAnnotationAction(targetId, id, annotation),
   ),
   switchToSingleCanvasView: () => dispatch(
-    setWindowViewTypeM3Action(props.targetProps.windowId, 'single'),
+    setWindowViewTypeAction(props.targetProps.windowId, 'single'),
   ),
 });
 
