@@ -25,7 +25,7 @@ export default function DrawingTemplate(
   {
     annotation,
     closeFormCompanionWindow,
-playerReferences,
+    playerReferences,
     saveAnnotation,
     t,
     windowId,
@@ -282,5 +282,4 @@ DrawingTemplate.propTypes = {
   saveAnnotation: PropTypes.func.isRequired,
   t: PropTypes.func.isRequired,
   windowId: PropTypes.string.isRequired,
-
 };
