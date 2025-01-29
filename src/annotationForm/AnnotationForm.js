@@ -7,7 +7,7 @@ import i18n from 'i18next';
 import { useTranslation } from 'react-i18next';
 
 import AnnotationFormTemplateSelector from './AnnotationFormTemplateSelector';
-import { getTemplateType, saveAnnotationInStorageAdapter, TEMPLATE } from './AnnotationFormUtils'; 
+import { getTemplateType, saveAnnotationInStorageAdapter, TEMPLATE } from './AnnotationFormUtils';
 import AnnotationFormHeader from './AnnotationFormHeader';
 import AnnotationFormBody from './AnnotationFormBody';
 import { convertAnnotationStateToBeSaved } from '../IIIFUtils';
