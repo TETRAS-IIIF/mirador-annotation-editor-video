@@ -110,15 +110,6 @@ function AnnotationForm(
               {t('detected_media_type', { mediaType })}
             </Typography>
           </Grid>
-          <Grid item>
-            <Typography>
-              {t('video_annotation_instruction')}
-              {' '}
-              <Link href="https://github.com/SCENE-CE/mirador-annotation-editor-video" target="_blank" rel="noopener noreferrer">
-                {t('maev_github_link')}
-              </Link>
-            </Typography>
-          </Grid>
         </Grid>
       </CompanionWindow>
     );
