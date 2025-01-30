@@ -11,9 +11,14 @@ import {
 } from 'mirador';
 import { useDispatch, useSelector } from 'react-redux';
 import { Tooltip } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import SingleCanvasDialog from '../SingleCanvasDialog';
 import AnnotationExportDialog from '../AnnotationExportDialog';
 import LocalStorageAdapter from '../annotationAdapter/LocalStorageAdapter';
+
+const StyledDiv = styled('div')(() => ({
+  display: 'flex',
+}));
 
 /** Mirador annotation plugin component. Get all the stuff
  * and info to manage annotation functionnality */
@@ -28,7 +33,6 @@ function MiradorAnnotation(
   const [annotationExportDialogOpen, setAnnotationExportDialogOpen] = useState(false);
   const [singleCanvasDialogOpen, setSingleCanvasDialogOpen] = useState(false);
   const [currentCompanionWindowId, setCurrentCompanionWindowId] = useState(null);
-
   const dispatch = useDispatch();
 
   /** Open the companion window for annotation */
@@ -71,18 +75,20 @@ function MiradorAnnotation(
       && config.annotation.exportLocalStorageAnnotations;
 
   return (
-    <div>
+    <StyledDiv>
       {/* eslint-disable-next-line react/jsx-props-no-spreading */}
       <TargetComponent {...targetProps} />
       <Tooltip title={t('create_annotation')}>
-        <MiradorMenuButton
-          aria-label={t('create_annotation')}
-          onClick={windowViewType === 'single' ? openCreateAnnotationCompanionWindow : toggleSingleCanvasDialogOpen}
-          size="small"
-          disabled={!annotationEditCompanionWindowIsOpened}
-        >
-          <AddBoxIcon />
-        </MiradorMenuButton>
+        <div>
+          <MiradorMenuButton
+            aria-label={t('create_annotation')}
+            onClick={windowViewType === 'single' ? openCreateAnnotationCompanionWindow : toggleSingleCanvasDialogOpen}
+            size="small"
+            disabled={!annotationEditCompanionWindowIsOpened}
+          >
+            <AddBoxIcon />
+          </MiradorMenuButton>
+        </div>
       </Tooltip>
       {singleCanvasDialogOpen && (
         <SingleCanvasDialog
@@ -94,13 +100,15 @@ function MiradorAnnotation(
       )}
       {offerExportDialog && (
         <Tooltip title={t('export_local_annotation')}>
-          <MiradorMenuButton
-            aria-label="Export local annotations for visible items"
-            onClick={toggleCanvasExportDialog}
-            size="small"
-          >
-            <GetAppIcon />
-          </MiradorMenuButton>
+          <div>
+            <MiradorMenuButton
+              aria-label="Export local annotations for visible items"
+              onClick={toggleCanvasExportDialog}
+              size="small"
+            >
+              <GetAppIcon />
+            </MiradorMenuButton>
+          </div>
         </Tooltip>
       )}
       {offerExportDialog && (
@@ -112,7 +120,7 @@ function MiradorAnnotation(
           t={t}
         />
       )}
-    </div>
+    </StyledDiv>
   );
 }
 
