@@ -22,4 +22,4 @@ jobs:
       - run: npm install -g codecov
       - run: npm install
       - run: npm test
-      - run: codecov
+      - run: codecov --verbose
