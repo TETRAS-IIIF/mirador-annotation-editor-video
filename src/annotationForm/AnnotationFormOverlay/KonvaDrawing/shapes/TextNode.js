@@ -86,6 +86,7 @@ TextNode.propTypes = {
     x: PropTypes.number,
     y: PropTypes.number,
   }).isRequired,
+  text: PropTypes.string.isRequired,
 };
 
 export default TextNode;

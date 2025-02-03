@@ -24,6 +24,9 @@ function LineNode({
     }
   }, [isSelected]);
 
+  /**
+   * Handles the click event on the shape by invoking the provided callback function.
+   */
   const handleClick = () => {
     onShapeClick(shape);
   };
@@ -58,14 +61,19 @@ LineNode.propTypes = {
   onShapeClick: PropTypes.func.isRequired,
   selectedShapeId: PropTypes.string.isRequired,
   shape: PropTypes.shape({
+    fill: PropTypes.string,
     id: PropTypes.string,
+    points: PropTypes.arrayOf(PropTypes.number),
     rotation: PropTypes.number,
     scaleX: PropTypes.number,
     scaleY: PropTypes.number,
+    stroke: PropTypes.string,
+    strokeWidth: PropTypes.number,
     type: PropTypes.string,
     url: PropTypes.string,
     x: PropTypes.number,
     y: PropTypes.number,
+
   }).isRequired,
 };
 

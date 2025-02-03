@@ -68,6 +68,7 @@ function ImageShape({
 
 ImageShape.propTypes = {
   activeTool: PropTypes.string.isRequired,
+  displayMode: PropTypes.string.isRequired,
   handleDragEnd: PropTypes.func.isRequired,
   handleDragStart: PropTypes.func.isRequired,
   isSelected: PropTypes.bool.isRequired,
