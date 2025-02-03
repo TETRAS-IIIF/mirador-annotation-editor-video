@@ -325,7 +325,6 @@ export class WindowPlayer {
 
   /**
    * Send setCurrentTime action to mirador
-   * @param windowId
    * @param args
    * @returns {*}
    */
@@ -338,7 +337,6 @@ export class WindowPlayer {
 
   /**
    * Send setSeekToAction to mirador
-   * @param windowId
    * @param args
    * @returns {*}
    */
@@ -346,6 +344,7 @@ export class WindowPlayer {
     if (this.mediaType === MEDIA_TYPES.VIDEO) {
       return this.actions.setWindowSeekTo(this.windowId, ...args);
     }
+    return null;
     console.error('Cannot seek time for image');
   }
 }

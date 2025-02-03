@@ -21,6 +21,7 @@ function ExternalStorageAnnotation({
         typeof config.annotation.adapter === 'string'
         && config.annotation.adapter === AnnotationAdapter.LOCAL_STORAGE
       ) {
+        // eslint-disable-next-line no-param-reassign
         config.annotation.adapter = (canvasId) => new LocalStorageAdapter(`localStorage://?canvasId=${canvasId}`);
       }
       if (
@@ -28,9 +29,11 @@ function ExternalStorageAnnotation({
         && config.annotation.adapter === AnnotationAdapter.ANNOTOT
       ) {
         const endpointUrl = 'http://127.0.0.1:3000/annotations';
+        // eslint-disable-next-line no-param-reassign
         config.annotation.adapter = (canvasId) => new AnnototAdapter(canvasId, endpointUrl);
       }
       if (!config.annotation.adapter) {
+        // eslint-disable-next-line no-param-reassign
         config.annotation.adapter = (canvasId) => new LocalStorageAdapter(`localStorage://?canvasId=${canvasId}`);
       }
       const storageAdapter = config.annotation.adapter(canvas.id);
