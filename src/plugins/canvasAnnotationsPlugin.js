@@ -37,6 +37,7 @@ function CanvasAnnotationsWrapper({
     listContainerComponent: CanvasListItem,
   };
 
+  // eslint-disable-next-line react/jsx-no-constructed-context-values
   const contextProviderProps = {
     addCompanionWindow,
     annotationEditCompanionWindowIsOpened,
