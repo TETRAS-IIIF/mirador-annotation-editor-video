@@ -52,6 +52,7 @@ function CanvasAnnotationsWrapper({
         windowViewType,
       }}
     >
+      {/* // eslint-disable-next-line react/jsx-props-no-spreading */}
       <TargetComponent {...props} />
       {windowViewType !== 'single' && (
         <SingleCanvasDialog

@@ -52,7 +52,13 @@ const config = {
     defaultSideBarPanel: 'annotations',
     sideBarOpenByDefault: true,
   },
-  windows: [],
+  windows: [
+    {
+      manifestId: 'https://iiif.harvardartmuseums.org/manifests/object/299843',
+      thumbnailNavigationPosition: 'far-bottom',
+      maximized: false,
+    },
+  ],
 };
 
 Mirador.viewer(config, [...annotationPlugins]);
