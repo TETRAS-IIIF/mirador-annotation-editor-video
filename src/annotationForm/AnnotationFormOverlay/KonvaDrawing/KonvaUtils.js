@@ -54,7 +54,7 @@ export async function getSvg(windowId) {
     node.strokeWidth(exportStrokeWidth);
   }
 
-  // TODO use forEach instead of map
+  // TODO Use forEach instead of map
   stage.find('Rect')
     .map((node) => {
       cleanNode(node);
