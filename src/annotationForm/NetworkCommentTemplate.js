@@ -79,16 +79,22 @@ function NetworkCommentTemplate(
     });
   };
 
-  function getBaseAnnotation(id) {
-    if (!id) {
+  /**
+   * Get the base path of the annotation
+   * AnnotationId can be MY_ANNOTATION_ID#MANIFEST_ID
+   * @returns {*|null}
+   * @param annotationFullId
+   */
+  function getBasePathAnnotation(annotationFullId) {
+    if (!annotationFullId) {
       return null;
     }
-    const match = id.match(
+    const match = annotationFullId.match(
       /((http|https|localStorage)\:\/\/[a-z0-9\/:%_+.,#?!@&=-]+)#((http|https)\:\/\/[a-z0-9\/:%_+.,#?!@&=-]+)/gi,
     );
 
     return match ? match[0].split('#')
-      .slice(1) : id;
+      .slice(1) : annotationFullId;
   }
 
   /** SaveFunction for Manifest* */
@@ -101,10 +107,10 @@ function NetworkCommentTemplate(
     );
 
     console.log(annotationState.id);
-    const baseAnnotation = getBaseAnnotation(annotationState.id);
+    const baseAnnotation = getBasePathAnnotation(annotationState.id);
     console.log('base', baseAnnotation);
     if (baseAnnotation) {
-      annotationState.id = `${getBaseAnnotation(annotationState.id)}#${annotation.maeData.manifestNetwork}`;
+      annotationState.id = `${getBasePathAnnotation(annotationState.id)}#${annotation.maeData.manifestNetwork}`;
     }
     console.log(annotationState.id);
 

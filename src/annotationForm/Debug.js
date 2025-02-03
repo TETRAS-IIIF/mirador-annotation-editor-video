@@ -1,20 +1,20 @@
 import Typography from '@mui/material/Typography';
 import { Grid } from '@mui/material';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { JsonEditor as Editor } from 'jsoneditor-react';
 import ace from 'brace';
 import PropTypes from 'prop-types';
 import { MEDIA_TYPES } from './AnnotationFormUtils';
-import { playerReferences } from '../playerReferences';
 
+/* DONT DELETE THIS COMPONENT */
 /** Debug Component * */
 export function Debug(
   {
     drawingState,
     scale,
+    playerReferences,
   },
 ) {
-  const [updateComp, setUpdateComp] = useState(drawingState);
   const jsonEditorRef = useRef(null);
   /** update the jsonEditor dynamicly * */
   const setRef = (instance) => {
@@ -42,7 +42,7 @@ export function Debug(
     console.log('overlay.containerHeight', playerReferences.getContainerHeight());
     console.log('drawingState', drawingState);
     console.log('-------------End of Render---------------');
-  }, [drawingState, scale, updateComp]);
+  }, [drawingState, scale]);
 
   useEffect(() => {
     if (jsonEditorRef.current !== null) {
@@ -118,7 +118,8 @@ export function Debug(
         <Typography variant="subFormSectionTitle">
           Composed Scale
           {' '}
-          {playerReferences.getMediaTrueHeight() / playerReferences.getDisplayedMediaHeight() * scale}
+          {playerReferences.getMediaTrueHeight()
+            / playerReferences.getDisplayedMediaHeight() * scale}
         </Typography>
       </Grid>
       {
@@ -198,5 +199,7 @@ export function Debug(
 Debug.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   drawingState: PropTypes.object.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  playerReferences: PropTypes.object.isRequired,
   scale: PropTypes.string.isRequired,
 };
