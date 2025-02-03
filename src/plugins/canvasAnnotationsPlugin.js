@@ -23,6 +23,7 @@ function CanvasAnnotationsWrapper({
 }) {
   const [singleCanvasDialogOpen, setSingleCanvasDialogOpen] = useState(false);
 
+  /** */
   const toggleSingleCanvasDialogOpen = () => {
     setSingleCanvasDialogOpen((prev) => !prev);
   };
