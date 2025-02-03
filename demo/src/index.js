@@ -11,7 +11,7 @@ const config = {
   catalog: manifestsCatalog,
   debug: true,
   id: 'demo',
-  language: 'de',
+  language: 'fr',
   themes: {
     dark: {
       typography: {
