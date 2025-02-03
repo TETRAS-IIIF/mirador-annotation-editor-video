@@ -1,7 +1,13 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { getVisibleCanvases, getWindowViewType, getCompanionWindowsForContent } from 'mirador';
-import * as actions from 'mirador';
+import {
+  getVisibleCanvases,
+  getWindowViewType,
+  getCompanionWindowsForContent,
+  setWindowViewType as setWindowViewTypeAction,
+  addCompanionWindow as addCompanionWindowAction,
+  receiveAnnotation as receiveAnnotationAction,
+} from 'mirador';
 import CanvasListItem from '../CanvasListItem';
 import AnnotationActionsContext from '../AnnotationActionsContext';
 import SingleCanvasDialog from '../SingleCanvasDialog';
@@ -18,7 +24,6 @@ function CanvasAnnotationsWrapper({
   t,
   targetProps,
   windowViewType,
-  containerRef = null,
   annotationEditCompanionWindowIsOpened,
 }) {
   const [singleCanvasDialogOpen, setSingleCanvasDialogOpen] = useState(false);
@@ -48,7 +53,7 @@ function CanvasAnnotationsWrapper({
         windowViewType,
       }}
     >
-      <TargetComponent {...props} ref={containerRef} />
+      <TargetComponent {...props} />
       {windowViewType !== 'single' && (
         <SingleCanvasDialog
           handleClose={toggleSingleCanvasDialogOpen}
@@ -95,10 +100,6 @@ CanvasAnnotationsWrapper.propTypes = {
       adapter: PropTypes.func,
     }),
   }).isRequired,
-  containerRef: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.shape({ current: PropTypes.instanceOf(Element) }),
-  ]).isRequired,
   receiveAnnotation: PropTypes.func.isRequired,
   switchToSingleCanvasView: PropTypes.func.isRequired,
   t: PropTypes.func.isRequired,
@@ -136,24 +137,25 @@ function mapStateToProps(state, { targetProps: { windowId } }) {
     windowViewType: getWindowViewType(state, { windowId }),
   };
 }
-
 /** */
 const mapDispatchToProps = (dispatch, props, annotationEditCompanionWindowIsOpened) => ({
   addCompanionWindow: (content, additionalProps) => dispatch(
-    actions.addCompanionWindow(props.targetProps.windowId, { content, ...additionalProps }),
+    addCompanionWindowAction(props.targetProps.windowId, { content, ...additionalProps }),
   ),
   receiveAnnotation: (targetId, id, annotation) => dispatch(
-    actions.receiveAnnotation(targetId, id, annotation),
+    receiveAnnotationAction(targetId, id, annotation),
   ),
   switchToSingleCanvasView: () => dispatch(
-    actions.setWindowViewType(props.targetProps.windowId, 'single'),
+    setWindowViewTypeAction(props.targetProps.windowId, 'single'),
   ),
 });
 
-export default {
+const canvasAnnotationsPlugin = {
   component: CanvasAnnotationsWrapper,
   mapDispatchToProps,
   mapStateToProps,
   mode: 'wrap',
   target: 'CanvasAnnotations',
 };
+
+export default canvasAnnotationsPlugin;

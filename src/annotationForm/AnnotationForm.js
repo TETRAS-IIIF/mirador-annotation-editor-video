@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { CompanionWindow } from 'mirador';
+import { ConnectedCompanionWindow } from 'mirador';
 import PropTypes from 'prop-types';
 import { Grid, Link } from '@mui/material';
 import Typography from '@mui/material/Typography';
-import { withTranslation } from 'react-i18next';
 import i18n from 'i18next';
+import { useTranslation } from 'react-i18next';
+
 import AnnotationFormTemplateSelector from './AnnotationFormTemplateSelector';
 import { getTemplateType, saveAnnotationInStorageAdapter, TEMPLATE } from './AnnotationFormUtils';
 import AnnotationFormHeader from './AnnotationFormHeader';
@@ -24,11 +25,10 @@ function AnnotationForm(
     id,
     playerReferences,
     receiveAnnotation,
-    t,
     windowId,
   },
 ) {
-
+  const { t } = useTranslation();
 
   const [templateType, setTemplateType] = useState(null);
   // eslint-disable-next-line no-underscore-dangle
@@ -100,7 +100,7 @@ function AnnotationForm(
 
   if (!playerReferences?.isInitializedCorrectly()) {
     return (
-      <CompanionWindow title={t('media_not_supported')} windowId={windowId} id={id}>
+      <ConnectedCompanionWindow title={t('media_not_supported')} windowId={windowId} id={id}>
         <Grid container padding={1} spacing={1}>
           <Grid item>
             <Typography>{t('media_not_supported')}</Typography>
@@ -120,7 +120,7 @@ function AnnotationForm(
             </Typography>
           </Grid>
         </Grid>
-      </CompanionWindow>
+      </ConnectedCompanionWindow>
     );
   }
 
@@ -160,7 +160,7 @@ function AnnotationForm(
   };
 
   return (
-    <CompanionWindow
+    <ConnectedCompanionWindow
       title={annotation.id ? t('edit_annotation') : t('new_annotation')}
       windowId={windowId}
       id={id}
@@ -197,7 +197,7 @@ function AnnotationForm(
             </Grid>
           </Grid>
         )}
-    </CompanionWindow>
+    </ConnectedCompanionWindow>
   );
 }
 
@@ -237,8 +237,7 @@ AnnotationForm.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   playerReferences: PropTypes.object.isRequired,
   receiveAnnotation: PropTypes.func.isRequired,
-  t: PropTypes.func.isRequired,
   windowId: PropTypes.string.isRequired,
 };
 
-export default withTranslation()(AnnotationForm);
+export default AnnotationForm;

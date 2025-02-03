@@ -1,7 +1,6 @@
 import React, { useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { getVisibleCanvases } from 'mirador';
-import * as actions from 'mirador';
+import { getVisibleCanvases, receiveAnnotation as receiveAnnotationAction } from 'mirador';
 import LocalStorageAdapter from '../annotationAdapter/LocalStorageAdapter';
 import AnnototAdapter from '../annotationAdapter/AnnototAdapter';
 import { AnnotationAdapter } from '../annotationAdapter/AnnotationAdapterUtils';
@@ -81,7 +80,7 @@ ExternalStorageAnnotation.propTypes = {
 
 /** */
 const mapDispatchToProps = {
-  receiveAnnotation: actions.receiveAnnotation,
+  receiveAnnotation: receiveAnnotationAction,
 };
 
 /** */
