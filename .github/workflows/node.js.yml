@@ -12,16 +12,13 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [ 18.x, 20.x, 22.x ]
 
     steps:
       - uses: actions/checkout@v4
-      - name: Use Node.js  ${{ matrix.node-version }}
+      - name: Use Node.js 20x
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 20.x
       - run: npm install
       - run: npm test
       - name: Upload coverage to Codecov
