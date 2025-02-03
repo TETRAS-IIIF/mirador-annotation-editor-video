@@ -33,6 +33,7 @@ function AnnotationForm(
   const [mediaType, setMediaType] = useState(playerReferences.getMediaType());
 
   // Add a state to trigger redraw
+  // eslint-disable-next-line no-unused-vars
   const [windowSize, setWindowSize] = useState({
     height: window.innerHeight,
     width: window.innerWidth,

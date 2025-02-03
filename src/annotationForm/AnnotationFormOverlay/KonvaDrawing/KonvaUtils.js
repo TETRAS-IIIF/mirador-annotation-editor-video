@@ -24,7 +24,6 @@ export function resizeKonvaStage(windowId, width, height, scale) {
     x: scale,
     y: scale,
   });
-  // stage.draw();
 }
 
 /**
@@ -138,9 +137,8 @@ export const rgbaToObj = (rgba = 'rgba(255,255,255,0.5)') => {
 
 /** Convert color object to rgba string */
 export const objToRgba = (obj = {
-  // eslint-disable-next-line sort-keys
-  r: 255,
-  g: 255,
-  b: 255,
   a: 0.5,
+  b: 255,
+  g: 255,
+  r: 255,
 }) => `rgba(${obj.r},${obj.g},${obj.b},${obj.a})`;

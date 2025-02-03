@@ -51,8 +51,8 @@ export const convertAnnotationStateToBeSaved = async (
     tstart: annotationStateForSaving.maeData.target.tstart,
   };
 
-  if (annotationStateForSaving.maeData.templateType == TEMPLATE.TAGGING_TYPE
-    || annotationStateForSaving.maeData.templateType == TEMPLATE.TEXT_TYPE) {
+  if (annotationStateForSaving.maeData.templateType === TEMPLATE.TAGGING_TYPE
+    || annotationStateForSaving.maeData.templateType === TEMPLATE.TEXT_TYPE) {
     // Complex annotation
     if (annotationStateForSaving.maeData.target.drawingState.shapes.length > 0) {
       // eslint-disable-next-line no-param-reassign
@@ -66,8 +66,8 @@ export const convertAnnotationStateToBeSaved = async (
     annotationStateForSaving.type = 'Annotation';
   }
 
-  if (annotationStateForSaving.maeData.templateType == TEMPLATE.IMAGE_TYPE) {
-    if (annotationStateForSaving.maeData.target.drawingState.shapes.length == 1) {
+  if (annotationStateForSaving.maeData.templateType === TEMPLATE.IMAGE_TYPE) {
+    if (annotationStateForSaving.maeData.target.drawingState.shapes.length === 1) {
       // eslint-disable-next-line max-len
       annotationStateForSaving.body.id = annotationStateForSaving.maeData.target.drawingState.shapes[0].url;
       annotationStateForSaving.type = 'Annotation';
@@ -100,7 +100,7 @@ export const maeTargetToIiifTarget = (maeTarget, canvasId) => {
 
   if (maeTarget.templateType !== TEMPLATE.KONVA_TYPE) {
     // In some case the target can be simplify in a string
-    if (maeTarget.drawingState.shapes.length === 1 && (maeTarget.drawingState.shapes[0].type === 'rectangle' || maeTarget.drawingState.shapes[0].type == 'image')) {
+    if (maeTarget.drawingState.shapes.length === 1 && (maeTarget.drawingState.shapes[0].type === 'rectangle' || maeTarget.drawingState.shapes[0].type === 'image')) {
       const {
         // eslint-disable-next-line prefer-const
         x,

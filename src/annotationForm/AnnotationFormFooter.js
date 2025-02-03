@@ -37,7 +37,6 @@ AnnotationFormFooter.propTypes = {
   closeFormCompanionWindow: PropTypes.func.isRequired,
   saveAnnotation: PropTypes.func.isRequired,
   t: PropTypes.func.isRequired,
-  windowId: PropTypes.string.isRequired,
 };
 
 export default AnnotationFormFooter;

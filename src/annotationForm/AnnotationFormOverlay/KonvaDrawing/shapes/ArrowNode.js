@@ -12,6 +12,7 @@ import { Arrow, Transformer } from 'react-konva';
   isSelected,
   onTransform,
   handleDragEnd,
+  handleDragStart,
 }) {
   const shapeRef = useRef();
   const trRef = useRef();
@@ -55,7 +56,7 @@ import { Arrow, Transformer } from 'react-konva';
         pointerWidth={shape.pointerWidth}
         onTransform={onTransform}
         onDragEnd={handleDragEnd}
-        onDragStart={handleDragEnd}
+        onDragStart={handleDragStart}
       />
       <Transformer
         ref={trRef}
