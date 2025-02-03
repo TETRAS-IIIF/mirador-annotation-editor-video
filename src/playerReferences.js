@@ -344,8 +344,8 @@ export class WindowPlayer {
     if (this.mediaType === MEDIA_TYPES.VIDEO) {
       return this.actions.setWindowSeekTo(this.windowId, ...args);
     }
-    return null;
     console.error('Cannot seek time for image');
+    return null;
   }
 }
 
