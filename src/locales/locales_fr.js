@@ -43,6 +43,7 @@ export const fr = {
   manifest_link_with_note: 'Manifest avec description',
   manifest_url: 'URL du manifeste',
   media_not_supported: 'Média non pris en charge',
+  media_not_supported_text: 'Ce média n\'est pas encore supporté par cette instance.',
   new_annotation: 'Nouvelle annotation',
   no_annotation: 'Aucune annotation enregistrée pour le moment.',
   note: 'Note',
