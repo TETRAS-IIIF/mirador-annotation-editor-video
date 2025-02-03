@@ -1,6 +1,7 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { Line, Transformer } from 'react-konva';
+
 /**
  * Represents a line node component.
  * @returns {JSX.Element} The TextNode component.
@@ -18,7 +19,8 @@ function LineNode({
   useEffect(() => {
     if (trRef.current) {
       trRef.current.nodes([shapeRef.current]);
-      trRef.current.getLayer().batchDraw();
+      trRef.current.getLayer()
+        .batchDraw();
     }
   }, [isSelected]);
 

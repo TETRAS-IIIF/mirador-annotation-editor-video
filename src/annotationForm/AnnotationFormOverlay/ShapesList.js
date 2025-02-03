@@ -46,7 +46,10 @@ function ShapesList({
               <Typography
                 style={shape.id === currentShapeId ? { fontWeight: 'bold' } : {}}
                 onClick={() => updateCurrentShapeInShapes(shape)}
-                sx={{ color: 'black', cursor: 'pointer' }}
+                sx={{
+                  color: 'black',
+                  cursor: 'pointer',
+                }}
               >
                 {t(shape.type)}
               </Typography>

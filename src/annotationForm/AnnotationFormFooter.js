@@ -9,8 +9,8 @@ function AnnotationFormFooter({
   t,
 }) {
   /**
-     * Validate form and save annotation
-     */
+   * Validate form and save annotation
+   */
 
   return (
     <Grid container item spacing={1} justifyContent="flex-end">
@@ -32,6 +32,7 @@ function AnnotationFormFooter({
     </Grid>
   );
 }
+
 AnnotationFormFooter.propTypes = {
   closeFormCompanionWindow: PropTypes.func.isRequired,
   saveAnnotation: PropTypes.func.isRequired,

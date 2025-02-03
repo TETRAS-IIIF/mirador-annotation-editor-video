@@ -80,14 +80,15 @@ function NetworkCommentTemplate(
   };
 
   function getBaseAnnotation(id) {
-    if(!id) {
+    if (!id) {
       return null;
     }
     const match = id.match(
       /((http|https|localStorage)\:\/\/[a-z0-9\/:%_+.,#?!@&=-]+)#((http|https)\:\/\/[a-z0-9\/:%_+.,#?!@&=-]+)/gi,
     );
 
-    return match ? match[0].split('#').slice(1) : id;
+    return match ? match[0].split('#')
+      .slice(1) : id;
   }
 
   /** SaveFunction for Manifest* */
@@ -101,7 +102,7 @@ function NetworkCommentTemplate(
 
     console.log(annotationState.id);
     const baseAnnotation = getBaseAnnotation(annotationState.id);
-    console.log("base" , baseAnnotation);
+    console.log('base', baseAnnotation);
     if (baseAnnotation) {
       annotationState.id = `${getBaseAnnotation(annotationState.id)}#${annotation.maeData.manifestNetwork}`;
     }

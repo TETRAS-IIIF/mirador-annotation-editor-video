@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { Arrow, Transformer } from 'react-konva';
 
@@ -6,7 +6,12 @@ import { Arrow, Transformer } from 'react-konva';
  * Represents a arrow node component.
  * @returns {JSX.Element} The TextNode component.
  */function ArrowNode({
-  onShapeClick, shape, activeTool, isSelected, onTransform, handleDragEnd,
+  onShapeClick,
+  shape,
+  activeTool,
+  isSelected,
+  onTransform,
+  handleDragEnd,
 }) {
   const shapeRef = useRef();
   const trRef = useRef();
@@ -14,7 +19,8 @@ import { Arrow, Transformer } from 'react-konva';
   useEffect(() => {
     if (trRef.current) {
       trRef.current.nodes([shapeRef.current]);
-      trRef.current.getLayer().batchDraw();
+      trRef.current.getLayer()
+        .batchDraw();
     }
   }, [isSelected]);
 

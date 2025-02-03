@@ -20,7 +20,10 @@ export function resizeKonvaStage(windowId, width, height, scale) {
   const stage = getKonvaStage(windowId);
   stage.width(width);
   stage.height(height);
-  stage.scale({ x: scale, y: scale });
+  stage.scale({
+    x: scale,
+    y: scale,
+  });
   // stage.draw();
 }
 
@@ -32,7 +35,8 @@ export async function getSvg(windowId) {
   const stage = getKonvaStage(windowId);
   const exportStrokeWidth = 1;
 
-  stage.find('Transformer').forEach((node) => node.destroy());
+  stage.find('Transformer')
+    .forEach((node) => node.destroy());
 
   /**
    * Clean the node by removing the strokeScaleEnabled and setting the stroke width
@@ -41,27 +45,33 @@ export async function getSvg(windowId) {
    */
   function cleanNode(node) {
     const {
-      r, g, b, a,
+      r,
+      g,
+      b,
+      a,
     } = rgbaToObj(node.stroke());
     node.strokeScaleEnabled(true);
     node.stroke(`rgb(${r},${g},${b}`);
     node.strokeWidth(exportStrokeWidth);
   }
 
-  stage.find('Rect').map((node) => {
-    cleanNode(node);
-  });
+  stage.find('Rect')
+    .map((node) => {
+      cleanNode(node);
+    });
 
-  stage.find('Line').map((node) => {
-    cleanNode(node);
-  });
+  stage.find('Line')
+    .map((node) => {
+      cleanNode(node);
+    });
 
-  stage.find('Circle').map((node) => {
-    cleanNode(node);
-  });
+  stage.find('Circle')
+    .map((node) => {
+      cleanNode(node);
+    });
 
   let svg = await exportStageSVG(stage, false); // TODO clean
-  svg = svg.replaceAll('"', "'");
+  svg = svg.replaceAll('"', '\'');
   return svg;
 }
 
@@ -107,7 +117,8 @@ export const SHAPES_TOOL = {
 /** Check if the active tool is a shape tool */
 export function isShapesTool(activeTool) {
   // Find if active tool in the list of overlay tools. I want a boolean in return
-  return Object.values(SHAPES_TOOL).find((tool) => tool === activeTool);
+  return Object.values(SHAPES_TOOL)
+    .find((tool) => tool === activeTool);
 }
 
 /** Utils functions to convert string to object */
@@ -128,5 +139,8 @@ export const rgbaToObj = (rgba = 'rgba(255,255,255,0.5)') => {
 /** Convert color object to rgba string */
 export const objToRgba = (obj = {
   // eslint-disable-next-line sort-keys
-  r: 255, g: 255, b: 255, a: 0.5,
+  r: 255,
+  g: 255,
+  b: 255,
+  a: 0.5,
 }) => `rgba(${obj.r},${obj.g},${obj.b},${obj.a})`;

@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { getVisibleCanvases } from 'mirador/dist/es/src/state/selectors/canvases';
 import * as actions from 'mirador/dist/es/src/state/actions';
@@ -21,8 +21,7 @@ function ExternalStorageAnnotation({
         typeof config.annotation.adapter === 'string'
         && config.annotation.adapter === AnnotationAdapter.LOCAL_STORAGE
       ) {
-        config.annotation.adapter = (canvasId) =>
-          new LocalStorageAdapter(`localStorage://?canvasId=${canvasId}`);
+        config.annotation.adapter = (canvasId) => new LocalStorageAdapter(`localStorage://?canvasId=${canvasId}`);
       }
       if (
         typeof config.annotation.adapter === 'string'
@@ -32,20 +31,20 @@ function ExternalStorageAnnotation({
         config.annotation.adapter = (canvasId) => new AnnototAdapter(canvasId, endpointUrl);
       }
       if (!config.annotation.adapter) {
-        config.annotation.adapter = (canvasId) =>
-          new LocalStorageAdapter(`localStorage://?canvasId=${canvasId}`);
+        config.annotation.adapter = (canvasId) => new LocalStorageAdapter(`localStorage://?canvasId=${canvasId}`);
       }
       const storageAdapter = config.annotation.adapter(canvas.id);
 
-      storageAdapter.all().then((annoPage) => {
-        if (annoPage) {
-          receiveAnnotation(
-            canvas.id,
-            storageAdapter.annotationPageId,
-            annoPage,
-          );
-        }
-      });
+      storageAdapter.all()
+        .then((annoPage) => {
+          if (annoPage) {
+            receiveAnnotation(
+              canvas.id,
+              storageAdapter.annotationPageId,
+              annoPage,
+            );
+          }
+        });
     });
   }, [config, receiveAnnotation]);
 
@@ -63,7 +62,10 @@ function ExternalStorageAnnotation({
 
 ExternalStorageAnnotation.propTypes = {
   canvases: PropTypes.arrayOf(
-    PropTypes.shape({ id: PropTypes.string, index: PropTypes.number }),
+    PropTypes.shape({
+      id: PropTypes.string,
+      index: PropTypes.number,
+    }),
   ),
   config: PropTypes.shape({
     annotation: PropTypes.shape({

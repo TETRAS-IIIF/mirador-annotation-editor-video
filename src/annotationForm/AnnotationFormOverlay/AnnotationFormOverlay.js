@@ -1,6 +1,4 @@
-import {
-  Grid, Tooltip,
-} from '@mui/material';
+import { Grid, Tooltip } from '@mui/material';
 import ToggleButton from '@mui/material/ToggleButton';
 import TitleIcon from '@mui/icons-material/Title';
 import ImageIcon from '@mui/icons-material/Image';
@@ -17,7 +15,7 @@ import {
   StyledToggleButtonGroup,
   TARGET_VIEW,
 } from '../AnnotationFormUtils';
-import { OVERLAY_TOOL, KONVA_MODE } from './KonvaDrawing/KonvaUtils';
+import { KONVA_MODE, OVERLAY_TOOL } from './KonvaDrawing/KonvaUtils';
 
 const OverlayIconAndTitleContainer = styled(Grid)(({ theme }) => ({
   display: 'flex',
@@ -83,14 +81,22 @@ function AnnotationFormOverlay(
           size="small"
         >
           <Tooltip title={t('edit')}>
-            <ToggleButton value={OVERLAY_TOOL.EDIT} aria-label={t('select_cursor')} onClick={tabHandler(TARGET_VIEW)}>
+            <ToggleButton
+              value={OVERLAY_TOOL.EDIT}
+              aria-label={t('select_cursor')}
+              onClick={tabHandler(TARGET_VIEW)}
+            >
               <CursorIcon />
             </ToggleButton>
           </Tooltip>
           {displayMode !== KONVA_MODE.IMAGE && (
             <div>
               <Tooltip title={t('shape_selection')}>
-                <ToggleButton value={OVERLAY_TOOL.SHAPE} aria-label={t('select_cursor')} onClick={tabHandler(OVERLAY_VIEW)}>
+                <ToggleButton
+                  value={OVERLAY_TOOL.SHAPE}
+                  aria-label={t('select_cursor')}
+                  onClick={tabHandler(OVERLAY_VIEW)}
+                >
                   <CategoryIcon />
                 </ToggleButton>
               </Tooltip>
@@ -106,7 +112,11 @@ function AnnotationFormOverlay(
                 </Tooltip>
               )}
               <Tooltip title={t('delete')}>
-                <ToggleButton value={OVERLAY_TOOL.DELETE} aria-label={t('select_cursor')} onClick={tabHandler(OVERLAY_VIEW)}>
+                <ToggleButton
+                  value={OVERLAY_TOOL.DELETE}
+                  aria-label={t('select_cursor')}
+                  onClick={tabHandler(OVERLAY_VIEW)}
+                >
                   <DeleteIcon />
                 </ToggleButton>
               </Tooltip>
@@ -114,7 +124,11 @@ function AnnotationFormOverlay(
           )}
           {displayMode === KONVA_MODE.IMAGE && (
             <Tooltip title={t('image')}>
-              <ToggleButton value={OVERLAY_TOOL.IMAGE} aria-label={t('select_cursor')} onClick={tabHandler(OVERLAY_VIEW)}>
+              <ToggleButton
+                value={OVERLAY_TOOL.IMAGE}
+                aria-label={t('select_cursor')}
+                onClick={tabHandler(OVERLAY_VIEW)}
+              >
                 <ImageIcon />
               </ToggleButton>
             </Tooltip>

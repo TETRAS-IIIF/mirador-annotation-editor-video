@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import CompanionWindow from 'mirador/dist/es/src/containers/CompanionWindow';
 import PropTypes from 'prop-types';
-import { Grid, Link } from '@mui/material';
+import { Grid } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { withTranslation } from 'react-i18next';
 import i18n from 'i18next';
@@ -28,8 +28,6 @@ function AnnotationForm(
     windowId,
   },
 ) {
-
-
   const [templateType, setTemplateType] = useState(null);
   // eslint-disable-next-line no-underscore-dangle
   const [mediaType, setMediaType] = useState(playerReferences.getMediaType());
@@ -57,15 +55,16 @@ function AnnotationForm(
   // Add translations from config to i18n
   useEffect(() => {
     if (i18n.isInitialized && config.translations) {
-      Object.keys(config.translations).forEach((language) => {
-        i18n.addResourceBundle(
-          language,
-          'translation',
-          config.translations[language],
-          true,
-          true,
-        );
-      });
+      Object.keys(config.translations)
+        .forEach((language) => {
+          i18n.addResourceBundle(
+            language,
+            'translation',
+            config.translations[language],
+            true,
+            true,
+          );
+        });
 
       if (config.language) {
         i18n.changeLanguage(config.language);
@@ -121,7 +120,10 @@ function AnnotationForm(
    * @returns {void}
    */
   const closeFormCompanionWindow = () => {
-    closeCompanionWindow('annotationCreation', { id, position: 'right' });
+    closeCompanionWindow('annotationCreation', {
+      id,
+      position: 'right',
+    });
   };
 
   /**
@@ -129,25 +131,27 @@ function AnnotationForm(
    * @param annotationState
    */
   const saveAnnotation = (annotationState) => {
-    const promises = playerReferences.getCanvases().map(async (canvas) => {
-      const annotationStateToBeSaved = await convertAnnotationStateToBeSaved(
-        annotationState,
-        canvas,
-        windowId,
-        playerReferences,
-      );
-      const storageAdapter = config.annotation.adapter(canvas.id);
-      return saveAnnotationInStorageAdapter(
-        canvas.id,
-        storageAdapter,
-        receiveAnnotation,
-        annotationStateToBeSaved,
-      );
-    });
+    const promises = playerReferences.getCanvases()
+      .map(async (canvas) => {
+        const annotationStateToBeSaved = await convertAnnotationStateToBeSaved(
+          annotationState,
+          canvas,
+          windowId,
+          playerReferences,
+        );
+        const storageAdapter = config.annotation.adapter(canvas.id);
+        return saveAnnotationInStorageAdapter(
+          canvas.id,
+          storageAdapter,
+          receiveAnnotation,
+          annotationStateToBeSaved,
+        );
+      });
 
-    Promise.all(promises).then(() => {
-      closeFormCompanionWindow();
-    });
+    Promise.all(promises)
+      .then(() => {
+        closeFormCompanionWindow();
+      });
   };
 
   return (

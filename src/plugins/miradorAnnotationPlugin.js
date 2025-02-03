@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import AddBoxIcon from '@mui/icons-material/AddBox';
 import GetAppIcon from '@mui/icons-material/GetApp';
@@ -65,7 +65,7 @@ function MiradorAnnotation(
 
   const storageAdapter = config?.annotation?.adapter && config.annotation.adapter('poke');
   const offerExportDialog = config.annotation && storageAdapter instanceof LocalStorageAdapter
-      && config.annotation.exportLocalStorageAnnotations;
+    && config.annotation.exportLocalStorageAnnotations;
 
   return (
     <div>
@@ -116,7 +116,10 @@ function MiradorAnnotation(
 MiradorAnnotation.propTypes = {
   annotationEditCompanionWindowIsOpened: PropTypes.bool.isRequired,
   canvases: PropTypes.arrayOf(
-    PropTypes.shape({ id: PropTypes.string, index: PropTypes.number }),
+    PropTypes.shape({
+      id: PropTypes.string,
+      index: PropTypes.number,
+    }),
   ).isRequired,
   config: PropTypes.shape({
     annotation: PropTypes.shape({
