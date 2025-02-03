@@ -37,21 +37,24 @@ function CanvasAnnotationsWrapper({
     listContainerComponent: CanvasListItem,
   };
 
+  const contextProviderProps = {
+    addCompanionWindow,
+    annotationEditCompanionWindowIsOpened,
+    annotationsOnCanvases,
+    canvases,
+    config,
+    receiveAnnotation,
+    storageAdapter: config.annotation.adapter,
+    toggleSingleCanvasDialogOpen,
+    windowId: targetProps.windowId,
+    windowViewType,
+  };
+
   return (
     <AnnotationActionsContext.Provider
-      value={{
-        addCompanionWindow,
-        annotationEditCompanionWindowIsOpened,
-        annotationsOnCanvases,
-        canvases,
-        config,
-        receiveAnnotation,
-        storageAdapter: config.annotation.adapter,
-        toggleSingleCanvasDialogOpen,
-        windowId: targetProps.windowId,
-        windowViewType,
-      }}
+      value={contextProviderProps}
     >
+      {/* eslint-disable-next-line react/jsx-props-no-spreading */}
       <TargetComponent {...props} ref={containerRef} />
       {windowViewType !== 'single' && (
         <SingleCanvasDialog
