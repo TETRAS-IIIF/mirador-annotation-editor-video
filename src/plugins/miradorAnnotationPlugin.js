@@ -24,13 +24,11 @@ function MiradorAnnotation(
 ) {
   const [annotationExportDialogOpen, setAnnotationExportDialogOpen] = useState(false);
   const [singleCanvasDialogOpen, setSingleCanvasDialogOpen] = useState(false);
-  const [currentCompanionWindowId, setCurrentCompanionWindowId] = useState(null);
 
   const dispatch = useDispatch();
 
   /** Open the companion window for annotation */
   const addCompanionWindow = (content, additionalProps) => {
-    setCurrentCompanionWindowId(targetProps.windowId);
     dispatch(actions.addCompanionWindow(targetProps.windowId, { content, ...additionalProps }));
   };
 
