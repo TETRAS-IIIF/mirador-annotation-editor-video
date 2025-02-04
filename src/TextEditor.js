@@ -11,7 +11,10 @@ const StyledReactQuill = styled(ReactQuill)(({ theme }) => ({
 }));
 
 /** Rich text editor for annotation body */
-function TextEditor({ annoHtml, updateAnnotationBody }) {
+function TextEditor({
+  annoHtml,
+  updateAnnotationBody,
+}) {
   const [editorHtml, setEditorHtml] = useState(annoHtml);
 
   /**

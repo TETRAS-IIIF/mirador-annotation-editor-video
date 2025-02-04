@@ -1,7 +1,8 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { Rect, Transformer } from 'react-konva';
 import { KONVA_MODE } from '../KonvaUtils';
+
 /**
  * Represents a rectangle node component.
  * @returns {JSX.Element} The TextNode component.
@@ -22,7 +23,8 @@ function Rectangle({
   useEffect(() => {
     if (trRef.current) {
       trRef.current.nodes([shapeRef.current]);
-      trRef.current.getLayer().batchDraw();
+      trRef.current.getLayer()
+        .batchDraw();
     }
   }, [isSelected]);
 

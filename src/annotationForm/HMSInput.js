@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Input, styled } from '@mui/material';
 import { secondsToHMSarray } from './AnnotationFormUtils';
@@ -17,7 +17,11 @@ const StyledRoot = styled('div')({
 });
 
 /** Hours minutes seconds form inputs */
-function HMSInput({ seconds, onChange, duration }) {
+function HMSInput({
+  seconds,
+  onChange,
+  duration,
+}) {
   const [hms, setHms] = useState(secondsToHMSarray(seconds));
 
   useEffect(() => {
@@ -28,7 +32,10 @@ function HMSInput({ seconds, onChange, duration }) {
 
   /** Handle change on one form */
   const someChange = (ev) => {
-    const { name, value } = ev.target;
+    const {
+      name,
+      value,
+    } = ev.target;
     let numValue = Number(value);
 
     if (numValue < 0) {

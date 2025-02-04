@@ -30,7 +30,7 @@ const StyledToggleButton = styled(ToggleButton)(({ theme }) => ({
 /** Form part with time mangement, dual slider + double input. Mange Tstart and Tend value */
 function TargetTimeInput({
   onChange,
-playerReferences,
+  playerReferences,
   tend,
   tstart,
   windowId,

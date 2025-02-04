@@ -3,7 +3,9 @@ import PropTypes from 'prop-types';
 import { getVisibleCanvases } from 'mirador/dist/es/src/state/selectors/canvases';
 import * as actions from 'mirador/dist/es/src/state/actions';
 import { getWindowViewType } from 'mirador/dist/es/src/state/selectors';
-import { getCompanionWindowsForContent } from 'mirador/dist/es/src/state/selectors/companionWindows';
+import {
+  getCompanionWindowsForContent,
+} from 'mirador/dist/es/src/state/selectors/companionWindows';
 import CanvasListItem from '../CanvasListItem';
 import AnnotationActionsContext from '../AnnotationActionsContext';
 import SingleCanvasDialog from '../SingleCanvasDialog';
@@ -35,21 +37,25 @@ function CanvasAnnotationsWrapper({
     listContainerComponent: CanvasListItem,
   };
 
+  // eslint-disable-next-line react/jsx-no-constructed-context-values
+  const contextProviderProps = {
+    addCompanionWindow,
+    annotationEditCompanionWindowIsOpened,
+    annotationsOnCanvases,
+    canvases,
+    config,
+    receiveAnnotation,
+    storageAdapter: config.annotation.adapter,
+    toggleSingleCanvasDialogOpen,
+    windowId: targetProps.windowId,
+    windowViewType,
+  };
+
   return (
     <AnnotationActionsContext.Provider
-      value={{
-        addCompanionWindow,
-        annotationEditCompanionWindowIsOpened,
-        annotationsOnCanvases,
-        canvases,
-        config,
-        receiveAnnotation,
-        storageAdapter: config.annotation.adapter,
-        toggleSingleCanvasDialogOpen,
-        windowId: targetProps.windowId,
-        windowViewType,
-      }}
+      value={contextProviderProps}
     >
+      {/* eslint-disable-next-line react/jsx-props-no-spreading */}
       <TargetComponent {...props} ref={containerRef} />
       {windowViewType !== 'single' && (
         <SingleCanvasDialog
@@ -90,7 +96,10 @@ CanvasAnnotationsWrapper.propTypes = {
     }),
   }),
   canvases: PropTypes.arrayOf(
-    PropTypes.shape({ id: PropTypes.string, index: PropTypes.number }),
+    PropTypes.shape({
+      id: PropTypes.string,
+      index: PropTypes.number,
+    }),
   ),
   config: PropTypes.shape({
     annotation: PropTypes.shape({
@@ -123,7 +132,10 @@ CanvasAnnotationsWrapper.defaultProps = {
 function mapStateToProps(state, { targetProps: { windowId } }) {
   const canvases = getVisibleCanvases(state, { windowId });
   const annotationsOnCanvases = {};
-  const annotationCreationCompanionWindows = getCompanionWindowsForContent(state, { content: 'annotationCreation', windowId });
+  const annotationCreationCompanionWindows = getCompanionWindowsForContent(state, {
+    content: 'annotationCreation',
+    windowId,
+  });
   let annotationEditCompanionWindowIsOpened = true;
 
   if (Object.keys(annotationCreationCompanionWindows).length !== 0) {
@@ -158,10 +170,12 @@ const mapDispatchToProps = (dispatch, props, annotationEditCompanionWindowIsOpen
   ),
 });
 
-export default {
+const CanvasAnnotationsWrapperContainer = {
   component: CanvasAnnotationsWrapper,
   mapDispatchToProps,
   mapStateToProps,
   mode: 'wrap',
   target: 'CanvasAnnotations',
 };
+
+export default CanvasAnnotationsWrapperContainer;

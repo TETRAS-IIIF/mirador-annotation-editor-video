@@ -1,13 +1,21 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import PropTypes, { number } from 'prop-types';
 import { Image, Transformer } from 'react-konva';
 import useImage from 'use-image';
+
 /**
  * Represents a image shape component.
  * @returns {JSX.Element} The TextNode component.
  */
 function ImageShape({
-  onShapeClick, shape, activeTool, isSelected, onTransform, handleDragEnd, handleDragStart, displayMode,
+  onShapeClick,
+  shape,
+  activeTool,
+  isSelected,
+  onTransform,
+  handleDragEnd,
+  handleDragStart,
+  displayMode,
 }) {
   const shapeRef = useRef();
   const trRef = useRef();
@@ -16,7 +24,8 @@ function ImageShape({
   useEffect(() => {
     if (trRef.current) {
       trRef.current.nodes([shapeRef.current]);
-      trRef.current.getLayer().batchDraw();
+      trRef.current.getLayer()
+        .batchDraw();
     }
   }, [isSelected]);
   /**
@@ -59,6 +68,7 @@ function ImageShape({
 
 ImageShape.propTypes = {
   activeTool: PropTypes.string.isRequired,
+  displayMode: PropTypes.string.isRequired,
   handleDragEnd: PropTypes.func.isRequired,
   handleDragStart: PropTypes.func.isRequired,
   isSelected: PropTypes.bool.isRequired,

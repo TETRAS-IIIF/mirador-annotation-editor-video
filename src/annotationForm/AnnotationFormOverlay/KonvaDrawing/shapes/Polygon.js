@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
-import { Transformer, Shape, Line } from 'react-konva';
+import { Line, Transformer } from 'react-konva';
 
 /** FreeHand shape displaying */
 function Polygon({
@@ -19,7 +19,8 @@ function Polygon({
   useEffect(() => {
     if (trRef.current) {
       trRef.current.nodes([shapeRef.current]);
-      trRef.current.getLayer().batchDraw();
+      trRef.current.getLayer()
+        .batchDraw();
     }
   }, [isSelected, shape]);
 

@@ -8,7 +8,6 @@ import { TargetSpatialInput } from './TargetSpatialInput';
 /**
  * Section of Time and Space Target
  * @param templateType
- * @param mediaType
  * @param spatialTarget
  * @param windowId
  * @returns {Element}
@@ -31,6 +30,7 @@ export default function TargetFormSection(
     if (playerReferences.getMediaType() === MEDIA_TYPES.VIDEO) {
       // eslint-disable-next-line no-param-reassign
       target.tstart = playerReferences.getCurrentTime() || 0;
+      // eslint-disable-next-line no-param-reassign
       target.tend = playerReferences.getMediaDuration()
         ? Math.floor(playerReferences.getMediaDuration()) : 0;
     }
@@ -105,7 +105,7 @@ export default function TargetFormSection(
             />
           </Grid>
         )
-        }
+      }
     </Grid>
   );
 }
