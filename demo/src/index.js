@@ -52,7 +52,12 @@ const config = {
     defaultSideBarPanel: 'annotations',
     sideBarOpenByDefault: true,
   },
-  windows: [],
+  windows: [
+    {
+      manifestId: 'https://purl.stanford.edu/sn904cj3429/iiif/manifest',
+    },
+  ],
 };
 
 Mirador.viewer(config, [...annotationPlugins]);
+// Mirador.viewer(config);
