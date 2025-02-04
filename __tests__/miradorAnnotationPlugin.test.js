@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 
-import { getWindowViewType } from 'mirador/dist/es/src/state/selectors';
+import { getWindowViewType } from 'mirador';
 import LocalStorageAdapter from '../src/annotationAdapter/LocalStorageAdapter';
 import MiradorAnnotation from '../src/plugins/miradorAnnotationPlugin';
 import { render, screen, fireEvent } from './test-utils';
@@ -10,7 +10,8 @@ jest.mock('react-redux', () => ({
   ...jest.requireActual('react-redux'),
   useDispatch: jest.fn(),
 }));
-jest.mock('mirador/dist/es/src/state/selectors', () => ({
+jest.mock('mirador', () => ({
+  ...jest.requireActual('mirador'),
   getWindowViewType: jest.fn(),
 }));
 
