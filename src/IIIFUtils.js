@@ -107,10 +107,13 @@ export const maeTargetToIiifTarget = (maeTarget, canvasId) => {
         y,
         width,
         height,
+        scaleX,
+        scaleY,
       } = maeTarget.drawingState.shapes[0];
       console.info('Implement target as string with one shape (reactangle or image)');
       // Image have not tstart and tend
-      return `${canvasId}#${maeTarget.tend ? `xywh=${x},${y},${width},${height}&t=${maeTarget.tstart},${maeTarget.tend}` : `xywh=${x},${y},${width},${height}`}`;
+      // We use scaleX and scaleY to have the real size of the shape, if it has been resized
+      return `${canvasId}#${maeTarget.tend ? `xywh=${x},${y},${width * scaleX},${height * scaleY}&t=${maeTarget.tstart},${maeTarget.tend}` : `xywh=${x},${y},${width * scaleX},${height * scaleY}`}`;
     }
     // On the other case, the target is a SVG
     console.info('Implement target as SVG/Fragment with shapes');
