@@ -61,7 +61,7 @@ export class WindowPlayer {
    * @returns {*|boolean}
    */
   isInitializedCorrectly() {
-    return this.media && (this.media.current || this.media.video)
+    return this.media && ((this.media.current && this.media.current.canvas) || this.media.video)
       && (this.mediaType !== MEDIA_TYPES.UNKNOWN && this.mediaType !== MEDIA_TYPES.AUDIO);
   }
 
