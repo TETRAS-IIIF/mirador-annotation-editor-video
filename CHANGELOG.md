@@ -1,8 +1,17 @@
 # Changelog
 
+Entries types:
+
+- `ADDED` for new features.
+- `CHANGED` for changes in existing functionality.
+- `DEPRECATED` for soon-to-be removed features.
+- `REMOVED` for now removed features.
+- `FIXED` for any bug fixes.
+- `SECURITY` to invite users to upgrade in case of vulnerabilities.
+
 ## 1.0.78 (2025-02-05)
 
-- CHANGE : Display edit annotation button only if annotation is editable with MAE
+- CHANGED : Display edit annotation button only if annotation is editable with MAE
 - FIXED : Github CI/CD
 - FIXED : Linting error issues
 
