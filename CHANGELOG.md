@@ -9,6 +9,11 @@ Entries types:
 - `FIXED` for any bug fixes.
 - `SECURITY` to invite users to upgrade in case of vulnerabilities.
 
+## 1.0.79 (2025-02-05)
+
+- FIXED : Wrong size of target after scaling shape
+- FIXED : Window crash when opening new manifest if mae is already open
+
 ## 1.0.78 (2025-02-05)
 
 - CHANGED : Display edit annotation button only if annotation is editable with MAE
