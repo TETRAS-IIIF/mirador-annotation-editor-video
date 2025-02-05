@@ -1,8 +1,5 @@
 import { getVisibleCanvases } from 'mirador/dist/es/src/state/selectors/canvases';
-import {
-  getVisibleCanvasAudioResources,
-  getVisibleCanvasVideoResources,
-} from 'mirador/dist/es/src/state/selectors';
+import { getVisibleCanvasAudioResources, getVisibleCanvasVideoResources } from 'mirador/dist/es/src/state/selectors';
 import { MEDIA_TYPES } from './annotationForm/AnnotationFormUtils';
 
 // TODO All the code related to the video player must be moved in MAEV plugin
@@ -64,7 +61,7 @@ export class WindowPlayer {
    * @returns {*|boolean}
    */
   isInitializedCorrectly() {
-    return this.media && (this.media.current || this.media.video)
+    return this.media && ((this.media.current && this.media.current.canvas) || this.media.video)
       && (this.mediaType !== MEDIA_TYPES.UNKNOWN && this.mediaType !== MEDIA_TYPES.AUDIO);
   }
 
@@ -325,6 +322,7 @@ export class WindowPlayer {
 
   /**
    * Send setCurrentTime action to mirador
+   * @param windowId
    * @param args
    * @returns {*}
    */
@@ -337,6 +335,7 @@ export class WindowPlayer {
 
   /**
    * Send setSeekToAction to mirador
+   * @param windowId
    * @param args
    * @returns {*}
    */
@@ -345,7 +344,6 @@ export class WindowPlayer {
       return this.actions.setWindowSeekTo(this.windowId, ...args);
     }
     console.error('Cannot seek time for image');
-    return null;
   }
 }
 
