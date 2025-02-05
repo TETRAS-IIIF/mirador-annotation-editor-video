@@ -84,7 +84,9 @@ const CanvasListItem = forwardRef((props, ref) => {
         return flatten(Object.entries(annotationsOnCanvases[canvas.id])
           .map(([key, value]) => {
             if (value.json && value.json.items) {
-              return value.json.items.map((item) => item.id);
+              return value.json.items.filter((item)=>item.maeData).map((item) => {
+                return item.id
+              });
             }
             return [];
           }));
