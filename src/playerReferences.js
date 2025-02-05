@@ -1,5 +1,8 @@
 import { getVisibleCanvases } from 'mirador/dist/es/src/state/selectors/canvases';
-import { getVisibleCanvasAudioResources, getVisibleCanvasVideoResources } from 'mirador/dist/es/src/state/selectors';
+import {
+  getVisibleCanvasAudioResources,
+  getVisibleCanvasVideoResources,
+} from 'mirador/dist/es/src/state/selectors';
 import { MEDIA_TYPES } from './annotationForm/AnnotationFormUtils';
 
 // TODO All the code related to the video player must be moved in MAEV plugin
@@ -335,7 +338,6 @@ export class WindowPlayer {
 
   /**
    * Send setSeekToAction to mirador
-   * @param windowId
    * @param args
    * @returns {*}
    */
@@ -344,13 +346,13 @@ export class WindowPlayer {
       return this.actions.setWindowSeekTo(this.windowId, ...args);
     }
     console.error('Cannot seek time for image');
+    return null;
   }
 }
 
 /** ***********************
  * Get media type of visible canvas
  * @param state
- * @param windowId
  */
 export function checkMediaType(state, windowId) {
   const audioResources = getVisibleCanvasAudioResources(state, { windowId }) || [];
