@@ -100,14 +100,20 @@ export const maeTargetToIiifTarget = (maeTarget, canvasId) => {
 
   if (maeTarget.templateType !== TEMPLATE.KONVA_TYPE) {
     // In some case the target can be simplify in a string
-    if (maeTarget.drawingState.shapes.length === 1 && (maeTarget.drawingState.shapes[0].type === 'rectangle' || maeTarget.drawingState.shapes[0].type == 'image')) {
-      let {
+    if (maeTarget.drawingState.shapes.length === 1 && (maeTarget.drawingState.shapes[0].type === 'rectangle' || maeTarget.drawingState.shapes[0].type === 'image')) {
+      const {
         // eslint-disable-next-line prefer-const
-        x, y, width, height,
+        x,
+        y,
+        width,
+        height,
+        scaleX,
+        scaleY,
       } = maeTarget.drawingState.shapes[0];
       console.info('Implement target as string with one shape (reactangle or image)');
       // Image have not tstart and tend
-      return `${canvasId}#${maeTarget.tend ? `xywh=${x},${y},${width},${height}&t=${maeTarget.tstart},${maeTarget.tend}` : `xywh=${x},${y},${width},${height}`}`;
+      // We use scaleX and scaleY to have the real size of the shape, if it has been resized
+      return `${canvasId}#${maeTarget.tend ? `xywh=${x},${y},${width * scaleX},${height * scaleY}&t=${maeTarget.tstart},${maeTarget.tend}` : `xywh=${x},${y},${width * scaleX},${height * scaleY}`}`;
     }
     // On the other case, the target is a SVG
     console.info('Implement target as SVG/Fragment with shapes');
