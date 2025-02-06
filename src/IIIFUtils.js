@@ -34,7 +34,7 @@ export const convertAnnotationStateToBeSaved = async (
   canvas,
   windowId,
   // eslint-disable-next-line no-shadow
-  playerReferences
+  playerReferences,
 ) => {
   const annotationStateForSaving = annotationState;
 
@@ -51,8 +51,8 @@ export const convertAnnotationStateToBeSaved = async (
     tstart: annotationStateForSaving.maeData.target.tstart,
   };
 
-  if (annotationStateForSaving.maeData.templateType == TEMPLATE.TAGGING_TYPE
-    || annotationStateForSaving.maeData.templateType == TEMPLATE.TEXT_TYPE) {
+  if (annotationStateForSaving.maeData.templateType === TEMPLATE.TAGGING_TYPE
+    || annotationStateForSaving.maeData.templateType === TEMPLATE.TEXT_TYPE) {
     // Complex annotation
     if (annotationStateForSaving.maeData.target.drawingState.shapes.length > 0) {
       // eslint-disable-next-line no-param-reassign
@@ -66,8 +66,8 @@ export const convertAnnotationStateToBeSaved = async (
     annotationStateForSaving.type = 'Annotation';
   }
 
-  if (annotationStateForSaving.maeData.templateType == TEMPLATE.IMAGE_TYPE) {
-    if (annotationStateForSaving.maeData.target.drawingState.shapes.length == 1) {
+  if (annotationStateForSaving.maeData.templateType === TEMPLATE.IMAGE_TYPE) {
+    if (annotationStateForSaving.maeData.target.drawingState.shapes.length === 1) {
       // eslint-disable-next-line max-len
       annotationStateForSaving.body.id = annotationStateForSaving.maeData.target.drawingState.shapes[0].url;
       annotationStateForSaving.type = 'Annotation';
@@ -100,14 +100,20 @@ export const maeTargetToIiifTarget = (maeTarget, canvasId) => {
 
   if (maeTarget.templateType !== TEMPLATE.KONVA_TYPE) {
     // In some case the target can be simplify in a string
-    if (maeTarget.drawingState.shapes.length === 1 && (maeTarget.drawingState.shapes[0].type === 'rectangle' || maeTarget.drawingState.shapes[0].type == 'image')) {
-      let {
+    if (maeTarget.drawingState.shapes.length === 1 && (maeTarget.drawingState.shapes[0].type === 'rectangle' || maeTarget.drawingState.shapes[0].type === 'image')) {
+      const {
         // eslint-disable-next-line prefer-const
-        x, y, width, height,
+        x,
+        y,
+        width,
+        height,
+        scaleX,
+        scaleY,
       } = maeTarget.drawingState.shapes[0];
       console.info('Implement target as string with one shape (reactangle or image)');
       // Image have not tstart and tend
-      return `${canvasId}#${maeTarget.tend ? `xywh=${x},${y},${width},${height}&t=${maeTarget.tstart},${maeTarget.tend}` : `xywh=${x},${y},${width},${height}`}`;
+      // We use scaleX and scaleY to have the real size of the shape, if it has been resized
+      return `${canvasId}#${maeTarget.tend ? `xywh=${x},${y},${width * scaleX},${height * scaleY}&t=${maeTarget.tstart},${maeTarget.tend}` : `xywh=${x},${y},${width * scaleX},${height * scaleY}`}`;
     }
     // On the other case, the target is a SVG
     console.info('Implement target as SVG/Fragment with shapes');

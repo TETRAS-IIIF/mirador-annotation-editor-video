@@ -1,22 +1,22 @@
 import Typography from '@mui/material/Typography';
 import { Grid } from '@mui/material';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { JsonEditor as Editor } from 'jsoneditor-react';
 import ace from 'brace';
 import PropTypes from 'prop-types';
 import { MEDIA_TYPES } from './AnnotationFormUtils';
-import {playerReferences} from "../playerReferences";
 
+/* DONT DELETE THIS COMPONENT */
 /** Debug Component * */
 export function Debug(
   {
     drawingState,
     scale,
+    playerReferences,
   },
 ) {
-  const [updateComp, setUpdateComp] = useState(drawingState);
   const jsonEditorRef = useRef(null);
-/** update the jsonEditor dynamicly **/
+  /** update the jsonEditor dynamicly * */
   const setRef = (instance) => {
     if (instance) {
       jsonEditorRef.current = instance.jsonEditor;
@@ -24,7 +24,7 @@ export function Debug(
       jsonEditorRef.current = null;
     }
   };
-  /**check if mediaType = video and if it is set border around video**/
+  /** check if mediaType = video and if it is set border around video* */
   if (playerReferences.getMediaType() === MEDIA_TYPES.VIDEO) {
     const videoElement = document.querySelector('video');
     const parentVideoElement = videoElement.parentElement;
@@ -42,7 +42,7 @@ export function Debug(
     console.log('overlay.containerHeight', playerReferences.getContainerHeight());
     console.log('drawingState', drawingState);
     console.log('-------------End of Render---------------');
-  }, [drawingState, scale, updateComp]);
+  }, [drawingState, scale]);
 
   useEffect(() => {
     if (jsonEditorRef.current !== null) {
@@ -118,64 +118,65 @@ export function Debug(
         <Typography variant="subFormSectionTitle">
           Composed Scale
           {' '}
-          {playerReferences.getMediaTrueHeight() / playerReferences.getDisplayedMediaHeight() * scale}
+          {playerReferences.getMediaTrueHeight()
+            / playerReferences.getDisplayedMediaHeight() * scale}
         </Typography>
       </Grid>
       {
-              drawingState.currentShape && (
-              <>
-                <Grid item>
-                  <Typography variant="subFormSectionTitle">
-                    id :
-                    {' '}
-                    {drawingState.currentShape.id}
-                  </Typography>
-                </Grid>
-                <Grid item>
-                  <Typography variant="subFormSectionTitle">
-                    Height :
-                    {' '}
-                    {drawingState.currentShape.height}
-                  </Typography>
-                </Grid>
-                <Grid item>
-                  <Typography variant="subFormSectionTitle">
-                    Width :
-                    {' '}
-                    {drawingState.currentShape.width}
-                  </Typography>
-                </Grid>
-                <Grid item>
-                  <Typography variant="subFormSectionTitle">
-                    x :
-                    {' '}
-                    {drawingState.currentShape.x}
-                  </Typography>
-                </Grid>
-                <Grid item>
-                  <Typography variant="subFormSectionTitle">
-                    y :
-                    {' '}
-                    {drawingState.currentShape.y}
-                  </Typography>
-                </Grid>
-                <Grid item>
-                  <Typography variant="subFormSectionTitle">
-                    scaleX :
-                    {' '}
-                    {drawingState.currentShape.scaleX}
-                  </Typography>
-                </Grid>
-                <Grid item>
-                  <Typography variant="subFormSectionTitle">
-                    strokeWidth :
-                    {' '}
-                    {drawingState.currentShape.strokeWidth}
-                  </Typography>
-                </Grid>
-              </>
-              )
-          }
+        drawingState.currentShape && (
+          <>
+            <Grid item>
+              <Typography variant="subFormSectionTitle">
+                id :
+                {' '}
+                {drawingState.currentShape.id}
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Typography variant="subFormSectionTitle">
+                Height :
+                {' '}
+                {drawingState.currentShape.height}
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Typography variant="subFormSectionTitle">
+                Width :
+                {' '}
+                {drawingState.currentShape.width}
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Typography variant="subFormSectionTitle">
+                x :
+                {' '}
+                {drawingState.currentShape.x}
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Typography variant="subFormSectionTitle">
+                y :
+                {' '}
+                {drawingState.currentShape.y}
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Typography variant="subFormSectionTitle">
+                scaleX :
+                {' '}
+                {drawingState.currentShape.scaleX}
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Typography variant="subFormSectionTitle">
+                strokeWidth :
+                {' '}
+                {drawingState.currentShape.strokeWidth}
+              </Typography>
+            </Grid>
+          </>
+        )
+      }
       <Grid item sx={{ height: '500px' }}>
         <Editor
           ref={setRef}
@@ -198,5 +199,7 @@ export function Debug(
 Debug.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   drawingState: PropTypes.object.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  playerReferences: PropTypes.object.isRequired,
   scale: PropTypes.string.isRequired,
 };

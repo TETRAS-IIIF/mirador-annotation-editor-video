@@ -10,10 +10,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import Typography from '@mui/material/Typography';
 import AnnotationFormOverlayToolOptions from './AnnotationFormOverlayToolOptions';
 import {
-  isShapesTool,
-  OVERLAY_TOOL,
-  SHAPES_TOOL,
-  KONVA_MODE,
+  isShapesTool, KONVA_MODE, OVERLAY_TOOL, SHAPES_TOOL,
 } from './KonvaDrawing/KonvaUtils';
 import ShapesList from './ShapesList';
 import { StyledToggleButtonGroup } from '../AnnotationFormUtils';

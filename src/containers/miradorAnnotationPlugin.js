@@ -1,6 +1,10 @@
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { getWindowViewType, getVisibleCanvases, getCompanionWindowsForContent } from 'mirador';
+import {
+  getWindowViewType,
+  getVisibleCanvases,
+  getCompanionWindowsForContent,
+} from 'mirador';
 import { withTranslation } from 'react-i18next';
 import MiradorAnnotation from '../plugins/miradorAnnotationPlugin';
 
@@ -10,7 +14,10 @@ import MiradorAnnotation from '../plugins/miradorAnnotationPlugin';
  * */
 function mapStateToProps(state, { targetProps: { windowId } }) {
   // Annotation edit companion window ou annotation creation companion window is the same thing
-  const annotationCreationCompanionWindows = getCompanionWindowsForContent(state, { content: 'annotationCreation', windowId });
+  const annotationCreationCompanionWindows = getCompanionWindowsForContent(state, {
+    content: 'annotationCreation',
+    windowId,
+  });
   let annotationEditCompanionWindowIsOpened = true;
   if (Object.keys(annotationCreationCompanionWindows).length !== 0) {
     annotationEditCompanionWindowIsOpened = false;

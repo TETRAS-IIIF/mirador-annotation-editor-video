@@ -3,9 +3,7 @@ import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import { Grid } from '@mui/material';
 import Typography from '@mui/material/Typography';
-import {
-  TEMPLATE,
-} from './AnnotationFormUtils';
+import { TEMPLATE } from './AnnotationFormUtils';
 import TextCommentTemplate from './TextCommentTemplate';
 import ImageCommentTemplate from './ImageCommentTemplate';
 import NetworkCommentTemplate from './NetworkCommentTemplate';

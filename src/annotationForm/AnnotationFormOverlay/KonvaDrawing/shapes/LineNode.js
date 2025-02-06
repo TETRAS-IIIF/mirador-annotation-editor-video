@@ -1,6 +1,7 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { Line, Transformer } from 'react-konva';
+
 /**
  * Represents a line node component.
  * @returns {JSX.Element} The TextNode component.
@@ -18,10 +19,14 @@ function LineNode({
   useEffect(() => {
     if (trRef.current) {
       trRef.current.nodes([shapeRef.current]);
-      trRef.current.getLayer().batchDraw();
+      trRef.current.getLayer()
+        .batchDraw();
     }
   }, [isSelected]);
 
+  /**
+   * Handles the click event on the shape by invoking the provided callback function.
+   */
   const handleClick = () => {
     onShapeClick(shape);
   };
@@ -56,14 +61,19 @@ LineNode.propTypes = {
   onShapeClick: PropTypes.func.isRequired,
   selectedShapeId: PropTypes.string.isRequired,
   shape: PropTypes.shape({
+    fill: PropTypes.string,
     id: PropTypes.string,
+    points: PropTypes.arrayOf(PropTypes.number),
     rotation: PropTypes.number,
     scaleX: PropTypes.number,
     scaleY: PropTypes.number,
+    stroke: PropTypes.string,
+    strokeWidth: PropTypes.number,
     type: PropTypes.string,
     url: PropTypes.string,
     x: PropTypes.number,
     y: PropTypes.number,
+
   }).isRequired,
 };
 
