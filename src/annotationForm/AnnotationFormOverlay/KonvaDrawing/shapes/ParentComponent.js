@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Layer } from 'react-konva';
 import Rectangle from './Rectangle';
@@ -35,9 +35,9 @@ function ParentComponent({
   }, [selectedShape]);
 
   /**
-    * Triggered onShapeClick provided function when a shape is clicked
-    * @param {object} shape
-    */
+   * Triggered onShapeClick provided function when a shape is clicked
+   * @param {object} shape
+   */
   const handleShapeClick = (shape) => {
     onShapeClick(shape);
     setSelectedShape(shape);

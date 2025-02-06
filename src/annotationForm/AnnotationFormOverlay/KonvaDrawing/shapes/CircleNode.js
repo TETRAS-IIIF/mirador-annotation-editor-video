@@ -1,6 +1,7 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { Circle, Transformer } from 'react-konva';
+
 /**
  * Represents a Elipse node component.
  * @returns {JSX.Element} The TextNode component.
@@ -20,7 +21,8 @@ function CircleNode({
   useEffect(() => {
     if (trRef.current) {
       trRef.current.nodes([shapeRef.current]);
-      trRef.current.getLayer().batchDraw();
+      trRef.current.getLayer()
+        .batchDraw();
     }
   }, [isSelected]);
 

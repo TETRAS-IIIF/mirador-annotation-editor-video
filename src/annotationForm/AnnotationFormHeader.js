@@ -15,8 +15,8 @@ export default function AnnotationFormHeader(
   },
 ) {
   /**
-     * Function to navigate back to the template selection.
-     */
+   * Function to navigate back to the template selection.
+   */
   const goBackToTemplateSelection = () => {
     setCommentingType(null);
   };
@@ -32,11 +32,11 @@ export default function AnnotationFormHeader(
     >
       <Grid item>
         {annotation.id == null
-        && (
-          <MiradorMenuButton ariaLabel="back" TooltipProps="back">
-            <ChevronLeftIcon onClick={goBackToTemplateSelection} />
-          </MiradorMenuButton>
-        )}
+          && (
+            <MiradorMenuButton ariaLabel="back" TooltipProps="back">
+              <ChevronLeftIcon onClick={goBackToTemplateSelection} />
+            </MiradorMenuButton>
+          )}
       </Grid>
       <Grid item>
         {templateType.icon}

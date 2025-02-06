@@ -4,19 +4,12 @@ import { Grid } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import AnnotationDrawing from './AnnotationFormOverlay/AnnotationDrawing';
 
-import {
-  TARGET_VIEW,
-  TEMPLATE,
-  defaultToolState,
-} from './AnnotationFormUtils';
+import { defaultToolState, TARGET_VIEW, TEMPLATE } from './AnnotationFormUtils';
 import AnnotationFormOverlay from './AnnotationFormOverlay/AnnotationFormOverlay';
 import TextFormSection from './TextFormSection';
 import TargetFormSection from './TargetFormSection';
 import AnnotationFormFooter from './AnnotationFormFooter';
-import {
-  KONVA_MODE,
-  resizeKonvaStage,
-} from './AnnotationFormOverlay/KonvaDrawing/KonvaUtils';
+import { KONVA_MODE, resizeKonvaStage } from './AnnotationFormOverlay/KonvaDrawing/KonvaUtils';
 
 /**
  * Template for Konva annotations (drawing)

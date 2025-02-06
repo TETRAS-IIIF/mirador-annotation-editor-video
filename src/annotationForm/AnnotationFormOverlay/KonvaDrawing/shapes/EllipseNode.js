@@ -1,13 +1,19 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { Ellipse, Transformer } from 'react-konva';
+
 /**
  * Represents a Elipse node component.
  * @returns {JSX.Element} The TextNode component.
  */
 function EllipseNode({
-  onShapeClick, shape, activeTool, isSelected,
-  onTransform, handleDragEnd, handleDragStart,
+  onShapeClick,
+  shape,
+  activeTool,
+  isSelected,
+  onTransform,
+  handleDragEnd,
+  handleDragStart,
 }) {
   const shapeRef = useRef();
   const trRef = useRef();
@@ -15,7 +21,8 @@ function EllipseNode({
   useEffect(() => {
     if (trRef.current) {
       trRef.current.nodes([shapeRef.current]);
-      trRef.current.getLayer().batchDraw();
+      trRef.current.getLayer()
+        .batchDraw();
     }
   }, [isSelected]);
 

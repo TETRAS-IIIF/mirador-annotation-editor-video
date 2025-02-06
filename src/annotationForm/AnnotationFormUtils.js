@@ -7,8 +7,8 @@ import React from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { styled } from '@mui/material/styles';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import { OVERLAY_TOOL } from './AnnotationFormOverlay/KonvaDrawing/KonvaUtils';
 import { AddLink } from '@mui/icons-material';
+import { OVERLAY_TOOL } from './AnnotationFormOverlay/KonvaDrawing/KonvaUtils';
 
 export const TEMPLATE = {
   IIIF_TYPE: 'iiif',
@@ -37,70 +37,76 @@ export const getTemplateType = (t, templateType) => TEMPLATE_TYPES(t)
 export const TEMPLATE_TYPES = (t) => [
   {
     description: t('textual_note_with_target'),
-    icon: <TextFieldsIcon/>,
+    icon: <TextFieldsIcon />,
     id: TEMPLATE.TEXT_TYPE,
     isCompatibleWithTemplate: (mediaType) => {
       if (mediaType === MEDIA_TYPES.VIDEO) return true;
       if (mediaType === MEDIA_TYPES.IMAGE) return true;
       if (mediaType === MEDIA_TYPES.AUDIO) return false;
+      return false;
     },
     label: t('note'),
   },
   {
     description: t('tag_with_target'),
-    icon: <LocalOfferIcon fontSize="small"/>,
+    icon: <LocalOfferIcon fontSize="small" />,
     id: TEMPLATE.TAGGING_TYPE,
     isCompatibleWithTemplate: (mediaType) => {
       if (mediaType === MEDIA_TYPES.VIDEO) return true;
       if (mediaType === MEDIA_TYPES.IMAGE) return true;
       if (mediaType === MEDIA_TYPES.AUDIO) return true;
+      return false;
     },
     label: t('tag'),
   },
   {
     description: t('image_in_overlay_with_note'),
-    icon: <ImageIcon fontSize="small"/>,
+    icon: <ImageIcon fontSize="small" />,
     id: TEMPLATE.IMAGE_TYPE,
     isCompatibleWithTemplate: (mediaType) => {
       if (mediaType === MEDIA_TYPES.VIDEO) return true;
       // Mirador doesn't support annotation from an image
       if (mediaType === MEDIA_TYPES.IMAGE) return false;
       if (mediaType === MEDIA_TYPES.AUDIO) return false;
+      return false;
     },
     label: t('image'),
   },
   {
     description: t('drawings_and_text_in_overlay'),
-    icon: <CategoryIcon fontSize="small"/>,
+    icon: <CategoryIcon fontSize="small" />,
     id: TEMPLATE.KONVA_TYPE,
     isCompatibleWithTemplate: (mediaType) => {
       if (mediaType === MEDIA_TYPES.VIDEO) return true;
       // Mirador doesn't support annotation from an image
       if (mediaType === MEDIA_TYPES.IMAGE) return false;
       if (mediaType === MEDIA_TYPES.AUDIO) return false;
+      return false;
     },
     label: t('overlay'),
   },
   {
     description: t('manifest_link_with_note'),
-    icon: <AddLink fontSize="small"/>,
+    icon: <AddLink fontSize="small" />,
     id: TEMPLATE.MANIFEST_TYPE,
     isCompatibleWithTemplate: (mediaType) => {
       if (mediaType === MEDIA_TYPES.VIDEO) return true;
       // Mirador doesn't support annotation from an image
       if (mediaType === MEDIA_TYPES.IMAGE) return false;
       if (mediaType === MEDIA_TYPES.AUDIO) return false;
+      return false;
     },
     label: t('manifest_link'),
   },
   {
     description: t('edit_iiif_json_code'),
-    icon: <DataObjectIcon fontSize="small"/>,
+    icon: <DataObjectIcon fontSize="small" />,
     id: TEMPLATE.IIIF_TYPE,
     isCompatibleWithTemplate: (mediaType) => {
       if (mediaType === MEDIA_TYPES.VIDEO) return true;
       if (mediaType === MEDIA_TYPES.IMAGE) return true;
       if (mediaType === MEDIA_TYPES.AUDIO) return true;
+      return false;
     },
     label: t('expert_mode'),
   },
@@ -115,6 +121,12 @@ export const defaultToolState = {
   strokeWidth: 2,
 };
 
+/**
+ * Specific Tool state for the target SVG
+ * @param imageZoom
+ * @returns {{activeTool: string, closedMode: string, image: {id: null}, imageEvent: null,
+ * strokeColor: string, strokeWidth: number}}
+ */
 export function getTargetSVGToolState(imageZoom) {
   return {
     activeTool: OVERLAY_TOOL.EDIT,
@@ -180,11 +192,12 @@ export async function saveAnnotationInStorageAdapter(
       });
   } else {
     // eslint-disable-next-line no-param-reassign
-    annotation.id = canvasId + "/annotation/" + uuidv4();
-    if(annotation?.maeData?.manifestNetwork){
+    annotation.id = `${canvasId}/annotation/${uuidv4()}`;
+    if (annotation?.maeData?.manifestNetwork) {
       // Ugly tricks to solve manifest template annotation issue on creation
       // For more see NetworkCommentTemplate:saveFunction
-      annotation.id = annotation.id + "#" + annotation.maeData.manifestNetwork;
+      // eslint-disable-next-line no-param-reassign
+      annotation.id = `${annotation.id}#${annotation.maeData.manifestNetwork}`;
     }
     storageAdapter.create(annotation)
       .then((annoPage) => {

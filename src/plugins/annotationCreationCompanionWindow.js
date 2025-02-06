@@ -13,7 +13,10 @@ import { WindowPlayer } from '../playerReferences';
 import translations from '../locales/locales';
 
 /** */
-const mapDispatchToProps = (dispatch, { id, windowId }) => ({
+const mapDispatchToProps = (dispatch, {
+  id,
+  windowId,
+}) => ({
   closeCompanionWindow: () => dispatch(
     removeCompanionWindowAction(windowId, id),
   ),
@@ -23,9 +26,15 @@ const mapDispatchToProps = (dispatch, { id, windowId }) => ({
 });
 
 /** */
-function mapStateToProps(state, { id: companionWindowId, windowId }) {
+function mapStateToProps(state, {
+  id: companionWindowId,
+  windowId,
+}) {
   const currentTime = null;
-  const cw = getCompanionWindow(state, { companionWindowId, windowId });
+  const cw = getCompanionWindow(state, {
+    companionWindowId,
+    windowId,
+  });
   const { annotationid } = cw;
 
   // This architecture lead to recreate the playerReferences each time the component is rendered
@@ -51,7 +60,10 @@ function mapStateToProps(state, { id: companionWindowId, windowId }) {
   return {
     annotation,
     canvases,
-    config: { ...state.config, translations },
+    config: {
+      ...state.config,
+      translations,
+    },
     currentTime,
     playerReferences,
   };
