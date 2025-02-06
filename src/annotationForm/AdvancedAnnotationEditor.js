@@ -1,6 +1,6 @@
 import React from 'react';
 import { Grid } from '@mui/material';
-import { JsonEditor as Editor } from 'jsoneditor-react';
+import { JsonEditor as Editor } from 'jsoneditor-react18';
 import ace from 'brace';
 import PropTypes from 'prop-types';
 import AnnotationFormFooter from './AnnotationFormFooter';

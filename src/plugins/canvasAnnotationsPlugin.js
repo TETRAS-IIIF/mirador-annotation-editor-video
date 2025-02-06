@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-props-no-spreading */
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
@@ -57,6 +56,7 @@ function CanvasAnnotationsWrapper({
     <AnnotationActionsContext.Provider
       value={contextProviderProps}
     >
+      {/* eslint-disable-next-line react/jsx-props-no-spreading */}
       <TargetComponent {...props} />
       {windowViewType !== 'single' && (
         <SingleCanvasDialog

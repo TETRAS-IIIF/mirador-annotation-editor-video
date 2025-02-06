@@ -32,7 +32,6 @@ function MiradorAnnotation(
 ) {
   const [annotationExportDialogOpen, setAnnotationExportDialogOpen] = useState(false);
   const [singleCanvasDialogOpen, setSingleCanvasDialogOpen] = useState(false);
-
   const dispatch = useDispatch();
 
   /** Open the companion window for annotation */

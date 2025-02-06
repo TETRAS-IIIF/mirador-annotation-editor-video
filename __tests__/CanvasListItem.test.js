@@ -4,19 +4,18 @@ import CanvasListItem from '../src/CanvasListItem';
 import AnnotationActionsContext from '../src/AnnotationActionsContext';
 import { fireEvent, render, screen } from './test-utils';
 
-const receiveAnnotation = jest.fn();
-const storageAdapter = jest.fn(() => (
+const receiveAnnotation = vi.fn();
+const storageAdapter = vi.fn(() => (
   {
-    all: jest.fn()
-      .mockResolvedValue(
-        {
-          items: [
-            { id: 'anno/2' },
-          ],
-        },
-      ),
+    all: vi.fn().mockResolvedValue(
+      {
+        items: [
+          { id: 'anno/2' },
+        ],
+      },
+    ),
     annotationPageId: 'pageId/3',
-    delete: jest.fn(async () => 'annoPageResultFromDelete'),
+    delete: vi.fn(async () => 'annoPageResultFromDelete'),
   }
 ));
 

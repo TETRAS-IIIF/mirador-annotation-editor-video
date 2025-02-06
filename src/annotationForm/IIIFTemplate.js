@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { JsonEditor as Editor } from 'jsoneditor-react';
+import { JsonEditor as Editor } from 'jsoneditor-react18';
 import PropTypes from 'prop-types';
-import 'jsoneditor-react/es/editor.min.css';
+import 'jsoneditor-react18/es/editor.min.css';
 import ace from 'brace';
 import 'brace/mode/json';
 import 'brace/theme/github';

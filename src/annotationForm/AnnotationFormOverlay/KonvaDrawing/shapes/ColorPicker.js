@@ -164,8 +164,7 @@ ColorPicker.propTypes = {
   toolOptions: Proptypes.oneOfType([
     Proptypes.bool,
     Proptypes.string,
-  ]
-  ).isRequired,
+  ]).isRequired,
   toolState: PropTypes.shape({
     activeTool: PropTypes.string.isRequired,
     closedMode: PropTypes.bool.isRequired,
