@@ -1,4 +1,3 @@
-/// <reference types="vitest" />
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { fileURLToPath } from 'url';
@@ -17,13 +16,10 @@ export default defineConfig({
           name: 'load-js-files-as-jsx',
 
           setup(build) {
-            build.onLoad(
-              { filter: /(src|__tests__)\/.*\.js$/ },
-              async (args) => ({
-                contents: await fs.readFile(args.path, 'utf8'),
-                loader: 'jsx',
-              })
-            );
+            build.onLoad({ filter: /(src|__tests__)\/.*\.js$/ }, async (args) => ({
+              contents: await fs.readFile(args.path, 'utf8'),
+              loader: 'jsx',
+            }));
           },
         },
       ],

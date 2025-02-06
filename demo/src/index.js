@@ -54,10 +54,9 @@ const config = {
   },
   windows: [
     {
-      manifestId: 'https://purl.stanford.edu/sn904cj3429/iiif/manifest',
+      manifestId: 'https://iiif.harvardartmuseums.org/manifests/object/299843',
     },
   ],
 };
 
 Mirador.viewer(config, [...annotationPlugins]);
-// Mirador.viewer(config);

@@ -6,19 +6,25 @@ import LocalStorageAdapter from '../src/annotationAdapter/LocalStorageAdapter';
 import MiradorAnnotation from '../src/plugins/miradorAnnotationPlugin';
 import { render, screen, fireEvent } from './test-utils';
 
-jest.mock('react-redux', () => ({
-  ...jest.requireActual('react-redux'),
-  useDispatch: jest.fn(),
-}));
-jest.mock('mirador', () => ({
-  ...jest.requireActual('mirador'),
-  getWindowViewType: jest.fn(),
-}));
+vi.mock('react-redux', async () => {
+  const actualReactRedux = await vi.importActual('react-redux');
+  return {
+    ...actualReactRedux,
+    useDispatch: vi.fn(),
+  };
+});
 
+vi.mock('mirador', async () => {
+  const actualMirador = await vi.importActual('mirador');
+  return {
+    ...actualMirador,
+    getWindowViewType: vi.fn(),
+  };
+});
 const defaultInitalState = {
   config: {
     annotation: {
-      adapter: jest.fn(),
+      adapter: vi.fn(),
       exportLocalStorageAnnotations: true,
     },
   },
@@ -26,14 +32,14 @@ const defaultInitalState = {
 
 /** */
 function createWrapper(props, initalState = defaultInitalState) {
-  const mockT = jest.fn().mockImplementation((key) => key);
+  const mockT = vi.fn().mockImplementation((key) => key);
 
   return render(<MiradorAnnotation
     canvases={[]}
     TargetComponent={() => <div>hello</div>}
     targetProps={{ windowId: 'windowId' }}
-    receiveAnnotation={jest.fn()}
-    switchToSingleCanvasView={jest.fn()}
+    receiveAnnotation={vi.fn()}
+    switchToSingleCanvasView={vi.fn()}
     annotationEditCompanionWindowIsOpened
     t={mockT}
     {...props}
@@ -48,7 +54,7 @@ describe('MiradorAnnotation', () => {
   });
 
   it('opens a new companionWindow when clicked', () => {
-    const mockDispatch = jest.fn();
+    const mockDispatch = vi.fn();
     useDispatch.mockImplementation(() => mockDispatch);
 
     getWindowViewType.mockReturnValue('single');

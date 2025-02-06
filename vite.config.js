@@ -1,14 +1,60 @@
 import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react-swc';
+import react from '@vitejs/plugin-react';
 import fs from 'fs/promises';
+import path from 'node:path';
+import { fileURLToPath } from 'url';
+import { globSync } from 'glob';
 import pkg from './package.json';
 
+/**
+* Vite configuration
+*/
 export default defineConfig({
-  plugins: [react(
-    {
-      jsxRuntime: 'automatic',
-    },
-  )],
+  ...(
+    process.env.NETLIFY ? {
+      build: {
+        rollupOptions: {
+          external: ['__tests__/*', '__mocks__/*'],
+          input: Object.fromEntries(
+            globSync('./demo/src/*.html').map((file) => [
+              // This remove `src/` as well as the file extension from each
+              // file, so e.g. src/nested/foo.js becomes nested/foo
+              path.relative(
+                'demo/src/',
+                file.slice(0, file.length - path.extname(file).length),
+              ),
+              // This expands the relative paths to absolute paths, so e.g.
+              // src/nested/foo becomes /project/src/nested/foo.js
+              fileURLToPath(new URL(file, import.meta.url)),
+            ]),
+          ),
+        },
+        sourcemap: true,
+      },
+    } : {
+      build: {
+        lib: {
+          entry: './src/index.js',
+          fileName: (format) => (format === 'umd' ? 'mirador-annotation-editor.js' : 'mirador-annotation-editor.es.js'),
+          formats: ['es', 'umd'],
+          name: 'MiradorAnnotationEditor',
+        },
+        rollupOptions: {
+          external: [...Object.keys(pkg.peerDependencies || {}), '__tests__/*', '__mocks__/*'],
+          output: {
+            assetFileNames: 'mirador-annotation-editor.[ext]',
+          },
+        },
+        sourcemap: true,
+      },
+    }
+  ),
+  esbuild: {
+    exclude: [],
+    // Matches .js and .jsx in __tests__ and .jsx in src
+    include: [/__tests__\/.*\.(js|jsx)$/, /src\/.*\.jsx?$/],
+    loader: 'jsx',
+  },
   optimizeDeps: {
     esbuildOptions: {
       plugins: [
@@ -16,7 +62,6 @@ export default defineConfig({
           name: 'load-js-files-as-jsx',
           // TODO: rename all our files to .jsx ...
 
-          // eslint-disable-next-line require-jsdoc
           setup(build) {
             build.onLoad({ filter: /(src|__tests__)\/.*\.js$/ }, async (args) => ({
               contents: await fs.readFile(args.path, 'utf8'),
@@ -27,25 +72,17 @@ export default defineConfig({
       ],
     },
     include: [
-      '@emotion/react', '@mui/material/', 'mirador',
+      '@emotion/react',
     ],
   },
-  server: {
-    open: './demo/src/index.html', // Öffnet den Browser automatisch
-    port: 3000, // Der Port, auf dem die Entwicklungsumgebung läuft
-  },
-  build: {
-    outDir: 'dist', // Der Ordner, in dem die Produktions-Build-Dateien gespeichert werden
-    sourcemap: true,
-    rollupOptions: {
-      external: [...Object.keys(pkg.peerDependencies || {}), '__tests__/*', '__mocks__/*'],
-      input: './demo/src/index.html',
+  plugins: [react()],
+  resolve: {
+    alias: {
+      '@tests/': fileURLToPath(new URL('./__tests__', import.meta.url)),
     },
   },
-  esbuild: {
-    exclude: [],
-    // Matches .js and .jsx in __tests__ and .jsx in src
-    include: [/__tests__\/.*\.(js|jsx)$/, /src\/.*\.jsx?$/],
-    loader: 'jsx',
+  server: {
+    open: '/demo/src/index.html',
+    port: '4444',
   },
 });
