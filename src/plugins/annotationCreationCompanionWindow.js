@@ -1,11 +1,13 @@
-import * as actions from 'mirador/dist/es/src/state/actions';
-import { getCompanionWindow } from 'mirador/dist/es/src/state/selectors/companionWindows';
-import { getVisibleCanvases } from 'mirador/dist/es/src/state/selectors/canvases';
+import * as actions from 'mirador';
 import {
+  getCompanionWindow,
+  getVisibleCanvases,
   getPresentAnnotationsOnSelectedCanvases,
-} from 'mirador/dist/es/src/state/selectors/annotations';
-import { OSDReferences } from 'mirador/dist/es/src/plugins/OSDReferences';
-import { withTranslation } from 'react-i18next';
+  OSDReferences,
+  removeCompanionWindow as removeCompanionWindowAction,
+  receiveAnnotation as receiveAnnotationAction,
+} from 'mirador';
+
 import annotationForm from '../annotationForm/AnnotationForm';
 import { WindowPlayer } from '../playerReferences';
 import translations from '../locales/locales';
@@ -16,10 +18,10 @@ const mapDispatchToProps = (dispatch, {
   windowId,
 }) => ({
   closeCompanionWindow: () => dispatch(
-    actions.removeCompanionWindow(windowId, id),
+    removeCompanionWindowAction(windowId, id),
   ),
   receiveAnnotation: (targetId, annoId, annotation) => dispatch(
-    actions.receiveAnnotation(targetId, annoId, annotation),
+    receiveAnnotationAction(targetId, annoId, annotation),
   ),
 });
 
@@ -67,12 +69,11 @@ function mapStateToProps(state, {
   };
 }
 
-// Enhance annotationForm with i18n support
-const AnnotationFormWithTranslation = withTranslation()(annotationForm);
-
-export default {
+const annotationCreationCompanionWindow = {
   companionWindowKey: 'annotationCreation',
-  component: AnnotationFormWithTranslation,
+  component: annotationForm,
   mapDispatchToProps,
   mapStateToProps,
 };
+
+export default annotationCreationCompanionWindow;

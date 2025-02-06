@@ -5,11 +5,7 @@ import PropTypes from 'prop-types';
  * A wrapper plugin that sets hasAnyAnnotations to true so that the annotation
  * companion window button is present
  */
-function WindowSideBarButtonWrapper({
-  PluginComponents,
-  TargetComponent,
-  targetProps,
-}) {
+function WindowSideBarButtonWrapper({ PluginComponents = [], TargetComponent, targetProps }) {
   // eslint-disable-next-line no-param-reassign
   targetProps.hasAnyAnnotations = true;
 
@@ -22,16 +18,12 @@ function WindowSideBarButtonWrapper({
 }
 
 WindowSideBarButtonWrapper.propTypes = {
-  PluginComponents: PropTypes.array, // eslint-disable-line react/forbid-prop-types
+  PluginComponents: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
   TargetComponent: PropTypes.oneOfType([
     PropTypes.func,
     PropTypes.node,
   ]).isRequired,
   targetProps: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
-};
-
-WindowSideBarButtonWrapper.defaultProps = {
-  PluginComponents: [],
 };
 
 const windowSideBarButtonsPlugin = {

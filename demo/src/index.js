@@ -1,4 +1,4 @@
-import mirador from 'mirador/dist/es/src/index';
+import Mirador from 'mirador';
 import annotationPlugins from '../../src';
 import LocalStorageAdapter from '../../src/annotationAdapter/LocalStorageAdapter';
 import { manifestsCatalog } from './manifestsCatalog';
@@ -55,4 +55,4 @@ const config = {
   windows: [],
 };
 
-mirador.viewer(config, [...annotationPlugins]);
+Mirador.viewer(config, [...annotationPlugins]);

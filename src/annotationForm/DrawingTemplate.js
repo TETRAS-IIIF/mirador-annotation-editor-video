@@ -275,5 +275,4 @@ DrawingTemplate.propTypes = {
   saveAnnotation: PropTypes.func.isRequired,
   t: PropTypes.func.isRequired,
   windowId: PropTypes.string.isRequired,
-
 };

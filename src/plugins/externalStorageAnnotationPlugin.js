@@ -1,17 +1,16 @@
 import React, { useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { getVisibleCanvases } from 'mirador/dist/es/src/state/selectors/canvases';
-import * as actions from 'mirador/dist/es/src/state/actions';
+import { getVisibleCanvases, receiveAnnotation as receiveAnnotationAction } from 'mirador';
 import LocalStorageAdapter from '../annotationAdapter/LocalStorageAdapter';
 import AnnototAdapter from '../annotationAdapter/AnnototAdapter';
 import { AnnotationAdapter } from '../annotationAdapter/AnnotationAdapterUtils';
 
 /** Functional component version of ExternalStorageAnnotation */
 function ExternalStorageAnnotation({
-  canvases,
+  canvases = [],
   config,
   receiveAnnotation,
-  PluginComponents,
+  PluginComponents = [],
   TargetComponent,
   targetProps,
 }) {
@@ -69,13 +68,13 @@ ExternalStorageAnnotation.propTypes = {
       id: PropTypes.string,
       index: PropTypes.number,
     }),
-  ),
+  ).isRequired,
   config: PropTypes.shape({
     annotation: PropTypes.shape({
       adapter: PropTypes.func,
     }),
   }).isRequired,
-  PluginComponents: PropTypes.array, // eslint-disable-line react/forbid-prop-types
+  PluginComponents: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
   receiveAnnotation: PropTypes.func.isRequired,
   TargetComponent: PropTypes.oneOfType([
     PropTypes.func,
@@ -84,14 +83,9 @@ ExternalStorageAnnotation.propTypes = {
   targetProps: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
 };
 
-ExternalStorageAnnotation.defaultProps = {
-  canvases: [],
-  PluginComponents: [],
-};
-
 /** */
 const mapDispatchToProps = {
-  receiveAnnotation: actions.receiveAnnotation,
+  receiveAnnotation: receiveAnnotationAction,
 };
 
 /** */
@@ -102,10 +96,12 @@ function mapStateToProps(state, { targetProps }) {
   };
 }
 
-export default {
+const externalStorageAnnotationPlugin = {
   component: ExternalStorageAnnotation,
   mapDispatchToProps,
   mapStateToProps,
   mode: 'wrap',
   target: 'Window',
 };
+
+export default externalStorageAnnotationPlugin;

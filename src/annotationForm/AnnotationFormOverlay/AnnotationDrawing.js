@@ -644,17 +644,10 @@ AnnotationDrawing.propTypes = {
   setColorToolFromCurrentShape: PropTypes.func.isRequired,
   setDrawingState: PropTypes.func.isRequired,
   tabView: PropTypes.string.isRequired,
-  toolState: PropTypes.oneOfType(
-    PropTypes.string,
-    PropTypes.string,
-    PropTypes.string,
-    PropTypes.oneOfType(
-      PropTypes.string,
-    ),
-    PropTypes.string,
+  toolState: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.number,
-  ).isRequired,
+  ]).isRequired,
   updateCurrentShapeInShapes: PropTypes.func.isRequired,
   updateScale: PropTypes.func.isRequired,
   windowId: PropTypes.string.isRequired,
