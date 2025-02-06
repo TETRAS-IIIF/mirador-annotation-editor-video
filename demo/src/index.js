@@ -52,7 +52,7 @@ const config = {
     defaultSideBarPanel: 'annotations',
     sideBarOpenByDefault: true,
   },
-  windows: [{}],
+  windows: [],
 };
 
 Mirador.viewer(config, [...annotationPlugins]);
