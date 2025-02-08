@@ -105,6 +105,7 @@ function TextCommentTemplate(
           closeFormCompanionWindow={closeFormCompanionWindow}
           saveAnnotation={saveFunction}
           t={t}
+          annotationState={annotationState}
         />
       </Grid>
     </Grid>

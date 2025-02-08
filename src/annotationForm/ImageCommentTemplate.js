@@ -241,6 +241,7 @@ export default function ImageCommentTemplate(
           closeFormCompanionWindow={closeFormCompanionWindow}
           saveAnnotation={saveFunction}
           t={t}
+          annotationState={annotationState}
         />
       </Grid>
     </Grid>

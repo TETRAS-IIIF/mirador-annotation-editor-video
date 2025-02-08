@@ -25,7 +25,7 @@ export default function DrawingTemplate(
   {
     annotation,
     closeFormCompanionWindow,
-playerReferences,
+    playerReferences,
     saveAnnotation,
     t,
     windowId,
@@ -250,6 +250,7 @@ playerReferences,
           closeFormCompanionWindow={closeFormCompanionWindow}
           saveAnnotation={saveFunction}
           t={t}
+          annotationState={annotationState}
         />
       </Grid>
     </Grid>

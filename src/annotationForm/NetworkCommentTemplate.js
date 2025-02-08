@@ -80,7 +80,7 @@ function NetworkCommentTemplate(
   };
 
   function getBaseAnnotation(id) {
-    if(!id) {
+    if (!id) {
       return null;
     }
     const match = id.match(
@@ -101,7 +101,7 @@ function NetworkCommentTemplate(
 
     console.log(annotationState.id);
     const baseAnnotation = getBaseAnnotation(annotationState.id);
-    console.log("base" , baseAnnotation);
+    console.log('base', baseAnnotation);
     if (baseAnnotation) {
       annotationState.id = `${getBaseAnnotation(annotationState.id)}#${annotation.maeData.manifestNetwork}`;
     }
@@ -140,6 +140,7 @@ function NetworkCommentTemplate(
           closeFormCompanionWindow={closeFormCompanionWindow}
           saveAnnotation={saveFunction}
           t={t}
+          annotationState={annotationState}
         />
       </Grid>
     </Grid>

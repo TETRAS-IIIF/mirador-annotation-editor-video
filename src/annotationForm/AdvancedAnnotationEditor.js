@@ -29,6 +29,7 @@ export function AdvancedAnnotationEditor({
           closeFormCompanionWindow={closeFormCompanionWindow}
           saveAnnotation={saveAnnotation}
           t={t}
+          annotationState={value}
         />
       </Grid>
     </Grid>

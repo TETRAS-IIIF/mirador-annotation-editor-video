@@ -22,7 +22,7 @@ export default function IIIFTemplate({
   saveAnnotation,
   closeFormCompanionWindow,
   canvases,
-t,
+  t,
 }) {
   let maeAnnotation = annotation;
   if (!annotation.id) {
@@ -76,6 +76,7 @@ t,
         closeFormCompanionWindow={closeFormCompanionWindow}
         saveAnnotation={saveFunction}
         t={t}
+        annotationState={annotationState}
       />
     </>
   );
