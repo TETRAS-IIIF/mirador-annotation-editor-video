@@ -1,4 +1,6 @@
-import React, { forwardRef, useContext, useMemo, useState } from 'react';
+import React, {
+  forwardRef, useContext, useMemo, useState,
+} from 'react';
 import PropTypes from 'prop-types';
 import DeleteIcon from '@mui/icons-material/DeleteForever';
 import EditIcon from '@mui/icons-material/Edit';
@@ -112,6 +114,9 @@ const CanvasListItem = forwardRef((props, ref) => {
 
   const { t } = context;
 
+  console.log('Props', props);
+  console.log('props.children', props.children);
+
   return (
     <div
       onMouseEnter={handleMouseHover}
@@ -131,8 +136,9 @@ const CanvasListItem = forwardRef((props, ref) => {
             aria-label="annotation tools"
             size="small"
             style={{
+              backgroundColor: 'white',
               position: 'absolute',
-              right: 0
+              right: 0,
             }}
             disabled={!context.annotationEditCompanionWindowIsOpened}
           >
@@ -141,14 +147,14 @@ const CanvasListItem = forwardRef((props, ref) => {
               onClick={context.windowViewType === 'single' ? handleEdit : context.toggleSingleCanvasDialogOpen}
               value="edit"
             >
-              <EditIcon/>
+              <EditIcon />
             </ToggleButton>
             <ToggleButton
               aria-label="Delete"
               onClick={handleDelete}
               value="delete"
             >
-              <DeleteIcon/>
+              <DeleteIcon />
             </ToggleButton>
           </ToggleButtonGroup>
         </div>

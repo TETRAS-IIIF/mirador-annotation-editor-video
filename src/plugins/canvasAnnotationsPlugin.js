@@ -3,13 +3,13 @@ import PropTypes from 'prop-types';
 import { getVisibleCanvases } from 'mirador/dist/es/src/state/selectors/canvases';
 import * as actions from 'mirador/dist/es/src/state/actions';
 import { getWindowViewType } from 'mirador/dist/es/src/state/selectors';
-import { getCompanionWindowsForContent } from 'mirador/dist/es/src/state/selectors/companionWindows';
+import {
+  getCompanionWindowsForContent,
+} from 'mirador/dist/es/src/state/selectors/companionWindows';
+import { useTranslation } from 'react-i18next';
 import CanvasListItem from '../CanvasListItem';
 import AnnotationActionsContext from '../AnnotationActionsContext';
 import SingleCanvasDialog from '../SingleCanvasDialog';
-import { withTranslation } from 'react-i18next';
-import { connect } from 'react-redux';
-import { compose } from 'redux';
 
 /** Functional Component */
 function CanvasAnnotationsWrapper({
@@ -37,6 +37,8 @@ function CanvasAnnotationsWrapper({
     listContainerComponent: CanvasListItem,
   };
 
+  const { t } = useTranslation();
+
   return (
     <AnnotationActionsContext.Provider
       value={{
@@ -63,7 +65,7 @@ function CanvasAnnotationsWrapper({
       )}
     </AnnotationActionsContext.Provider>
   );
-};
+}
 
 CanvasAnnotationsWrapper.propTypes = {
   addCompanionWindow: PropTypes.func.isRequired,
