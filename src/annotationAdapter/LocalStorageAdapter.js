@@ -10,6 +10,10 @@ export default class LocalStorageAdapter {
     }
   }
 
+  /**
+   * Get the storage adapter user
+   * @returns {*}
+   */
   getStorageAdapterUser() {
     return this.user;
   }
