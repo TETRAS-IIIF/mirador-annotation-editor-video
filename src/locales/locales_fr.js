@@ -6,6 +6,7 @@ export const fr = {
   add_an_arrow_shape: 'Ajouter une flèche',
   add_an_ellipse: 'Ajouter une ellipse',
   add_image_from_url: 'Ajouter une image à partir d\'une URL',
+  anonymous: 'Anonyme',
   arrow: 'Flèche',
   border_color: 'Couleur de bordure',
   cancel: 'Annuler',

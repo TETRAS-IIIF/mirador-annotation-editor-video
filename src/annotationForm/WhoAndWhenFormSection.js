@@ -23,19 +23,22 @@ function WhoAndWhenFormSection({
     return null;
   }
 
+  let creatorToDisplay = creator !== ANONYMOUS_USER ? creator : t('anonymous');
+  let lastEditorToDisplay = lastEditor !== ANONYMOUS_USER ? lastEditor : t('anonymous');
+
   return (
     <>
       <Typography>
         {t('createdByOn', {
           creationDate,
-          creator,
+          creator: creatorToDisplay,
         })}
       </Typography>
       {
         (lastSavedDate && lastEditor) && (
           <Typography>
             {t('lastEditedByOn', {
-              lastEditor,
+              lastEditor: lastEditorToDisplay,
               lastSavedDate,
             })}
           </Typography>

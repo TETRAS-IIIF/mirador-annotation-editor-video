@@ -6,7 +6,7 @@ export default class LocalStorageAdapter {
     if (user) {
       this.user = user;
     } else {
-      this.user = 'Anonymous';
+      this.user = ANONYMOUS_USER;
     }
   }
 
@@ -66,3 +66,5 @@ export default class LocalStorageAdapter {
     return JSON.parse(localStorage.getItem(this.annotationPageId));
   }
 }
+
+export const ANONYMOUS_USER = 'Anonymous';

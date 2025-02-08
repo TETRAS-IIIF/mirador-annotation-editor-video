@@ -6,6 +6,7 @@ export const en = {
   add_an_arrow_shape: 'Add an arrow shape',
   add_an_ellipse: 'Add an ellipse',
   add_image_from_url: 'Add image from URL',
+  anonymous: 'Anonymous',
   arrow: 'Arrow',
   border_color: 'Border color',
   cancel: 'Cancel',
@@ -75,5 +76,4 @@ export const en = {
   video_annotation_instruction: 'If you want to annotate video media, you must install MAEV to create and edit annotations on video:',
   your_tag_here: 'Your tag here:',
   zoom: 'Zoom',
-  anonymous: 'Anonymous',
 };
