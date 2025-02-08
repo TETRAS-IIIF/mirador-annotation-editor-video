@@ -110,6 +110,8 @@ const CanvasListItem = forwardRef((props, ref) => {
 
   console.log('AnnotationData:', annotationData);
 
+  const { t } = context;
+
   return (
     <div
       onMouseEnter={handleMouseHover}
@@ -148,14 +150,17 @@ const CanvasListItem = forwardRef((props, ref) => {
           </ToggleButtonGroup>
         </div>
       )}
-      {/* eslint-disable-next-line react/jsx-props-no-spreading */}
       {
-        annotationData?.creator ?? (
-          <div>
-            {annotationData?.creationDate}
-          </div>
+        annotationData?.creator && (
+          <>
+            {annotationData.creator}
+            {', '}
+            {annotationData.creationDate}
+          </>
         )
+
       }
+      {/* eslint-disable-next-line react/jsx-props-no-spreading */}
       <li {...props}>
         {props.children}
       </li>

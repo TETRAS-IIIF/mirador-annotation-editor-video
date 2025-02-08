@@ -12,10 +12,10 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 
 /** Functional Component */
-const CanvasAnnotationsWrapper = ({
+function CanvasAnnotationsWrapper({
   addCompanionWindow,
-  annotationsOnCanvases,
-  canvases,
+  annotationsOnCanvases = {},
+  canvases = [],
   config,
   receiveAnnotation,
   switchToSingleCanvasView,
@@ -24,9 +24,10 @@ const CanvasAnnotationsWrapper = ({
   windowViewType,
   containerRef,
   annotationEditCompanionWindowIsOpened,
-}) => {
+}) {
   const [singleCanvasDialogOpen, setSingleCanvasDialogOpen] = useState(false);
 
+  /** */
   const toggleSingleCanvasDialogOpen = () => {
     setSingleCanvasDialogOpen((prev) => !prev);
   };
@@ -57,6 +58,7 @@ const CanvasAnnotationsWrapper = ({
           handleClose={toggleSingleCanvasDialogOpen}
           open={singleCanvasDialogOpen}
           switchToSingleCanvasView={switchToSingleCanvasView}
+          t={t}
         />
       )}
     </AnnotationActionsContext.Provider>
@@ -64,10 +66,6 @@ const CanvasAnnotationsWrapper = ({
 };
 
 CanvasAnnotationsWrapper.propTypes = {
-  TargetComponent: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.node,
-  ]).isRequired,
   addCompanionWindow: PropTypes.func.isRequired,
   annotationEditCompanionWindowIsOpened: PropTypes.bool.isRequired,
   annotationsOnCanvases: PropTypes.shape({
@@ -92,13 +90,13 @@ CanvasAnnotationsWrapper.propTypes = {
       ),
       type: PropTypes.string,
     }),
-  }),
+  }).isRequired,
   canvases: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string,
-      index: PropTypes.number
+      index: PropTypes.number,
     }),
-  ),
+  ).isRequired,
   config: PropTypes.shape({
     annotation: PropTypes.shape({
       adapter: PropTypes.func,
@@ -110,22 +108,24 @@ CanvasAnnotationsWrapper.propTypes = {
   ]),
   receiveAnnotation: PropTypes.func.isRequired,
   switchToSingleCanvasView: PropTypes.func.isRequired,
+  t: PropTypes.func.isRequired,
+  TargetComponent: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.node,
+  ]).isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   targetProps: PropTypes.object.isRequired,
   windowViewType: PropTypes.string.isRequired,
-};
-
-CanvasAnnotationsWrapper.defaultProps = {
-  annotationsOnCanvases: {},
-  canvases: [],
-  containerRef: null,
 };
 
 /** TODO this logic is duplicated */
 function mapStateToProps(state, { targetProps: { windowId } }) {
   const canvases = getVisibleCanvases(state, { windowId });
   const annotationsOnCanvases = {};
-  const annotationCreationCompanionWindows = getCompanionWindowsForContent(state, { content: 'annotationCreation', windowId });
+  const annotationCreationCompanionWindows = getCompanionWindowsForContent(state, {
+    content: 'annotationCreation',
+    windowId,
+  });
   let annotationEditCompanionWindowIsOpened = true;
 
   if (Object.keys(annotationCreationCompanionWindows).length !== 0) {
@@ -160,10 +160,12 @@ const mapDispatchToProps = (dispatch, props, annotationEditCompanionWindowIsOpen
   ),
 });
 
-export default {
+const CanvasAnnotationsWrapperContainer = {
   component: CanvasAnnotationsWrapper,
   mapDispatchToProps,
   mapStateToProps,
   mode: 'wrap',
   target: 'CanvasAnnotations',
 };
+
+export default CanvasAnnotationsWrapperContainer;
