@@ -1,6 +1,4 @@
-import React, {
-  useState, useContext, forwardRef,
-} from 'react';
+import React, { forwardRef, useContext, useState } from 'react';
 import PropTypes from 'prop-types';
 import DeleteIcon from '@mui/icons-material/DeleteForever';
 import EditIcon from '@mui/icons-material/Edit';
@@ -13,6 +11,31 @@ import AnnotationActionsContext from './AnnotationActionsContext';
 const CanvasListItem = forwardRef((props, ref) => {
   const [isHovering, setIsHovering] = useState(false);
   const context = useContext(AnnotationActionsContext);
+
+  const annotationData = useMemo(() => {
+    const { annotationid } = props;
+    const {
+      canvases,
+      annotationsOnCanvases,
+    } = context;
+    let annotation;
+    canvases.some((canvas) => {
+      if (annotationsOnCanvases[canvas.id]) {
+        Object.entries(annotationsOnCanvases[canvas.id])
+          .forEach(([key, value]) => {
+            if (value.json && value.json.items) {
+              annotation = value.json.items.find((anno) => anno.id === annotationid);
+              if (annotation) {
+                return annotation;
+              }
+            }
+          });
+      }
+      return (annotation);
+    });
+    return annotation;
+  }, [props.annotationid]);
+
   /**
    * Function to handle mouse hover event.
    * @function handleMouseHover
@@ -28,13 +51,18 @@ const CanvasListItem = forwardRef((props, ref) => {
    * @returns {void}
    */
   const handleDelete = () => {
-    const { canvases, receiveAnnotation, storageAdapter } = context;
+    const {
+      canvases,
+      receiveAnnotation,
+      storageAdapter,
+    } = context;
     const { annotationid } = props;
     canvases.forEach((canvas) => {
       const adapter = storageAdapter(canvas.id);
-      adapter.delete(annotationid).then((annoPage) => {
-        receiveAnnotation(canvas.id, adapter.annotationPageId, annoPage);
-      });
+      adapter.delete(annotationid)
+        .then((annoPage) => {
+          receiveAnnotation(canvas.id, adapter.annotationPageId, annoPage);
+        });
     });
   };
   /**
@@ -44,20 +72,10 @@ const CanvasListItem = forwardRef((props, ref) => {
    */
   const handleEdit = () => {
     const {
-      addCompanionWindow, canvases, annotationsOnCanvases,
+      addCompanionWindow,
     } = context;
     const { annotationid } = props;
-    let annotation;
-    canvases.some((canvas) => {
-      if (annotationsOnCanvases[canvas.id]) {
-        Object.entries(annotationsOnCanvases[canvas.id]).forEach(([key, value]) => {
-          if (value.json && value.json.items) {
-            annotation = value.json.items.find((anno) => anno.id === annotationid);
-          }
-        });
-      }
-      return (annotation);
-    });
+
     addCompanionWindow('annotationCreation', {
       annotationid,
       position: 'right',
@@ -68,21 +86,29 @@ const CanvasListItem = forwardRef((props, ref) => {
    * @returns {boolean} Returns true if the annotation ID is editable, false otherwise.
    */
   const editable = () => {
-    const { annotationsOnCanvases, canvases } = context;
+    const {
+      annotationsOnCanvases,
+      canvases,
+    } = context;
     const { annotationid } = props;
     const annoIds = canvases.map((canvas) => {
       if (annotationsOnCanvases[canvas.id]) {
-        return flatten(Object.entries(annotationsOnCanvases[canvas.id]).map(([key, value]) => {
-          if (value.json && value.json.items) {
-            return value.json.items.map((item) => item.id);
-          }
-          return [];
-        }));
+        return flatten(Object.entries(annotationsOnCanvases[canvas.id])
+          .map(([key, value]) => {
+            if (value.json && value.json.items) {
+              return value.json.items.filter((item) => item.maeData)
+                .map((item) => item.id);
+            }
+            return [];
+          }));
       }
       return [];
     });
-    return flatten(annoIds).includes(annotationid);
+    return flatten(annoIds)
+      .includes(annotationid);
   };
+
+  console.log('AnnotationData:', annotationData);
 
   return (
     <div
@@ -123,6 +149,13 @@ const CanvasListItem = forwardRef((props, ref) => {
         </div>
       )}
       {/* eslint-disable-next-line react/jsx-props-no-spreading */}
+      {
+        annotationData?.creator ?? (
+          <div>
+            {annotationData?.creationDate}
+          </div>
+        )
+      }
       <li {...props}>
         {props.children}
       </li>
