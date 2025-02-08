@@ -1,4 +1,4 @@
-import React, { forwardRef, useContext, useState } from 'react';
+import React, { forwardRef, useContext, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import DeleteIcon from '@mui/icons-material/DeleteForever';
 import EditIcon from '@mui/icons-material/Edit';
@@ -130,7 +130,10 @@ const CanvasListItem = forwardRef((props, ref) => {
           <ToggleButtonGroup
             aria-label="annotation tools"
             size="small"
-            style={{ position: 'absolute', right: 0 }}
+            style={{
+              position: 'absolute',
+              right: 0
+            }}
             disabled={!context.annotationEditCompanionWindowIsOpened}
           >
             <ToggleButton
@@ -138,14 +141,14 @@ const CanvasListItem = forwardRef((props, ref) => {
               onClick={context.windowViewType === 'single' ? handleEdit : context.toggleSingleCanvasDialogOpen}
               value="edit"
             >
-              <EditIcon />
+              <EditIcon/>
             </ToggleButton>
             <ToggleButton
               aria-label="Delete"
               onClick={handleDelete}
               value="delete"
             >
-              <DeleteIcon />
+              <DeleteIcon/>
             </ToggleButton>
           </ToggleButtonGroup>
         </div>
