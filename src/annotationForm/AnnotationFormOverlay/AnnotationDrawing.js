@@ -469,9 +469,7 @@ export default function AnnotationDrawing(
 
           updateCurrentShapeInShapes({
             ...drawingState.currentShape,
-            height: pos.y - drawingState.currentShape.y,
             radius,
-            width: pos.x - drawingState.currentShape.x,
           });
           break;
         case SHAPES_TOOL.FREEHAND:
