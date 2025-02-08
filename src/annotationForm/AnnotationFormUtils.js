@@ -43,6 +43,7 @@ export const TEMPLATE_TYPES = (t) => [
       if (mediaType === MEDIA_TYPES.VIDEO) return true;
       if (mediaType === MEDIA_TYPES.IMAGE) return true;
       if (mediaType === MEDIA_TYPES.AUDIO) return false;
+      return false;
     },
     label: t('note'),
   },
@@ -54,6 +55,7 @@ export const TEMPLATE_TYPES = (t) => [
       if (mediaType === MEDIA_TYPES.VIDEO) return true;
       if (mediaType === MEDIA_TYPES.IMAGE) return true;
       if (mediaType === MEDIA_TYPES.AUDIO) return true;
+      return false;
     },
     label: t('tag'),
   },
@@ -66,6 +68,7 @@ export const TEMPLATE_TYPES = (t) => [
       // Mirador doesn't support annotation from an image
       if (mediaType === MEDIA_TYPES.IMAGE) return false;
       if (mediaType === MEDIA_TYPES.AUDIO) return false;
+      return false;
     },
     label: t('image'),
   },
@@ -78,6 +81,7 @@ export const TEMPLATE_TYPES = (t) => [
       // Mirador doesn't support annotation from an image
       if (mediaType === MEDIA_TYPES.IMAGE) return false;
       if (mediaType === MEDIA_TYPES.AUDIO) return false;
+      return false;
     },
     label: t('overlay'),
   },
@@ -90,6 +94,7 @@ export const TEMPLATE_TYPES = (t) => [
       // Mirador doesn't support annotation from an image
       if (mediaType === MEDIA_TYPES.IMAGE) return false;
       if (mediaType === MEDIA_TYPES.AUDIO) return false;
+      return false;
     },
     label: t('manifest_link'),
   },
@@ -101,6 +106,7 @@ export const TEMPLATE_TYPES = (t) => [
       if (mediaType === MEDIA_TYPES.VIDEO) return true;
       if (mediaType === MEDIA_TYPES.IMAGE) return true;
       if (mediaType === MEDIA_TYPES.AUDIO) return true;
+      return false;
     },
     label: t('expert_mode'),
   },
@@ -115,6 +121,12 @@ export const defaultToolState = {
   strokeWidth: 2,
 };
 
+/**
+ * Specific Tool state for the target SVG
+ * @param imageZoom
+ * @returns {{activeTool: string, closedMode: string, image: {id: null}, imageEvent: null,
+ * strokeColor: string, strokeWidth: number}}
+ */
 export function getTargetSVGToolState(imageZoom) {
   return {
     activeTool: OVERLAY_TOOL.EDIT,
@@ -174,14 +186,22 @@ export async function saveAnnotationInStorageAdapter(
 ) {
   console.log('Annotation to save', annotation);
   if (annotation.id) {
+    // eslint-disable-next-line no-param-reassign
+    annotation.lastSavedDate = new Date();
+    // eslint-disable-next-line no-param-reassign
+    annotation.lastEditor = storageAdapter.getStorageAdapterUser();
     storageAdapter.update(annotation)
       .then((annoPage) => {
         receiveAnnotation(canvasId, storageAdapter.annotationPageId, annoPage);
       });
   } else {
     // eslint-disable-next-line no-param-reassign
-    annotation.id = canvasId + "/annotation/" + uuidv4();
-    if(annotation?.maeData?.manifestNetwork){
+    annotation.id = `${canvasId}/annotation/${uuidv4()}`;
+    // eslint-disable-next-line no-param-reassign
+    annotation.creationDate = new Date();
+    // eslint-disable-next-line no-param-reassign
+    annotation.creator = storageAdapter.getStorageAdapterUser();
+    if (annotation?.maeData?.manifestNetwork) {
       // Ugly tricks to solve manifest template annotation issue on creation
       // For more see NetworkCommentTemplate:saveFunction
       annotation.id = annotation.id + "#" + annotation.maeData.manifestNetwork;

@@ -1,8 +1,17 @@
 /** */
 export default class LocalStorageAdapter {
   /** */
-  constructor(annotationPageId) {
+  constructor(annotationPageId, user) {
     this.annotationPageId = annotationPageId;
+    if (user) {
+      this.user = user;
+    } else {
+      this.user = 'Anonymous';
+    }
+  }
+
+  getStorageAdapterUser() {
+    return this.user;
   }
 
   /** */
@@ -13,6 +22,7 @@ export default class LocalStorageAdapter {
       type: 'AnnotationPage',
     };
     const annotationPage = await this.all() || emptyAnnoPage;
+
     annotationPage.items.push(annotation);
     localStorage.setItem(this.annotationPageId, JSON.stringify(annotationPage));
     console.log('CREATE ANNOTATION', annotationPage);
