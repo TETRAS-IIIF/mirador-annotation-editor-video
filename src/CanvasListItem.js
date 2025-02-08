@@ -110,12 +110,7 @@ const CanvasListItem = forwardRef((props, ref) => {
       .includes(annotationid);
   };
 
-  console.log('AnnotationData:', annotationData);
-
   const { t } = context;
-
-  console.log('Props', props);
-  console.log('props.children', props.children);
 
   return (
     <div

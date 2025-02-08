@@ -10,10 +10,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import Typography from '@mui/material/Typography';
 import AnnotationFormOverlayToolOptions from './AnnotationFormOverlayToolOptions';
 import {
-  isShapesTool,
-  OVERLAY_TOOL,
-  SHAPES_TOOL,
-  KONVA_MODE,
+  isShapesTool, KONVA_MODE, OVERLAY_TOOL, SHAPES_TOOL,
 } from './KonvaDrawing/KonvaUtils';
 import ShapesList from './ShapesList';
 import { StyledToggleButtonGroup } from '../AnnotationFormUtils';
@@ -121,11 +118,15 @@ function AnnotationFormOverlayTool({
                   <RectangleIcon />
                 </ToggleButton>
               </Tooltip>
-              <Tooltip title={t('circle')}>
-                <ToggleButton value={SHAPES_TOOL.CIRCLE} aria-label={t('add_a_circle')}>
-                  <CircleIcon />
-                </ToggleButton>
-              </Tooltip>
+              {
+                (displayMode === KONVA_MODE.TARGET) && (
+                  <Tooltip title={t('circle')}>
+                    <ToggleButton value={SHAPES_TOOL.CIRCLE} aria-label={t('add_a_circle')}>
+                      <CircleIcon />
+                    </ToggleButton>
+                  </Tooltip>
+                )
+              }
               <div>
                 <Tooltip title={t('line')}>
                   <ToggleButton

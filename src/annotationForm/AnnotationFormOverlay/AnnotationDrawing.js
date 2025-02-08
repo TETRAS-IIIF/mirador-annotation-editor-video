@@ -1,6 +1,4 @@
-import React, {
-  useEffect, useState, useLayoutEffect,
-} from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { Stage } from 'react-konva';
@@ -238,7 +236,8 @@ export default function AnnotationDrawing(
   /** */
   const handleMouseDown = (e) => {
     try {
-      const pos = e.target.getStage().getRelativePointerPosition();
+      const pos = e.target.getStage()
+        .getRelativePointerPosition();
       pos.x /= scale;
       pos.y /= scale;
       let shape = null;
@@ -291,7 +290,7 @@ export default function AnnotationDrawing(
             fill: toolState.fillColor,
             height: 1,
             id: uuidv4(),
-            radius: 30,
+            radius: 1,
             rotation: 0,
             scaleX: 1,
             scaleY: 1,
@@ -412,7 +411,6 @@ export default function AnnotationDrawing(
     } catch (error) {
       console.error('error', error);
     }
-    console.log("debug toolState.strokeWidth", toolState.strokeWidth);
   };
 
   /** */
@@ -424,7 +422,8 @@ export default function AnnotationDrawing(
       if (!drawingState.currentShape) {
         return;
       }
-      const pos = e.target.getStage().getRelativePointerPosition();
+      const pos = e.target.getStage()
+        .getRelativePointerPosition();
       pos.x /= scale;
       pos.y /= scale;
 
@@ -462,13 +461,16 @@ export default function AnnotationDrawing(
             pos.y = drawingState.currentShape.y;
           }
 
+          const radius = Math.sqrt(
+            (pos.x - drawingState.currentShape.x) ** 2
+            + (pos.y - drawingState.currentShape.y) ** 2,
+          );
+          console.log('debug radius', radius);
+
           updateCurrentShapeInShapes({
             ...drawingState.currentShape,
             height: pos.y - drawingState.currentShape.y,
-            radius: Math.sqrt(
-              (pos.x - drawingState.currentShape.x) ** 2
-              + (pos.y - drawingState.currentShape.y) ** 2,
-            ),
+            radius,
             width: pos.x - drawingState.currentShape.x,
           });
           break;
