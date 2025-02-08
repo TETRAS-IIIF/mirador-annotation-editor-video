@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import Typography from '@mui/material/Typography';
 import React from 'react';
+import { ANONYMOUS_USER } from '../annotationAdapter/LocalStorageAdapter';
 
 /**
  *
@@ -23,8 +24,8 @@ function WhoAndWhenFormSection({
     return null;
   }
 
-  let creatorToDisplay = creator !== ANONYMOUS_USER ? creator : t('anonymous');
-  let lastEditorToDisplay = lastEditor !== ANONYMOUS_USER ? lastEditor : t('anonymous');
+  const creatorToDisplay = creator !== ANONYMOUS_USER ? creator : t('anonymous');
+  const lastEditorToDisplay = lastEditor !== ANONYMOUS_USER ? lastEditor : t('anonymous');
 
   return (
     <>
