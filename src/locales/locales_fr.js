@@ -14,6 +14,7 @@ export const fr = {
   click_to_delete_shape: 'Cliquer sur une forme pour la supprimer',
   container_size: 'Taille du conteneur',
   create_annotation: 'Créer une annotation',
+  createdByOn: 'Créé par {{creator}}, {{creationDate}}',
   delete: 'Supprimer',
   delete_all: 'Tout supprimer',
   detected_media_type: 'Nous détectons un média de type {{mediaType}}.',
@@ -35,6 +36,7 @@ export const fr = {
   image_in_overlay_with_note: 'Image en superposition avec une note',
   image_true_size: 'Taille réelle de l\'image',
   invalid_url: 'URL invalide',
+  lastEditedByOn: 'Dernière modification par {{lastEditor}}, {{lastSavedDate}}',
   line: 'Ligne',
   line_weight: 'Épaisseur de ligne',
   loading_failed: 'Échec du chargement',
@@ -73,6 +75,4 @@ export const fr = {
   video_annotation_instruction: 'Si vous souhaitez annoter des vidéos, vous devez installer le plugin Mirador Annotation Editor Video (MAEV) pour créer et modifier des annotations sur les vidéos :',
   your_tag_here: 'Votre étiquette',
   zoom: 'Zoom',
-  createdByOn: 'Créé par {{creator}}, {{creationDate}}',
-  lastEditedByOn: 'Dernière modification par {{lastEditor}}, {{lastSavedDate}}',
 };

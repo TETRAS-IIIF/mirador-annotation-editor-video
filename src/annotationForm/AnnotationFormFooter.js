@@ -18,16 +18,22 @@ function AnnotationFormFooter({
 
   return (
     <>
-      <Divider sx={{ m: 1 }} />
-      <Grid container>
-        <WhoAndWhenFormSection
-          lastSavedDate={annotationState.lastSavedDate}
-          lastEditor={annotationState.lastEditor}
-          creator={annotationState.creator}
-          creationDate={annotationState.creationDate}
-          t={t}
-        />
-      </Grid>
+      {
+        (annotationState.creator && annotationState.creationDate) && (
+          <>
+            <Divider sx={{ m: 1 }} />
+            <Grid container>
+              <WhoAndWhenFormSection
+                lastSavedDate={annotationState.lastSavedDate}
+                lastEditor={annotationState.lastEditor}
+                creator={annotationState.creator}
+                creationDate={annotationState.creationDate}
+                t={t}
+              />
+            </Grid>
+          </>
+        )
+      }
       <Divider sx={{ m: 1 }} />
       <Grid sx={{ mt: 1 }} container item spacing={1} justifyContent="flex-end">
         <Tooltip title={t('cancel')}>

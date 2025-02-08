@@ -14,6 +14,7 @@ export const en = {
   click_to_delete_shape: 'Click on shape to delete it',
   container_size: 'Container Size',
   create_annotation: 'Create annotation',
+  createdByOn: 'Created by {{creator}}, {{creationDate}}',
   delete: 'Delete',
   delete_all: 'Delete all',
   detected_media_type: 'We detect {{mediaType}} media type.',
@@ -35,6 +36,7 @@ export const en = {
   image_in_overlay_with_note: 'Image in overlay with a note',
   image_true_size: 'Image True Size',
   invalid_url: 'Invalid URL',
+  lastEditedByOn: 'Last edit by {{lastEditor}}, {{lastSavedDate}}',
   line: 'Line',
   line_weight: 'Line weight',
   loading_failed: 'Loading failed',
@@ -73,4 +75,5 @@ export const en = {
   video_annotation_instruction: 'If you want to annotate video media, you must install MAEV to create and edit annotations on video:',
   your_tag_here: 'Your tag here:',
   zoom: 'Zoom',
+  anonymous: 'Anonymous',
 };

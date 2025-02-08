@@ -5,7 +5,7 @@ import { manifestsCatalog } from './manifestsCatalog';
 
 const config = {
   annotation: {
-    adapter: (canvasId) => new LocalStorageAdapter(`localStorage://?canvasId=${canvasId}`),
+    adapter: (canvasId) => new LocalStorageAdapter(`localStorage://?canvasId=${canvasId}`, 'Anonymous'),
     exportLocalStorageAnnotations: false, // display annotation JSON export button
   },
   catalog: manifestsCatalog,
