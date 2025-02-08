@@ -171,6 +171,17 @@ export const isValidUrl = (string) => {
 };
 
 /**
+ * Get the current date in locale string format
+ * @returns {string}
+ */
+function getCurrentDateLocaleString() {
+  return new Date().toLocaleString([navigator.language], {
+    dateStyle: 'short',
+    timeStyle: 'short',
+  });
+}
+
+/**
  * Save the annotation in the storage adapter
  * @param canvasId
  * @param storageAdapter
@@ -187,7 +198,7 @@ export async function saveAnnotationInStorageAdapter(
   console.log('Annotation to save', annotation);
   if (annotation.id) {
     // eslint-disable-next-line no-param-reassign
-    annotation.lastSavedDate = new Date();
+    annotation.lastSavedDate = getCurrentDateLocaleString();
     // eslint-disable-next-line no-param-reassign
     annotation.lastEditor = storageAdapter.getStorageAdapterUser();
     storageAdapter.update(annotation)
@@ -198,7 +209,7 @@ export async function saveAnnotationInStorageAdapter(
     // eslint-disable-next-line no-param-reassign
     annotation.id = `${canvasId}/annotation/${uuidv4()}`;
     // eslint-disable-next-line no-param-reassign
-    annotation.creationDate = new Date();
+    annotation.creationDate = getCurrentDateLocaleString();
     // eslint-disable-next-line no-param-reassign
     annotation.creator = storageAdapter.getStorageAdapterUser();
     if (annotation?.maeData?.manifestNetwork) {

@@ -73,4 +73,6 @@ export const fr = {
   video_annotation_instruction: 'Si vous souhaitez annoter des vidéos, vous devez installer le plugin Mirador Annotation Editor Video (MAEV) pour créer et modifier des annotations sur les vidéos :',
   your_tag_here: 'Votre étiquette',
   zoom: 'Zoom',
+  createdByOn: 'Créé par {{creator}}, {{creationDate}}',
+  lastEditedByOn: 'Dernière modification par {{lastEditor}}, {{lastSavedDate}}',
 };

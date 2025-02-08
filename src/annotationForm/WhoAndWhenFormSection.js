@@ -30,18 +30,17 @@ function WhoAndWhenFormSection({
           creationDate,
           creator,
         })}
-        )
       </Typography>
-      ( lastSavedDate && lastEditor && (
-      <Typography>
-        {t('lastEditedByOn', {
-          lastEditor,
-          lastSavedDate,
-        })}
+      {
+        (lastSavedDate && lastEditor) && (
+          <Typography>
+            {t('lastEditedByOn', {
+              lastEditor,
+              lastSavedDate,
+            })}
+          </Typography>
         )
-      </Typography>
-      )
-      ))
+      }
     </>
   );
 }

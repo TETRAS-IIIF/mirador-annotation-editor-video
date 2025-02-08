@@ -6,7 +6,6 @@ import AnnotationFormFooter from './AnnotationFormFooter';
 import { TEMPLATE } from './AnnotationFormUtils';
 import TargetFormSection from './TargetFormSection';
 import { resizeKonvaStage } from './AnnotationFormOverlay/KonvaDrawing/KonvaUtils';
-import WhoAndWhenFormSection from './WhoAndWhenFormSection.js';
 
 /** Tagging Template* */
 export default function TaggingTemplate(
@@ -92,15 +91,6 @@ export default function TaggingTemplate(
         />
       </Grid>
       <Grid item>
-        <WhoAndWhenFormSection
-          lastSavedDate={annotationState.lastSavedDate}
-          lastEditor={annotationState.lastEditor}
-          creator={annotationState.creator}
-          creationDate={annotationState.creationDate}
-          t={t}
-        />
-      </Grid>
-      <Grid item>
         <TargetFormSection
           onChangeTarget={updateTargetState}
           playerReferences={playerReferences}
@@ -116,6 +106,7 @@ export default function TaggingTemplate(
           closeFormCompanionWindow={closeFormCompanionWindow}
           saveAnnotation={saveFunction}
           t={t}
+          annotationState={annotationState}
         />
       </Grid>
     </Grid>
