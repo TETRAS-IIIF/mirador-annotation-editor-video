@@ -63,7 +63,7 @@ export const en = {
   shapes: 'Shapes',
   style: 'Style',
   style_selection: 'Style selection',
-  svg_selection: 'SVG selection',
+  spatialTarget: 'Shapes',
   switch_view: 'Switch to single view',
   switch_view_h2: 'Switch view type to single view?',
   tag: 'Tag',

@@ -63,7 +63,7 @@ export const fr = {
   shapes: 'Formes',
   style: 'Style',
   style_selection: 'Sélection du style',
-  svg_selection: 'Sélection SVG',
+  spatialTarget: 'Formes',
   switch_view: 'Passer à la vue simple',
   switch_view_h2: 'Changer le type de vue en vue simple?',
   tag: 'Étiquette',
