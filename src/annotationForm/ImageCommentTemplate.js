@@ -4,9 +4,7 @@ import { Grid } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import TextFormSection from './TextFormSection';
 import TargetFormSection from './TargetFormSection';
-import {
-  TARGET_VIEW, TEMPLATE, defaultToolState,
-} from './AnnotationFormUtils';
+import { DEFAULT_TOOL_STATE, TARGET_VIEW, TEMPLATE } from './AnnotationFormUtils';
 import { KONVA_MODE, resizeKonvaStage } from './AnnotationFormOverlay/KonvaDrawing/KonvaUtils';
 import AnnotationDrawing from './AnnotationFormOverlay/AnnotationDrawing';
 import AnnotationFormOverlay from './AnnotationFormOverlay/AnnotationFormOverlay';
@@ -84,7 +82,7 @@ export default function ImageCommentTemplate(
   /** ****************************************
    * Drawing stuff
    ***************************************** */
-  const [toolState, setToolState] = useState(defaultToolState);
+  const [toolState, setToolState] = useState(DEFAULT_TOOL_STATE);
 
   /** Initialize drawingState * */
   const initDrawingState = () => {

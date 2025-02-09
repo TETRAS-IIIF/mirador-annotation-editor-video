@@ -10,7 +10,7 @@ import CategoryIcon from '@mui/icons-material/Category';
 import CursorIcon from '../../icons/Cursor';
 import AnnotationFormOverlayTool from './AnnotationFormOverlayTool';
 import {
-  defaultToolState,
+  DEFAULT_TOOL_STATE,
   OVERLAY_VIEW,
   StyledToggleButtonGroup,
   TARGET_VIEW,
@@ -48,7 +48,7 @@ function AnnotationFormOverlay(
     if (!displayMode) {
       if (tool === OVERLAY_TOOL.SHAPE) {
         setToolState({
-          ...defaultToolState,
+          ...DEFAULT_TOOL_STATE,
           activeTool: tool,
         });
       }

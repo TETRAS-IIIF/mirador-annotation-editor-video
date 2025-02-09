@@ -111,8 +111,8 @@ export const TEMPLATE_TYPES = (t) => [
     label: t('expert_mode'),
   },
 ];
-export const defaultToolState = {
-  activeTool: OVERLAY_TOOL.EDIT,
+export const DEFAULT_TOOL_STATE = {
+  activeTool: OVERLAY_TOOL.SHAPE,
   closedMode: 'closed',
   fillColor: 'rgba(83,162, 235, 0.5)',
   image: { id: '' },
@@ -129,7 +129,7 @@ export const defaultToolState = {
  */
 export function getTargetSVGToolState(imageZoom) {
   return {
-    activeTool: OVERLAY_TOOL.EDIT,
+    activeTool: OVERLAY_TOOL.SHAPE,
     closedMode: 'closed',
     image: { id: null },
     imageEvent: null,
