@@ -15,7 +15,7 @@ import {
   StyledToggleButtonGroup,
   TARGET_VIEW,
 } from '../AnnotationFormUtils';
-import { KONVA_MODE, OVERLAY_TOOL } from './KonvaDrawing/KonvaUtils';
+import { isShapesTool, KONVA_MODE, OVERLAY_TOOL } from './KonvaDrawing/KonvaUtils';
 
 const OverlayIconAndTitleContainer = styled(Grid)(({ theme }) => ({
   display: 'flex',
@@ -83,7 +83,7 @@ function AnnotationFormOverlay(
           {displayMode !== KONVA_MODE.IMAGE && (
             <Tooltip title={t('shape_selection')}>
               <ToggleButton
-                value={OVERLAY_TOOL.SHAPE}
+                value={isShapesTool(activeTool) ? activeTool : OVERLAY_TOOL.SHAPE}
                 aria-label={t('select_cursor')}
                 onClick={tabHandler(OVERLAY_VIEW)}
               >
