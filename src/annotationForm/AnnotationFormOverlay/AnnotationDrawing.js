@@ -39,7 +39,7 @@ export default function AnnotationDrawing(
         rotation: 0,
         scaleX: 1,
         scaleY: 1,
-        type: SHAPES_TOOL.IMAGE,
+        type: OVERLAY_TOOL.IMAGE,
         url: toolState.imageEvent.id,
         x: 30,
         y: 30,

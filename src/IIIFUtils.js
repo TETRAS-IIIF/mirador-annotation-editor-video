@@ -34,7 +34,7 @@ export const convertAnnotationStateToBeSaved = async (
   canvas,
   windowId,
   // eslint-disable-next-line no-shadow
-  playerReferences
+  playerReferences,
 ) => {
   const annotationStateForSaving = annotationState;
 
@@ -82,6 +82,7 @@ export const convertAnnotationStateToBeSaved = async (
   annotationStateForSaving.target = maeTargetToIiifTarget(
     annotationStateForSaving.maeData.target,
     canvas.id,
+    playerReferences.getScale(),
   );
   // eslint-disable-next-line no-param-reassign
   annotationStateForSaving.maeData.target.drawingState = JSON.stringify(
@@ -92,7 +93,7 @@ export const convertAnnotationStateToBeSaved = async (
 };
 
 /** Transform maetarget to IIIF compatible data * */
-export const maeTargetToIiifTarget = (maeTarget, canvasId) => {
+export const maeTargetToIiifTarget = (maeTarget, canvasId, playerScale) => {
   // In case of IIIF target, the user know what he is doing
   if (maeTarget.templateType === TEMPLATE.IIIF_TYPE) {
     return maeTarget;
@@ -113,6 +114,9 @@ export const maeTargetToIiifTarget = (maeTarget, canvasId) => {
       console.info('Implement target as string with one shape (reactangle or image)');
       // Image have not tstart and tend
       // We use scaleX and scaleY to have the real size of the shape, if it has been resized
+      if (maeTarget.drawingState.shapes[0].type === 'image') {
+        return `${canvasId}#${maeTarget.tend ? `xywh=${x},${y},${width * scaleX / playerScale},${height * scaleY / playerScale}&t=${maeTarget.tstart},${maeTarget.tend}` : `xywh=${x},${y},${width * scaleX / playerScale},${height * scaleY / playerScale}`}`;
+      }
       return `${canvasId}#${maeTarget.tend ? `xywh=${x},${y},${width * scaleX},${height * scaleY}&t=${maeTarget.tstart},${maeTarget.tend}` : `xywh=${x},${y},${width * scaleX},${height * scaleY}`}`;
     }
     // On the other case, the target is a SVG
