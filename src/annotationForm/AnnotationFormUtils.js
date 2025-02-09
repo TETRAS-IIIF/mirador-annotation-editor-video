@@ -121,6 +121,16 @@ export const DEFAULT_TOOL_STATE = {
   strokeWidth: 2,
 };
 
+export const IMAGE_TOOL_STATE = {
+  activeTool: OVERLAY_TOOL.IMAGE,
+  closedMode: 'closed',
+  fillColor: 'rgba(83,162, 235, 0.5)',
+  image: { id: '' },
+  imageEvent: null,
+  strokeColor: 'rgba(20,82,168,1)',
+  strokeWidth: 2,
+};
+
 /**
  * Specific Tool state for the target SVG
  * @param imageZoom
