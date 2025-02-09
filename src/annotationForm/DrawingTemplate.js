@@ -240,10 +240,10 @@ export default function DrawingTemplate(
       />
       <Grid item>
         <AnnotationFormFooter
+          annotationState={annotationState}
           closeFormCompanionWindow={closeFormCompanionWindow}
           saveAnnotation={saveFunction}
           t={t}
-          annotationState={annotationState}
         />
       </Grid>
     </Grid>

@@ -7,14 +7,14 @@ import WhoAndWhenFormSection from './WhoAndWhenFormSection.js';
 
 /** Annotation form footer, save or cancel the edition/creation of an annotation */
 function AnnotationFormFooter({
+  annotationState,
   closeFormCompanionWindow,
   saveAnnotation,
   t,
-  annotationState,
 }) {
   /**
-     * Validate form and save annotation
-     */
+   * Validate form and save annotation
+   */
 
   return (
     <>
@@ -55,11 +55,13 @@ function AnnotationFormFooter({
     </>
   );
 }
+
 AnnotationFormFooter.propTypes = {
+  // eslint-disable-next-line react/forbid-prop-types
+  annotationState: PropTypes.object.isRequired,
   closeFormCompanionWindow: PropTypes.func.isRequired,
   saveAnnotation: PropTypes.func.isRequired,
   t: PropTypes.func.isRequired,
-  windowId: PropTypes.string.isRequired,
 };
 
 export default AnnotationFormFooter;

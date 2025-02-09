@@ -630,14 +630,6 @@ AnnotationDrawing.propTypes = {
     ),
   ]).isRequired,
   isMouseOverSave: PropTypes.bool.isRequired,
-  overlay: PropTypes.shape({
-    canvasHeight: PropTypes.number,
-    canvasWidth: PropTypes.number,
-    containerHeight: PropTypes.number,
-    containerWidth: PropTypes.number,
-    height: PropTypes.number,
-    width: PropTypes.number,
-  }).isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   playerReferences: PropTypes.object.isRequired,
   scale: PropTypes.number.isRequired,
