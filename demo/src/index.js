@@ -16,6 +16,7 @@ const config = {
     dark: {
       typography: {
         formSectionTitle: {
+          color: '#5A8264',
           fontSize: '1rem',
           fontWeight: 600,
           letterSpacing: '0.1em',
@@ -38,6 +39,7 @@ const config = {
       },
       typography: {
         formSectionTitle: {
+          color: '#5A8264',
           fontSize: '1.215rem',
         },
         subFormSectionTitle: {
