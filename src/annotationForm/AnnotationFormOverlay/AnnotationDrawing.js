@@ -11,7 +11,6 @@ export default function AnnotationDrawing(
   {
     displayMode,
     drawingState,
-    isMouseOverSave,
     playerReferences,
     scale,
     setColorToolFromCurrentShape,
@@ -547,7 +546,6 @@ export default function AnnotationDrawing(
         displayMode={displayMode}
         handleDragEnd={handleDragEnd}
         handleDragStart={handleDragStart}
-        isMouseOverSave={isMouseOverSave}
         onShapeClick={onShapeClick}
         onTransform={onTransform}
         scale={scale}
@@ -629,7 +627,6 @@ AnnotationDrawing.propTypes = {
       }),
     ),
   ]).isRequired,
-  isMouseOverSave: PropTypes.bool.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   playerReferences: PropTypes.object.isRequired,
   scale: PropTypes.number.isRequired,

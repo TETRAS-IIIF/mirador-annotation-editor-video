@@ -112,7 +112,6 @@ export default function DrawingTemplate(
   const [drawingState, setDrawingState] = useState(initDrawingState());
 
   const [scale, setScale] = useState(playerReferences.getZoom());
-  const [isMouseOverSave, setIsMouseOverSave] = useState(false);
   const [viewTool, setViewTool] = useState(TARGET_VIEW);
 
   useEffect(() => {
@@ -197,7 +196,6 @@ export default function DrawingTemplate(
         <AnnotationDrawing
           displayMode={KONVA_MODE.DRAW}
           drawingState={drawingState}
-          isMouseOverSave={isMouseOverSave}
           playerReferences={playerReferences}
           scale={scale}
           setColorToolFromCurrentShape={setColorToolFromCurrentShape}
@@ -236,6 +234,7 @@ export default function DrawingTemplate(
         t={t}
         target={annotationState.maeData.target}
         timeTarget
+        spatialTarget={false}
         windowId={windowId}
       />
       <Grid item>

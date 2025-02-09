@@ -103,7 +103,6 @@ export default function ImageCommentTemplate(
   const [drawingState, setDrawingState] = useState(initDrawingState());
 
   const [scale, setScale] = useState(playerReferences.getZoom());
-  const [isMouseOverSave, setIsMouseOverSave] = useState(false);
   const [viewTool, setViewTool] = useState(TARGET_VIEW);
 
   useEffect(() => {
@@ -191,7 +190,6 @@ export default function ImageCommentTemplate(
           closed={toolState.closedMode === 'closed'}
           displayMode={KONVA_MODE.IMAGE}
           drawingState={drawingState}
-          isMouseOverSave={isMouseOverSave}
           playerReferences={playerReferences}
           scale={scale}
           setColorToolFromCurrentShape={setColorToolFromCurrentShape}

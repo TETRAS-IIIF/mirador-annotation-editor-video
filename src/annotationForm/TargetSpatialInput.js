@@ -95,7 +95,6 @@ export function TargetSpatialInput({
             <AnnotationDrawing
               displayMode={KONVA_MODE.TARGET}
               drawingState={drawingState}
-              isMouseOverSave={false} // TODO remove
               playerReferences={playerReferences}
               scale={scale}
               setColorToolFromCurrentShape={() => {

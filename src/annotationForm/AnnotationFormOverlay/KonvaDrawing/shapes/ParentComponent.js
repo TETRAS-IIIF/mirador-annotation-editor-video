@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Layer } from 'react-konva';
 import Rectangle from './Rectangle';
@@ -17,7 +17,6 @@ function ParentComponent({
   displayMode,
   handleDragEnd,
   handleDragStart,
-  isMouseOverSave,
   onShapeClick,
   onTransform,
   scale,
@@ -35,9 +34,9 @@ function ParentComponent({
   }, [selectedShape]);
 
   /**
-    * Triggered onShapeClick provided function when a shape is clicked
-    * @param {object} shape
-    */
+   * Triggered onShapeClick provided function when a shape is clicked
+   * @param {object} shape
+   */
   const handleShapeClick = (shape) => {
     onShapeClick(shape);
     setSelectedShape(shape);
@@ -51,7 +50,7 @@ function ParentComponent({
       {/* eslint-disable-next-line consistent-return */}
       {shapes.map((shape, i) => {
         // eslint-disable-next-line max-len
-        const isSelected = selectedShapeId === shape.id && !isMouseOverSave && trview;
+        const isSelected = selectedShapeId === shape.id && trview;
         switch (shape.type) {
           case SHAPES_TOOL.RECTANGLE:
             return (
@@ -189,7 +188,6 @@ ParentComponent.propTypes = {
   displayMode: PropTypes.string.isRequired,
   handleDragEnd: PropTypes.func.isRequired,
   handleDragStart: PropTypes.func.isRequired,
-  isMouseOverSave: PropTypes.bool.isRequired,
   onShapeClick: PropTypes.func.isRequired,
   onTransform: PropTypes.func.isRequired,
   scale: PropTypes.number.isRequired,
