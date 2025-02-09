@@ -75,6 +75,10 @@ export default function TargetFormSection(
     timeTarget = false;
   }
 
+  if (!spatialTarget && !timeTarget) {
+    return <> </>;
+  }
+
   return (
     <Grid item container direction="column" spacing={1}>
       <Grid item>
