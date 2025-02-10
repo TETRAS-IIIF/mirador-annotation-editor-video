@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
-import { JsonEditor as Editor } from 'jsoneditor-react';
 import PropTypes from 'prop-types';
-import 'jsoneditor-react/es/editor.min.css';
-import ace from 'brace';
 import 'brace/mode/json';
 import 'brace/theme/github';
 import { Paper } from '@mui/material';
+import { JsonEditor } from 'json-edit-react';
 import AnnotationFormFooter from './AnnotationFormFooter';
 import { TEMPLATE } from './AnnotationFormUtils';
 
@@ -65,11 +63,10 @@ export default function IIIFTemplate({
         elevation={0}
         style={{ minHeight: '300px' }}
       >
-        <Editor
-          value={annotationState}
-          ace={ace}
-          theme="ace/theme/github"
-          onChange={setAnnotationState}
+
+        <JsonEditor
+          data={annotationState}
+          onUpdate={setAnnotationState}
         />
       </Paper>
       <AnnotationFormFooter
