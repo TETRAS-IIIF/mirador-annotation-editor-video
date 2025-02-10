@@ -1,11 +1,8 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import 'brace/mode/json';
-import 'brace/theme/github';
 import { Paper } from '@mui/material';
 import { JsonEditor } from 'json-edit-react';
 import AnnotationFormFooter from './AnnotationFormFooter';
-import { TEMPLATE } from './AnnotationFormUtils';
 
 /**
  * IIIFTemplate component
@@ -22,25 +19,7 @@ export default function IIIFTemplate({
   canvases,
   t,
 }) {
-  let maeAnnotation = annotation;
-  if (!annotation.id) {
-    // If the annotation does not have maeData, the annotation was not created with mae
-    maeAnnotation = {
-      body: {
-        id: '',
-        type: '',
-        value: 'Your annotation',
-      },
-      id: null,
-      maeData: {
-        templateType: TEMPLATE.IIIF_TYPE,
-      },
-      motivation: 'commenting',
-      target: '',
-    };
-  }
-
-  const [annotationState, setAnnotationState] = useState(maeAnnotation);
+  const [annotationState, setAnnotationState] = useState(annotation);
 
   /**
    * Save function for the annotation
