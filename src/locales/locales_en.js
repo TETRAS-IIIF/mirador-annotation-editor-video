@@ -54,6 +54,7 @@ export const en = {
   object_list: 'Object list',
   overlay: 'Overlay',
   polygon: 'Polygon',
+  pressEscapeToFinish: 'Press "Esc" to finish the line',
   rectangle: 'Rectangle',
   save: 'Save',
   scale: 'Scale',
