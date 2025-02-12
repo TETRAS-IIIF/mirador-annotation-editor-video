@@ -8,6 +8,7 @@ import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import flatten from 'lodash/flatten';
 import { Tooltip } from '@mui/material';
+import { withTranslation } from 'react-i18next';
 import AnnotationActionsContext from './AnnotationActionsContext';
 
 // TODO missing TRAD
@@ -111,8 +112,6 @@ const CanvasListItem = forwardRef((props, ref) => {
       .includes(annotationid);
   };
 
-  const { t } = context;
-
   const editToolTip = annotationData?.creator ? `${annotationData.creator} ${annotationData.creationDate}` : '';
 
   return (
@@ -124,10 +123,6 @@ const CanvasListItem = forwardRef((props, ref) => {
     >
       {editable() && (
         <div>
-          {t('createdByOn', {
-            creator: 'Anonymous',
-            creationDate: '2021-10-01',
-          })}
           <ToggleButtonGroup
             aria-label="annotation tools"
             size="small"
@@ -135,6 +130,7 @@ const CanvasListItem = forwardRef((props, ref) => {
               backgroundColor: 'white',
               position: 'absolute',
               right: 0,
+              zIndex: 10000,
             }}
             disabled={!context.annotationEditCompanionWindowIsOpened}
           >
@@ -174,4 +170,4 @@ CanvasListItem.propTypes = {
   ]).isRequired,
 };
 
-export default CanvasListItem;
+export default withTranslation()(CanvasListItem);

@@ -6,7 +6,6 @@ import { getWindowViewType } from 'mirador/dist/es/src/state/selectors';
 import {
   getCompanionWindowsForContent,
 } from 'mirador/dist/es/src/state/selectors/companionWindows';
-import { useTranslation } from 'react-i18next';
 import CanvasListItem from '../CanvasListItem';
 import AnnotationActionsContext from '../AnnotationActionsContext';
 import SingleCanvasDialog from '../SingleCanvasDialog';
@@ -37,7 +36,10 @@ function CanvasAnnotationsWrapper({
     listContainerComponent: CanvasListItem,
   };
 
-  const { t } = useTranslation();
+  /* const { t } = useTranslation();
+
+  console.log(t('add_a_circle'));
+  console.log(t(TargetComponent)); */
 
   return (
     <AnnotationActionsContext.Provider
@@ -60,7 +62,6 @@ function CanvasAnnotationsWrapper({
           handleClose={toggleSingleCanvasDialogOpen}
           open={singleCanvasDialogOpen}
           switchToSingleCanvasView={switchToSingleCanvasView}
-          t={t}
         />
       )}
     </AnnotationActionsContext.Provider>
