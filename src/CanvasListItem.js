@@ -7,6 +7,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import flatten from 'lodash/flatten';
+import { Tooltip } from '@mui/material';
 import AnnotationActionsContext from './AnnotationActionsContext';
 
 // TODO missing TRAD
@@ -112,6 +113,8 @@ const CanvasListItem = forwardRef((props, ref) => {
 
   const { t } = context;
 
+  const editToolTip = annotationData?.creator ? `${annotationData.creator} ${annotationData.creationDate}` : '';
+
   return (
     <div
       onMouseEnter={handleMouseHover}
@@ -119,14 +122,12 @@ const CanvasListItem = forwardRef((props, ref) => {
       className="mirador-annotation-list-item"
       ref={ref}
     >
-      {isHovering && editable() && (
-        <div
-          style={{
-            position: 'relative',
-            top: -20,
-            zIndex: 10000,
-          }}
-        >
+      {editable() && (
+        <div>
+          {t('createdByOn', {
+            creator: 'Anonymous',
+            creationDate: '2021-10-01',
+          })}
           <ToggleButtonGroup
             aria-label="annotation tools"
             size="small"
@@ -137,13 +138,15 @@ const CanvasListItem = forwardRef((props, ref) => {
             }}
             disabled={!context.annotationEditCompanionWindowIsOpened}
           >
-            <ToggleButton
-              aria-label="Edit"
-              onClick={context.windowViewType === 'single' ? handleEdit : context.toggleSingleCanvasDialogOpen}
-              value="edit"
-            >
-              <EditIcon />
-            </ToggleButton>
+            <Tooltip title={editToolTip}>
+              <ToggleButton
+                aria-label="Edit"
+                onClick={context.windowViewType === 'single' ? handleEdit : context.toggleSingleCanvasDialogOpen}
+                value="edit"
+              >
+                <EditIcon />
+              </ToggleButton>
+            </Tooltip>
             <ToggleButton
               aria-label="Delete"
               onClick={handleDelete}
@@ -154,16 +157,6 @@ const CanvasListItem = forwardRef((props, ref) => {
           </ToggleButtonGroup>
         </div>
       )}
-      {
-        annotationData?.creator && (
-          <>
-            {annotationData.creator}
-            {', '}
-            {annotationData.creationDate}
-          </>
-        )
-
-      }
       {/* eslint-disable-next-line react/jsx-props-no-spreading */}
       <li {...props}>
         {props.children}
