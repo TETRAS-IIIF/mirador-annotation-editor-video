@@ -134,7 +134,7 @@ function AnnotationForm(
     const promises = playerReferences.getCanvases()
       .map(async (canvas) => {
         let annotationStateToBeSaved;
-        if (annotationState?.maeData) {
+        if (annotationState?.maeData && annotationState.maeData.templateType) {
           annotationStateToBeSaved = await convertAnnotationStateToBeSaved(
             annotationState,
             canvas,

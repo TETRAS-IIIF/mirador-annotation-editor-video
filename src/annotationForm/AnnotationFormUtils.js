@@ -205,32 +205,35 @@ export async function saveAnnotationInStorageAdapter(
   receiveAnnotation,
   annotation,
 ) {
-  console.log('Annotation to save', annotation);
-  if (annotation.id) {
-    // eslint-disable-next-line no-param-reassign
-    annotation.lastSavedDate = getCurrentDateLocaleString();
-    // eslint-disable-next-line no-param-reassign
-    annotation.lastEditor = storageAdapter.getStorageAdapterUser();
-    storageAdapter.update(annotation)
-      .then((annoPage) => {
-        receiveAnnotation(canvasId, storageAdapter.annotationPageId, annoPage);
-      });
-  } else {
-    // eslint-disable-next-line no-param-reassign
-    annotation.id = `${canvasId}/annotation/${uuidv4()}`;
-    // eslint-disable-next-line no-param-reassign
-    annotation.creationDate = getCurrentDateLocaleString();
-    // eslint-disable-next-line no-param-reassign
-    annotation.creator = storageAdapter.getStorageAdapterUser();
-    if (annotation?.maeData?.manifestNetwork) {
-      // Ugly tricks to solve manifest template annotation issue on creation
-      // For more see NetworkCommentTemplate:saveFunction
-      annotation.id = `${annotation.id}#${annotation.maeData.manifestNetwork}`;
+  if (annotation?.maeData) {
+    if (annotation.id) {
+      // eslint-disable-next-line no-param-reassign
+      annotation.lastSavedDate = getCurrentDateLocaleString();
+      // eslint-disable-next-line no-param-reassign
+      annotation.lastEditor = storageAdapter.getStorageAdapterUser();
+      console.log('Annotation to update', annotation);
+      storageAdapter.update(annotation)
+        .then((annoPage) => {
+          receiveAnnotation(canvasId, storageAdapter.annotationPageId, annoPage);
+        });
+    } else {
+      // eslint-disable-next-line no-param-reassign
+      annotation.id = `${canvasId}/annotation/${uuidv4()}`;
+      // eslint-disable-next-line no-param-reassign
+      annotation.creationDate = getCurrentDateLocaleString();
+      // eslint-disable-next-line no-param-reassign
+      annotation.creator = storageAdapter.getStorageAdapterUser();
+      if (annotation?.maeData?.manifestNetwork) {
+        // Ugly tricks to solve manifest template annotation issue on creation
+        // For more see NetworkCommentTemplate:saveFunction
+        annotation.id = `${annotation.id}#${annotation.maeData.manifestNetwork}`;
+      }
+      console.log('Annotation to create', annotation);
+      storageAdapter.create(annotation)
+        .then((annoPage) => {
+          receiveAnnotation(canvasId, storageAdapter.annotationPageId, annoPage);
+        });
     }
-    storageAdapter.create(annotation)
-      .then((annoPage) => {
-        receiveAnnotation(canvasId, storageAdapter.annotationPageId, annoPage);
-      });
   }
 }
 
