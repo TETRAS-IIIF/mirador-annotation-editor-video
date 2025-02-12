@@ -20,18 +20,15 @@ function AnnotationFormFooter({
     <>
       {
         (annotationState.creator && annotationState.creationDate) && (
-          <>
-            <Divider sx={{ m: 1 }} />
-            <Grid container>
-              <WhoAndWhenFormSection
-                lastSavedDate={annotationState.lastSavedDate}
-                lastEditor={annotationState.lastEditor}
-                creator={annotationState.creator}
-                creationDate={annotationState.creationDate}
-                t={t}
-              />
-            </Grid>
-          </>
+          <Grid container>
+            <WhoAndWhenFormSection
+              lastSavedDate={annotationState.lastSavedDate}
+              lastEditor={annotationState.lastEditor}
+              creator={annotationState.creator}
+              creationDate={annotationState.creationDate}
+              t={t}
+            />
+          </Grid>
         )
       }
       <Divider sx={{ m: 1 }} />

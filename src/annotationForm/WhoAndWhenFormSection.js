@@ -29,6 +29,9 @@ function WhoAndWhenFormSection({
 
   return (
     <>
+      <Typography variant="formSectionTitle">
+        {t('metadata')}
+      </Typography>
       <Typography>
         {t('createdByOn', {
           creationDate,
