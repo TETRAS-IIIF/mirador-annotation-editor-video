@@ -189,6 +189,7 @@ CanvasListItem.propTypes = {
     PropTypes.func,
     PropTypes.node,
   ]).isRequired,
+  t: PropTypes.func.isRequired,
 };
 
 export default withTranslation()(CanvasListItem);
