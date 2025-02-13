@@ -3,10 +3,14 @@ import Typography from '@mui/material/Typography';
 import React from 'react';
 import { ANONYMOUS_USER } from '../annotationAdapter/LocalStorageAdapter';
 
+export const TOOLTIP_MODE = 'tooltip';
+export const SECTION_MODE = 'section';
+
 /**
  *
  * @param creator
  * @param creationDate
+ * @param displayMode
  * @param lastEditor
  * @param lastSavedDate
  * @param t
@@ -18,6 +22,7 @@ function WhoAndWhenFormSection({
   creationDate,
   lastEditor,
   lastSavedDate,
+  displayMode,
   t,
 }) {
   if (!creator || !creationDate) {
@@ -29,9 +34,20 @@ function WhoAndWhenFormSection({
 
   return (
     <>
-      <Typography variant="formSectionTitle">
-        {t('metadata')}
-      </Typography>
+      {
+        displayMode === SECTION_MODE && (
+          <Typography variant="formSectionTitle">
+            {t('metadata')}
+          </Typography>
+        )
+      }
+      {
+        displayMode === TOOLTIP_MODE && (
+          <h1>
+            {t('metadata')}
+          </h1>
+        )
+      }
       <Typography>
         {t('createdByOn', {
           creationDate,
@@ -55,6 +71,7 @@ function WhoAndWhenFormSection({
 WhoAndWhenFormSection.propTypes = {
   creationDate: PropTypes.string.isRequired,
   creator: PropTypes.string.isRequired,
+  displayMode: PropTypes.string.isRequired,
   lastEditor: PropTypes.string.isRequired,
   lastSavedDate: PropTypes.string.isRequired,
   t: PropTypes.func.isRequired,

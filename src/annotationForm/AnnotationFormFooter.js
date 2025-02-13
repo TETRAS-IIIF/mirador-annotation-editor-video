@@ -3,7 +3,7 @@ import {
 } from '@mui/material';
 import PropTypes from 'prop-types';
 import React from 'react';
-import WhoAndWhenFormSection from './WhoAndWhenFormSection.js';
+import WhoAndWhenFormSection, { SECTION_MODE } from './WhoAndWhenFormSection';
 
 /** Annotation form footer, save or cancel the edition/creation of an annotation */
 function AnnotationFormFooter({
@@ -26,6 +26,7 @@ function AnnotationFormFooter({
               lastEditor={annotationState.lastEditor}
               creator={annotationState.creator}
               creationDate={annotationState.creationDate}
+              displayMode={SECTION_MODE}
               t={t}
             />
           </Grid>

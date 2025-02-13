@@ -9,7 +9,9 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import flatten from 'lodash/flatten';
 import { Tooltip } from '@mui/material';
 import { withTranslation } from 'react-i18next';
+import InfoIcon from '@mui/icons-material/Info';
 import AnnotationActionsContext from './AnnotationActionsContext';
+import WhoAndWhenFormSection, { TOOLTIP_MODE } from './annotationForm/WhoAndWhenFormSection';
 
 // TODO missing TRAD
 const CanvasListItem = forwardRef((props, ref) => {
@@ -112,7 +114,7 @@ const CanvasListItem = forwardRef((props, ref) => {
       .includes(annotationid);
   };
 
-  const editToolTip = annotationData?.creator ? `${annotationData.creator} ${annotationData.creationDate}` : '';
+  const { t } = props;
 
   return (
     <div
@@ -121,7 +123,7 @@ const CanvasListItem = forwardRef((props, ref) => {
       className="mirador-annotation-list-item"
       ref={ref}
     >
-      {editable() && (
+      {(isHovering && editable()) && (
         <div>
           <ToggleButtonGroup
             aria-label="annotation tools"
@@ -132,21 +134,40 @@ const CanvasListItem = forwardRef((props, ref) => {
               right: 0,
               zIndex: 10000,
             }}
-            disabled={!context.annotationEditCompanionWindowIsOpened}
+
           >
-            <Tooltip title={editToolTip}>
+            <Tooltip title={(
+              <WhoAndWhenFormSection
+                creator={annotationData.creator}
+                creationDate={annotationData.creationDate}
+                lastEditor={annotationData.lastEditor}
+                lastSavedDate={annotationData.lastSavedDate}
+                displayMode={TOOLTIP_MODE}
+                t={t}
+              />
+            )}
+            >
               <ToggleButton
-                aria-label="Edit"
-                onClick={context.windowViewType === 'single' ? handleEdit : context.toggleSingleCanvasDialogOpen}
-                value="edit"
+                aria-label="Metadata"
+                value="metadata"
+                visible={annotationData?.creator}
               >
-                <EditIcon />
+                <InfoIcon />
               </ToggleButton>
             </Tooltip>
+            <ToggleButton
+              aria-label="Edit"
+              onClick={context.windowViewType === 'single' ? handleEdit : context.toggleSingleCanvasDialogOpen}
+              value="edit"
+              disabled={!context.annotationEditCompanionWindowIsOpened}
+            >
+              <EditIcon />
+            </ToggleButton>
             <ToggleButton
               aria-label="Delete"
               onClick={handleDelete}
               value="delete"
+              disabled={!context.annotationEditCompanionWindowIsOpened}
             >
               <DeleteIcon />
             </ToggleButton>
