@@ -38,11 +38,6 @@ function CanvasAnnotationsWrapper({
     listContainerComponent: CanvasListItem,
   };
 
-  /* const { t } = useTranslation();
-
-  console.log(t('add_a_circle'));
-  console.log(t(TargetComponent)); */
-
   return (
     <AnnotationActionsContext.Provider
       value={{
