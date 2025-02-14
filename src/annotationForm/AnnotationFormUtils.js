@@ -6,7 +6,6 @@ import { v4 as uuidv4 } from 'uuid';
 import { styled } from '@mui/material/styles';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { AddLink } from '@mui/icons-material';
-import CategoryIcon from '@mui/icons-material/Category';
 import { OVERLAY_TOOL } from './AnnotationFormOverlay/KonvaDrawing/KonvaUtils';
 
 export const TEMPLATE = {
@@ -58,19 +57,6 @@ export const TEMPLATE_TYPES = (t) => [
       return false;
     },
     label: t('tag'),
-  },
-  {
-    description: t('drawings_and_text_in_overlay'),
-    icon: <CategoryIcon fontSize="small" />,
-    id: TEMPLATE.KONVA_TYPE,
-    isCompatibleWithTemplate: (mediaType) => {
-      if (mediaType === MEDIA_TYPES.VIDEO) return true;
-      // Mirador doesn't support annotation from an image
-      if (mediaType === MEDIA_TYPES.IMAGE) return false;
-      if (mediaType === MEDIA_TYPES.AUDIO) return false;
-      return false;
-    },
-    label: t('overlay'),
   },
   {
     description: t('manifest_link_with_note'),
