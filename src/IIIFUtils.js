@@ -11,14 +11,6 @@ import { TEMPLATE } from './annotationForm/AnnotationFormUtils';
  * @returns {boolean}
  */
 function isAnnotationExportableToImage(maeData) {
-  if (maeData.templateType === TEMPLATE.KONVA_TYPE) {
-    if (maeData.target.drawingState.shapes.length > 1) {
-      return true;
-    }
-    if (maeData.target.drawingState.shapes.length === 1 && maeData.target.drawingState.shapes[0].type !== 'rectangle') {
-      return true;
-    }
-  }
   return false;
 }
 
@@ -93,42 +85,37 @@ export const maeTargetToIiifTarget = (maeTarget, canvasId, playerScale, windowId
     return maeTarget;
   }
 
-  if (maeTarget.templateType !== TEMPLATE.KONVA_TYPE) {
-    // In some case the target can be simplify in a string
-    if (maeTarget.drawingState.shapes.length === 1 && maeTarget.drawingState.shapes[0].type === SHAPES_TOOL.RECTANGLE) {
-      const {
-        // eslint-disable-next-line prefer-const
-        x,
-        y,
-        width,
-        height,
-        scaleX,
-        scaleY,
-      } = maeTarget.drawingState.shapes[0];
-      console.info('Implement target as string with one shape (rectangle)');
-      // Image have not tstart and tend
-      // We use scaleX and scaleY to have the real size of the shape, if it has been resized
-      return `${canvasId}#${maeTarget.tend ? `xywh=${x},${y},${width * scaleX},${height * scaleY}&t=${maeTarget.tstart},${maeTarget.tend}` : `xywh=${x},${y},${width * scaleX},${height * scaleY}`}`;
-    }
-    // On the other case, the target is a SVG
-    console.info('Implement target as SVG/Fragment with shapes');
-    const fragmentTarget = `${maeTarget.tend ? `xywh=${maeTarget.fullCanvaXYWH}&t=${maeTarget.tstart},${maeTarget.tend}` : `xywh=${maeTarget.fullCanvaXYWH}`}`;
-    return {
-      selector: [
-        {
-          type: 'SvgSelector',
-          value: maeTarget.svg,
-        },
-        {
-          type: 'FragmentSelector',
-          value: `${canvasId}#${fragmentTarget}`,
-        },
-      ],
-      source: canvasId,
-    };
+  // In some case the target can be simplify in a string
+  if (maeTarget.drawingState.shapes.length === 1
+    && maeTarget.drawingState.shapes[0].type === SHAPES_TOOL.RECTANGLE) {
+    const {
+      // eslint-disable-next-line prefer-const
+      x,
+      y,
+      width,
+      height,
+      scaleX,
+      scaleY,
+    } = maeTarget.drawingState.shapes[0];
+    console.info('Implement target as string with one shape (rectangle)');
+    // Image have not tstart and tend
+    // We use scaleX and scaleY to have the real size of the shape, if it has been resized
+    return `${canvasId}#${maeTarget.tend ? `xywh=${x},${y},${width * scaleX},${height * scaleY}&t=${maeTarget.tstart},${maeTarget.tend}` : `xywh=${x},${y},${width * scaleX},${height * scaleY}`}`;
   }
-
-  // In case of Konva target and for all the other case, target is a string and on full size canvas
-  console.info('Implement target as string on fullSizeCanvas');
-  return `${canvasId}#${maeTarget.tend ? `xywh=${maeTarget.fullCanvaXYWH}&t=${maeTarget.tstart},${maeTarget.tend}` : `xywh=${maeTarget.fullCanvaXYWH}`}`;
+  // On the other case, the target is a SVG
+  console.info('Implement target as SVG/Fragment with shapes');
+  const fragmentTarget = `${maeTarget.tend ? `xywh=${maeTarget.fullCanvaXYWH}&t=${maeTarget.tstart},${maeTarget.tend}` : `xywh=${maeTarget.fullCanvaXYWH}`}`;
+  return {
+    selector: [
+      {
+        type: 'SvgSelector',
+        value: maeTarget.svg,
+      },
+      {
+        type: 'FragmentSelector',
+        value: `${canvasId}#${fragmentTarget}`,
+      },
+    ],
+    source: canvasId,
+  };
 };
