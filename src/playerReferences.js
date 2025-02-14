@@ -1,8 +1,6 @@
 import { getVisibleCanvases } from 'mirador/dist/es/src/state/selectors/canvases';
-import { getVisibleCanvasAudioResources, getVisibleCanvasVideoResources } from 'mirador/dist/es/src/state/selectors';
 import { MEDIA_TYPES } from './annotationForm/AnnotationFormUtils';
 
-// TODO All the code related to the video player must be moved in MAEV plugin
 /** */
 export class WindowPlayer {
   actions;
@@ -42,12 +40,6 @@ export class WindowPlayer {
             containerHeight: this.media.current.canvas.clientHeight,
             containerWidth: this.media.current.canvas.clientWidth,
           };
-          break;
-        case MEDIA_TYPES.VIDEO:
-          this.overlay = this.media.canvasOverlay;
-          break;
-        case MEDIA_TYPES.AUDIO:
-          this.audio = getVisibleCanvasAudioResources(state, { windowId });
           break;
         default:
           console.error('Unknown media type');
@@ -132,9 +124,6 @@ export class WindowPlayer {
     if (this.mediaType === MEDIA_TYPES.IMAGE) {
       return this.media.current.container;
     }
-    if (this.mediaType === MEDIA_TYPES.VIDEO) {
-      return this.media.ref.current.parentElement;
-    }
     return null;
   }
 
@@ -168,9 +157,6 @@ export class WindowPlayer {
         return actualHeightInPixels;
       }
     }
-    if (this.mediaType === MEDIA_TYPES.VIDEO) {
-      return this.overlay.containerHeight;
-    }
     return undefined;
   }
 
@@ -188,10 +174,6 @@ export class WindowPlayer {
         return actualWidthInPixels;
       }
     }
-    if (this.mediaType === MEDIA_TYPES.VIDEO) {
-      return this.overlay.containerWidth;
-    }
-
     return undefined;
   }
 
@@ -203,10 +185,6 @@ export class WindowPlayer {
     if (this.mediaType === MEDIA_TYPES.IMAGE) {
       // eslint-disable-next-line no-underscore-dangle
       return this.canvases[0].__jsonld.height;
-    }
-    if (this.mediaType === MEDIA_TYPES.VIDEO) {
-      // It's not perfect to use the canvas size and not the video size
-      return this.media.player.props.iiifVideoInfos.getHeight();
     }
     console.error('Unknown media type');
     return undefined;
@@ -220,10 +198,6 @@ export class WindowPlayer {
     if (this.mediaType === MEDIA_TYPES.IMAGE) {
       // eslint-disable-next-line no-underscore-dangle
       return this.canvases[0].__jsonld.width;
-    }
-    if (this.mediaType === MEDIA_TYPES.VIDEO) {
-      // It's not perfect to use the canvas size and not the video size
-      return this.media.player.props.iiifVideoInfos.getWidth();
     }
     return undefined;
   }
@@ -247,9 +221,6 @@ export class WindowPlayer {
       let zoom = currentZoom / maxZoom;
       zoom = Math.round(zoom * 100) / 100;
       return zoom;
-    }
-    if (this.mediaType === MEDIA_TYPES.VIDEO) {
-      return this.getDisplayedMediaWidth() / this.getMediaTrueWidth();
     }
     return undefined;
   }
@@ -276,13 +247,6 @@ export class WindowPlayer {
         return position;
       }
     }
-    if (this.mediaType === MEDIA_TYPES.VIDEO) {
-      const position = {
-        x: 0,
-        y: 0,
-      };
-      return position;
-    }
     return undefined;
   }
 
@@ -306,17 +270,6 @@ export class WindowPlayer {
    * @returns {*}
    */
   getMediaDuration() {
-    if (this.mediaType === MEDIA_TYPES.VIDEO) {
-      // eslint-disable-next-line no-underscore-dangle
-      return this.media.props.canvas.__jsonld.duration;
-    }
-    if (this.mediaType === MEDIA_TYPES.AUDIO) {
-      if (this.audio) {
-        // eslint-disable-next-line no-underscore-dangle
-        return this.audio[0].__jsonld.duration;
-      }
-      console.error('Something is wrong about audio');
-    }
     return 0;
   }
 
@@ -327,9 +280,6 @@ export class WindowPlayer {
    * @returns {*}
    */
   setCurrentTime(...args) {
-    if (this.mediaType === MEDIA_TYPES.VIDEO) {
-      return this.actions.setWindowCurrentTime(this.windowId, ...args);
-    }
     return null;
   }
 
@@ -340,9 +290,6 @@ export class WindowPlayer {
    * @returns {*}
    */
   setSeekTo(...args) {
-    if (this.mediaType === MEDIA_TYPES.VIDEO) {
-      return this.actions.setWindowSeekTo(this.windowId, ...args);
-    }
     console.error('Cannot seek time for image');
   }
 }
@@ -353,15 +300,5 @@ export class WindowPlayer {
  * @param windowId
  */
 export function checkMediaType(state, windowId) {
-  const audioResources = getVisibleCanvasAudioResources(state, { windowId }) || [];
-  const videoResources = getVisibleCanvasVideoResources(state, { windowId }) || [];
-
-  if (videoResources.length > 0) {
-    return MEDIA_TYPES.VIDEO;
-  }
-  if (audioResources.length > 0) {
-    return MEDIA_TYPES.AUDIO;
-  }
-
   return MEDIA_TYPES.IMAGE;
 }
