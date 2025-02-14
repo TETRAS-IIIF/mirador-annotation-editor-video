@@ -1,5 +1,6 @@
 import {
   getKonvaAsDataURL,
+  getKonvaShape,
   getSvg,
 } from './annotationForm/AnnotationFormOverlay/KonvaDrawing/KonvaUtils';
 import { TEMPLATE } from './annotationForm/AnnotationFormUtils';
@@ -83,6 +84,7 @@ export const convertAnnotationStateToBeSaved = async (
     annotationStateForSaving.maeData.target,
     canvas.id,
     playerReferences.getScale(),
+    windowId,
   );
   // eslint-disable-next-line no-param-reassign
   annotationStateForSaving.maeData.target.drawingState = JSON.stringify(
@@ -93,7 +95,7 @@ export const convertAnnotationStateToBeSaved = async (
 };
 
 /** Transform maetarget to IIIF compatible data * */
-export const maeTargetToIiifTarget = (maeTarget, canvasId, playerScale) => {
+export const maeTargetToIiifTarget = (maeTarget, canvasId, playerScale, windowId = null) => {
   // In case of IIIF target, the user know what he is doing
   if (maeTarget.templateType === TEMPLATE.IIIF_TYPE) {
     return maeTarget;
@@ -115,7 +117,17 @@ export const maeTargetToIiifTarget = (maeTarget, canvasId, playerScale) => {
       // Image have not tstart and tend
       // We use scaleX and scaleY to have the real size of the shape, if it has been resized
       if (maeTarget.drawingState.shapes[0].type === 'image') {
-        return `${canvasId}#${maeTarget.tend ? `xywh=${x},${y},${width * scaleX / playerScale},${height * scaleY / playerScale}&t=${maeTarget.tstart},${maeTarget.tend}` : `xywh=${x},${y},${width * scaleX / playerScale},${height * scaleY / playerScale}`}`;
+        const imageShape = getKonvaShape(windowId, maeTarget.drawingState.shapes[0].id);
+        console.log('imageShape', imageShape);
+        const widthImage = Math.round(
+          imageShape.attrs.image.width * imageShape.attrs.scaleX / playerScale,
+        );
+        const heightImage = Math.round(
+          imageShape.attrs.image.height * imageShape.attrs.scaleY / playerScale,
+        );
+        const xImage = Math.round(x / playerScale);
+        const yImage = Math.round(y / playerScale);
+        return `${canvasId}#${maeTarget.tend ? `xywh=${xImage},${yImage},${widthImage},${heightImage}&t=${maeTarget.tstart},${maeTarget.tend}` : `xywh=${xImage},${yImage},${widthImage},${heightImage}`}`;
       }
       return `${canvasId}#${maeTarget.tend ? `xywh=${x},${y},${width * scaleX},${height * scaleY}&t=${maeTarget.tstart},${maeTarget.tend}` : `xywh=${x},${y},${width * scaleX},${height * scaleY}`}`;
     }

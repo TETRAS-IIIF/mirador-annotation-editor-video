@@ -464,7 +464,6 @@ export default function AnnotationDrawing(
             (pos.x - drawingState.currentShape.x) ** 2
             + (pos.y - drawingState.currentShape.y) ** 2,
           );
-          console.log('debug radius', radius);
 
           updateCurrentShapeInShapes({
             ...drawingState.currentShape,
