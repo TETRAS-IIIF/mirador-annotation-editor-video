@@ -9,6 +9,7 @@ import {
 import CanvasListItem from '../CanvasListItem';
 import AnnotationActionsContext from '../AnnotationActionsContext';
 import SingleCanvasDialog from '../SingleCanvasDialog';
+import translations from '../locales/locales';
 
 /** Functional Component */
 function CanvasAnnotationsWrapper({
@@ -23,6 +24,7 @@ function CanvasAnnotationsWrapper({
   windowViewType,
   containerRef,
   annotationEditCompanionWindowIsOpened,
+  t,
 }) {
   const [singleCanvasDialogOpen, setSingleCanvasDialogOpen] = useState(false);
 
@@ -54,6 +56,7 @@ function CanvasAnnotationsWrapper({
         toggleSingleCanvasDialogOpen,
         windowId: targetProps.windowId,
         windowViewType,
+        t,
       }}
     >
       <TargetComponent {...props} ref={containerRef} />
@@ -145,7 +148,10 @@ function mapStateToProps(state, { targetProps: { windowId } }) {
     annotationEditCompanionWindowIsOpened,
     annotationsOnCanvases,
     canvases,
-    config: state.config,
+    config: {
+      ...state.config,
+      translations,
+    },
     windowViewType: getWindowViewType(state, { windowId }),
   };
 }
