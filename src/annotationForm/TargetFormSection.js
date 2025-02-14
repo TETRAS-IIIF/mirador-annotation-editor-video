@@ -49,8 +49,7 @@ export default function TargetFormSection(
         break;
     }
 
-    if (target.templateType !== TEMPLATE.IMAGE_TYPE
-      && target.templateType !== TEMPLATE.KONVA_TYPE) {
+    if (target.templateType !== TEMPLATE.KONVA_TYPE) {
       // eslint-disable-next-line no-param-reassign
       target.drawingState = {
         currentShape: null,

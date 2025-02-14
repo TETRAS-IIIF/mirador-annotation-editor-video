@@ -67,14 +67,6 @@ export const convertAnnotationStateToBeSaved = async (
     annotationStateForSaving.type = 'Annotation';
   }
 
-  if (annotationStateForSaving.maeData.templateType == TEMPLATE.IMAGE_TYPE) {
-    if (annotationStateForSaving.maeData.target.drawingState.shapes.length == 1) {
-      // eslint-disable-next-line max-len
-      annotationStateForSaving.body.id = annotationStateForSaving.maeData.target.drawingState.shapes[0].url;
-      annotationStateForSaving.type = 'Annotation';
-    }
-  }
-
   // eslint-disable-next-line no-param-reassign
   annotationStateForSaving.maeData.target.scale = playerReferences.getMediaTrueHeight()
     / playerReferences.getDisplayedMediaHeight() * playerReferences.getZoom();

@@ -1,11 +1,9 @@
-import { Button, Grid, TextField } from '@mui/material';
+import { Grid, TextField } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
-import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import { v4 as uuidv4 } from 'uuid';
-import ImageFormField from './ImageFormField';
 import {
   isShapesTool,
   KONVA_MODE,
@@ -205,28 +203,6 @@ function AnnotationFormOverlayToolOptions({
               </Grid>
             )}
           </Grid>
-        )
-      }
-      {
-        toolState.activeTool === OVERLAY_TOOL.IMAGE && (
-          <>
-            <Typography variant="overline">
-              {t('add_image_from_url')}
-            </Typography>
-            <Grid container>
-              <ImageFormField
-                xs={8}
-                value={toolState.image}
-                onChange={handleImgChange}
-                t={t}
-              />
-            </Grid>
-            <StyledDivButtonImage>
-              <Button variant="contained" onClick={addImage}>
-                <AddPhotoAlternateIcon />
-              </Button>
-            </StyledDivButtonImage>
-          </>
         )
       }
       {

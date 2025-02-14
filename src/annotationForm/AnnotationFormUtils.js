@@ -1,13 +1,10 @@
 import TextFieldsIcon from '@mui/icons-material/TextFields';
-import ImageIcon from '@mui/icons-material/Image';
-import CategoryIcon from '@mui/icons-material/Category';
 import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 import DataObjectIcon from '@mui/icons-material/DataObject';
 import React from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { styled } from '@mui/material/styles';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import { AddLink } from '@mui/icons-material';
 import { OVERLAY_TOOL } from './AnnotationFormOverlay/KonvaDrawing/KonvaUtils';
 
 export const TEMPLATE = {
@@ -19,12 +16,14 @@ export const TEMPLATE = {
   TEXT_TYPE: 'text',
 };
 
+// TODO Move in MediaUtils
 export const MEDIA_TYPES = {
   AUDIO: 'Audio',
   IMAGE: 'Image',
   UNKNOWN: 'Unknown',
   VIDEO: 'Video',
 };
+
 /** Return template type * */
 export const getTemplateType = (t, templateType) => TEMPLATE_TYPES(t)
   .find(
@@ -58,19 +57,6 @@ export const TEMPLATE_TYPES = (t) => [
       return false;
     },
     label: t('tag'),
-  },
-  {
-    description: t('image_in_overlay_with_note'),
-    icon: <ImageIcon fontSize="small" />,
-    id: TEMPLATE.IMAGE_TYPE,
-    isCompatibleWithTemplate: (mediaType) => {
-      if (mediaType === MEDIA_TYPES.VIDEO) return true;
-      // Mirador doesn't support annotation from an image
-      if (mediaType === MEDIA_TYPES.IMAGE) return false;
-      if (mediaType === MEDIA_TYPES.AUDIO) return false;
-      return false;
-    },
-    label: t('image'),
   },
   {
     description: t('drawings_and_text_in_overlay'),
