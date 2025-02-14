@@ -97,7 +97,6 @@ export default function TaggingTemplate(
           spatialTarget
           t={t}
           target={annotationState.maeData.target}
-          timeTarget
           windowId={windowId}
         />
       </Grid>
