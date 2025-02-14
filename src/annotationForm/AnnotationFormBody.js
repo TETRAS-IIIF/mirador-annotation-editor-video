@@ -3,13 +3,8 @@ import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import { Grid } from '@mui/material';
 import Typography from '@mui/material/Typography';
-import {
-  TEMPLATE,
-} from './AnnotationFormUtils';
+import { TEMPLATE } from './AnnotationFormUtils';
 import TextCommentTemplate from './TextCommentTemplate';
-import ImageCommentTemplate from './ImageCommentTemplate';
-import NetworkCommentTemplate from './NetworkCommentTemplate';
-import DrawingTemplate from './DrawingTemplate';
 import IIIFTemplate from './IIIFTemplate';
 import TaggingTemplate from './TaggingTemplate';
 
@@ -41,42 +36,6 @@ export default function AnnotationFormBody(
           {
             templateType.id === TEMPLATE.TEXT_TYPE && (
               <TextCommentTemplate
-                annotation={annotation}
-                closeFormCompanionWindow={closeFormCompanionWindow}
-                playerReferences={playerReferences}
-                saveAnnotation={saveAnnotation}
-                t={t}
-                windowId={windowId}
-              />
-            )
-          }
-          {
-            templateType.id === TEMPLATE.IMAGE_TYPE && (
-              <ImageCommentTemplate
-                annotation={annotation}
-                closeFormCompanionWindow={closeFormCompanionWindow}
-                playerReferences={playerReferences}
-                saveAnnotation={saveAnnotation}
-                windowId={windowId}
-                t={t}
-              />
-            )
-          }
-          {
-            templateType.id === TEMPLATE.KONVA_TYPE && (
-              <DrawingTemplate
-                annotation={annotation}
-                closeFormCompanionWindow={closeFormCompanionWindow}
-                playerReferences={playerReferences}
-                saveAnnotation={saveAnnotation}
-                t={t}
-                windowId={windowId}
-              />
-            )
-          }
-          {
-            templateType.id === TEMPLATE.MANIFEST_TYPE && (
-              <NetworkCommentTemplate
                 annotation={annotation}
                 closeFormCompanionWindow={closeFormCompanionWindow}
                 playerReferences={playerReferences}
