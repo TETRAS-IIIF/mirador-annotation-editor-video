@@ -300,5 +300,15 @@ export class WindowPlayer {
  * @param windowId
  */
 export function checkMediaType(state, windowId) {
+  const audioResources = getVisibleCanvasAudioResources(state, { windowId }) || [];
+  const videoResources = getVisibleCanvasVideoResources(state, { windowId }) || [];
+
+  if (videoResources.length > 0) {
+    return MEDIA_TYPES.VIDEO;
+  }
+  if (audioResources.length > 0) {
+    return MEDIA_TYPES.AUDIO;
+  }
+
   return MEDIA_TYPES.IMAGE;
 }
