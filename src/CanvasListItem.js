@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import DeleteIcon from '@mui/icons-material/DeleteForever';
 import EditIcon from '@mui/icons-material/Edit';
 import ToggleButton from '@mui/material/ToggleButton';
+import SettingsIcon from '@mui/icons-material/Settings';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import flatten from 'lodash/flatten';
 import { Tooltip } from '@mui/material';
@@ -134,8 +135,15 @@ const CanvasListItem = forwardRef((props, ref) => {
               right: 0,
               zIndex: 10000,
             }}
-
           >
+            <ToggleButton
+              aria-label="Debug"
+              onClick={() => console.log(annotationData)} // TODO Open IIIIF debug window
+              value="Debug in console"
+              visible={context.config.debug}
+            >
+              <SettingsIcon />
+            </ToggleButton>
             <Tooltip title={(
               <WhoAndWhenFormSection
                 creator={annotationData.creator}
