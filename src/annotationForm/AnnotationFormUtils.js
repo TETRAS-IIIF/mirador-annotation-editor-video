@@ -5,13 +5,10 @@ import React from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { styled } from '@mui/material/styles';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import { AddLink } from '@mui/icons-material';
 import { OVERLAY_TOOL } from './AnnotationFormOverlay/KonvaDrawing/KonvaUtils';
 
 export const TEMPLATE = {
   IIIF_TYPE: 'iiif',
-  KONVA_TYPE: 'konva',
-  MANIFEST_TYPE: 'manifest',
   TAGGING_TYPE: 'tagging',
   TEXT_TYPE: 'text',
 };
@@ -57,19 +54,6 @@ export const TEMPLATE_TYPES = (t) => [
       return false;
     },
     label: t('tag'),
-  },
-  {
-    description: t('manifest_link_with_note'),
-    icon: <AddLink fontSize="small" />,
-    id: TEMPLATE.MANIFEST_TYPE,
-    isCompatibleWithTemplate: (mediaType) => {
-      if (mediaType === MEDIA_TYPES.VIDEO) return true;
-      // Mirador doesn't support annotation from an image
-      if (mediaType === MEDIA_TYPES.IMAGE) return false;
-      if (mediaType === MEDIA_TYPES.AUDIO) return false;
-      return false;
-    },
-    label: t('manifest_link'),
   },
   {
     description: t('edit_iiif_json_code'),
