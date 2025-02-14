@@ -11,7 +11,6 @@ import { OVERLAY_TOOL } from './AnnotationFormOverlay/KonvaDrawing/KonvaUtils';
 
 export const TEMPLATE = {
   IIIF_TYPE: 'iiif',
-  IMAGE_TYPE: 'image',
   KONVA_TYPE: 'konva',
   MANIFEST_TYPE: 'manifest',
   TAGGING_TYPE: 'tagging',
