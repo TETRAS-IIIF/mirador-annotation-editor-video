@@ -9,7 +9,7 @@ import Polygon from './Polygon';
 import Freehand from './Freehand';
 import ImageShape from './Image';
 import CircleNode from './CircleNode';
-import { OVERLAY_TOOL, SHAPES_TOOL } from '../KonvaUtils';
+import { SHAPES_TOOL } from '../KonvaUtils';
 
 /** Loads Konva and display in function of their type */
 function ParentComponent({
@@ -160,7 +160,7 @@ function ParentComponent({
                 key={shape.id}
               />
             );
-          case OVERLAY_TOOL.IMAGE:
+          case SHAPES_TOOL.IMAGE:
             return (
               <ImageShape
                 {...{

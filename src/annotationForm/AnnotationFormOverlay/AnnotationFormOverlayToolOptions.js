@@ -3,7 +3,6 @@ import Typography from '@mui/material/Typography';
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
-import { v4 as uuidv4 } from 'uuid';
 import {
   isShapesTool,
   KONVA_MODE,
@@ -105,30 +104,6 @@ function AnnotationFormOverlayToolOptions({
     setToolState({
       ...toolState,
       [toolOptions.currentColorType]: objToRgba(color.rgb),
-    });
-  };
-
-  /** Handle Image Change * */
-  const handleImgChange = (newUrl, imgRef) => {
-    setToolState({
-      ...toolState,
-      image: {
-        ...toolState.image,
-        id: newUrl,
-      },
-    });
-  };
-  /** Handle Image into toolstate * */
-  const addImage = () => {
-    const data = {
-      id: toolState?.image?.id,
-      uuid: uuidv4(),
-    };
-
-    setToolState({
-      ...toolState,
-      image: { id: null },
-      imageEvent: data,
     });
   };
 
