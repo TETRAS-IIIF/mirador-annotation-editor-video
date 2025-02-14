@@ -136,16 +136,19 @@ const CanvasListItem = forwardRef((props, ref) => {
               zIndex: 10000,
             }}
           >
-            <Tooltip title={t('debugAnnotation')}>
-              <ToggleButton
-                aria-label="Debug"
-                onClick={() => console.log(annotationData)} // TODO Open IIIIF debug window
-                value="Debug in console"
-                visible={context.config.debug}
-              >
-                <SettingsIcon />
-              </ToggleButton>
-            </Tooltip>
+            {
+              context?.config?.debug && (
+                <Tooltip title={t('debugAnnotation')}>
+                  <ToggleButton
+                    aria-label="Debug"
+                    onClick={() => console.log(annotationData)} // TODO Open IIIIF debug window
+                    value="Debug in console"
+                  >
+                    <SettingsIcon />
+                  </ToggleButton>
+                </Tooltip>
+              )
+            }
             <Tooltip title={(
               <WhoAndWhenFormSection
                 creator={annotationData.creator}
