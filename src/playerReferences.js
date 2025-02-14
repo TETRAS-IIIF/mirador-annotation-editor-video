@@ -253,49 +253,6 @@ export class WindowPlayer {
     }
     return undefined;
   }
-
-  /** ***********************************************************
-   * Time stuff
-   *********************************************************** */
-
-  /**
-   * Get Current time of the media
-   * @returns {*|null}
-   */
-  getCurrentTime() {
-    if (this.mediaType !== MEDIA_TYPES.IMAGE) {
-      return this.media.props.currentTime;
-    }
-    return null;
-  }
-
-  /**
-   * Get media duration
-   * @returns {*}
-   */
-  getMediaDuration() {
-    return 0;
-  }
-
-  /**
-   * Send setCurrentTime action to mirador
-   * @param windowId
-   * @param args
-   * @returns {*}
-   */
-  setCurrentTime(...args) {
-    return null;
-  }
-
-  /**
-   * Send setSeekToAction to mirador
-   * @param windowId
-   * @param args
-   * @returns {*}
-   */
-  setSeekTo(...args) {
-    console.error('Cannot seek time for image');
-  }
 }
 
 /** ***********************
