@@ -1,7 +1,7 @@
 import {
   getKonvaAsDataURL,
-  getKonvaShape,
   getSvg,
+  SHAPES_TOOL,
 } from './annotationForm/AnnotationFormOverlay/KonvaDrawing/KonvaUtils';
 import { TEMPLATE } from './annotationForm/AnnotationFormUtils';
 
@@ -95,7 +95,7 @@ export const maeTargetToIiifTarget = (maeTarget, canvasId, playerScale, windowId
 
   if (maeTarget.templateType !== TEMPLATE.KONVA_TYPE) {
     // In some case the target can be simplify in a string
-    if (maeTarget.drawingState.shapes.length === 1 && (maeTarget.drawingState.shapes[0].type === 'rectangle' || maeTarget.drawingState.shapes[0].type === 'image')) {
+    if (maeTarget.drawingState.shapes.length === 1 && maeTarget.drawingState.shapes[0].type === SHAPES_TOOL.RECTANGLE) {
       const {
         // eslint-disable-next-line prefer-const
         x,
@@ -105,22 +105,9 @@ export const maeTargetToIiifTarget = (maeTarget, canvasId, playerScale, windowId
         scaleX,
         scaleY,
       } = maeTarget.drawingState.shapes[0];
-      console.info('Implement target as string with one shape (reactangle or image)');
+      console.info('Implement target as string with one shape (rectangle)');
       // Image have not tstart and tend
       // We use scaleX and scaleY to have the real size of the shape, if it has been resized
-      if (maeTarget.drawingState.shapes[0].type === 'image') {
-        const imageShape = getKonvaShape(windowId, maeTarget.drawingState.shapes[0].id);
-        console.log('imageShape', imageShape);
-        const widthImage = Math.round(
-          imageShape.attrs.image.width * imageShape.attrs.scaleX / playerScale,
-        );
-        const heightImage = Math.round(
-          imageShape.attrs.image.height * imageShape.attrs.scaleY / playerScale,
-        );
-        const xImage = Math.round(x / playerScale);
-        const yImage = Math.round(y / playerScale);
-        return `${canvasId}#${maeTarget.tend ? `xywh=${xImage},${yImage},${widthImage},${heightImage}&t=${maeTarget.tstart},${maeTarget.tend}` : `xywh=${xImage},${yImage},${widthImage},${heightImage}`}`;
-      }
       return `${canvasId}#${maeTarget.tend ? `xywh=${x},${y},${width * scaleX},${height * scaleY}&t=${maeTarget.tstart},${maeTarget.tend}` : `xywh=${x},${y},${width * scaleX},${height * scaleY}`}`;
     }
     // On the other case, the target is a SVG

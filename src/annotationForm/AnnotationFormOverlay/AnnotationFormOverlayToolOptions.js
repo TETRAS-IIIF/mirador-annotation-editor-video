@@ -1,8 +1,10 @@
-import { Grid, TextField } from '@mui/material';
+import { Button, Grid, TextField } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
+import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
+import { v4 as uuidv4 } from 'uuid';
 import {
   isShapesTool,
   KONVA_MODE,
@@ -12,6 +14,7 @@ import {
   SHAPES_TOOL,
 } from './KonvaDrawing/KonvaUtils';
 import ColorPicker from './KonvaDrawing/shapes/ColorPicker';
+import ImageFormField from './ImageFormField';
 
 const StyledDivButtonImage = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -117,6 +120,33 @@ function AnnotationFormOverlayToolOptions({
       },
     );
   };
+
+  /** Handle Image Change * */
+  const handleImgChange = (newUrl, imgRef) => {
+    setToolState({
+      ...toolState,
+      image: {
+        ...toolState.image,
+        id: newUrl,
+      },
+    });
+  };
+  /** Handle Image into toolstate * */
+  const addImage = () => {
+    const data = {
+      id: toolState?.image?.id,
+      uuid: uuidv4(),
+    };
+
+    setToolState({
+      ...toolState,
+      image: { id: null },
+      imageEvent: data,
+    });
+  };
+
+  const showImageTool = false;
+
   return (
     <div>
       {
@@ -178,6 +208,28 @@ function AnnotationFormOverlayToolOptions({
               </Grid>
             )}
           </Grid>
+        )
+      }
+      {
+        showImageTool && (
+          <>
+            <Typography variant="overline">
+              {t('add_image_from_url')}
+            </Typography>
+            <Grid container>
+              <ImageFormField
+                xs={8}
+                imageUrl={toolState.image}
+                onChange={handleImgChange}
+                t={t}
+              />
+            </Grid>
+            <StyledDivButtonImage>
+              <Button variant="contained" onClick={addImage}>
+                <AddPhotoAlternateIcon />
+              </Button>
+            </StyledDivButtonImage>
+          </>
         )
       }
       {
