@@ -36,9 +36,7 @@ export const TEMPLATE_TYPES = (t) => [
     icon: <TextFieldsIcon />,
     id: TEMPLATE.TEXT_TYPE,
     isCompatibleWithTemplate: (mediaType) => {
-      if (mediaType === MEDIA_TYPES.VIDEO) return true;
       if (mediaType === MEDIA_TYPES.IMAGE) return true;
-      if (mediaType === MEDIA_TYPES.AUDIO) return false;
       return false;
     },
     label: t('note'),
@@ -48,9 +46,7 @@ export const TEMPLATE_TYPES = (t) => [
     icon: <LocalOfferIcon fontSize="small" />,
     id: TEMPLATE.TAGGING_TYPE,
     isCompatibleWithTemplate: (mediaType) => {
-      if (mediaType === MEDIA_TYPES.VIDEO) return true;
       if (mediaType === MEDIA_TYPES.IMAGE) return true;
-      if (mediaType === MEDIA_TYPES.AUDIO) return true;
       return false;
     },
     label: t('tag'),
@@ -60,9 +56,7 @@ export const TEMPLATE_TYPES = (t) => [
     icon: <DataObjectIcon fontSize="small" />,
     id: TEMPLATE.IIIF_TYPE,
     isCompatibleWithTemplate: (mediaType) => {
-      if (mediaType === MEDIA_TYPES.VIDEO) return true;
       if (mediaType === MEDIA_TYPES.IMAGE) return true;
-      if (mediaType === MEDIA_TYPES.AUDIO) return true;
       return false;
     },
     label: t('expert_mode'),
