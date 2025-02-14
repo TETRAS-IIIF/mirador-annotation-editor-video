@@ -38,6 +38,7 @@
     "draft-js-import-html": "^1.4.1",
     "html-loader": "^5.0.0",
     "i18next": "^24.2.0",
+    "json-edit-react": "^1.22.2",
     "jsoneditor": "^9.10.5",
     "jsoneditor-react": "npm:jsoneditor-react18@0.5.0",
     "react-color": "^2.18.1",

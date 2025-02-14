@@ -4,9 +4,7 @@ import { Grid } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import TextFormSection from './TextFormSection';
 import TargetFormSection from './TargetFormSection';
-import {
-  TARGET_VIEW, TEMPLATE, defaultToolState,
-} from './AnnotationFormUtils';
+import { IMAGE_TOOL_STATE, TARGET_VIEW, TEMPLATE } from './AnnotationFormUtils';
 import { KONVA_MODE, resizeKonvaStage } from './AnnotationFormOverlay/KonvaDrawing/KonvaUtils';
 import AnnotationDrawing from './AnnotationFormOverlay/AnnotationDrawing';
 import AnnotationFormOverlay from './AnnotationFormOverlay/AnnotationFormOverlay';
@@ -84,7 +82,7 @@ export default function ImageCommentTemplate(
   /** ****************************************
    * Drawing stuff
    ***************************************** */
-  const [toolState, setToolState] = useState(defaultToolState);
+  const [toolState, setToolState] = useState(IMAGE_TOOL_STATE);
 
   /** Initialize drawingState * */
   const initDrawingState = () => {
@@ -105,7 +103,6 @@ export default function ImageCommentTemplate(
   const [drawingState, setDrawingState] = useState(initDrawingState());
 
   const [scale, setScale] = useState(playerReferences.getZoom());
-  const [isMouseOverSave, setIsMouseOverSave] = useState(false);
   const [viewTool, setViewTool] = useState(TARGET_VIEW);
 
   useEffect(() => {
@@ -193,7 +190,6 @@ export default function ImageCommentTemplate(
           closed={toolState.closedMode === 'closed'}
           displayMode={KONVA_MODE.IMAGE}
           drawingState={drawingState}
-          isMouseOverSave={isMouseOverSave}
           playerReferences={playerReferences}
           scale={scale}
           setColorToolFromCurrentShape={setColorToolFromCurrentShape}

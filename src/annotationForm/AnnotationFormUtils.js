@@ -111,8 +111,18 @@ export const TEMPLATE_TYPES = (t) => [
     label: t('expert_mode'),
   },
 ];
-export const defaultToolState = {
-  activeTool: OVERLAY_TOOL.EDIT,
+export const DEFAULT_TOOL_STATE = {
+  activeTool: OVERLAY_TOOL.SHAPE,
+  closedMode: 'closed',
+  fillColor: 'rgba(83,162, 235, 0.5)',
+  image: { id: '' },
+  imageEvent: null,
+  strokeColor: 'rgba(20,82,168,1)',
+  strokeWidth: 2,
+};
+
+export const IMAGE_TOOL_STATE = {
+  activeTool: OVERLAY_TOOL.IMAGE,
   closedMode: 'closed',
   fillColor: 'rgba(83,162, 235, 0.5)',
   image: { id: '' },
@@ -129,7 +139,7 @@ export const defaultToolState = {
  */
 export function getTargetSVGToolState(imageZoom) {
   return {
-    activeTool: OVERLAY_TOOL.EDIT,
+    activeTool: OVERLAY_TOOL.SHAPE,
     closedMode: 'closed',
     image: { id: null },
     imageEvent: null,
@@ -195,32 +205,35 @@ export async function saveAnnotationInStorageAdapter(
   receiveAnnotation,
   annotation,
 ) {
-  console.log('Annotation to save', annotation);
-  if (annotation.id) {
-    // eslint-disable-next-line no-param-reassign
-    annotation.lastSavedDate = getCurrentDateLocaleString();
-    // eslint-disable-next-line no-param-reassign
-    annotation.lastEditor = storageAdapter.getStorageAdapterUser();
-    storageAdapter.update(annotation)
-      .then((annoPage) => {
-        receiveAnnotation(canvasId, storageAdapter.annotationPageId, annoPage);
-      });
-  } else {
-    // eslint-disable-next-line no-param-reassign
-    annotation.id = `${canvasId}/annotation/${uuidv4()}`;
-    // eslint-disable-next-line no-param-reassign
-    annotation.creationDate = getCurrentDateLocaleString();
-    // eslint-disable-next-line no-param-reassign
-    annotation.creator = storageAdapter.getStorageAdapterUser();
-    if (annotation?.maeData?.manifestNetwork) {
-      // Ugly tricks to solve manifest template annotation issue on creation
-      // For more see NetworkCommentTemplate:saveFunction
-      annotation.id = `${annotation.id}#${annotation.maeData.manifestNetwork}`;
+  if (annotation?.maeData) {
+    if (annotation.id) {
+      // eslint-disable-next-line no-param-reassign
+      annotation.lastSavedDate = getCurrentDateLocaleString();
+      // eslint-disable-next-line no-param-reassign
+      annotation.lastEditor = storageAdapter.getStorageAdapterUser();
+      console.log('Annotation to update', annotation);
+      storageAdapter.update(annotation)
+        .then((annoPage) => {
+          receiveAnnotation(canvasId, storageAdapter.annotationPageId, annoPage);
+        });
+    } else {
+      // eslint-disable-next-line no-param-reassign
+      annotation.id = `${canvasId}/annotation/${uuidv4()}`;
+      // eslint-disable-next-line no-param-reassign
+      annotation.creationDate = getCurrentDateLocaleString();
+      // eslint-disable-next-line no-param-reassign
+      annotation.creator = storageAdapter.getStorageAdapterUser();
+      if (annotation?.maeData?.manifestNetwork) {
+        // Ugly tricks to solve manifest template annotation issue on creation
+        // For more see NetworkCommentTemplate:saveFunction
+        annotation.id = `${annotation.id}#${annotation.maeData.manifestNetwork}`;
+      }
+      console.log('Annotation to create', annotation);
+      storageAdapter.create(annotation)
+        .then((annoPage) => {
+          receiveAnnotation(canvasId, storageAdapter.annotationPageId, annoPage);
+        });
     }
-    storageAdapter.create(annotation)
-      .then((annoPage) => {
-        receiveAnnotation(canvasId, storageAdapter.annotationPageId, annoPage);
-      });
   }
 }
 

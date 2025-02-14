@@ -4,19 +4,12 @@ import { Grid } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import AnnotationDrawing from './AnnotationFormOverlay/AnnotationDrawing';
 
-import {
-  TARGET_VIEW,
-  TEMPLATE,
-  defaultToolState,
-} from './AnnotationFormUtils';
+import { DEFAULT_TOOL_STATE, TARGET_VIEW, TEMPLATE } from './AnnotationFormUtils';
 import AnnotationFormOverlay from './AnnotationFormOverlay/AnnotationFormOverlay';
 import TextFormSection from './TextFormSection';
 import TargetFormSection from './TargetFormSection';
 import AnnotationFormFooter from './AnnotationFormFooter';
-import {
-  KONVA_MODE,
-  resizeKonvaStage,
-} from './AnnotationFormOverlay/KonvaDrawing/KonvaUtils';
+import { KONVA_MODE, resizeKonvaStage } from './AnnotationFormOverlay/KonvaDrawing/KonvaUtils';
 
 /**
  * Template for Konva annotations (drawing)
@@ -98,7 +91,7 @@ export default function DrawingTemplate(
   /** ****************************************
    * Drawing stuff
    ***************************************** */
-  const [toolState, setToolState] = useState(defaultToolState);
+  const [toolState, setToolState] = useState(DEFAULT_TOOL_STATE);
   /** initialise drawing State* */
   const initDrawingState = () => {
     if (annotationState.maeData.target && annotationState.maeData.target.drawingState) {
@@ -119,7 +112,6 @@ export default function DrawingTemplate(
   const [drawingState, setDrawingState] = useState(initDrawingState());
 
   const [scale, setScale] = useState(playerReferences.getZoom());
-  const [isMouseOverSave, setIsMouseOverSave] = useState(false);
   const [viewTool, setViewTool] = useState(TARGET_VIEW);
 
   useEffect(() => {
@@ -204,7 +196,6 @@ export default function DrawingTemplate(
         <AnnotationDrawing
           displayMode={KONVA_MODE.DRAW}
           drawingState={drawingState}
-          isMouseOverSave={isMouseOverSave}
           playerReferences={playerReferences}
           scale={scale}
           setColorToolFromCurrentShape={setColorToolFromCurrentShape}
@@ -243,14 +234,15 @@ export default function DrawingTemplate(
         t={t}
         target={annotationState.maeData.target}
         timeTarget
+        spatialTarget={false}
         windowId={windowId}
       />
       <Grid item>
         <AnnotationFormFooter
+          annotationState={annotationState}
           closeFormCompanionWindow={closeFormCompanionWindow}
           saveAnnotation={saveFunction}
           t={t}
-          annotationState={annotationState}
         />
       </Grid>
     </Grid>

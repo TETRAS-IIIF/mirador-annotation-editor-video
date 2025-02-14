@@ -1,6 +1,4 @@
-import {
-  Button, Grid, TextField,
-} from '@mui/material';
+import { Button, Grid, TextField } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
@@ -9,7 +7,12 @@ import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import { v4 as uuidv4 } from 'uuid';
 import ImageFormField from './ImageFormField';
 import {
-  isShapesTool, OVERLAY_TOOL, KONVA_MODE, rgbaToObj, objToRgba,
+  isShapesTool,
+  KONVA_MODE,
+  objToRgba,
+  OVERLAY_TOOL,
+  rgbaToObj,
+  SHAPES_TOOL,
 } from './KonvaDrawing/KonvaUtils';
 import ColorPicker from './KonvaDrawing/shapes/ColorPicker';
 
@@ -111,7 +114,10 @@ function AnnotationFormOverlayToolOptions({
   const handleImgChange = (newUrl, imgRef) => {
     setToolState({
       ...toolState,
-      image: { ...toolState.image, id: newUrl },
+      image: {
+        ...toolState.image,
+        id: newUrl,
+      },
     });
   };
   /** Handle Image into toolstate * */
@@ -160,7 +166,7 @@ function AnnotationFormOverlayToolOptions({
         )
       }
       {
-          toolState.activeTool === OVERLAY_TOOL.TEXT && (
+        toolState.activeTool === OVERLAY_TOOL.TEXT && (
           <Grid container direction="column" spacing={1}>
             <Grid item>
               <Typography variant="overline">
@@ -199,10 +205,10 @@ function AnnotationFormOverlayToolOptions({
               </Grid>
             )}
           </Grid>
-          )
+        )
       }
       {
-          toolState.activeTool === OVERLAY_TOOL.IMAGE && (
+        toolState.activeTool === OVERLAY_TOOL.IMAGE && (
           <>
             <Typography variant="overline">
               {t('add_image_from_url')}
@@ -221,7 +227,14 @@ function AnnotationFormOverlayToolOptions({
               </Button>
             </StyledDivButtonImage>
           </>
-          )
+        )
+      }
+      {
+        toolState.activeTool === SHAPES_TOOL.POLYGON && (
+          <Typography>
+            {t('pressEscapeToFinish')}
+          </Typography>
+        )
       }
     </div>
   );

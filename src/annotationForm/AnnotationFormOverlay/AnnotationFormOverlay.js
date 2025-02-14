@@ -1,6 +1,4 @@
-import {
-  Grid, Tooltip,
-} from '@mui/material';
+import { Grid, Tooltip } from '@mui/material';
 import ToggleButton from '@mui/material/ToggleButton';
 import TitleIcon from '@mui/icons-material/Title';
 import ImageIcon from '@mui/icons-material/Image';
@@ -12,12 +10,12 @@ import CategoryIcon from '@mui/icons-material/Category';
 import CursorIcon from '../../icons/Cursor';
 import AnnotationFormOverlayTool from './AnnotationFormOverlayTool';
 import {
-  defaultToolState,
+  DEFAULT_TOOL_STATE,
   OVERLAY_VIEW,
   StyledToggleButtonGroup,
   TARGET_VIEW,
 } from '../AnnotationFormUtils';
-import { OVERLAY_TOOL, KONVA_MODE } from './KonvaDrawing/KonvaUtils';
+import { isShapesTool, KONVA_MODE, OVERLAY_TOOL } from './KonvaDrawing/KonvaUtils';
 
 const OverlayIconAndTitleContainer = styled(Grid)(({ theme }) => ({
   display: 'flex',
@@ -50,7 +48,7 @@ function AnnotationFormOverlay(
     if (!displayMode) {
       if (tool === OVERLAY_TOOL.SHAPE) {
         setToolState({
-          ...defaultToolState,
+          ...DEFAULT_TOOL_STATE,
           activeTool: tool,
         });
       }
@@ -82,43 +80,57 @@ function AnnotationFormOverlay(
           aria-label={t('tool_selection')}
           size="small"
         >
-          <Tooltip title={t('edit')}>
-            <ToggleButton value={OVERLAY_TOOL.EDIT} aria-label={t('select_cursor')} onClick={tabHandler(TARGET_VIEW)}>
-              <CursorIcon />
-            </ToggleButton>
-          </Tooltip>
           {displayMode !== KONVA_MODE.IMAGE && (
-            <div>
-              <Tooltip title={t('shape_selection')}>
-                <ToggleButton value={OVERLAY_TOOL.SHAPE} aria-label={t('select_cursor')} onClick={tabHandler(OVERLAY_VIEW)}>
-                  <CategoryIcon />
-                </ToggleButton>
-              </Tooltip>
-              {displayMode === KONVA_MODE.DRAW && (
-                <Tooltip title={t('text')}>
-                  <ToggleButton
-                    value={OVERLAY_TOOL.TEXT}
-                    aria-label={t('select_text')}
-                    onClick={tabHandler(OVERLAY_VIEW)}
-                  >
-                    <TitleIcon />
-                  </ToggleButton>
-                </Tooltip>
-              )}
-              <Tooltip title={t('delete')}>
-                <ToggleButton value={OVERLAY_TOOL.DELETE} aria-label={t('select_cursor')} onClick={tabHandler(OVERLAY_VIEW)}>
-                  <DeleteIcon />
-                </ToggleButton>
-              </Tooltip>
-            </div>
+            <Tooltip title={t('shape_selection')}>
+              <ToggleButton
+                value={isShapesTool(activeTool) ? activeTool : OVERLAY_TOOL.SHAPE}
+                aria-label={t('select_cursor')}
+                onClick={tabHandler(OVERLAY_VIEW)}
+              >
+                <CategoryIcon />
+              </ToggleButton>
+            </Tooltip>
+          )}
+          {displayMode === KONVA_MODE.DRAW && (
+            <Tooltip title={t('text')}>
+              <ToggleButton
+                value={OVERLAY_TOOL.TEXT}
+                aria-label={t('select_text')}
+                onClick={tabHandler(OVERLAY_VIEW)}
+              >
+                <TitleIcon />
+              </ToggleButton>
+            </Tooltip>
           )}
           {displayMode === KONVA_MODE.IMAGE && (
             <Tooltip title={t('image')}>
-              <ToggleButton value={OVERLAY_TOOL.IMAGE} aria-label={t('select_cursor')} onClick={tabHandler(OVERLAY_VIEW)}>
+              <ToggleButton
+                value={OVERLAY_TOOL.IMAGE}
+                aria-label={t('select_cursor')}
+                onClick={tabHandler(OVERLAY_VIEW)}
+              >
                 <ImageIcon />
               </ToggleButton>
             </Tooltip>
           )}
+          <Tooltip title={t('edit')}>
+            <ToggleButton
+              value={OVERLAY_TOOL.EDIT}
+              aria-label={t('select_cursor')}
+              onClick={tabHandler(TARGET_VIEW)}
+            >
+              <CursorIcon />
+            </ToggleButton>
+          </Tooltip>
+          <Tooltip title={t('delete')}>
+            <ToggleButton
+              value={OVERLAY_TOOL.DELETE}
+              aria-label={t('select_cursor')}
+              onClick={tabHandler(OVERLAY_VIEW)}
+            >
+              <DeleteIcon />
+            </ToggleButton>
+          </Tooltip>
         </StyledToggleButtonGroup>
         <AnnotationFormOverlayTool
           currentShape={currentShape}

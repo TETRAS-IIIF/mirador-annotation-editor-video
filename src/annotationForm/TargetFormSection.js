@@ -6,10 +6,13 @@ import TargetTimeInput from './TargetTimeInput';
 import { TargetSpatialInput } from './TargetSpatialInput';
 
 /**
- * Section of Time and Space Target
- * @param templateType
- * @param mediaType
+ *
+ * @param onChangeTarget
  * @param spatialTarget
+ * @param t
+ * @param playerReferences
+ * @param target
+ * @param timeTarget
  * @param windowId
  * @returns {Element}
  * @constructor
@@ -72,6 +75,10 @@ export default function TargetFormSection(
     timeTarget = false;
   }
 
+  if (!spatialTarget && !timeTarget) {
+    return <> </>;
+  }
+
   return (
     <Grid item container direction="column" spacing={1}>
       <Grid item>
@@ -105,7 +112,7 @@ export default function TargetFormSection(
             />
           </Grid>
         )
-        }
+      }
     </Grid>
   );
 }

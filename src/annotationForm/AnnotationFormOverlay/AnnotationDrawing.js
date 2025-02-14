@@ -11,7 +11,6 @@ export default function AnnotationDrawing(
   {
     displayMode,
     drawingState,
-    isMouseOverSave,
     playerReferences,
     scale,
     setColorToolFromCurrentShape,
@@ -40,7 +39,7 @@ export default function AnnotationDrawing(
         rotation: 0,
         scaleX: 1,
         scaleY: 1,
-        type: SHAPES_TOOL.IMAGE,
+        type: OVERLAY_TOOL.IMAGE,
         url: toolState.imageEvent.id,
         x: 30,
         y: 30,
@@ -465,7 +464,6 @@ export default function AnnotationDrawing(
             (pos.x - drawingState.currentShape.x) ** 2
             + (pos.y - drawingState.currentShape.y) ** 2,
           );
-          console.log('debug radius', radius);
 
           updateCurrentShapeInShapes({
             ...drawingState.currentShape,
@@ -547,7 +545,6 @@ export default function AnnotationDrawing(
         displayMode={displayMode}
         handleDragEnd={handleDragEnd}
         handleDragStart={handleDragStart}
-        isMouseOverSave={isMouseOverSave}
         onShapeClick={onShapeClick}
         onTransform={onTransform}
         scale={scale}
@@ -629,15 +626,6 @@ AnnotationDrawing.propTypes = {
       }),
     ),
   ]).isRequired,
-  isMouseOverSave: PropTypes.bool.isRequired,
-  overlay: PropTypes.shape({
-    canvasHeight: PropTypes.number,
-    canvasWidth: PropTypes.number,
-    containerHeight: PropTypes.number,
-    containerWidth: PropTypes.number,
-    height: PropTypes.number,
-    width: PropTypes.number,
-  }).isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   playerReferences: PropTypes.object.isRequired,
   scale: PropTypes.number.isRequired,

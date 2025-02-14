@@ -6,10 +6,10 @@ import { getWindowViewType } from 'mirador/dist/es/src/state/selectors';
 import {
   getCompanionWindowsForContent,
 } from 'mirador/dist/es/src/state/selectors/companionWindows';
-import { useTranslation } from 'react-i18next';
 import CanvasListItem from '../CanvasListItem';
 import AnnotationActionsContext from '../AnnotationActionsContext';
 import SingleCanvasDialog from '../SingleCanvasDialog';
+import translations from '../locales/locales';
 
 /** Functional Component */
 function CanvasAnnotationsWrapper({
@@ -24,6 +24,7 @@ function CanvasAnnotationsWrapper({
   windowViewType,
   containerRef,
   annotationEditCompanionWindowIsOpened,
+  t,
 }) {
   const [singleCanvasDialogOpen, setSingleCanvasDialogOpen] = useState(false);
 
@@ -37,7 +38,10 @@ function CanvasAnnotationsWrapper({
     listContainerComponent: CanvasListItem,
   };
 
-  const { t } = useTranslation();
+  /* const { t } = useTranslation();
+
+  console.log(t('add_a_circle'));
+  console.log(t(TargetComponent)); */
 
   return (
     <AnnotationActionsContext.Provider
@@ -52,6 +56,7 @@ function CanvasAnnotationsWrapper({
         toggleSingleCanvasDialogOpen,
         windowId: targetProps.windowId,
         windowViewType,
+        t,
       }}
     >
       <TargetComponent {...props} ref={containerRef} />
@@ -60,7 +65,6 @@ function CanvasAnnotationsWrapper({
           handleClose={toggleSingleCanvasDialogOpen}
           open={singleCanvasDialogOpen}
           switchToSingleCanvasView={switchToSingleCanvasView}
-          t={t}
         />
       )}
     </AnnotationActionsContext.Provider>
@@ -144,7 +148,10 @@ function mapStateToProps(state, { targetProps: { windowId } }) {
     annotationEditCompanionWindowIsOpened,
     annotationsOnCanvases,
     canvases,
-    config: state.config,
+    config: {
+      ...state.config,
+      translations,
+    },
     windowViewType: getWindowViewType(state, { windowId }),
   };
 }

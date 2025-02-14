@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Typography from '@mui/material/Typography';
 import { Grid } from '@mui/material';
 import AnnotationDrawing from './AnnotationFormOverlay/AnnotationDrawing';
-import { TARGET_VIEW, getTargetSVGToolState } from './AnnotationFormUtils';
+import { getTargetSVGToolState, TARGET_VIEW } from './AnnotationFormUtils';
 import AnnotationFormOverlay from './AnnotationFormOverlay/AnnotationFormOverlay';
 import { KONVA_MODE } from './AnnotationFormOverlay/KonvaDrawing/KonvaUtils';
 
@@ -86,19 +86,19 @@ export function TargetSpatialInput({
 
   return (
     <Grid container direction="column">
-      { showSVGSelector && (
+      {showSVGSelector && (
         <Grid item container direction="column">
           <Typography variant="subFormSectionTitle">
-            {t('svg_selection')}
+            {t('spatialTarget')}
           </Typography>
           <Grid item direction="row" spacing={2}>
             <AnnotationDrawing
               displayMode={KONVA_MODE.TARGET}
               drawingState={drawingState}
-              isMouseOverSave={false} // TODO remove
               playerReferences={playerReferences}
               scale={scale}
-              setColorToolFromCurrentShape={() => {}}
+              setColorToolFromCurrentShape={() => {
+              }}
               setDrawingState={setDrawingState}
               tabView="edit" // TODO change
               toolState={toolState}
