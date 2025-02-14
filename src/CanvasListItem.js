@@ -136,14 +136,16 @@ const CanvasListItem = forwardRef((props, ref) => {
               zIndex: 10000,
             }}
           >
-            <ToggleButton
-              aria-label="Debug"
-              onClick={() => console.log(annotationData)} // TODO Open IIIIF debug window
-              value="Debug in console"
-              visible={context.config.debug}
-            >
-              <SettingsIcon />
-            </ToggleButton>
+            <Tooltip title={t('debugAnnotation')}>
+              <ToggleButton
+                aria-label="Debug"
+                onClick={() => console.log(annotationData)} // TODO Open IIIIF debug window
+                value="Debug in console"
+                visible={context.config.debug}
+              >
+                <SettingsIcon />
+              </ToggleButton>
+            </Tooltip>
             <Tooltip title={(
               <WhoAndWhenFormSection
                 creator={annotationData.creator}
@@ -163,22 +165,26 @@ const CanvasListItem = forwardRef((props, ref) => {
                 <InfoIcon />
               </ToggleButton>
             </Tooltip>
-            <ToggleButton
-              aria-label="Edit"
-              onClick={context.windowViewType === 'single' ? handleEdit : context.toggleSingleCanvasDialogOpen}
-              value="edit"
-              disabled={!context.annotationEditCompanionWindowIsOpened}
-            >
-              <EditIcon />
-            </ToggleButton>
-            <ToggleButton
-              aria-label="Delete"
-              onClick={handleDelete}
-              value="delete"
-              disabled={!context.annotationEditCompanionWindowIsOpened}
-            >
-              <DeleteIcon />
-            </ToggleButton>
+            <Tooltip title={t('edit_annotation')}>
+              <ToggleButton
+                aria-label="Edit"
+                onClick={context.windowViewType === 'single' ? handleEdit : context.toggleSingleCanvasDialogOpen}
+                value="edit"
+                disabled={!context.annotationEditCompanionWindowIsOpened}
+              >
+                <EditIcon />
+              </ToggleButton>
+            </Tooltip>
+            <Tooltip title={t('deleteAnnotation')}>
+              <ToggleButton
+                aria-label="Delete"
+                onClick={handleDelete}
+                value="delete"
+                disabled={!context.annotationEditCompanionWindowIsOpened}
+              >
+                <DeleteIcon />
+              </ToggleButton>
+            </Tooltip>
           </ToggleButtonGroup>
         </div>
       )}

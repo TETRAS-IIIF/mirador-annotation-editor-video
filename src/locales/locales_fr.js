@@ -16,7 +16,7 @@ export const fr = {
   container_size: 'Taille du conteneur',
   create_annotation: 'Créer une annotation',
   createdByOn: 'Créé par {{creator}}, {{creationDate}}',
-  debugAnnotation: 'Debug annotation dans la console',
+  debugAnnotation: 'Voir l\'annotation dans la console',
   delete: 'Supprimer',
   deleteAnnotation: 'Supprimer',
   delete_all: 'Tout supprimer',
