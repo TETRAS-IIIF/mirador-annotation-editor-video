@@ -5,7 +5,7 @@ import { manifestsCatalog } from './manifestsCatalog';
 
 const config = {
   annotation: {
-    adapter: (canvasId) => new LocalStorageAdapter(`localStorage://?canvasId=${canvasId}`),
+    adapter: (canvasId) => new LocalStorageAdapter(`localStorage://?canvasId=${canvasId}`, 'Anonymous User'),
     exportLocalStorageAnnotations: false, // display annotation JSON export button
   },
   catalog: manifestsCatalog,
@@ -16,6 +16,7 @@ const config = {
     dark: {
       typography: {
         formSectionTitle: {
+          color: '#5A8264',
           fontSize: '1rem',
           fontWeight: 600,
           letterSpacing: '0.1em',
@@ -38,6 +39,7 @@ const config = {
       },
       typography: {
         formSectionTitle: {
+          color: '#5A8264',
           fontSize: '1.215rem',
         },
         subFormSectionTitle: {

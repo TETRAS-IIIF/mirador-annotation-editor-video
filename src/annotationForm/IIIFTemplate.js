@@ -1,48 +1,26 @@
 import React, { useState } from 'react';
-import { JsonEditor as Editor } from 'jsoneditor-react18';
 import PropTypes from 'prop-types';
-import 'jsoneditor-react18/es/editor.min.css';
-import ace from 'brace';
-import 'brace/mode/json';
-import 'brace/theme/github';
 import { Paper } from '@mui/material';
+import { JsonEditor } from 'json-edit-react';
 import AnnotationFormFooter from './AnnotationFormFooter';
-import { TEMPLATE } from './AnnotationFormUtils';
 
 /**
  * IIIFTemplate component
  * @param annotation
- * @param saveAnnotation
- * @param closeFormCompanionWindow
  * @param canvases
+ * @param closeFormCompanionWindow
+ * @param saveAnnotation
+ * @param t
  * @returns {JSX.Element}
  */
 export default function IIIFTemplate({
   annotation,
-  saveAnnotation,
-  closeFormCompanionWindow,
   canvases,
+  closeFormCompanionWindow,
+  saveAnnotation,
   t,
 }) {
-  let maeAnnotation = annotation;
-  if (!annotation.id) {
-    // If the annotation does not have maeData, the annotation was not created with mae
-    maeAnnotation = {
-      body: {
-        id: '',
-        type: '',
-        value: 'Your annotation',
-      },
-      id: null,
-      maeData: {
-        templateType: TEMPLATE.IIIF_TYPE,
-      },
-      motivation: 'commenting',
-      target: '',
-    };
-  }
-
-  const [annotationState, setAnnotationState] = useState(maeAnnotation);
+  const [annotationState, setAnnotationState] = useState(annotation);
 
   /**
    * Save function for the annotation
@@ -65,17 +43,17 @@ export default function IIIFTemplate({
         elevation={0}
         style={{ minHeight: '300px' }}
       >
-        <Editor
-          value={annotationState}
-          ace={ace}
-          theme="ace/theme/github"
-          onChange={setAnnotationState}
+
+        <JsonEditor
+          data={annotationState}
+          onUpdate={setAnnotationState}
         />
       </Paper>
       <AnnotationFormFooter
         closeFormCompanionWindow={closeFormCompanionWindow}
         saveAnnotation={saveFunction}
         t={t}
+        annotationState={annotationState}
       />
     </>
   );

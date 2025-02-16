@@ -17,7 +17,6 @@ function ParentComponent({
   displayMode,
   handleDragEnd,
   handleDragStart,
-  isMouseOverSave,
   onShapeClick,
   onTransform,
   scale,
@@ -51,7 +50,7 @@ function ParentComponent({
       {/* eslint-disable-next-line consistent-return */}
       {shapes.map((shape, i) => {
         // eslint-disable-next-line max-len
-        const isSelected = selectedShapeId === shape.id && !isMouseOverSave && trview;
+        const isSelected = selectedShapeId === shape.id && trview;
         switch (shape.type) {
           case SHAPES_TOOL.RECTANGLE:
             return (
@@ -189,7 +188,6 @@ ParentComponent.propTypes = {
   displayMode: PropTypes.string.isRequired,
   handleDragEnd: PropTypes.func.isRequired,
   handleDragStart: PropTypes.func.isRequired,
-  isMouseOverSave: PropTypes.bool.isRequired,
   onShapeClick: PropTypes.func.isRequired,
   onTransform: PropTypes.func.isRequired,
   scale: PropTypes.number.isRequired,

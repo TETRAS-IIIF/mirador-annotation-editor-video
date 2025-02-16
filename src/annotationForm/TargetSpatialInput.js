@@ -89,13 +89,12 @@ export function TargetSpatialInput({
       {showSVGSelector && (
         <Grid item container direction="column">
           <Typography variant="subFormSectionTitle">
-            {t('svg_selection')}
+            {t('spatialTarget')}
           </Typography>
           <Grid item direction="row" spacing={2}>
             <AnnotationDrawing
               displayMode={KONVA_MODE.TARGET}
               drawingState={drawingState}
-              isMouseOverSave={false} // TODO remove
               playerReferences={playerReferences}
               scale={scale}
               setColorToolFromCurrentShape={() => {

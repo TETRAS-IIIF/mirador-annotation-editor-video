@@ -47,6 +47,7 @@ function CanvasAnnotationsWrapper({
     config,
     receiveAnnotation,
     storageAdapter: config.annotation.adapter,
+    t,
     toggleSingleCanvasDialogOpen,
     windowId: targetProps.windowId,
     windowViewType,
@@ -139,14 +140,20 @@ function mapStateToProps(state, { targetProps: { windowId } }) {
       annotationsOnCanvases[canvas.id] = anno;
     }
   });
+
+  // TODO Before merging we were injecting translation inside config.
+  //  Perhaps a regression to remove it
   return {
     annotationEditCompanionWindowIsOpened,
     annotationsOnCanvases,
     canvases,
-    config: state.config,
+    config: {
+      ...state.config,
+    },
     windowViewType: getWindowViewType(state, { windowId }),
   };
 }
+
 /** */
 const mapDispatchToProps = (dispatch, props, annotationEditCompanionWindowIsOpened) => ({
   addCompanionWindow: (content, additionalProps) => dispatch(

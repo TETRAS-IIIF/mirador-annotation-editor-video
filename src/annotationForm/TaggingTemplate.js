@@ -97,7 +97,6 @@ export default function TaggingTemplate(
           spatialTarget
           t={t}
           target={annotationState.maeData.target}
-          timeTarget
           windowId={windowId}
         />
       </Grid>
@@ -106,6 +105,7 @@ export default function TaggingTemplate(
           closeFormCompanionWindow={closeFormCompanionWindow}
           saveAnnotation={saveFunction}
           t={t}
+          annotationState={annotationState}
         />
       </Grid>
     </Grid>

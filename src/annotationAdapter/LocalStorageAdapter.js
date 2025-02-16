@@ -1,8 +1,21 @@
 /** */
 export default class LocalStorageAdapter {
   /** */
-  constructor(annotationPageId) {
+  constructor(annotationPageId, user) {
     this.annotationPageId = annotationPageId;
+    if (user) {
+      this.user = user;
+    } else {
+      this.user = ANONYMOUS_USER;
+    }
+  }
+
+  /**
+   * Get the storage adapter user
+   * @returns {*}
+   */
+  getStorageAdapterUser() {
+    return this.user;
   }
 
   /** */
@@ -13,6 +26,7 @@ export default class LocalStorageAdapter {
       type: 'AnnotationPage',
     };
     const annotationPage = await this.all() || emptyAnnoPage;
+
     annotationPage.items.push(annotation);
     localStorage.setItem(this.annotationPageId, JSON.stringify(annotationPage));
     console.log('CREATE ANNOTATION', annotationPage);
@@ -56,3 +70,5 @@ export default class LocalStorageAdapter {
     return JSON.parse(localStorage.getItem(this.annotationPageId));
   }
 }
+
+export const ANONYMOUS_USER = 'Anonymous';

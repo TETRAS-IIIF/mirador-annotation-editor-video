@@ -1,16 +1,48 @@
-import React, { forwardRef, useContext, useState } from 'react';
+import React, {
+  forwardRef, useContext, useMemo, useState,
+} from 'react';
 import PropTypes from 'prop-types';
 import DeleteIcon from '@mui/icons-material/DeleteForever';
 import EditIcon from '@mui/icons-material/Edit';
 import ToggleButton from '@mui/material/ToggleButton';
+import SettingsIcon from '@mui/icons-material/Settings';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import flatten from 'lodash/flatten';
+import { Tooltip } from '@mui/material';
+import { withTranslation } from 'react-i18next';
+import InfoIcon from '@mui/icons-material/Info';
 import AnnotationActionsContext from './AnnotationActionsContext';
+import WhoAndWhenFormSection, { TOOLTIP_MODE } from './annotationForm/WhoAndWhenFormSection';
 
 // TODO missing TRAD
 const CanvasListItem = forwardRef((props, ref) => {
   const [isHovering, setIsHovering] = useState(false);
   const context = useContext(AnnotationActionsContext);
+
+  const annotationData = useMemo(() => {
+    const { annotationid } = props;
+    const {
+      canvases,
+      annotationsOnCanvases,
+    } = context;
+    let annotation;
+    canvases.some((canvas) => {
+      if (annotationsOnCanvases[canvas.id]) {
+        Object.entries(annotationsOnCanvases[canvas.id])
+          .forEach(([key, value]) => {
+            if (value.json && value.json.items) {
+              annotation = value.json.items.find((anno) => anno.id === annotationid);
+              if (annotation) {
+                return annotation;
+              }
+            }
+          });
+      }
+      return (annotation);
+    });
+    return annotation;
+  }, [props.annotationid]);
+
   /**
    * Function to handle mouse hover event.
    * @function handleMouseHover
@@ -48,22 +80,9 @@ const CanvasListItem = forwardRef((props, ref) => {
   const handleEdit = () => {
     const {
       addCompanionWindow,
-      canvases,
-      annotationsOnCanvases,
     } = context;
     const { annotationid } = props;
-    let annotation;
-    canvases.some((canvas) => {
-      if (annotationsOnCanvases[canvas.id]) {
-        Object.entries(annotationsOnCanvases[canvas.id])
-          .forEach(([key, value]) => {
-            if (value.json && value.json.items) {
-              annotation = value.json.items.find((anno) => anno.id === annotationid);
-            }
-          });
-      }
-      return (annotation);
-    });
+
     addCompanionWindow('annotationCreation', {
       annotationid,
       position: 'right',
@@ -84,7 +103,8 @@ const CanvasListItem = forwardRef((props, ref) => {
         return flatten(Object.entries(annotationsOnCanvases[canvas.id])
           .map(([key, value]) => {
             if (value.json && value.json.items) {
-              return value.json.items.filter((item) => item.maeData).map((item) => item.id);
+              return value.json.items.filter((item) => item.maeData)
+                .map((item) => item.id);
             }
             return [];
           }));
@@ -95,6 +115,8 @@ const CanvasListItem = forwardRef((props, ref) => {
       .includes(annotationid);
   };
 
+  const { t } = context;
+
   return (
     <div
       onMouseEnter={handleMouseHover}
@@ -102,37 +124,67 @@ const CanvasListItem = forwardRef((props, ref) => {
       className="mirador-annotation-list-item"
       ref={ref}
     >
-      {isHovering && editable() && (
-        <div
-          style={{
-            position: 'relative',
-            top: -20,
-            zIndex: 10000,
-          }}
-        >
+      {(isHovering && editable()) && (
+        <div>
           <ToggleButtonGroup
             aria-label="annotation tools"
             size="small"
             style={{
+              backgroundColor: 'white',
               position: 'absolute',
               right: 0,
+              zIndex: 10000,
             }}
-            disabled={!context.annotationEditCompanionWindowIsOpened}
           >
-            <ToggleButton
-              aria-label="Edit"
-              onClick={context.windowViewType === 'single' ? handleEdit : context.toggleSingleCanvasDialogOpen}
-              value="edit"
+            <Tooltip title={t('debugAnnotation')}>
+              <ToggleButton
+                aria-label="Debug"
+                onClick={() => console.log(annotationData)} // TODO Open IIIIF debug window
+                value="Debug in console"
+                visible={context.config.debug}
+              >
+                <SettingsIcon />
+              </ToggleButton>
+            </Tooltip>
+            <Tooltip title={(
+              <WhoAndWhenFormSection
+                creator={annotationData.creator}
+                creationDate={annotationData.creationDate}
+                lastEditor={annotationData.lastEditor}
+                lastSavedDate={annotationData.lastSavedDate}
+                displayMode={TOOLTIP_MODE}
+                t={t}
+              />
+            )}
             >
-              <EditIcon />
-            </ToggleButton>
-            <ToggleButton
-              aria-label="Delete"
-              onClick={handleDelete}
-              value="delete"
-            >
-              <DeleteIcon />
-            </ToggleButton>
+              <ToggleButton
+                aria-label="Metadata"
+                value="metadata"
+                visible={annotationData?.creator}
+              >
+                <InfoIcon />
+              </ToggleButton>
+            </Tooltip>
+            <Tooltip title={t('edit_annotation')}>
+              <ToggleButton
+                aria-label="Edit"
+                onClick={context.windowViewType === 'single' ? handleEdit : context.toggleSingleCanvasDialogOpen}
+                value="edit"
+                disabled={!context.annotationEditCompanionWindowIsOpened}
+              >
+                <EditIcon />
+              </ToggleButton>
+            </Tooltip>
+            <Tooltip title={t('deleteAnnotation')}>
+              <ToggleButton
+                aria-label="Delete"
+                onClick={handleDelete}
+                value="delete"
+                disabled={!context.annotationEditCompanionWindowIsOpened}
+              >
+                <DeleteIcon />
+              </ToggleButton>
+            </Tooltip>
           </ToggleButtonGroup>
         </div>
       )}

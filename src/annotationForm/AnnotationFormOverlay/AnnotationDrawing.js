@@ -1,4 +1,6 @@
-import React, { useEffect, useLayoutEffect, useState } from 'react';
+import React, {
+  useEffect, useState, useLayoutEffect,
+} from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { Stage } from 'react-konva';
@@ -11,7 +13,6 @@ export default function AnnotationDrawing(
   {
     displayMode,
     drawingState,
-    isMouseOverSave,
     playerReferences,
     scale,
     setColorToolFromCurrentShape,
@@ -195,7 +196,7 @@ export default function AnnotationDrawing(
     const shape = drawingState.shapes.find((s) => s.id === modifiedShape.id);
 
     Object.assign(shape, modifiedShape);
-    if (shape.type === 'image') {
+    if (shape.type === SHAPES_TOOL.IMAGE) {
       shape.width = modifiedShape.image.width * modifiedShape.scaleX;
       shape.height = modifiedShape.image.height * modifiedShape.scaleY;
     }
@@ -214,7 +215,7 @@ export default function AnnotationDrawing(
     shape.x = editedShape.x;
     shape.y = editedShape.y;
 
-    if (shape.type === 'image') {
+    if (shape.type === SHAPES_TOOL.IMAGE) {
       shape.width = editedShape.image.width * editedShape.scaleX;
       shape.height = editedShape.image.height * editedShape.scaleY;
     }
@@ -290,7 +291,7 @@ export default function AnnotationDrawing(
             fill: toolState.fillColor,
             height: 1,
             id: uuidv4(),
-            radius: 30,
+            radius: 1,
             rotation: 0,
             scaleX: 1,
             scaleY: 1,
@@ -411,7 +412,6 @@ export default function AnnotationDrawing(
     } catch (error) {
       console.error('error', error);
     }
-    console.log('debug toolState.strokeWidth', toolState.strokeWidth);
   };
 
   /** */
@@ -462,14 +462,14 @@ export default function AnnotationDrawing(
             pos.y = drawingState.currentShape.y;
           }
 
+          const radius = Math.sqrt(
+            (pos.x - drawingState.currentShape.x) ** 2
+            + (pos.y - drawingState.currentShape.y) ** 2,
+          );
+
           updateCurrentShapeInShapes({
             ...drawingState.currentShape,
-            height: pos.y - drawingState.currentShape.y,
-            radius: Math.sqrt(
-              (pos.x - drawingState.currentShape.x) ** 2
-              + (pos.y - drawingState.currentShape.y) ** 2,
-            ),
-            width: pos.x - drawingState.currentShape.x,
+            radius,
           });
           break;
         case SHAPES_TOOL.FREEHAND:
@@ -547,7 +547,6 @@ export default function AnnotationDrawing(
         displayMode={displayMode}
         handleDragEnd={handleDragEnd}
         handleDragStart={handleDragStart}
-        isMouseOverSave={isMouseOverSave}
         onShapeClick={onShapeClick}
         onTransform={onTransform}
         scale={scale}
@@ -629,15 +628,6 @@ AnnotationDrawing.propTypes = {
       }),
     ),
   ]).isRequired,
-  isMouseOverSave: PropTypes.bool.isRequired,
-  overlay: PropTypes.shape({
-    canvasHeight: PropTypes.number,
-    canvasWidth: PropTypes.number,
-    containerHeight: PropTypes.number,
-    containerWidth: PropTypes.number,
-    height: PropTypes.number,
-    width: PropTypes.number,
-  }).isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   playerReferences: PropTypes.object.isRequired,
   scale: PropTypes.number.isRequired,

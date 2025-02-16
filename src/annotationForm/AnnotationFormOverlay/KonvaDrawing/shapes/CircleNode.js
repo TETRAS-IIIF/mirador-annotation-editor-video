@@ -41,7 +41,6 @@ function CircleNode({
       <Circle
         draggable={activeTool === 'cursor' || activeTool === 'edit'}
         fill={shape.fill}
-        height={shape.height}
         id={shape.id}
         onClick={handleClick}
         onDragEnd={handleDragEnd}
@@ -57,7 +56,6 @@ function CircleNode({
         // This line cause SVG export error
         strokeScaleEnabled={false}
         strokeWidth={shape.strokeWidth}
-        width={shape.width}
         x={shape.x}
         y={shape.y}
       />

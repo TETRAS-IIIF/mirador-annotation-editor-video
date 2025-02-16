@@ -8,6 +8,8 @@ import AnnotationFormFooter from './AnnotationFormFooter';
 import { TEMPLATE } from './AnnotationFormUtils';
 import { resizeKonvaStage } from './AnnotationFormOverlay/KonvaDrawing/KonvaUtils';
 
+const DEFAULT_BODY_VALUE = 'Annotation';
+
 /** Form part for edit annotation content and body */
 function TextCommentTemplate(
   {
@@ -73,6 +75,9 @@ function TextCommentTemplate(
       playerReferences.getMediaTrueHeight(),
       1 / playerReferences.getScale(),
     );
+    if (annotationState.body.value === '') {
+      annotationState.body.value = DEFAULT_BODY_VALUE;
+    }
     saveAnnotation(annotationState);
   };
 
@@ -96,7 +101,6 @@ function TextCommentTemplate(
           spatialTarget
           t={t}
           target={annotationState.maeData.target}
-          timeTarget
           windowId={windowId}
         />
       </Grid>
@@ -105,6 +109,7 @@ function TextCommentTemplate(
           closeFormCompanionWindow={closeFormCompanionWindow}
           saveAnnotation={saveFunction}
           t={t}
+          annotationState={annotationState}
         />
       </Grid>
     </Grid>

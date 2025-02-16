@@ -75,6 +75,18 @@ export async function getSvg(windowId) {
   return svg;
 }
 
+/**
+ *
+ * @param windowId
+ * @param shapeId
+ * @returns {Node}
+ */
+export function getKonvaShape(windowId, shapeId) {
+  const stage = getKonvaStage(windowId);
+  const shape = stage.findOne(`#${shapeId}`);
+  return shape;
+}
+
 /** Export the stage as a JPG image in a data url */
 export async function getKonvaAsDataURL(windowId) {
   const stage = getKonvaStage(windowId);
@@ -138,8 +150,9 @@ export const rgbaToObj = (rgba = 'rgba(255,255,255,0.5)') => {
 
 /** Convert color object to rgba string */
 export const objToRgba = (obj = {
-  a: 0.5,
-  b: 255,
-  g: 255,
+  // eslint-disable-next-line sort-keys
   r: 255,
+  g: 255,
+  b: 255,
+  a: 0.5,
 }) => `rgba(${obj.r},${obj.g},${obj.b},${obj.a})`;

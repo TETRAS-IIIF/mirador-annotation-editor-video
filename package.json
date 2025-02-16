@@ -1,6 +1,6 @@
 {
   "name": "mirador-annotation-editor",
-  "version": "1.0.80",
+  "version": "1.0.81",
   "description": "mirador-annotation-editor plugin in a React component. Mirador 4 (Alpha 2) compatible ",
   "main": "./dist/mirador-annotation-editor.js",
   "module": "./dist/mirador-annotation-editor.es.js",
@@ -34,6 +34,7 @@
     "brace": "^0.11.1",
     "draft-js": "^0.11.7",
     "i18next": "^24.2.2",
+    "json-edit-react": "^1.22.2",
     "jsoneditor": "^9.10.5",
     "jsoneditor-react18": "^0.5.0",
     "react-color": "^2.19.3",

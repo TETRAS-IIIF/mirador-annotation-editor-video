@@ -5,15 +5,16 @@ import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import { v4 as uuidv4 } from 'uuid';
-import ImageFormField from './ImageFormField';
 import {
   isShapesTool,
   KONVA_MODE,
   objToRgba,
   OVERLAY_TOOL,
   rgbaToObj,
+  SHAPES_TOOL,
 } from './KonvaDrawing/KonvaUtils';
 import ColorPicker from './KonvaDrawing/shapes/ColorPicker';
+import ImageFormField from './ImageFormField';
 
 const StyledDivButtonImage = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -109,6 +110,17 @@ function AnnotationFormOverlayToolOptions({
     });
   };
 
+  /** Handle text change from AnnotationFormOverlayToolOption * */
+  const handleTextChange = (e) => {
+    const text = e.target.value;
+    setToolState(
+      {
+        ...toolState,
+        text,
+      },
+    );
+  };
+
   /** Handle Image Change * */
   const handleImgChange = (newUrl, imgRef) => {
     setToolState({
@@ -133,16 +145,8 @@ function AnnotationFormOverlayToolOptions({
     });
   };
 
-  /** Handle text change from AnnotationFormOverlayToolOption * */
-  const handleTextChange = (e) => {
-    const text = e.target.value;
-    setToolState(
-      {
-        ...toolState,
-        text,
-      },
-    );
-  };
+  const showImageTool = false;
+
   return (
     <div>
       {
@@ -207,7 +211,7 @@ function AnnotationFormOverlayToolOptions({
         )
       }
       {
-        toolState.activeTool === OVERLAY_TOOL.IMAGE && (
+        showImageTool && (
           <>
             <Typography variant="overline">
               {t('add_image_from_url')}
@@ -215,7 +219,7 @@ function AnnotationFormOverlayToolOptions({
             <Grid container>
               <ImageFormField
                 xs={8}
-                value={toolState.image}
+                imageUrl={toolState.image.id}
                 onChange={handleImgChange}
                 t={t}
               />
@@ -226,6 +230,13 @@ function AnnotationFormOverlayToolOptions({
               </Button>
             </StyledDivButtonImage>
           </>
+        )
+      }
+      {
+        toolState.activeTool === SHAPES_TOOL.POLYGON && (
+          <Typography>
+            {t('pressEscapeToFinish')}
+          </Typography>
         )
       }
     </div>
