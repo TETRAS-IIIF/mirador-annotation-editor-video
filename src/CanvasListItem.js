@@ -44,14 +44,6 @@ const CanvasListItem = forwardRef((props, ref) => {
   }, [props.annotationid]);
 
   /**
-   * Function to handle mouse hover event.
-   * @function handleMouseHover
-   * @returns {void}
-   */
-  const handleMouseHover = () => {
-    setIsHovering(!isHovering);
-  };
-  /**
    * Handle deletion of annotation.
    * @function
    * @name handleDelete
@@ -119,8 +111,8 @@ const CanvasListItem = forwardRef((props, ref) => {
 
   return (
     <div
-      onMouseEnter={handleMouseHover}
-      onMouseLeave={handleMouseHover}
+      onMouseEnter={() => setIsHovering(true)}
+      onMouseLeave={() => setIsHovering(false)}
       className="mirador-annotation-list-item"
       ref={ref}
     >
@@ -136,16 +128,20 @@ const CanvasListItem = forwardRef((props, ref) => {
               zIndex: 10000,
             }}
           >
-            <Tooltip title={t('debugAnnotation')}>
-              <ToggleButton
-                aria-label="Debug"
-                onClick={() => console.log(annotationData)} // TODO Open IIIIF debug window
-                value="Debug in console"
-                visible={context.config.debug}
-              >
-                <SettingsIcon />
-              </ToggleButton>
-            </Tooltip>
+            {
+              context.config?.debug && (
+                <Tooltip title={t('debugAnnotation')}>
+                  <ToggleButton
+                    aria-label="Debug"
+                    onClick={() => console.log(annotationData)} // TODO Open IIIIF debug window
+                    value="Debug in console"
+                    visible={context.config.debug}
+                  >
+                    <SettingsIcon />
+                  </ToggleButton>
+                </Tooltip>
+              )
+            }
             <Tooltip title={(
               <WhoAndWhenFormSection
                 creator={annotationData.creator}
