@@ -1,8 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Grid, Typography } from '@mui/material';
-import { MEDIA_TYPES, TEMPLATE } from './AnnotationFormUtils';
-import TargetTimeInput from './TargetTimeInput';
+import { MEDIA_TYPES } from './AnnotationFormUtils';
 import { TargetSpatialInput } from './TargetSpatialInput';
 
 /**
@@ -12,7 +11,6 @@ import { TargetSpatialInput } from './TargetSpatialInput';
  * @param t
  * @param playerReferences
  * @param target
- * @param timeTarget
  * @param windowId
  * @returns {Element}
  * @constructor
@@ -24,24 +22,16 @@ export default function TargetFormSection(
     t,
     playerReferences,
     target,
-    timeTarget,
     windowId,
   },
 ) {
   if (!target) {
     // eslint-disable-next-line no-param-reassign
     target = {};
-    if (playerReferences.getMediaType() === MEDIA_TYPES.VIDEO) {
-      // eslint-disable-next-line no-param-reassign
-      target.tstart = playerReferences.getCurrentTime() || 0;
-      target.tend = playerReferences.getMediaDuration()
-        ? Math.floor(playerReferences.getMediaDuration()) : 0;
-    }
 
     // TODO Check if its possible to use overlay ?
     switch (playerReferences.getMediaType()) {
       case MEDIA_TYPES.IMAGE:
-      case MEDIA_TYPES.VIDEO:
         // eslint-disable-next-line no-param-reassign
         target.fullCanvaXYWH = `0,0,${playerReferences.getMediaTrueWidth()},${playerReferences.getMediaTrueHeight()}`;
         break;
@@ -49,20 +39,16 @@ export default function TargetFormSection(
         break;
     }
 
-    if (target.templateType !== TEMPLATE.IMAGE_TYPE
-      && target.templateType !== TEMPLATE.KONVA_TYPE) {
-      // eslint-disable-next-line no-param-reassign
-      target.drawingState = {
-        currentShape: null,
-        isDrawing: false,
-        shapes: [],
-      };
-    }
+    target.drawingState = {
+      currentShape: null,
+      isDrawing: false,
+      shapes: [],
+    };
 
     onChangeTarget(target);
   }
 
-  /** Handle timeTargetInput  and spatialTargetInput* */
+  /** Handle spatialTargetInput* */
   const onChangeTargetInput = (newData) => {
     onChangeTarget({
       ...target,
@@ -70,12 +56,7 @@ export default function TargetFormSection(
     });
   };
 
-  if (playerReferences.getMediaType() === MEDIA_TYPES.IMAGE) {
-    // eslint-disable-next-line no-param-reassign
-    timeTarget = false;
-  }
-
-  if (!spatialTarget && !timeTarget) {
+  if (!spatialTarget) {
     return <> </>;
   }
 
@@ -99,20 +80,6 @@ export default function TargetFormSection(
           </Grid>
         )
       }
-      {
-        (timeTarget && playerReferences.getMediaType() !== MEDIA_TYPES.IMAGE) && (
-          <Grid item container direction="column">
-            <TargetTimeInput
-              playerReferences={playerReferences}
-              tstart={target.tstart}
-              tend={target.tend}
-              onChange={onChangeTargetInput}
-              windowId={windowId}
-              t={t}
-            />
-          </Grid>
-        )
-      }
     </Grid>
   );
 }
@@ -125,6 +92,5 @@ TargetFormSection.propTypes = {
   t: PropTypes.func.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   target: PropTypes.object.isRequired,
-  timeTarget: PropTypes.bool.isRequired,
   windowId: PropTypes.string.isRequired,
 };

@@ -80,17 +80,15 @@ function AnnotationFormOverlay(
           aria-label={t('tool_selection')}
           size="small"
         >
-          {displayMode !== KONVA_MODE.IMAGE && (
-            <Tooltip title={t('shape_selection')}>
-              <ToggleButton
-                value={isShapesTool(activeTool) ? activeTool : OVERLAY_TOOL.SHAPE}
-                aria-label={t('select_cursor')}
-                onClick={tabHandler(OVERLAY_VIEW)}
-              >
-                <CategoryIcon />
-              </ToggleButton>
-            </Tooltip>
-          )}
+          <Tooltip title={t('shape_selection')}>
+            <ToggleButton
+              value={isShapesTool(activeTool) ? activeTool : OVERLAY_TOOL.SHAPE}
+              aria-label={t('select_cursor')}
+              onClick={tabHandler(OVERLAY_VIEW)}
+            >
+              <CategoryIcon />
+            </ToggleButton>
+          </Tooltip>
           {displayMode === KONVA_MODE.DRAW && (
             <Tooltip title={t('text')}>
               <ToggleButton
@@ -102,7 +100,7 @@ function AnnotationFormOverlay(
               </ToggleButton>
             </Tooltip>
           )}
-          {displayMode === KONVA_MODE.IMAGE && (
+          {false && (
             <Tooltip title={t('image')}>
               <ToggleButton
                 value={OVERLAY_TOOL.IMAGE}
