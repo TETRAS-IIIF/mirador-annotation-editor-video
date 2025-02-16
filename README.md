@@ -4,21 +4,14 @@
 
 ### Generalities
 
-`mirador-annotation-editor`(also known as "MAE") is a [Mirador 4](https://github.com/projectmirador/mirador) plugin that 
-adds annotation creation tools to the user interface. 
-
-It is based on the original [mirador-annotations](https://github.com/ProjectMirador/mirador-annotations/) plugin with a
-lot of technical and functional modifications.
+`mirador-annotation-editor-video`(also known as "MAEV") is a [Mirador 4](https://github.com/projectmirador/mirador) plugin that 
+adds annotation creation tools to the user interface. It support both image and video annotation.
 
 ### Copyrights
 
 #### Licence
 
-Like the original [mirador-annotations](https://github.com/ProjectMirador/mirador-annotations/) plugin, this 
-`mirador-annotation-editor` is distributed under the **Apache License Version 2.0**.
-
-Beware that the extension plugin [mirador-annotation-editor-video](https://github.com/SCENE-CE/mirador-annotation-editor-video) 
-that supports video annotation is released under the **GPL v3** license.
+This plugin is released under the **GPL v3** license unlike MAE and the original plugin.
 
 Please acknowledge that any modification you make must be distributed under a compatible licence and cannot be closed 
 source.
@@ -78,31 +71,17 @@ You can override existing annotation plugin with your own versions by using npm.
 
 Update your `package.json` file to include the following dependencies and devDependencies:
 ```js
-"mirador-annotations": "npm:mirador-annotation-editor@^1.0.10",
+"mirador-annotations": "npm:mirador-annotation-editor-video@^1.0.10",
 ```
 
-You need also to use the latest version of Mirador 4.
+You need also to use the custom version of Mirador 4.
 
 ```js
-"mirador" : "4.0.0-alpha.2",
+"mirador" : "npm@mirador-video@^1.0.17",
 ```
 
 If you encounter this error : 
 
-```js
-Module not found: Error: Can't resolve 'mirador-annotations/es/LocalStorageAdapter' in '/home/anthony/Documents/2024-scene/mirador-integration/src'
-```
-Update your import :
-
-```js
-# Change your LocalStorageAdapter path import
-import LocalStorageAdapter from 'mirador-annotations/es/LocalStorageAdapter';
-# To that
-import LocalStorageAdapter from 'mirador-annotations/es/annotationAdapter/LocalStorageAdapter';
-```
-
-You can find an example of integration in our Mirador-integration repository : 
-https://github.com/SCENE-CE/mirador-integration
 
 ## Install (local)
 

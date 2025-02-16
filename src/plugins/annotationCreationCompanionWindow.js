@@ -1,11 +1,15 @@
 import * as actions from 'mirador/dist/es/src/state/actions';
 import { getCompanionWindow } from 'mirador/dist/es/src/state/selectors/companionWindows';
-import { getVisibleCanvases } from 'mirador/dist/es/src/state/selectors/canvases';
+import {
+  getVisibleCanvases,
+} from 'mirador/dist/es/src/state/selectors/canvases';
 import { getPresentAnnotationsOnSelectedCanvases } from 'mirador/dist/es/src/state/selectors/annotations';
 import { OSDReferences } from 'mirador/dist/es/src/plugins/OSDReferences';
+import { VideosReferences } from 'mirador/dist/es/src/plugins/VideosReferences';
 import { withTranslation } from 'react-i18next';
 import annotationForm from '../annotationForm/AnnotationForm';
-import { WindowPlayer } from '../playerReferences';
+import { checkMediaType, WindowPlayer } from '../playerReferences';
+import { MEDIA_TYPES } from '../annotationForm/AnnotationFormUtils';
 import translations from '../locales/locales';
 
 /** */
@@ -23,13 +27,20 @@ function mapStateToProps(state, { id: companionWindowId, windowId }) {
   const currentTime = null;
   const cw = getCompanionWindow(state, { companionWindowId, windowId });
   const { annotationid } = cw;
+  const canvases = getVisibleCanvases(state, { windowId });
 
-  // This architecture lead to recreate the playerReferences each time the component is rendered
-  const media = OSDReferences.get(windowId);
-  const playerReferences = new WindowPlayer(state, windowId, media, actions);
+  const mediaTypes = checkMediaType(state, windowId);
+
+  let playerReferences;
+
+  if (mediaTypes === MEDIA_TYPES.IMAGE) {
+    playerReferences = new WindowPlayer(state, windowId, OSDReferences.get(windowId), actions);
+  }
+  if (mediaTypes === MEDIA_TYPES.VIDEO || mediaTypes === MEDIA_TYPES.AUDIO) {
+    playerReferences = new WindowPlayer(state, windowId, VideosReferences.get(windowId), actions);
+  }
 
   // This could be removed but it's serve the useEffect in AnnotationForm for now.
-  const canvases = getVisibleCanvases(state, { windowId });
   let annotation = getPresentAnnotationsOnSelectedCanvases(state, { windowId })
     .flatMap((annoPage) => annoPage.json.items || [])
     .find((annot) => annot.id === annotationid);
@@ -53,9 +64,9 @@ function mapStateToProps(state, { id: companionWindowId, windowId }) {
   };
 }
 
-// Enhance annotationForm with i18n support
 const AnnotationFormWithTranslation = withTranslation()(annotationForm);
 
+// eslint-disable-next-line import/no-anonymous-default-export
 export default {
   companionWindowKey: 'annotationCreation',
   component: AnnotationFormWithTranslation,

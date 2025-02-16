@@ -1,5 +1,4 @@
 export const manifestsCatalog = [
-  // { manifestId: 'https://files.tetras-libre.fr/dev/multicanva-video.json' },
   { manifestId: 'https://files.tetras-libre.fr/dev/sun-400x400.json' },
   { manifestId: 'https://files.tetras-libre.fr/dev/test-vertical-video.json' },
   { manifestId: 'https://files.tetras-libre.fr/dev/Heterogeneous-media-on-several-canvases.json' },
@@ -12,4 +11,10 @@ export const manifestsCatalog = [
   { manifestId: 'https://purl.stanford.edu/sn904cj3429/iiif/manifest' },
   { manifestId: 'https://coeso.tetras-libre.fr/data/coeso-deliverable/Manual_Network_Configuration.json' },
   { manifestId: 'https://iiif.bodleian.ox.ac.uk/iiif/manifest/e32a277e-91e2-4a6d-8ba6-cc4bad230410.json' },
+  { manifestId: 'https://files.tetras-libre.fr/dev/multicanva-video.json' },
+  { manifestId: 'https://dzkimgs.l.u-tokyo.ac.jp/videos/iiif_in_japan_2017/manifest.json' },
+  { manifestId: 'https://iiif.io/api/cookbook/recipe/0219-using-caption-file/manifest.json' },
+  { manifestId: 'https://preview.iiif.io/cookbook/master/recipe/0003-mvm-video/manifest.json' },
+  { manifestId: 'https://iiif.io/api/cookbook/recipe/0065-opera-multiple-canvases/manifest.json' },
+  { manifestId: 'https://iiif.io/api/cookbook/recipe/0064-opera-one-canvas/manifest.json' },
 ];
