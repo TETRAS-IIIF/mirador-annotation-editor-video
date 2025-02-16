@@ -1,16 +1,19 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
+  addCompanionWindow as addCompanionWindowAction,
+  getCompanionWindowsForContent,
   getVisibleCanvases,
   getWindowViewType,
-  getCompanionWindowsForContent,
-  setWindowViewType as setWindowViewTypeAction,
-  addCompanionWindow as addCompanionWindowAction,
   receiveAnnotation as receiveAnnotationAction,
+  setWindowViewType as setWindowViewTypeAction,
 } from 'mirador';
+import { useTranslation } from 'react-i18next';
+import i18n from 'i18next';
 import CanvasListItem from '../CanvasListItem';
 import AnnotationActionsContext from '../AnnotationActionsContext';
 import SingleCanvasDialog from '../SingleCanvasDialog';
+import translations from '../locales/locales';
 
 /** Functional Component */
 function CanvasAnnotationsWrapper({
@@ -21,12 +24,33 @@ function CanvasAnnotationsWrapper({
   receiveAnnotation,
   switchToSingleCanvasView,
   TargetComponent,
-  t,
   targetProps,
   windowViewType,
   annotationEditCompanionWindowIsOpened,
 }) {
   const [singleCanvasDialogOpen, setSingleCanvasDialogOpen] = useState(false);
+
+  const { t } = useTranslation();
+
+  // Add translations from config to i18n
+  useEffect(() => {
+    if (i18n.isInitialized && config.translations) {
+      Object.keys(config.translations)
+        .forEach((language) => {
+          i18n.addResourceBundle(
+            language,
+            'translation',
+            config.translations[language],
+            true,
+            true,
+          );
+        });
+
+      if (config.language) {
+        i18n.changeLanguage(config.language);
+      }
+    }
+  }, [config.translations, config.language]);
 
   /** */
   const toggleSingleCanvasDialogOpen = () => {
@@ -107,6 +131,9 @@ CanvasAnnotationsWrapper.propTypes = {
     annotation: PropTypes.shape({
       adapter: PropTypes.func,
     }),
+    language: PropTypes.string,
+    // eslint-disable-next-line react/forbid-prop-types
+    translations: PropTypes.objectOf(PropTypes.object),
   }).isRequired,
   receiveAnnotation: PropTypes.func.isRequired,
   switchToSingleCanvasView: PropTypes.func.isRequired,
@@ -149,6 +176,7 @@ function mapStateToProps(state, { targetProps: { windowId } }) {
     canvases,
     config: {
       ...state.config,
+      translations,
     },
     windowViewType: getWindowViewType(state, { windowId }),
   };
