@@ -44,14 +44,6 @@ const CanvasListItem = forwardRef((props, ref) => {
   }, [props.annotationid]);
 
   /**
-   * Function to handle mouse hover event.
-   * @function handleMouseHover
-   * @returns {void}
-   */
-  const handleMouseHover = () => {
-    setIsHovering(!isHovering);
-  };
-  /**
    * Handle deletion of annotation.
    * @function
    * @name handleDelete
@@ -119,8 +111,8 @@ const CanvasListItem = forwardRef((props, ref) => {
 
   return (
     <div
-      onMouseEnter={handleMouseHover}
-      onMouseLeave={handleMouseHover}
+      onMouseEnter={() => setIsHovering(true)}
+      onMouseLeave={() => setIsHovering(false)}
       className="mirador-annotation-list-item"
       ref={ref}
     >
