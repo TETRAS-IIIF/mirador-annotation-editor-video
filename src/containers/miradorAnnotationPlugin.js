@@ -23,8 +23,8 @@ function mapStateToProps(state, { targetProps: { windowId } }) {
     annotationEditCompanionWindowIsOpened,
     canvases: getVisibleCanvases(state, { windowId }),
     config: state.config,
-    windowViewType: getWindowViewType(state, { windowId }),
     currentTime: currrentTime,
+    windowViewType: getWindowViewType(state, { windowId }),
   };
 }
 
