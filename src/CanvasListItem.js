@@ -116,7 +116,6 @@ const CanvasListItem = forwardRef((props, ref) => {
   };
 
   const { t } = useTranslation();
-  console.log('plop t', t);
 
   return (
     <div
