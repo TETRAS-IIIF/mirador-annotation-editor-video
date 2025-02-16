@@ -1,6 +1,6 @@
 {
   "name": "arvest-mae",
-  "version": "1.0.81",
+  "version": "1.0.82",
   "description": "mirador-annotation-editor plugin in a React component. Mirador 4 (Alpha 2) compatible ",
   "main": "es/index.js",
   "module": "es/index.js",
