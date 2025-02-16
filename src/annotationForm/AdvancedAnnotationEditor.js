@@ -1,8 +1,7 @@
 import React from 'react';
 import { Grid } from '@mui/material';
-import { JsonEditor as Editor } from 'jsoneditor-react18';
-import ace from 'brace';
 import PropTypes from 'prop-types';
+import { JsonEditor } from 'json-edit-react';
 import AnnotationFormFooter from './AnnotationFormFooter';
 
 /** Advanced Annotation Editor * */
@@ -17,11 +16,9 @@ export function AdvancedAnnotationEditor({
   return (
     <Grid container direction="column" spacing={1} justifyContent="flex-end" padding={1}>
       <Grid item>
-        <Editor
-          value={value}
-          ace={ace}
-          theme="ace/theme/github"
-          onChange={onChange}
+        <JsonEditor
+          data={value}
+          onUpdate={onChange}
         />
       </Grid>
       <Grid item marginTop={1}>

@@ -1,9 +1,8 @@
 import Typography from '@mui/material/Typography';
 import { Grid } from '@mui/material';
 import React, { useEffect, useRef } from 'react';
-import { JsonEditor as Editor } from 'jsoneditor-react';
-import ace from 'brace';
 import PropTypes from 'prop-types';
+import { JsonEditor } from 'json-edit-react';
 import { MEDIA_TYPES } from './AnnotationFormUtils';
 
 /* DONT DELETE THIS COMPONENT */
@@ -178,18 +177,8 @@ export function Debug(
         )
       }
       <Grid item sx={{ height: '500px' }}>
-        <Editor
-          ref={setRef}
-          value={drawingState}
-          ace={ace}
-          theme="ace/theme/github"
-          mode="code"
-          statusBar
-          htmlElementProps={{
-            style: {
-              height: 500,
-            },
-          }}
+        <JsonEditor
+          data={drawingState}
         />
       </Grid>
     </Grid>
