@@ -115,7 +115,7 @@ const CanvasListItem = forwardRef((props, ref) => {
       .includes(annotationid);
   };
 
-  const { t } = context;
+  const { t } = props;
 
   return (
     <div
@@ -205,4 +205,4 @@ CanvasListItem.propTypes = {
   ]).isRequired,
 };
 
-export default CanvasListItem;
+export default withTranslation()(CanvasListItem);

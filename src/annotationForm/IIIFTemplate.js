@@ -43,7 +43,6 @@ export default function IIIFTemplate({
         elevation={0}
         style={{ minHeight: '300px' }}
       >
-
         <JsonEditor
           data={annotationState}
           onUpdate={setAnnotationState}
