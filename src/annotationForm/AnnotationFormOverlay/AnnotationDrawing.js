@@ -306,7 +306,7 @@ export default function AnnotationDrawing(
             shapes: [...drawingState.shapes, shape],
           });
           break;
-        case 'text':
+        case OVERLAY_TOOL.TEXT:
           shape = {
             fill: toolState.fillColor,
             fontSize: 20,
