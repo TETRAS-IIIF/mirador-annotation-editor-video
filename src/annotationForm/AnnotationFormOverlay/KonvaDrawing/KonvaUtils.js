@@ -119,10 +119,10 @@ export const SHAPES_TOOL = {
   CIRCLE: 'circle',
   ELLIPSE: 'ellipse',
   FREEHAND: 'freehand',
+  IMAGE: 'image',
   POLYGON: 'polygon',
   RECTANGLE: 'rectangle',
   SHAPES: 'shapes',
-  TEXT: 'text',
 };
 
 /** Check if the active tool is a shape tool */
