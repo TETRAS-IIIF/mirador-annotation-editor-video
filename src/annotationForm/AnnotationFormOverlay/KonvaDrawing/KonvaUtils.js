@@ -122,7 +122,6 @@ export const SHAPES_TOOL = {
   POLYGON: 'polygon',
   RECTANGLE: 'rectangle',
   SHAPES: 'shapes',
-  TEXT: 'text',
 };
 
 /** Check if the active tool is a shape tool */
