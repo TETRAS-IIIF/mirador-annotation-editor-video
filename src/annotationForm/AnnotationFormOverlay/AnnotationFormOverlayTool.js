@@ -102,22 +102,18 @@ function AnnotationFormOverlayTool({
       }
       {
         isShapesTool(toolState.activeTool) && (
-          <>
-            <Typography variant="subFormSectionTitle">
-              {t('shape')}
-            </Typography>
-            <StyledToggleButtonGroup
-              value={toolState.activeTool} // State or props ?
-              exclusive
-              onChange={changeTool}
-              aria-label={t('tool_selection')}
-              size="small"
-            >
-              <Tooltip title={t('rectangle')}>
-                <ToggleButton value={SHAPES_TOOL.RECTANGLE} aria-label={t('add_a_rectangle')}>
-                  <RectangleIcon />
-                </ToggleButton>
-              </Tooltip>
+          <StyledToggleButtonGroup
+            value={toolState.activeTool} // State or props ?
+            exclusive
+            onChange={changeTool}
+            aria-label={t('tool_selection')}
+            size="small"
+          >
+            <Tooltip title={t('rectangle')}>
+              <ToggleButton value={SHAPES_TOOL.RECTANGLE} aria-label={t('add_a_rectangle')}>
+                <RectangleIcon />
+              </ToggleButton>
+            </Tooltip>
               {
                 (displayMode === KONVA_MODE.TARGET) && (
                   <Tooltip title={t('circle')}>
@@ -127,23 +123,23 @@ function AnnotationFormOverlayTool({
                   </Tooltip>
                 )
               }
-              <div>
-                <Tooltip title={t('line')}>
-                  <ToggleButton
-                    value={SHAPES_TOOL.POLYGON}
-                    aria-label={t('add_a_line')}
-                  >
-                    <PolygonIcon />
-                  </ToggleButton>
-                </Tooltip>
-                {/* <Tooltip title={t('freehand')}>
+            <div>
+              <Tooltip title={t('line')}>
+                <ToggleButton
+                  value={SHAPES_TOOL.POLYGON}
+                  aria-label={t('add_a_line')}
+                >
+                  <PolygonIcon />
+                </ToggleButton>
+              </Tooltip>
+              {/* <Tooltip title={t('freehand')}>
                   <ToggleButton
                     value={SHAPES_TOOL.FREEHAND}
                     aria-label={t('add_a_free_hand_shape')}>
                     <GestureIcon />
                   </ToggleButton>
                 </Tooltip> */}
-              </div>
+            </div>
               {
                 (displayMode === KONVA_MODE.DRAW) && (
                   <>
@@ -160,8 +156,7 @@ function AnnotationFormOverlayTool({
                   </>
                 )
               }
-            </StyledToggleButtonGroup>
-          </>
+          </StyledToggleButtonGroup>
         )
       }
       {
