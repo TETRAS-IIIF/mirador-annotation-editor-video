@@ -7,13 +7,14 @@ import { fireEvent, render, screen } from './test-utils';
 const receiveAnnotation = vi.fn();
 const storageAdapter = vi.fn(() => (
   {
-    all: vi.fn().mockResolvedValue(
-      {
-        items: [
-          { id: 'anno/2' },
-        ],
-      },
-    ),
+    all: vi.fn()
+      .mockResolvedValue(
+        {
+          items: [
+            { id: 'anno/2' },
+          ],
+        },
+      ),
     annotationPageId: 'pageId/3',
     delete: vi.fn(async () => 'annoPageResultFromDelete'),
   }
@@ -122,7 +123,7 @@ describe('CanvasListItem', () => {
 
     const buttons = screen.getAllByRole('button');
     expect(buttons.length)
-      .toBe(2);
+      .toBe(3); // Edit / view / metadata
     expect(screen.getByRole('button', { name: /edit/i }))
       .toBeInTheDocument();
     expect(screen.getByRole('button', { name: /delete/i }))
