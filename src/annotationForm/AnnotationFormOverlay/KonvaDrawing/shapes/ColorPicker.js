@@ -1,5 +1,11 @@
 import {
-  ClickAwayListener, Divider, Grid, MenuItem, MenuList, Popover, Tooltip,
+  ClickAwayListener,
+  Divider,
+  Grid,
+  MenuItem,
+  MenuList,
+  Popover,
+  Tooltip,
 } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
@@ -46,31 +52,31 @@ export default function ColorPicker(
           size="small"
         >
           {
-                toolState.activeTool !== OVERLAY_TOOL.TEXT && (
-                <>
-                  <Tooltip title={t('border_color')}>
-                    <ToggleButton
-                      value="strokeColor"
-                      aria-label={t('border_color')}
-                      onClick={openChooseColor}
-                    >
-                      <StrokeColorIcon style={{ fill: toolState.strokeColor }} />
-                      <ArrowDropDownIcon />
-                    </ToggleButton>
-                  </Tooltip>
-                  <Tooltip title={t('line_weight')}>
-                    <ToggleButton
-                      value="strokeColor"
-                      aria-label={t('line_weight')}
-                      onClick={openChooseLineWeight}
-                    >
-                      <LineWeightIcon />
-                      <ArrowDropDownIcon />
-                    </ToggleButton>
-                  </Tooltip>
-                </>
-                )
-}
+            toolState.activeTool !== OVERLAY_TOOL.TEXT && (
+              <>
+                <Tooltip title={t('border_color')}>
+                  <ToggleButton
+                    value="strokeColor"
+                    aria-label={t('border_color')}
+                    onClick={openChooseColor}
+                  >
+                    <StrokeColorIcon style={{ fill: toolState.strokeColor }} />
+                    <ArrowDropDownIcon />
+                  </ToggleButton>
+                </Tooltip>
+                <Tooltip title={t('line_weight')}>
+                  <ToggleButton
+                    value="strokeColor"
+                    aria-label={t('line_weight')}
+                    onClick={openChooseLineWeight}
+                  >
+                    <LineWeightIcon />
+                    <ArrowDropDownIcon />
+                  </ToggleButton>
+                </Tooltip>
+              </>
+            )
+          }
           <Tooltip title={t('fill_color')}>
 
             <ToggleButton
@@ -86,9 +92,9 @@ export default function ColorPicker(
 
         <StyledDivider flexItem orientation="vertical" />
         { /* close / open polygon mode only for freehand drawing mode. */
-            /* TODO: When does this happen ? */
-            false
-            && (
+          /* TODO: When does this happen ? */
+          false
+          && (
             <ToggleButtonGroup
               size="small"
               value={toolState.closedMode}
@@ -101,7 +107,7 @@ export default function ColorPicker(
                 <OpenPolygonIcon />
               </ToggleButton>
             </ToggleButtonGroup>
-            )
+          )
         }
       </Grid>
       <Popover
@@ -135,7 +141,7 @@ export default function ColorPicker(
         <SketchPicker
           disableAlpha={false}
           color={currentColor}
-          onChangeComplete={updateColor}
+          onChange={updateColor}
         />
       </Popover>
     </Grid>
