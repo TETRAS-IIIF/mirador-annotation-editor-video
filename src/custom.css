@@ -1,0 +1,6 @@
+/* Custom CSS when it's not possible to use REACT classic way */
+
+/* Fix ReractQuill tooltip issue */
+.ql-tooltip {
+    white-space: normal !important;
+}
