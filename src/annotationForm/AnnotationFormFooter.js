@@ -35,12 +35,16 @@ function AnnotationFormFooter({
       <Divider sx={{ m: 1 }} />
       <Grid sx={{ mt: 1 }} container item spacing={1} justifyContent="flex-end">
         <Tooltip title={t('cancel')}>
-          <Button onClick={closeFormCompanionWindow}>
+          <Button
+            sx={{ m: 1 }}
+            onClick={closeFormCompanionWindow}
+          >
             {t('cancel')}
           </Button>
         </Tooltip>
         <Tooltip title={t('save')}>
           <Button
+            sx={{ m: 1 }}
             variant="contained"
             color="primary"
             type="submit"
