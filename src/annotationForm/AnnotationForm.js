@@ -11,6 +11,7 @@ import AnnotationFormHeader from './AnnotationFormHeader';
 import AnnotationFormBody from './AnnotationFormBody';
 import { convertAnnotationStateToBeSaved } from '../IIIFUtils';
 import '../118n';
+import '../custom.css';
 
 /**
  * Component for submitting a form to create or edit an annotation.

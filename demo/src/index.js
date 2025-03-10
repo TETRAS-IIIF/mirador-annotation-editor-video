@@ -8,6 +8,9 @@ const config = {
     adapter: (canvasId) => new LocalStorageAdapter(`localStorage://?canvasId=${canvasId}`, 'Anonymous User'),
     exportLocalStorageAnnotations: false, // display annotation JSON export button
   },
+  annotations: {
+    htmlSanitizationRuleSet: 'liberal',
+  },
   catalog: manifestsCatalog,
   debug: true,
   id: 'demo',
