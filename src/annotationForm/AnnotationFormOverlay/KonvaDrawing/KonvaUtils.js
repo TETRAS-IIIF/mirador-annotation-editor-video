@@ -27,6 +27,11 @@ export function resizeKonvaStage(windowId, width, height, scale) {
   // stage.draw();
 }
 
+export function hideKonvaStageToSave() {
+  const konvaStage = document.getElementsByClassName('konvajs-content');
+  konvaStage[0].style.visibility = 'hidden';
+}
+
 /**
  * Get SVG picture containing all the stuff draw in the stage (Konva Stage).
  * This image will be put in overlay of the iiif media
