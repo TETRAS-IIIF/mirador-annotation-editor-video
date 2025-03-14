@@ -64,7 +64,7 @@ function HMSInput({ seconds, onChange, duration }) {
         type="number"
         min="0"
         name="hours"
-        value={hms.hours}
+        value={Math.floor(hms.hours)}
         onChange={someChange}
         dir="rtl"
         inputProps={{ style: { width: '35px' } }}
@@ -75,7 +75,7 @@ function HMSInput({ seconds, onChange, duration }) {
         min="0"
         max="59"
         name="minutes"
-        value={hms.minutes}
+        value={Math.floor(hms.minutes)}
         onChange={someChange}
         dir="rtl"
         inputProps={{ style: { width: '35px' } }}
@@ -86,7 +86,7 @@ function HMSInput({ seconds, onChange, duration }) {
         min="0"
         max="59"
         name="seconds"
-        value={hms.seconds}
+        value={Math.floor(hms.seconds)}
         onChange={someChange}
         dir="rtl"
         inputProps={{ style: { width: '35px' } }}
