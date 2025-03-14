@@ -15,8 +15,10 @@ export function getKonvaStage(windowId) {
  * @param width
  * @param height
  * @param scale
+ * @param hideAfterResize
  */
-export function resizeKonvaStage(windowId, width, height, scale) {
+export function resizeKonvaStage(windowId, width, height, scale, hideAfterResize = true) {
+  hideKonvaStage();
   const stage = getKonvaStage(windowId);
   stage.width(width);
   stage.height(height);
@@ -24,12 +26,26 @@ export function resizeKonvaStage(windowId, width, height, scale) {
     x: scale,
     y: scale,
   });
+  if (!hideAfterResize) {
+    showKonvaStage();
+  }
   // stage.draw();
 }
 
-export function hideKonvaStageToSave() {
+/**
+ * Hide the Konva stage
+ */
+export function hideKonvaStage() {
   const konvaStage = document.getElementsByClassName('konvajs-content');
   konvaStage[0].style.visibility = 'hidden';
+}
+
+/**
+ * Show the Konva stage
+ */
+export function showKonvaStage() {
+  const konvaStage = document.getElementsByClassName('konvajs-content');
+  konvaStage[0].style.visibility = 'visible';
 }
 
 /**
