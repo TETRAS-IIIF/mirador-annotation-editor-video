@@ -104,7 +104,7 @@ export const maeTargetToIiifTarget = (maeTarget, canvasId, playerScale, windowId
   }
   // On the other case, the target is a SVG
   console.info('Implement target as SVG/Fragment with shapes');
-  const fragmentTarget = `${maeTarget.tend ? `xywh=${maeTarget.fullCanvaXYWH}&t=${maeTarget.tstart},${maeTarget.tend}` : `xywh=${maeTarget.fullCanvaXYWH}`}`;
+  const fragmentTarget = `${maeTarget.tend ? `t=${maeTarget.tstart},${maeTarget.tend}` : ''}`;
   return {
     selector: [
       {
