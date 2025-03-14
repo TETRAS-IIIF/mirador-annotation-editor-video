@@ -1,7 +1,8 @@
 import {
   getKonvaAsDataURL,
   getKonvaShape,
-  getSvg,
+  getSvg, OVERLAY_TOOL,
+  SHAPES_TOOL,
 } from './annotationForm/AnnotationFormOverlay/KonvaDrawing/KonvaUtils';
 import { TEMPLATE } from './annotationForm/AnnotationFormUtils';
 
@@ -103,7 +104,9 @@ export const maeTargetToIiifTarget = (maeTarget, canvasId, playerScale, windowId
 
   if (maeTarget.templateType !== TEMPLATE.KONVA_TYPE) {
     // In some case the target can be simplify in a string
-    if (maeTarget.drawingState.shapes.length === 1 && (maeTarget.drawingState.shapes[0].type === 'rectangle' || maeTarget.drawingState.shapes[0].type === 'image')) {
+    if (maeTarget.drawingState.shapes.length === 1
+      && (maeTarget.drawingState.shapes[0].type === SHAPES_TOOL.RECTANGLE
+        || maeTarget.drawingState.shapes[0].type === OVERLAY_TOOL.IMAGE)) {
       const {
         // eslint-disable-next-line prefer-const
         x,
@@ -133,7 +136,7 @@ export const maeTargetToIiifTarget = (maeTarget, canvasId, playerScale, windowId
     }
     // On the other case, the target is a SVG
     console.info('Implement target as SVG/Fragment with shapes');
-    const fragmentTarget = `${maeTarget.tend ? `xywh=${maeTarget.fullCanvaXYWH}&t=${maeTarget.tstart},${maeTarget.tend}` : `xywh=${maeTarget.fullCanvaXYWH}`}`;
+    const fragmentTarget = `${maeTarget.tend ? `t=${maeTarget.tstart},${maeTarget.tend}` : ''}`;
     return {
       selector: [
         {
