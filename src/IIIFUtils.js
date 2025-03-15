@@ -115,19 +115,18 @@ export const getIIIFTargetFromMaeData = (maeData, canvasId) => {
   }
 
   if (templateType === TEMPLATE.IMAGE_TYPE) {
-    return getIIIFTargetFromImageType (maeData, canvasId);
+    return getIIIFTargetFromImageType(maeData, canvasId);
   }
 
   // Note, tagging or Manifest network template
   if (templateType === TEMPLATE.TAGGING_TYPE
     || templateType === TEMPLATE.MANIFEST_TYPE
-    || templateType ===TEMPLATE.TEXT_TYPE) {
-
+    || templateType === TEMPLATE.TEXT_TYPE) {
     // In some case the target can be simplified in a string
     if (maeTarget.drawingState.shapes.length === 1
       && maeTarget.drawingState.shapes[0].type === SHAPES_TOOL.RECTANGLE) {
       console.info('Implement target as string with one shape (rectangle)');
-      return getIIIFTargetFromRectangleShape(maeTarget, canvasId, maeTarget.drawingState.shapes[0])
+      return getIIIFTargetFromRectangleShape(maeTarget, canvasId, maeTarget.drawingState.shapes[0]);
     }
     // On the other case, the target is a SVG
     console.info('Implement target as SVG/Fragment with shapes');
@@ -137,42 +136,42 @@ export const getIIIFTargetFromMaeData = (maeData, canvasId) => {
   // Default return (useless ?)
   console.info('Implement target as string on fullSizeCanvas. N');
   return getIIIFTargetFullCanvas(maeData, canvasId);
-}
+};
 
 /**
  *
  */
-const getIIIFTargetFromKonvaType = (maeData, canvasId)=>  {
+const getIIIFTargetFromKonvaType = (maeData, canvasId) => {
   const maeTarget = maeData.target;
   return getIIIFTargetFullCanvas(maeData, canvasId);
-}
+};
 
-const getIIIFTargetFromImageType =  (maeData, canvasId) => {
+const getIIIFTargetFromImageType = (maeData, canvasId) => {
   const maeTarget = maeData.target;
 
   if (maeTarget.drawingState.shapes.length === 1) {
-    if( maeTarget.drawingState.shapes[0].type === OVERLAY_TOOL.IMAGE) {
-        const imageShape = getKonvaShape(windowId, maeTarget.drawingState.shapes[0].id);
-        console.log('imageShape', imageShape);
-        const widthImage = Math.round(
-          imageShape.attrs.image.width * imageShape.attrs.scaleX / playerScale,
-        );
-        const heightImage = Math.round(
-          imageShape.attrs.image.height * imageShape.attrs.scaleY / playerScale,
-        );
-        const xImage = Math.round(x / playerScale);
-        const yImage = Math.round(y / playerScale);
-        return `${canvasId}#${maeTarget.tend ? `xywh=${xImage},${yImage},${widthImage},${heightImage}&t=${maeTarget.tstart},${maeTarget.tend}` : `xywh=${xImage},${yImage},${widthImage},${heightImage}`}`;
+    if (maeTarget.drawingState.shapes[0].type === OVERLAY_TOOL.IMAGE) {
+      const imageShape = getKonvaShape(windowId, maeTarget.drawingState.shapes[0].id);
+      console.log('imageShape', imageShape);
+      const widthImage = Math.round(
+        imageShape.attrs.image.width * imageShape.attrs.scaleX / playerScale,
+      );
+      const heightImage = Math.round(
+        imageShape.attrs.image.height * imageShape.attrs.scaleY / playerScale,
+      );
+      const xImage = Math.round(x / playerScale);
+      const yImage = Math.round(y / playerScale);
+      return `${canvasId}#${maeTarget.tend ? `xywh=${xImage},${yImage},${widthImage},${heightImage}&t=${maeTarget.tstart},${maeTarget.tend}` : `xywh=${xImage},${yImage},${widthImage},${heightImage}`}`;
     }
   }
   // Default return. For example if no image is upload in the annotation
   return getIIIFTargetFullCanvas(maeData, canvasId);
-}
+};
 
-const getIIIFTargetFullCanvas = ( maeData, canvasId) =>{
+const getIIIFTargetFullCanvas = (maeData, canvasId) => {
   const maeTarget = maeData.target;
   return `${canvasId}#${maeTarget.tend ? `xywh=${maeTarget.fullCanvaXYWH}&t=${maeTarget.tstart},${maeTarget.tend}` : `xywh=${maeTarget.fullCanvaXYWH}`}`;
-}
+};
 
 const getIIIFTargetFromRectangleShape = (maeTarget, canvasId, shape) => {
   const {
@@ -187,7 +186,7 @@ const getIIIFTargetFromRectangleShape = (maeTarget, canvasId, shape) => {
   // Image have not tstart and tend
   // We use scaleX and scaleY to have the real size of the shape, if it has been resized
   return `${canvasId}#${maeTarget.tend ? `xywh=${x},${y},${width * scaleX},${height * scaleY}&t=${maeTarget.tstart},${maeTarget.tend}` : `xywh=${x},${y},${width * scaleX},${height * scaleY}`}`;
-}
+};
 
 const getIIIFTargetAsFragmentSVGSelector = (maeTarget, canvasId) => {
   const fragmentTarget = `${maeTarget.tend ? `t=${maeTarget.tstart},${maeTarget.tend}` : ''}`;
@@ -204,4 +203,4 @@ const getIIIFTargetAsFragmentSVGSelector = (maeTarget, canvasId) => {
     ],
     source: canvasId,
   };
-}
+};
