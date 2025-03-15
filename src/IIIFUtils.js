@@ -67,8 +67,6 @@ export const convertAnnotationStateToBeSaved = async (
   annotationStateForSaving.target = maeTargetToIiifTarget(
     annotationStateForSaving.maeData,
     canvas.id,
-    playerReferences.getScale(),
-    windowId,
   );
   // eslint-disable-next-line no-param-reassign
   annotationStateForSaving.maeData.target.drawingState = JSON.stringify(
@@ -78,8 +76,12 @@ export const convertAnnotationStateToBeSaved = async (
   return annotationStateForSaving;
 };
 
-/** Transform maetarget to IIIF compatible data * */
-export const maeTargetToIiifTarget = (maeData, canvasId, playerScale, windowId = null) => {
+/** Transform maetarget to IIIF compatible data
+ * @param maeData
+ * @param canvasId
+ * @returns {{selector: [{type: string, value},{type: string, value: string}], source}|*|string}
+ */
+export const maeTargetToIiifTarget = (maeData, canvasId) => {
   const maeTarget = maeData.target;
   const { templateType } = maeData;
 
