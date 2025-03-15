@@ -137,6 +137,10 @@ export default function AnnotationDrawing(
 
     // release the drawing
     if (e.key === 'Escape') {
+      console.log('Escape toool active', toolState.activeTool);
+      if (toolState.activeTool === OVERLAY_TOOL.IMAGE) {
+        return;
+      }
       if (toolState.activeTool === SHAPES_TOOL.POLYGON) {
         drawingState.currentShape.points.splice(-2, 2);
         updateCurrentShapeInShapes({

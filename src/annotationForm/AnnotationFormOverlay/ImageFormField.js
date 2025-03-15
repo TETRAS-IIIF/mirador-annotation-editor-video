@@ -46,11 +46,11 @@ function ImageFormField({
 
   return (
     <StyledRoot>
-      <Typography variant="overline">
-        {t('add_image_from_url')}
-      </Typography>
-      {!isReadOnly && (
+      {!isReadOnly ? (
         <>
+          <Typography variant="overline">
+            {t('add_image_from_url')}
+          </Typography>
           <StyledTextField
             value={imgUrl}
             onChange={(ev) => onChange(ev.target.value)}
@@ -67,7 +67,7 @@ function ImageFormField({
             </Button>
           </StyledDivButtonImage>
         </>
-      )}
+      ) : t('onlyOneImageAllowed')}
       {imgIsValid && (
         <img src={imageUrl} width="100%" height="auto" alt={t('loading_failed')} />
       )}
