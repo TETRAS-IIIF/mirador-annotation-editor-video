@@ -15,6 +15,7 @@ export default function AnnotationDrawing(
     scale,
     setColorToolFromCurrentShape,
     setDrawingState,
+    setToolState,
     tabView,
     toolState,
     updateCurrentShapeInShapes,
@@ -45,10 +46,19 @@ export default function AnnotationDrawing(
         y: 30,
       };
 
+      console.log('imageShape', imageShape);
+      console.log('toolState.imageEvent', toolState.imageEvent);
+      console.log('width', width);
+
       setDrawingState({
         ...drawingState,
         currentShape: imageShape,
         shapes: [...drawingState.shapes, imageShape],
+      });
+
+      setToolState({
+        ...toolState,
+        imageEvent: null,
       });
     }
     setIsDrawing(false);
@@ -115,6 +125,11 @@ export default function AnnotationDrawing(
       setDrawingState({
         ...drawingState,
         shapes: shapesWithoutTheDeleted,
+      });
+
+      setToolState({
+        ...toolState,
+        imageEvent: null,
       });
       return;
     }
@@ -631,6 +646,7 @@ AnnotationDrawing.propTypes = {
   scale: PropTypes.number.isRequired,
   setColorToolFromCurrentShape: PropTypes.func.isRequired,
   setDrawingState: PropTypes.func.isRequired,
+  setToolState: PropTypes.func.isRequired,
   tabView: PropTypes.string.isRequired,
   toolState: PropTypes.oneOfType(
     PropTypes.string,

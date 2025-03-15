@@ -200,6 +200,7 @@ export default function ImageCommentTemplate(
           updateCurrentShapeInShapes={updateCurrentShapeInShapes}
           updateScale={updateScale}
           windowId={windowId}
+          setToolState={setToolState}
         />
       </Grid>
       <Grid item>

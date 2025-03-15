@@ -205,6 +205,7 @@ export default function DrawingTemplate(
           updateCurrentShapeInShapes={updateCurrentShapeInShapes}
           updateScale={updateScale}
           windowId={windowId}
+          setToolState={setToolState}
         />
       </Grid>
       <Grid item>
