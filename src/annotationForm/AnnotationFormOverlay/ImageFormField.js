@@ -16,7 +16,7 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
 
 /** imageUrl input field for the annotation form */
 function ImageFormField({
-  imageUrl,
+  imageUrl = null,
   onChange,
   t,
 }) {
@@ -52,7 +52,7 @@ function ImageFormField({
 }
 
 ImageFormField.propTypes = {
-  imageUrl: PropTypes.string.isRequired,
+  imageUrl: PropTypes.string,
   onChange: PropTypes.func.isRequired,
   t: PropTypes.func.isRequired,
 };
