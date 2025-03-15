@@ -217,7 +217,7 @@ function AnnotationFormOverlayToolOptions({
             <Grid container>
               <ImageFormField
                 xs={8}
-                value={toolState.image}
+                imageUrl={toolState.image?.id}
                 onChange={handleImgChange}
                 t={t}
               />

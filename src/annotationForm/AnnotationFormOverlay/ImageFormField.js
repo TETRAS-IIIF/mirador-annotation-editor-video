@@ -1,6 +1,6 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
-import { TextField, styled } from '@mui/material';
+import { styled, TextField } from '@mui/material';
 
 const StyledRoot = styled('div')(({ theme }) => ({
   alignItems: 'center',
@@ -31,6 +31,8 @@ function ImageFormField({
       setImgIsValid(!!imageUrl);
     }
   }, [imageUrl]);
+
+  console.log('imageUrl', imageUrl);
 
   return (
     <StyledRoot>
