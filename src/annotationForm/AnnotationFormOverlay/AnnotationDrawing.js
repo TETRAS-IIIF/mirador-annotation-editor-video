@@ -34,7 +34,7 @@ export default function AnnotationDrawing(
   }, [{ width }]);
 
   useEffect(() => {
-    if (toolState.imageEvent?.id) {
+    if (toolState.imageEvent?.id && !drawingState.currentShape) {
       const imageShape = {
         id: uuidv4(),
         rotation: 0,
