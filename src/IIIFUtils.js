@@ -1,7 +1,8 @@
 import {
   getKonvaAsDataURL,
   getKonvaShape,
-  getSvg, OVERLAY_TOOL,
+  getSvg,
+  OVERLAY_TOOL,
   SHAPES_TOOL,
 } from './annotationForm/AnnotationFormOverlay/KonvaDrawing/KonvaUtils';
 import { TEMPLATE } from './annotationForm/AnnotationFormUtils';
@@ -35,7 +36,6 @@ export const convertAnnotationStateToBeSaved = async (
   annotationState,
   canvas,
   windowId,
-  // eslint-disable-next-line no-shadow
   playerReferences,
 ) => {
   const annotationStateForSaving = annotationState;
@@ -43,6 +43,8 @@ export const convertAnnotationStateToBeSaved = async (
   if (annotationState.maeData.templateType === TEMPLATE.IIIF_TYPE) {
     return annotationState;
   }
+  console.info('Annotation state to be saved', annotationState);
+  console.info('Annotation state target', annotationState.maeData.target);
 
   // TODO I dont know why this code is here? To clean the object ?
   annotationStateForSaving.maeData.target = {
@@ -53,11 +55,12 @@ export const convertAnnotationStateToBeSaved = async (
     tstart: annotationStateForSaving.maeData.target.tstart,
   };
 
-  if (annotationStateForSaving.maeData.templateType == TEMPLATE.TAGGING_TYPE
-    || annotationStateForSaving.maeData.templateType == TEMPLATE.TEXT_TYPE) {
+  console.info('Annotation state target', annotationState.maeData.target);
+
+  if (annotationStateForSaving.maeData.templateType === TEMPLATE.TAGGING_TYPE
+    || annotationStateForSaving.maeData.templateType === TEMPLATE.TEXT_TYPE) {
     // Complex annotation
     if (annotationStateForSaving.maeData.target.drawingState.shapes.length > 0) {
-      // eslint-disable-next-line no-param-reassign
       annotationStateForSaving.maeData.target.svg = await getSvg(windowId);
     }
   }
@@ -68,6 +71,7 @@ export const convertAnnotationStateToBeSaved = async (
     annotationStateForSaving.type = 'Annotation';
   }
 
+  // MAEV Specific
   if (annotationStateForSaving.maeData.templateType == TEMPLATE.IMAGE_TYPE) {
     if (annotationStateForSaving.maeData.target.drawingState.shapes.length == 1) {
       // eslint-disable-next-line max-len
@@ -76,18 +80,15 @@ export const convertAnnotationStateToBeSaved = async (
     }
   }
 
-  // eslint-disable-next-line no-param-reassign
+  // TODO Always relevant ?
   annotationStateForSaving.maeData.target.scale = playerReferences.getMediaTrueHeight()
     / playerReferences.getDisplayedMediaHeight() * playerReferences.getZoom();
 
-  // eslint-disable-next-line no-param-reassign
-  annotationStateForSaving.target = maeTargetToIiifTarget(
-    annotationStateForSaving.maeData.target,
+  annotationStateForSaving.target = getIIIFTargetFromMaeData(
+    annotationStateForSaving.maeData,
     canvas.id,
-    playerReferences.getScale(),
-    windowId,
   );
-  // eslint-disable-next-line no-param-reassign
+
   annotationStateForSaving.maeData.target.drawingState = JSON.stringify(
     annotationStateForSaving.maeData.target.drawingState,
   );
@@ -95,31 +96,62 @@ export const convertAnnotationStateToBeSaved = async (
   return annotationStateForSaving;
 };
 
-/** Transform maetarget to IIIF compatible data * */
-export const maeTargetToIiifTarget = (maeTarget, canvasId, playerScale, windowId = null) => {
+/** Get the IIIF target from the annotation state
+ * @param maeData
+ * @param canvasId
+ * @returns {{selector: [{type: string, value},{type: string, value: string}], source}|*|string}
+ */
+export const getIIIFTargetFromMaeData = (maeData, canvasId) => {
+  const maeTarget = maeData.target;
+  const { templateType } = maeData;
+
   // In case of IIIF target, the user know what he is doing
-  if (maeTarget.templateType === TEMPLATE.IIIF_TYPE) {
+  if (templateType === TEMPLATE.IIIF_TYPE) {
     return maeTarget;
   }
 
-  if (maeTarget.templateType !== TEMPLATE.KONVA_TYPE) {
-    // In some case the target can be simplify in a string
+  if (templateType === TEMPLATE.KONVA_TYPE) {
+    return getIIIFTargetFromKonvaType(maeData, canvasId);
+  }
+
+  if (templateType === TEMPLATE.IMAGE_TYPE) {
+    return getIIIFTargetFromImageType (maeData, canvasId);
+  }
+
+  // Note, tagging or Manifest network template
+  if (templateType === TEMPLATE.TAGGING_TYPE
+    || templateType === TEMPLATE.MANIFEST_TYPE
+    || templateType ===TEMPLATE.TEXT_TYPE) {
+
+    // In some case the target can be simplified in a string
     if (maeTarget.drawingState.shapes.length === 1
-      && (maeTarget.drawingState.shapes[0].type === SHAPES_TOOL.RECTANGLE
-        || maeTarget.drawingState.shapes[0].type === OVERLAY_TOOL.IMAGE)) {
-      const {
-        // eslint-disable-next-line prefer-const
-        x,
-        y,
-        width,
-        height,
-        scaleX,
-        scaleY,
-      } = maeTarget.drawingState.shapes[0];
-      console.info('Implement target as string with one shape (reactangle or image)');
-      // Image have not tstart and tend
-      // We use scaleX and scaleY to have the real size of the shape, if it has been resized
-      if (maeTarget.drawingState.shapes[0].type === 'image') {
+      && maeTarget.drawingState.shapes[0].type === SHAPES_TOOL.RECTANGLE) {
+      console.info('Implement target as string with one shape (rectangle)');
+      return getIIIFTargetFromRectangleShape(maeTarget, canvasId, maeTarget.drawingState.shapes[0])
+    }
+    // On the other case, the target is a SVG
+    console.info('Implement target as SVG/Fragment with shapes');
+    return getIIIFTargetAsFragmentSVGSelector(maeTarget, canvasId);
+  }
+
+  // Default return (useless ?)
+  console.info('Implement target as string on fullSizeCanvas. N');
+  return getIIIFTargetFullCanvas(maeData, canvasId);
+}
+
+/**
+ *
+ */
+const getIIIFTargetFromKonvaType = (maeData, canvasId)=>  {
+  const maeTarget = maeData.target;
+  return getIIIFTargetFullCanvas(maeData, canvasId);
+}
+
+const getIIIFTargetFromImageType =  (maeData, canvasId) => {
+  const maeTarget = maeData.target;
+
+  if (maeTarget.drawingState.shapes.length === 1) {
+    if( maeTarget.drawingState.shapes[0].type === OVERLAY_TOOL.IMAGE) {
         const imageShape = getKonvaShape(windowId, maeTarget.drawingState.shapes[0].id);
         console.log('imageShape', imageShape);
         const widthImage = Math.round(
@@ -131,28 +163,45 @@ export const maeTargetToIiifTarget = (maeTarget, canvasId, playerScale, windowId
         const xImage = Math.round(x / playerScale);
         const yImage = Math.round(y / playerScale);
         return `${canvasId}#${maeTarget.tend ? `xywh=${xImage},${yImage},${widthImage},${heightImage}&t=${maeTarget.tstart},${maeTarget.tend}` : `xywh=${xImage},${yImage},${widthImage},${heightImage}`}`;
-      }
-      return `${canvasId}#${maeTarget.tend ? `xywh=${x},${y},${width * scaleX},${height * scaleY}&t=${maeTarget.tstart},${maeTarget.tend}` : `xywh=${x},${y},${width * scaleX},${height * scaleY}`}`;
     }
-    // On the other case, the target is a SVG
-    console.info('Implement target as SVG/Fragment with shapes');
-    const fragmentTarget = `${maeTarget.tend ? `t=${maeTarget.tstart},${maeTarget.tend}` : ''}`;
-    return {
-      selector: [
-        {
-          type: 'SvgSelector',
-          value: maeTarget.svg,
-        },
-        {
-          type: 'FragmentSelector',
-          value: `${canvasId}#${fragmentTarget}`,
-        },
-      ],
-      source: canvasId,
-    };
   }
+  // Default return. For example if no image is upload in the annotation
+  return getIIIFTargetFullCanvas(maeData, canvasId);
+}
 
-  // In case of Konva target and for all the other case, target is a string and on full size canvas
-  console.info('Implement target as string on fullSizeCanvas');
+const getIIIFTargetFullCanvas = ( maeData, canvasId) =>{
+  const maeTarget = maeData.target;
   return `${canvasId}#${maeTarget.tend ? `xywh=${maeTarget.fullCanvaXYWH}&t=${maeTarget.tstart},${maeTarget.tend}` : `xywh=${maeTarget.fullCanvaXYWH}`}`;
-};
+}
+
+const getIIIFTargetFromRectangleShape = (maeTarget, canvasId, shape) => {
+  const {
+    x,
+    y,
+    width,
+    height,
+    scaleX,
+    scaleY,
+  } = shape;
+
+  // Image have not tstart and tend
+  // We use scaleX and scaleY to have the real size of the shape, if it has been resized
+  return `${canvasId}#${maeTarget.tend ? `xywh=${x},${y},${width * scaleX},${height * scaleY}&t=${maeTarget.tstart},${maeTarget.tend}` : `xywh=${x},${y},${width * scaleX},${height * scaleY}`}`;
+}
+
+const getIIIFTargetAsFragmentSVGSelector = (maeTarget, canvasId) => {
+  const fragmentTarget = `${maeTarget.tend ? `t=${maeTarget.tstart},${maeTarget.tend}` : ''}`;
+  return {
+    selector: [
+      {
+        type: 'SvgSelector',
+        value: maeTarget.svg,
+      },
+      {
+        type: 'FragmentSelector',
+        value: `${canvasId}#${fragmentTarget}`,
+      },
+    ],
+    source: canvasId,
+  };
+}
