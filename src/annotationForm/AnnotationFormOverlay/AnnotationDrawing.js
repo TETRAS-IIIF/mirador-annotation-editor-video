@@ -125,6 +125,7 @@ export default function AnnotationDrawing(
       setDrawingState({
         ...drawingState,
         shapes: shapesWithoutTheDeleted,
+        currentShape: null,
       });
 
       setToolState({
