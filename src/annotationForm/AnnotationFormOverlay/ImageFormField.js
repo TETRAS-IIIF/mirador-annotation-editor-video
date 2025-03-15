@@ -46,31 +46,45 @@ function ImageFormField({
 
   return (
     <StyledRoot>
-      {!isReadOnly ? (
-        <>
-          <Typography variant="overline">
-            {t('add_image_from_url')}
-          </Typography>
-          <StyledTextField
-            value={imgUrl}
-            onChange={(ev) => onChange(ev.target.value)}
-            error={imgUrl !== '' && !imgIsValid}
-            margin="dense"
-            label={t('imageURL')}
-            type="url"
-            fullWidth
-            inputRef={inputRef}
-          />
-          <StyledDivButtonImage>
-            <Button variant="contained" onClick={onAddImage}>
-              <AddPhotoAlternateIcon />
-            </Button>
-          </StyledDivButtonImage>
-        </>
-      ) : t('onlyOneImageAllowed')}
-      {imgIsValid && (
-        <img src={imageUrl} width="100%" height="auto" alt={t('loading_failed')} />
-      )}
+      {
+        !isReadOnly ? (
+          <>
+            <Typography variant="overline">
+              {t('add_image_from_url')}
+            </Typography>
+            <StyledTextField
+              value={imgUrl}
+              onChange={(ev) => onChange(ev.target.value)}
+              error={imgUrl !== '' && !imgIsValid}
+              margin="dense"
+              label={t('imageURL')}
+              type="url"
+              fullWidth
+              inputRef={inputRef}
+            />
+            {imgIsValid && (
+              <>
+                <img src={imageUrl} width="100%" height="auto" alt={t('loading_failed')} />
+                <StyledDivButtonImage>
+                  <Button variant="contained" onClick={onAddImage}>
+                    <AddPhotoAlternateIcon />
+                  </Button>
+                </StyledDivButtonImage>
+              </>
+            )}
+
+          </>
+        ) : (
+          <>
+            <Typography>
+              {t('onlyOneImageAllowed')}
+            </Typography>
+            {imgIsValid && (
+              <img src={imageUrl} width="100%" height="auto" alt={t('loading_failed')} />
+            )}
+          </>
+        )
+      }
     </StyledRoot>
   );
 }
