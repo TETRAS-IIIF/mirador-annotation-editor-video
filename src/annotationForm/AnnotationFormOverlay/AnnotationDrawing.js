@@ -42,8 +42,8 @@ export default function AnnotationDrawing(
         scaleY: 1,
         type: OVERLAY_TOOL.IMAGE,
         url: toolState.imageEvent.id,
-        x: 30,
-        y: 30,
+        x: 60,
+        y: 60,
       };
 
       console.log('imageShape', imageShape);
@@ -59,6 +59,7 @@ export default function AnnotationDrawing(
       setToolState({
         ...toolState,
         imageEvent: null,
+        activeTool: 'cursor',
       });
     }
     setIsDrawing(false);

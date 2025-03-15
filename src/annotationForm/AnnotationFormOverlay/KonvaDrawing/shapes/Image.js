@@ -8,14 +8,14 @@ import useImage from 'use-image';
  * @returns {JSX.Element} The TextNode component.
  */
 function ImageShape({
-  onShapeClick,
-  shape,
   activeTool,
-  isSelected,
-  onTransform,
+  displayMode,
   handleDragEnd,
   handleDragStart,
-  displayMode,
+  isSelected,
+  onShapeClick,
+  onTransform,
+  shape,
 }) {
   const shapeRef = useRef();
   const trRef = useRef();
@@ -49,7 +49,7 @@ function ImageShape({
         y={shape.y}
         image={image}
         id={shape.id}
-        draggable={activeTool === 'cursor' || activeTool === 'edit'}
+        draggable={activeTool === 'cursor' || activeTool === 'edit' || activeTool === 'image'} // TODO const
         onClick={handleClick}
         onMousedown={handleClick}
         onTransform={onTransform}
@@ -60,7 +60,7 @@ function ImageShape({
       <Transformer
         rotateEnabled={displayMode !== 'image'}
         ref={trRef}
-        visible={activeTool === 'edit' && isSelected}
+        visible
       />
     </>
   );
@@ -68,6 +68,7 @@ function ImageShape({
 
 ImageShape.propTypes = {
   activeTool: PropTypes.string.isRequired,
+  displayMode: PropTypes.string.isRequired,
   handleDragEnd: PropTypes.func.isRequired,
   handleDragStart: PropTypes.func.isRequired,
   isSelected: PropTypes.bool.isRequired,
