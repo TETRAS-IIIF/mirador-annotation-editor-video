@@ -99,58 +99,84 @@ export const convertAnnotationStateToBeSaved = async (
 /** Get the IIIF target from the annotation state
  * @param maeData
  * @param canvasId
+ * @param windowId NEEDED By MAEV
+ * @param playerScale NEEDED By MAEV
  * @returns {{selector: [{type: string, value},{type: string, value: string}], source}|*|string}
  */
-export const getIIIFTargetFromMaeData = (maeData, canvasId) => {
+export const getIIIFTargetFromMaeData = (
+  maeData,
+  canvasId,
+  windowId = null,
+  playerScale = null,
+) => {
   const maeTarget = maeData.target;
   const { templateType } = maeData;
 
-  // In case of IIIF target, the user know what he is doing
-  if (templateType === TEMPLATE.IIIF_TYPE) {
-    return maeTarget;
+  switch (templateType) {
+    case TEMPLATE.IIIF_TYPE:
+      return maeTarget;
+    case TEMPLATE.KONVA_TYPE:
+      return getIIIFTargetFromKonvaType(maeData, canvasId);
+    case TEMPLATE.IMAGE_TYPE:
+      return getIIIFTargetFromImageType(maeData, canvasId, windowId, playerScale);
+    case TEMPLATE.TAGGING_TYPE:
+    case TEMPLATE.MANIFEST_TYPE:
+    case TEMPLATE.TEXT_TYPE:
+      // Note, tagging or Manifest network template
+      if (templateType === TEMPLATE.TAGGING_TYPE
+        || templateType === TEMPLATE.MANIFEST_TYPE
+        || templateType === TEMPLATE.TEXT_TYPE) {
+        // In some case the target can be simplified in a string
+        if (maeTarget.drawingState.shapes.length === 1
+          && maeTarget.drawingState.shapes[0].type === SHAPES_TOOL.RECTANGLE) {
+          return getIIIFTargetFromRectangleShape(
+            maeTarget,
+            canvasId,
+            maeTarget.drawingState.shapes[0],
+          );
+        }
+        // On the other case, the target is a SVG
+        console.info('Implement target as SVG/Fragment with shapes');
+        return getIIIFTargetAsFragmentSVGSelector(maeTarget, canvasId);
+      }
+      break;
+    default:
+      return getIIIFTargetFullCanvas(maeData, canvasId);
   }
 
-  if (templateType === TEMPLATE.KONVA_TYPE) {
-    return getIIIFTargetFromKonvaType(maeData, canvasId);
-  }
-
-  if (templateType === TEMPLATE.IMAGE_TYPE) {
-    return getIIIFTargetFromImageType(maeData, canvasId);
-  }
-
-  // Note, tagging or Manifest network template
-  if (templateType === TEMPLATE.TAGGING_TYPE
-    || templateType === TEMPLATE.MANIFEST_TYPE
-    || templateType === TEMPLATE.TEXT_TYPE) {
-    // In some case the target can be simplified in a string
-    if (maeTarget.drawingState.shapes.length === 1
-      && maeTarget.drawingState.shapes[0].type === SHAPES_TOOL.RECTANGLE) {
-      console.info('Implement target as string with one shape (rectangle)');
-      return getIIIFTargetFromRectangleShape(maeTarget, canvasId, maeTarget.drawingState.shapes[0]);
-    }
-    // On the other case, the target is a SVG
-    console.info('Implement target as SVG/Fragment with shapes');
-    return getIIIFTargetAsFragmentSVGSelector(maeTarget, canvasId);
-  }
-
-  // Default return (useless ?)
-  console.info('Implement target as string on fullSizeCanvas. N');
+  // Default return
   return getIIIFTargetFullCanvas(maeData, canvasId);
 };
 
 /**
- *
+ * Get the IIIF target from a Konva annotation (Drawing template)
+ * @param maeData
+ * @param canvasId
+ * @returns {`${string}#${string}`}
  */
 const getIIIFTargetFromKonvaType = (maeData, canvasId) => {
-  const maeTarget = maeData.target;
+  // Simplified target for Konva annotation
+  console.log('Implement target as string with Konva annotation');
   return getIIIFTargetFullCanvas(maeData, canvasId);
 };
 
-const getIIIFTargetFromImageType = (maeData, canvasId) => {
+/**
+ * Get the IIIF target from an annotation with image template
+ * @param maeData
+ * @param canvasId
+ * @param windowId
+ * @param playerScale
+ * @returns {string}
+ */
+const getIIIFTargetFromImageType = (maeData, canvasId, windowId, playerScale) => {
   const maeTarget = maeData.target;
 
   if (maeTarget.drawingState.shapes.length === 1) {
     if (maeTarget.drawingState.shapes[0].type === OVERLAY_TOOL.IMAGE) {
+      const {
+        x,
+        y,
+      } = maeTarget.drawingState.shapes[0];
       const imageShape = getKonvaShape(windowId, maeTarget.drawingState.shapes[0].id);
       console.log('imageShape', imageShape);
       const widthImage = Math.round(
@@ -168,12 +194,27 @@ const getIIIFTargetFromImageType = (maeData, canvasId) => {
   return getIIIFTargetFullCanvas(maeData, canvasId);
 };
 
+/**
+ * Get the IIIF target from the full canvas
+ * @param maeData
+ * @param canvasId
+ * @returns {`${string}#${string}`}
+ */
 const getIIIFTargetFullCanvas = (maeData, canvasId) => {
+  console.info('Implement target as string on fullSizeCanvas.');
   const maeTarget = maeData.target;
   return `${canvasId}#${maeTarget.tend ? `xywh=${maeTarget.fullCanvaXYWH}&t=${maeTarget.tstart},${maeTarget.tend}` : `xywh=${maeTarget.fullCanvaXYWH}`}`;
 };
 
+/**
+ * Get the IIIF target from a rectangle shape
+ * @param maeTarget
+ * @param canvasId
+ * @param shape
+ * @returns {`${string}#${string}`}
+ */
 const getIIIFTargetFromRectangleShape = (maeTarget, canvasId, shape) => {
+  console.info('Implement target as string with one shape (rectangle)');
   const {
     x,
     y,
@@ -188,6 +229,12 @@ const getIIIFTargetFromRectangleShape = (maeTarget, canvasId, shape) => {
   return `${canvasId}#${maeTarget.tend ? `xywh=${x},${y},${width * scaleX},${height * scaleY}&t=${maeTarget.tstart},${maeTarget.tend}` : `xywh=${x},${y},${width * scaleX},${height * scaleY}`}`;
 };
 
+/**
+ * Get the IIIF target as a fragment selector with SVG
+ * @param maeTarget
+ * @param canvasId
+ * @returns {{selector: [{type: string, value},{type: string, value: string}], source}}
+ */
 const getIIIFTargetAsFragmentSVGSelector = (maeTarget, canvasId) => {
   const fragmentTarget = `${maeTarget.tend ? `t=${maeTarget.tstart},${maeTarget.tend}` : ''}`;
   return {
