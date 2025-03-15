@@ -59,7 +59,7 @@ export default function AnnotationDrawing(
       setToolState({
         ...toolState,
         imageEvent: null,
-        activeTool: 'cursor',
+        activeTool: 'edit',
       });
     }
     setIsDrawing(false);

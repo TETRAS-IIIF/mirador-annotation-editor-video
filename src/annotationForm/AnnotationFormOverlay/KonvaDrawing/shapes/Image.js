@@ -49,7 +49,7 @@ function ImageShape({
         y={shape.y}
         image={image}
         id={shape.id}
-        draggable={activeTool === 'cursor' || activeTool === 'edit' || activeTool === 'image'} // TODO const
+        draggable={activeTool === 'cursor' || activeTool === 'edit'}
         onClick={handleClick}
         onMousedown={handleClick}
         onTransform={onTransform}
@@ -60,7 +60,7 @@ function ImageShape({
       <Transformer
         rotateEnabled={displayMode !== 'image'}
         ref={trRef}
-        visible
+        visible={activeTool === 'edit'}
       />
     </>
   );
