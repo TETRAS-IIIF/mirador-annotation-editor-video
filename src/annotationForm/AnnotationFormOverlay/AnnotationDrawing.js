@@ -38,8 +38,8 @@ export default function AnnotationDrawing(
       const imageShape = {
         id: uuidv4(),
         rotation: 0,
-        scaleX: 1,
-        scaleY: 1,
+        scaleX: 0.2,
+        scaleY: 0.2,
         type: OVERLAY_TOOL.IMAGE,
         url: toolState.imageEvent.id,
         x: 60,
@@ -58,8 +58,8 @@ export default function AnnotationDrawing(
 
       setToolState({
         ...toolState,
-        imageEvent: null,
         activeTool: 'edit',
+        imageEvent: null,
       });
     }
     setIsDrawing(false);
