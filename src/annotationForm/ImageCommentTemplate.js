@@ -5,11 +5,7 @@ import Typography from '@mui/material/Typography';
 import TextFormSection from './TextFormSection';
 import TargetFormSection from './TargetFormSection';
 import { IMAGE_TOOL_STATE, TARGET_VIEW, TEMPLATE } from './AnnotationFormUtils';
-import {
-  KONVA_MODE,
-  OVERLAY_TOOL,
-  resizeKonvaStage,
-} from './AnnotationFormOverlay/KonvaDrawing/KonvaUtils';
+import { KONVA_MODE, resizeKonvaStage } from './AnnotationFormOverlay/KonvaDrawing/KonvaUtils';
 import AnnotationDrawing from './AnnotationFormOverlay/AnnotationDrawing';
 import AnnotationFormOverlay from './AnnotationFormOverlay/AnnotationFormOverlay';
 import AnnotationFormFooter from './AnnotationFormFooter';
@@ -91,16 +87,9 @@ export default function ImageCommentTemplate(
   /** Initialize drawingState * */
   const initDrawingState = () => {
     if (annotationState.maeData.target && annotationState.maeData.target.drawingState) {
-      let defaultCurrentShape = null;
-      if (annotationState.maeData.target.drawingState.shapes.length === 1
-        && annotationState.maeData.target.drawingState.shapes[0].type === OVERLAY_TOOL.IMAGE) {
-        // eslint-disable-next-line prefer-destructuring
-        defaultCurrentShape = annotationState.maeData.target.drawingState.shapes[0];
-      }
-
       return {
         ...annotationState.maeData.target.drawingState,
-        currentShape: defaultCurrentShape,
+        currentShape: null,
         isDrawing: false,
       };
     }
