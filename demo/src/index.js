@@ -12,7 +12,7 @@ const config = {
     htmlSanitizationRuleSet: 'liberal',
   },
   catalog: manifestsCatalog,
-  debug: true,
+  debug: false,
   id: 'demo',
   language: 'fr',
   themes: {

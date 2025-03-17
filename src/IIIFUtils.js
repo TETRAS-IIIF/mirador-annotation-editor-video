@@ -182,13 +182,13 @@ const getIIIFTargetFromImageType = (maeData, canvasId, windowId, playerScale) =>
       const imageShape = getKonvaShape(windowId, maeTarget.drawingState.shapes[0].id);
       console.log('imageShape', imageShape);
       const widthImage = Math.round(
-        imageShape.attrs.image.width * imageShape.attrs.scaleX / playerScale,
+        imageShape.attrs.image.width * imageShape.attrs.scaleX,
       );
       const heightImage = Math.round(
-        imageShape.attrs.image.height * imageShape.attrs.scaleY / playerScale,
+        imageShape.attrs.image.height * imageShape.attrs.scaleY,
       );
-      const xImage = Math.round(x / playerScale);
-      const yImage = Math.round(y / playerScale);
+      const xImage = Math.round(x);
+      const yImage = Math.round(y);
       return `${canvasId}#${maeTarget.tend ? `xywh=${xImage},${yImage},${widthImage},${heightImage}&t=${maeTarget.tstart},${maeTarget.tend}` : `xywh=${xImage},${yImage},${widthImage},${heightImage}`}`;
     }
   }
