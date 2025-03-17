@@ -55,7 +55,7 @@ function ImageFormField({
               onChange={(ev) => onChange(ev.target.value)}
               error={imgUrl !== '' && !imgIsValid}
               margin="dense"
-              label={t('imageUrl')}
+              label={t('imageURL')}
               type="url"
               fullWidth
               inputRef={inputRef}
