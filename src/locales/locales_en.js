@@ -37,7 +37,7 @@ export const en = {
   image_displayed: 'Image Displayed',
   image_in_overlay_with_note: 'Image in overlay with a note',
   image_true_size: 'Image True Size',
-  imageURL: 'Image URL',
+  imageUrl: 'Image URL',
   invalid_url: 'Invalid URL',
   lastEditedByOn: 'Last edit by {{lastEditor}}, {{lastSavedDate}}',
   line: 'Line',
