@@ -7,7 +7,7 @@ import TextNode from './TextNode';
 import ArrowNode from './ArrowNode';
 import Polygon from './Polygon';
 import Freehand from './Freehand';
-import ImageShape from './Image';
+import ImageShape from './ImageShape';
 import CircleNode from './CircleNode';
 import { OVERLAY_TOOL, SHAPES_TOOL } from '../KonvaUtils';
 
