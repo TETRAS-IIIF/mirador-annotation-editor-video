@@ -134,7 +134,6 @@ export default function AnnotationDrawing(
 
     // release the drawing
     if (e.key === 'Escape') {
-      console.log('Escape toool active', toolState.activeTool);
       if (toolState.activeTool === OVERLAY_TOOL.IMAGE) {
         return;
       }
