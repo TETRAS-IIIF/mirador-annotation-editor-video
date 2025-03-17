@@ -15,6 +15,7 @@ export default function AnnotationDrawing(
     scale,
     setColorToolFromCurrentShape,
     setDrawingState,
+    setToolState,
     tabView,
     toolState,
     updateCurrentShapeInShapes,
@@ -33,22 +34,28 @@ export default function AnnotationDrawing(
   }, [{ width }]);
 
   useEffect(() => {
-    if (toolState.imageEvent?.id) {
+    if (toolState.imageEvent?.id && !drawingState.currentShape) {
       const imageShape = {
         id: uuidv4(),
         rotation: 0,
-        scaleX: 1,
-        scaleY: 1,
+        scaleX: 0.2,
+        scaleY: 0.2,
         type: OVERLAY_TOOL.IMAGE,
         url: toolState.imageEvent.id,
-        x: 30,
-        y: 30,
+        x: 60,
+        y: 60,
       };
 
       setDrawingState({
         ...drawingState,
         currentShape: imageShape,
         shapes: [...drawingState.shapes, imageShape],
+      });
+
+      setToolState({
+        ...toolState,
+        activeTool: 'edit',
+        imageEvent: null,
       });
     }
     setIsDrawing(false);
@@ -121,6 +128,9 @@ export default function AnnotationDrawing(
 
     // release the drawing
     if (e.key === 'Escape') {
+      if (toolState.activeTool === OVERLAY_TOOL.IMAGE) {
+        return;
+      }
       if (toolState.activeTool === SHAPES_TOOL.POLYGON) {
         drawingState.currentShape.points.splice(-2, 2);
         updateCurrentShapeInShapes({
@@ -194,7 +204,7 @@ export default function AnnotationDrawing(
     const shape = drawingState.shapes.find((s) => s.id === modifiedShape.id);
 
     Object.assign(shape, modifiedShape);
-    if (shape.type === 'image') {
+    if (shape.type === OVERLAY_TOOL.IMAGE) {
       shape.width = modifiedShape.image.width * modifiedShape.scaleX;
       shape.height = modifiedShape.image.height * modifiedShape.scaleY;
     }
@@ -213,7 +223,7 @@ export default function AnnotationDrawing(
     shape.x = editedShape.x;
     shape.y = editedShape.y;
 
-    if (shape.type === 'image') {
+    if (shape.type === OVERLAY_TOOL.IMAGE) {
       shape.width = editedShape.image.width * editedShape.scaleX;
       shape.height = editedShape.image.height * editedShape.scaleY;
     }
@@ -631,6 +641,7 @@ AnnotationDrawing.propTypes = {
   scale: PropTypes.number.isRequired,
   setColorToolFromCurrentShape: PropTypes.func.isRequired,
   setDrawingState: PropTypes.func.isRequired,
+  setToolState: PropTypes.func.isRequired,
   tabView: PropTypes.string.isRequired,
   toolState: PropTypes.oneOfType(
     PropTypes.string,

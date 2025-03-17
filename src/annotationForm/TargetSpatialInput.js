@@ -105,6 +105,7 @@ export function TargetSpatialInput({
               updateCurrentShapeInShapes={updateCurrentShapeInShapes}
               updateScale={updateScale}
               windowId={windowId}
+              setToolState={setToolState}
             />
 
             <AnnotationFormOverlay
