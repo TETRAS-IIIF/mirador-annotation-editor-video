@@ -72,8 +72,8 @@ export const convertAnnotationStateToBeSaved = async (
   }
 
   // MAEV Specific
-  if (annotationStateForSaving.maeData.templateType == TEMPLATE.IMAGE_TYPE) {
-    if (annotationStateForSaving.maeData.target.drawingState.shapes.length == 1) {
+  if (annotationStateForSaving.maeData.templateType === TEMPLATE.IMAGE_TYPE) {
+    if (annotationStateForSaving.maeData.target.drawingState.shapes.length === 1) {
       // eslint-disable-next-line max-len
       annotationStateForSaving.body.id = annotationStateForSaving.maeData.target.drawingState.shapes[0].url;
       annotationStateForSaving.type = 'Annotation';
@@ -180,15 +180,14 @@ const getIIIFTargetFromImageType = (maeData, canvasId, windowId, playerScale) =>
         y,
       } = maeTarget.drawingState.shapes[0];
       const imageShape = getKonvaShape(windowId, maeTarget.drawingState.shapes[0].id);
-      console.log('imageShape', imageShape);
       const widthImage = Math.round(
-        imageShape.attrs.image.width * imageShape.attrs.scaleX / playerScale,
+        imageShape.attrs.image.width * imageShape.attrs.scaleX,
       );
       const heightImage = Math.round(
-        imageShape.attrs.image.height * imageShape.attrs.scaleY / playerScale,
+        imageShape.attrs.image.height * imageShape.attrs.scaleY,
       );
-      const xImage = Math.round(x / playerScale);
-      const yImage = Math.round(y / playerScale);
+      const xImage = Math.round(x);
+      const yImage = Math.round(y);
       return `${canvasId}#${maeTarget.tend ? `xywh=${xImage},${yImage},${widthImage},${heightImage}&t=${maeTarget.tstart},${maeTarget.tend}` : `xywh=${xImage},${yImage},${widthImage},${heightImage}`}`;
     }
   }

@@ -121,7 +121,13 @@ export default function AnnotationDrawing(
       const shapesWithoutTheDeleted = drawingState.shapes.filter((shape) => shape.id !== drawingState.currentShape.id);
       setDrawingState({
         ...drawingState,
+        currentShape: null,
         shapes: shapesWithoutTheDeleted,
+      });
+
+      setToolState({
+        ...toolState,
+        imageEvent: null,
       });
       return;
     }
