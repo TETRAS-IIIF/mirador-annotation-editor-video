@@ -172,7 +172,6 @@ function ParentComponent({
                   onShapeClick: handleShapeClick,
                   onTransform,
                   shape,
-                  src: shape.src,
                 }}
                 key={shape.id}
               />
