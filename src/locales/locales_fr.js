@@ -37,7 +37,7 @@ export const fr = {
   image_displayed: 'Image affichée',
   image_in_overlay_with_note: 'Image en superposition avec une note',
   image_true_size: 'Taille réelle de l\'image',
-  imageUrl: 'URL de l\'image',
+  imageURL: 'URL de l\'image',
   invalid_url: 'URL invalide',
   lastEditedByOn: 'Dernière modification par {{lastEditor}}, {{lastSavedDate}}',
   line: 'Ligne',
