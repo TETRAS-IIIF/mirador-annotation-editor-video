@@ -72,8 +72,8 @@ export const convertAnnotationStateToBeSaved = async (
   }
 
   // MAEV Specific
-  if (annotationStateForSaving.maeData.templateType == TEMPLATE.IMAGE_TYPE) {
-    if (annotationStateForSaving.maeData.target.drawingState.shapes.length == 1) {
+  if (annotationStateForSaving.maeData.templateType === TEMPLATE.IMAGE_TYPE) {
+    if (annotationStateForSaving.maeData.target.drawingState.shapes.length === 1) {
       // eslint-disable-next-line max-len
       annotationStateForSaving.body.id = annotationStateForSaving.maeData.target.drawingState.shapes[0].url;
       annotationStateForSaving.type = 'Annotation';
@@ -180,7 +180,6 @@ const getIIIFTargetFromImageType = (maeData, canvasId, windowId, playerScale) =>
         y,
       } = maeTarget.drawingState.shapes[0];
       const imageShape = getKonvaShape(windowId, maeTarget.drawingState.shapes[0].id);
-      console.log('imageShape', imageShape);
       const widthImage = Math.round(
         imageShape.attrs.image.width * imageShape.attrs.scaleX,
       );

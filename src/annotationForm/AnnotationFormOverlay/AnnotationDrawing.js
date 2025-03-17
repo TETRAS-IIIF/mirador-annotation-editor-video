@@ -46,10 +46,6 @@ export default function AnnotationDrawing(
         y: 60,
       };
 
-      console.log('imageShape', imageShape);
-      console.log('toolState.imageEvent', toolState.imageEvent);
-      console.log('width', width);
-
       setDrawingState({
         ...drawingState,
         currentShape: imageShape,

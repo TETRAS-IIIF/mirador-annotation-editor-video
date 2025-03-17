@@ -42,8 +42,6 @@ function ImageFormField({
     }
   }, [imageUrl]);
 
-  console.log('imageUrl', imageUrl);
-
   return (
     <StyledRoot>
       {
