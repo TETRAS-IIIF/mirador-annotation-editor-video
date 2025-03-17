@@ -89,7 +89,6 @@ export default function ImageCommentTemplate(
     if (annotationState.maeData.target && annotationState.maeData.target.drawingState) {
       return {
         ...annotationState.maeData.target.drawingState,
-        currentShape: null,
         isDrawing: false,
       };
     }
