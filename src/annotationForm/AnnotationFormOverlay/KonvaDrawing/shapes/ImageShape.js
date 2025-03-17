@@ -1,33 +1,40 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import PropTypes, { number } from 'prop-types';
 import { Image, Transformer } from 'react-konva';
-import useImage from 'use-image';
 
 /**
  * Represents a image shape component.
  * @returns {JSX.Element} The TextNode component.
  */
 function ImageShape({
-  onShapeClick,
-  shape,
   activeTool,
-  isSelected,
-  onTransform,
+  displayMode,
   handleDragEnd,
   handleDragStart,
-  displayMode,
+  isSelected,
+  onShapeClick,
+  onTransform,
+  shape,
 }) {
-  const shapeRef = useRef();
-  const trRef = useRef();
-  const [image] = useImage(shape.url);
+  const imageRef = useRef(null);
+  const trRef = useRef(null);
+  const [image, setImage] = useState(null);
 
   useEffect(() => {
-    if (trRef.current) {
-      trRef.current.nodes([shapeRef.current]);
+    if (isSelected && trRef.current && imageRef.current) {
+      trRef.current.nodes([imageRef.current]);
       trRef.current.getLayer()
         .batchDraw();
     }
-  }, [isSelected]);
+  }, [isSelected, image]);
+
+  useEffect(() => {
+    const img = new window.Image();
+    img.src = shape.url;
+    img.onload = () => {
+      setImage(img);
+    };
+  }, [shape.url]);
   /**
    * Handles the click event on the shape by invoking the provided callback function.
    * @function handleClick
@@ -41,7 +48,7 @@ function ImageShape({
   return (
     <>
       <Image
-        ref={shapeRef}
+        ref={imageRef}
         scaleX={shape.scaleX}
         scaleY={shape.scaleY}
         rotation={shape.rotation}
@@ -57,17 +64,20 @@ function ImageShape({
         onDragStart={handleDragStart}
       />
 
-      <Transformer
-        rotateEnabled={displayMode !== 'image'}
-        ref={trRef}
-        visible={activeTool === 'edit' && isSelected}
-      />
+      {isSelected && (
+        <Transformer
+          rotateEnabled={displayMode !== 'image'}
+          ref={trRef}
+          visible={activeTool === 'edit'}
+        />
+      )}
     </>
   );
 }
 
 ImageShape.propTypes = {
   activeTool: PropTypes.string.isRequired,
+  displayMode: PropTypes.string.isRequired,
   handleDragEnd: PropTypes.func.isRequired,
   handleDragStart: PropTypes.func.isRequired,
   isSelected: PropTypes.bool.isRequired,

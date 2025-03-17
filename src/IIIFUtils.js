@@ -68,6 +68,8 @@ export const convertAnnotationStateToBeSaved = async (
   annotationStateForSaving.target = getIIIFTargetFromMaeData(
     annotationStateForSaving.maeData,
     canvas.id,
+    windowId,
+    playerReferences.getScale(),
   );
 
   annotationStateForSaving.maeData.target.drawingState = JSON.stringify(
