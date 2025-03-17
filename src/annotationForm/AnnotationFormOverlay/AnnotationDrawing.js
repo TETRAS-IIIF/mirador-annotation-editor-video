@@ -210,7 +210,7 @@ export default function AnnotationDrawing(
     const shape = drawingState.shapes.find((s) => s.id === modifiedShape.id);
 
     Object.assign(shape, modifiedShape);
-    if (shape.type === 'image') {
+    if (shape.type === OVERLAY_TOOL.IMAGE) {
       shape.width = modifiedShape.image.width * modifiedShape.scaleX;
       shape.height = modifiedShape.image.height * modifiedShape.scaleY;
     }
@@ -229,7 +229,7 @@ export default function AnnotationDrawing(
     shape.x = editedShape.x;
     shape.y = editedShape.y;
 
-    if (shape.type === 'image') {
+    if (shape.type === OVERLAY_TOOL.IMAGE) {
       shape.width = editedShape.image.width * editedShape.scaleX;
       shape.height = editedShape.image.height * editedShape.scaleY;
     }
