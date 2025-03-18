@@ -57,7 +57,10 @@ const config = {
     defaultSideBarPanel: 'annotations',
     sideBarOpenByDefault: true,
   },
-  windows: [],
+  windows: [
+    { manifestId: 'https://files.tetras-libre.fr/dev/sun-400x400.json' },
+    { manifestId: 'https://resource.arvest.app/6b665140d80c98444a02f142c1a8fcb42d201940/8000x6000-Pogacar.json' },
+  ],
 };
 
 mirador.viewer(config, [...annotationPlugins]);

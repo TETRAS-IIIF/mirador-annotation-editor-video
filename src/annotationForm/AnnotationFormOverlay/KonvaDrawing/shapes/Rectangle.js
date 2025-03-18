@@ -1,13 +1,15 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { Rect, Transformer } from 'react-konva';
 import { KONVA_MODE } from '../KonvaUtils';
+
 /**
  * Represents a rectangle node component.
  * @returns {JSX.Element} The TextNode component.
  */
 function Rectangle({
   activeTool,
+  baseStrokeWidth,
   displayMode,
   handleDragEnd,
   handleDragStart,
@@ -22,7 +24,8 @@ function Rectangle({
   useEffect(() => {
     if (trRef.current) {
       trRef.current.nodes([shapeRef.current]);
-      trRef.current.getLayer().batchDraw();
+      trRef.current.getLayer()
+        .batchDraw();
     }
   }, [isSelected]);
 
@@ -35,6 +38,8 @@ function Rectangle({
   const handleClick = () => {
     onShapeClick(shape);
   };
+
+  const strokeWidth = baseStrokeWidth + shape.strokeWidth;
 
   return (
     <>
@@ -54,7 +59,7 @@ function Rectangle({
         scaleY={shape.scaleY}
         stroke={shape.stroke}
         strokeScaleEnabled={false}
-        strokeWidth={shape.strokeWidth}
+        strokeWidth={strokeWidth}
         width={shape.width}
         x={shape.x || 0}
         y={shape.y || 0}
@@ -70,6 +75,7 @@ function Rectangle({
 
 Rectangle.propTypes = {
   activeTool: PropTypes.string.isRequired,
+  baseStrokeWidth: PropTypes.number.isRequired,
   displayMode: PropTypes.string.isRequired,
   handleDragEnd: PropTypes.func.isRequired,
   handleDragStart: PropTypes.func.isRequired,

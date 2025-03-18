@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { Arrow, Transformer } from 'react-konva';
 
@@ -6,7 +6,13 @@ import { Arrow, Transformer } from 'react-konva';
  * Represents a arrow node component.
  * @returns {JSX.Element} The TextNode component.
  */function ArrowNode({
-  onShapeClick, shape, activeTool, isSelected, onTransform, handleDragEnd,
+  onShapeClick,
+  baseStrokeWidth,
+  shape,
+  activeTool,
+  isSelected,
+  onTransform,
+  handleDragEnd,
 }) {
   const shapeRef = useRef();
   const trRef = useRef();
@@ -14,7 +20,8 @@ import { Arrow, Transformer } from 'react-konva';
   useEffect(() => {
     if (trRef.current) {
       trRef.current.nodes([shapeRef.current]);
-      trRef.current.getLayer().batchDraw();
+      trRef.current.getLayer()
+        .batchDraw();
     }
   }, [isSelected]);
 
@@ -28,6 +35,8 @@ import { Arrow, Transformer } from 'react-konva';
     onShapeClick(shape);
   };
 
+  const strokeWidth = baseStrokeWidth + shape.strokeWidth;
+
   return (
     <>
       <Arrow
@@ -39,7 +48,7 @@ import { Arrow, Transformer } from 'react-konva';
         x={shape.x}
         y={shape.y}
         stroke={shape.stroke}
-        strokeWidth={shape.strokeWidth}
+        strokeWidth={strokeWidth}
         points={shape.points}
         id={shape.id}
         draggable={activeTool === 'cursor' || activeTool === 'edit'}
@@ -61,8 +70,8 @@ import { Arrow, Transformer } from 'react-konva';
 
 ArrowNode.propTypes = {
   activeTool: PropTypes.string.isRequired,
+  baseStrokeWidth: PropTypes.number.isRequired,
   handleDragEnd: PropTypes.func.isRequired,
-  handleDragStart: PropTypes.func.isRequired,
   isSelected: PropTypes.bool.isRequired,
   onShapeClick: PropTypes.func.isRequired,
   onTransform: PropTypes.func.isRequired,
