@@ -58,28 +58,29 @@ function AnnotationFormOverlayTool({
         toolState.activeTool === OVERLAY_TOOL.EDIT && (
           <>
             {
-              currentShape && displayMode === KONVA_MODE.DRAW && (
-                <div>
-                  <Typography variant="subFormSectionTitle">
-                    {t('selected_object')}
-                  </Typography>
-                  <AnnotationFormOverlayToolOptions
-                    t={t}
-                    toolState={{
-                      ...toolState,
-                      activeTool: currentShape.type,
-                      closedMode: currentShape.closedMode,
-                      fillColor: currentShape.fill,
-                      image: { id: currentShape.url },
-                      strokeColor: currentShape.stroke,
-                      strokeWidth: currentShape.strokeWidth,
-                      text: currentShape.text,
-                    }}
-                    setToolState={customUpdateToolState}
-                    displayMode={displayMode}
-                  />
-                </div>
-              )
+                ((currentShape && displayMode === KONVA_MODE.DRAW)
+                    || (currentShape && displayMode === KONVA_MODE.TARGET)) && (
+                    <div>
+                      <Typography variant="subFormSectionTitle">
+                        {t('selected_object')}
+                      </Typography>
+                      <AnnotationFormOverlayToolOptions
+                        t={t}
+                        toolState={{
+                          ...toolState,
+                          activeTool: currentShape.type,
+                          closedMode: currentShape.closedMode,
+                          fillColor: currentShape.fill,
+                          image: { id: currentShape.url },
+                          strokeColor: currentShape.stroke,
+                          strokeWidth: currentShape.strokeWidth,
+                          text: currentShape.text,
+                        }}
+                        setToolState={customUpdateToolState}
+                        displayMode={displayMode}
+                      />
+                    </div>
+                )
             }
             {
               (displayMode === KONVA_MODE.DRAW && shapes.length > 0) && (
