@@ -8,6 +8,7 @@ import { Circle, Transformer } from 'react-konva';
  */
 function CircleNode({
   activeTool,
+  baseStrokeWidth,
   handleDragEnd,
   handleDragStart,
   isSelected,
@@ -36,6 +37,8 @@ function CircleNode({
     onShapeClick(shape);
   };
 
+  const strokeWidth = baseStrokeWidth + shape.strokeWidth;
+
   return (
     <>
       <Circle
@@ -55,7 +58,7 @@ function CircleNode({
         stroke={shape.stroke}
         // This line cause SVG export error
         strokeScaleEnabled={false}
-        strokeWidth={shape.strokeWidth}
+        strokeWidth={strokeWidth}
         x={shape.x}
         y={shape.y}
       />
@@ -70,6 +73,7 @@ function CircleNode({
 
 CircleNode.propTypes = {
   activeTool: PropTypes.string.isRequired,
+  baseStrokeWidth: PropTypes.number.isRequired,
   handleDragEnd: PropTypes.func.isRequired,
   handleDragStart: PropTypes.func.isRequired,
   isSelected: PropTypes.bool.isRequired,

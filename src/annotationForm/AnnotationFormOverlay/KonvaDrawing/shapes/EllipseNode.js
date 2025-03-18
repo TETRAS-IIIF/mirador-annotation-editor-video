@@ -1,13 +1,20 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { Ellipse, Transformer } from 'react-konva';
+
 /**
  * Represents a Elipse node component.
  * @returns {JSX.Element} The TextNode component.
  */
 function EllipseNode({
-  onShapeClick, shape, activeTool, isSelected,
-  onTransform, handleDragEnd, handleDragStart,
+  activeTool,
+  baseStrokeWidth,
+  handleDragEnd,
+  isSelected,
+  onShapeClick,
+  onTransform,
+  shape,
+  handleDragStart,
 }) {
   const shapeRef = useRef();
   const trRef = useRef();
@@ -15,7 +22,8 @@ function EllipseNode({
   useEffect(() => {
     if (trRef.current) {
       trRef.current.nodes([shapeRef.current]);
-      trRef.current.getLayer().batchDraw();
+      trRef.current.getLayer()
+        .batchDraw();
     }
   }, [isSelected]);
 
@@ -28,6 +36,8 @@ function EllipseNode({
   const handleClick = () => {
     onShapeClick(shape);
   };
+
+  const strokeWidth = baseStrokeWidth + shape.strokeWidth;
 
   return (
     <>
@@ -48,7 +58,7 @@ function EllipseNode({
         scaleY={shape.scaleY}
         stroke={shape.stroke}
         strokeScaleEnabled={false}
-        strokeWidth={shape.strokeWidth || 1}
+        strokeWidth={strokeWidth}
         x={shape.x}
         y={shape.y}
       />
@@ -63,6 +73,7 @@ function EllipseNode({
 
 EllipseNode.propTypes = {
   activeTool: PropTypes.string.isRequired,
+  baseStrokeWidth: PropTypes.number.isRequired,
   handleDragEnd: PropTypes.func.isRequired,
   handleDragStart: PropTypes.func.isRequired,
   isSelected: PropTypes.bool.isRequired,
