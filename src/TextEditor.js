@@ -27,6 +27,37 @@ function TextEditor({
       updateAnnotationBody(html);
     }
   };
+  const modules = {
+    toolbar: [
+      [{ header: [1, 2, false] }],
+      ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+      [
+        { list: 'ordered' },
+        { list: 'bullet' },
+        { indent: '-1' },
+        { indent: '+1' },
+      ],
+      [{ color: [] }, { background: [] }],
+      ['link', 'image'],
+      ['clean'],
+    ],
+  };
+
+  const formats = [
+    'header',
+    'bold',
+    'italic',
+    'underline',
+    'strike',
+    'blockquote',
+    'list',
+    'bullet',
+    'indent',
+    'link',
+    'image',
+    'color',
+    'background',
+  ];
 
   // Data field is needed to set bounds for the editor and avoir tooltip overflow
   return (
@@ -36,6 +67,8 @@ function TextEditor({
         onChange={handleChange}
         placeholder="Your text here"
         bounds='[data-text-editor="name"]'
+        modules={modules}
+        formats={formats}
       />
     </div>
   );
