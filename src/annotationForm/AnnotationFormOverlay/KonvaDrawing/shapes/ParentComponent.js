@@ -14,6 +14,7 @@ import { OVERLAY_TOOL, SHAPES_TOOL } from '../KonvaUtils';
 /** Loads Konva and display in function of their type */
 function ParentComponent({
   activeTool,
+  baseStrokeWidth,
   displayMode,
   handleDragEnd,
   handleDragStart,
@@ -67,6 +68,7 @@ function ParentComponent({
                 }}
                 key={shape.id}
                 displayMode={displayMode}
+                baseStrokeWidth={baseStrokeWidth}
               />
             );
           case 'text':
@@ -98,6 +100,7 @@ function ParentComponent({
                   shape,
                 }}
                 key={shape.id}
+                baseStrokeWidth={baseStrokeWidth}
               />
             );
           case SHAPES_TOOL.CIRCLE:
@@ -113,6 +116,7 @@ function ParentComponent({
                   shape,
                 }}
                 key={shape.id}
+                baseStrokeWidth={baseStrokeWidth}
               />
             );
           case SHAPES_TOOL.FREEHAND:
@@ -128,6 +132,7 @@ function ParentComponent({
                   shape,
                 }}
                 key={shape.id}
+                baseStrokeWidth={baseStrokeWidth}
               />
             );
           case SHAPES_TOOL.POLYGON:
@@ -143,6 +148,7 @@ function ParentComponent({
                   shape,
                 }}
                 key={shape.id}
+                baseStrokeWidth={baseStrokeWidth}
               />
             );
           case SHAPES_TOOL.ARROW:
@@ -158,6 +164,7 @@ function ParentComponent({
                   shape,
                 }}
                 key={shape.id}
+                baseStrokeWidth={baseStrokeWidth}
               />
             );
           case OVERLAY_TOOL.IMAGE:
@@ -184,6 +191,7 @@ function ParentComponent({
 
 ParentComponent.propTypes = {
   activeTool: PropTypes.string.isRequired,
+  baseStrokeWidth: PropTypes.number.isRequired,
   displayMode: PropTypes.string.isRequired,
   handleDragEnd: PropTypes.func.isRequired,
   handleDragStart: PropTypes.func.isRequired,

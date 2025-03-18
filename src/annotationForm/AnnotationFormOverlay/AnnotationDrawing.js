@@ -558,6 +558,7 @@ export default function AnnotationDrawing(
     >
       <ParentComponent
         activeTool={toolState.activeTool}
+        baseStrokeWidth={toolState.strokeWidth}
         displayMode={displayMode}
         handleDragEnd={handleDragEnd}
         handleDragStart={handleDragStart}

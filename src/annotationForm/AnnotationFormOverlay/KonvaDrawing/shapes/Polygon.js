@@ -1,10 +1,11 @@
 import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
-import { Transformer, Shape, Line } from 'react-konva';
+import { Line, Transformer } from 'react-konva';
 
 /** FreeHand shape displaying */
 function Polygon({
   activeTool,
+  baseStrokeWidth,
   handleDragEnd,
   handleDragStart,
   isSelected,
@@ -19,7 +20,8 @@ function Polygon({
   useEffect(() => {
     if (trRef.current) {
       trRef.current.nodes([shapeRef.current]);
-      trRef.current.getLayer().batchDraw();
+      trRef.current.getLayer()
+        .batchDraw();
     }
   }, [isSelected, shape]);
 
@@ -33,8 +35,9 @@ function Polygon({
     onShapeClick(shape);
   };
 
-  return (
+  const strokeWidth = baseStrokeWidth + shape.strokeWidth;
 
+  return (
     <>
       <Line
         closed={false}
@@ -57,7 +60,7 @@ function Polygon({
         stroke={shape.stroke}
         // This line cause SVG export error
         strokeScaleEnabled={false}
-        strokeWidth={shape.strokeWidth}
+        strokeWidth={strokeWidth}
         x={shape.x}
         y={shape.y}
       />
@@ -71,6 +74,7 @@ function Polygon({
 
 Polygon.propTypes = {
   activeTool: PropTypes.string.isRequired,
+  baseStrokeWidth: PropTypes.number.isRequired,
   handleDragEnd: PropTypes.func.isRequired,
   handleDragStart: PropTypes.func.isRequired,
   isSelected: PropTypes.bool.isRequired,

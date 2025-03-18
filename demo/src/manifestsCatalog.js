@@ -17,4 +17,5 @@ export const manifestsCatalog = [
   { manifestId: 'https://preview.iiif.io/cookbook/master/recipe/0003-mvm-video/manifest.json' },
   { manifestId: 'https://iiif.io/api/cookbook/recipe/0065-opera-multiple-canvases/manifest.json' },
   { manifestId: 'https://iiif.io/api/cookbook/recipe/0064-opera-one-canvas/manifest.json' },
+  { manifestId: 'https://resource.arvest.app/6b665140d80c98444a02f142c1a8fcb42d201940/8000x6000-Pogacar.json' },
 ];
