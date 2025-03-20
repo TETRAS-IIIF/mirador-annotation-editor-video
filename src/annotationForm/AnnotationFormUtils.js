@@ -88,14 +88,14 @@ export const IMAGE_TOOL_STATE = {
  * @returns {{activeTool: string, closedMode: string, image: {id: null}, imageEvent: null,
  * strokeColor: string, strokeWidth: number}}
  */
-export function getTargetSVGToolState(imageZoom) {
+export function getTargetSVGToolState() {
   return {
     activeTool: OVERLAY_TOOL.SHAPE,
     closedMode: 'closed',
     image: { id: null },
     imageEvent: null,
     strokeColor: 'rgba(255,0, 0, 0.5)',
-    strokeWidth: 8 * imageZoom,
+    strokeWidth: 20,
   };
 }
 

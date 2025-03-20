@@ -15,6 +15,7 @@ export default function AnnotationDrawing(
     scale,
     setColorToolFromCurrentShape,
     setDrawingState,
+    setToolState,
     tabView,
     toolState,
     updateCurrentShapeInShapes,
@@ -33,22 +34,28 @@ export default function AnnotationDrawing(
   }, [{ width }]);
 
   useEffect(() => {
-    if (toolState.imageEvent?.id) {
+    if (toolState.imageEvent?.id && !drawingState.currentShape) {
       const imageShape = {
         id: uuidv4(),
         rotation: 0,
-        scaleX: 1,
-        scaleY: 1,
+        scaleX: 0.2,
+        scaleY: 0.2,
         type: SHAPES_TOOL.IMAGE,
         url: toolState.imageEvent.id,
-        x: 30,
-        y: 30,
+        x: 60,
+        y: 60,
       };
 
       setDrawingState({
         ...drawingState,
         currentShape: imageShape,
         shapes: [...drawingState.shapes, imageShape],
+      });
+
+      setToolState({
+        ...toolState,
+        activeTool: 'edit',
+        imageEvent: null,
       });
     }
     setIsDrawing(false);
@@ -114,13 +121,22 @@ export default function AnnotationDrawing(
       const shapesWithoutTheDeleted = drawingState.shapes.filter((shape) => shape.id !== drawingState.currentShape.id);
       setDrawingState({
         ...drawingState,
+        currentShape: null,
         shapes: shapesWithoutTheDeleted,
+      });
+
+      setToolState({
+        ...toolState,
+        imageEvent: null,
       });
       return;
     }
 
     // release the drawing
     if (e.key === 'Escape') {
+      if (toolState.activeTool === OVERLAY_TOOL.IMAGE) {
+        return;
+      }
       if (toolState.activeTool === SHAPES_TOOL.POLYGON) {
         drawingState.currentShape.points.splice(-2, 2);
         updateCurrentShapeInShapes({
@@ -542,6 +558,7 @@ export default function AnnotationDrawing(
     >
       <ParentComponent
         activeTool={toolState.activeTool}
+        baseStrokeWidth={toolState.strokeWidth}
         displayMode={displayMode}
         handleDragEnd={handleDragEnd}
         handleDragStart={handleDragStart}
@@ -631,6 +648,7 @@ AnnotationDrawing.propTypes = {
   scale: PropTypes.number.isRequired,
   setColorToolFromCurrentShape: PropTypes.func.isRequired,
   setDrawingState: PropTypes.func.isRequired,
+  setToolState: PropTypes.func.isRequired,
   tabView: PropTypes.string.isRequired,
   toolState: PropTypes.oneOfType(
     PropTypes.string,
