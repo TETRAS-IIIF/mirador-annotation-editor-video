@@ -57,10 +57,22 @@ export class WindowPlayer {
   }
 
   /**
+   * Pauses execution for a specified amount of time.
+   *
+   * @param {number} ms - The number of milliseconds to sleep.
+   * @returns {Promise<void>} A promise that resolves after the specified duration.
+   */
+  // eslint-disable-next-line class-methods-use-this,require-jsdoc
+  sleep(ms) {
+    return new Promise((resolve) => { setTimeout(resolve, ms); });
+  }
+
+  /**
    * Get player initialisation status
    * @returns {*|boolean}
    */
-  isInitializedCorrectly() {
+  async isInitializedCorrectly() {
+    await this.sleep(100);
     return this.media && ((this.media.current && this.media.current.canvas) || this.media.video)
         && (this.mediaType !== MEDIA_TYPES.UNKNOWN && this.mediaType !== MEDIA_TYPES.AUDIO);
   }
