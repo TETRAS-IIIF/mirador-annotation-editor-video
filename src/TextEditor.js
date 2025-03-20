@@ -11,7 +11,10 @@ const StyledReactQuill = styled(ReactQuill)(({ theme }) => ({
 }));
 
 /** Rich text editor for annotation body */
-function TextEditor({ annoHtml, updateAnnotationBody }) {
+function TextEditor({
+  annoHtml,
+  updateAnnotationBody,
+}) {
   const [editorHtml, setEditorHtml] = useState(annoHtml);
 
   /**
@@ -24,13 +27,48 @@ function TextEditor({ annoHtml, updateAnnotationBody }) {
       updateAnnotationBody(html);
     }
   };
+  const modules = {
+    toolbar: [
+      [{ header: [1, 2, false] }],
+      ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+      [
+        { list: 'ordered' },
+        { list: 'bullet' },
+        { indent: '-1' },
+        { indent: '+1' },
+      ],
+      [{ color: [] }, { background: [] }],
+      ['link', 'image'],
+      ['clean'],
+    ],
+  };
 
+  const formats = [
+    'header',
+    'bold',
+    'italic',
+    'underline',
+    'strike',
+    'blockquote',
+    'list',
+    'bullet',
+    'indent',
+    'link',
+    'image',
+    'color',
+    'background',
+  ];
+
+  // Data field is needed to set bounds for the editor and avoir tooltip overflow
   return (
-    <div>
+    <div data-text-editor="name">
       <StyledReactQuill
         value={editorHtml}
         onChange={handleChange}
         placeholder="Your text here"
+        bounds='[data-text-editor="name"]'
+        modules={modules}
+        formats={formats}
       />
     </div>
   );

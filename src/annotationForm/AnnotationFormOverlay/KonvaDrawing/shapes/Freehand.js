@@ -1,10 +1,16 @@
 import React, { useEffect, useRef } from 'react';
 import PropTypes, { number } from 'prop-types';
-import { Transformer, Line, Group } from 'react-konva';
+import { Group, Line, Transformer } from 'react-konva';
 
 /** FreeHand shape displaying */
 function Freehand({
-  activeTool, onShapeClick, isSelected, shape, onTransform, handleDragEnd, handleDragStart,
+  activeTool,
+  onShapeClick,
+  isSelected,
+  shape,
+  onTransform,
+  handleDragEnd,
+  handleDragStart,
 }) {
   // TODO check if selectedShapeId is needed
   const shapeRef = useRef();
@@ -13,7 +19,8 @@ function Freehand({
   useEffect(() => {
     if (trRef.current) {
       trRef.current.nodes([shapeRef.current]);
-      trRef.current.getLayer().batchDraw();
+      trRef.current.getLayer()
+        .batchDraw();
     }
   }, [isSelected, shape]);
 

@@ -11,6 +11,7 @@ export const manifestsCatalog = [
   { manifestId: 'https://purl.stanford.edu/sn904cj3429/iiif/manifest' },
   { manifestId: 'https://coeso.tetras-libre.fr/data/coeso-deliverable/Manual_Network_Configuration.json' },
   { manifestId: 'https://iiif.bodleian.ox.ac.uk/iiif/manifest/e32a277e-91e2-4a6d-8ba6-cc4bad230410.json' },
+  { manifestId: 'https://resource.arvest.app/6b665140d80c98444a02f142c1a8fcb42d201940/8000x6000-Pogacar.json' },
   { manifestId: 'https://files.tetras-libre.fr/dev/multicanva-video.json' },
   { manifestId: 'https://dzkimgs.l.u-tokyo.ac.jp/videos/iiif_in_japan_2017/manifest.json' },
   { manifestId: 'https://iiif.io/api/cookbook/recipe/0219-using-caption-file/manifest.json' },
