@@ -144,7 +144,7 @@ export function getTargetSVGToolState() {
     image: { id: null },
     imageEvent: null,
     strokeColor: 'rgba(255,0, 0, 0.5)',
-    strokeWidth: 20,
+    strokeWidth: 5,
   };
 }
 
