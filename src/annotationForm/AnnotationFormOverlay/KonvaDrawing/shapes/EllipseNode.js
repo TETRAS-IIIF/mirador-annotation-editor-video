@@ -8,7 +8,6 @@ import { Ellipse, Transformer } from 'react-konva';
  */
 function EllipseNode({
   activeTool,
-  baseStrokeWidth,
   handleDragEnd,
   isSelected,
   onShapeClick,
@@ -37,8 +36,6 @@ function EllipseNode({
     onShapeClick(shape);
   };
 
-  const strokeWidth = baseStrokeWidth + shape.strokeWidth;
-
   return (
     <>
       <Ellipse
@@ -58,7 +55,7 @@ function EllipseNode({
         scaleY={shape.scaleY}
         stroke={shape.stroke}
         strokeScaleEnabled={false}
-        strokeWidth={strokeWidth}
+        strokeWidth={shape.strokeWidth}
         x={shape.x}
         y={shape.y}
       />
@@ -73,7 +70,6 @@ function EllipseNode({
 
 EllipseNode.propTypes = {
   activeTool: PropTypes.string.isRequired,
-  baseStrokeWidth: PropTypes.number.isRequired,
   handleDragEnd: PropTypes.func.isRequired,
   handleDragStart: PropTypes.func.isRequired,
   isSelected: PropTypes.bool.isRequired,

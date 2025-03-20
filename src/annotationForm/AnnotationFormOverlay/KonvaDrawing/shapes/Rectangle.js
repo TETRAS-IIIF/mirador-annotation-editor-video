@@ -9,7 +9,6 @@ import { KONVA_MODE } from '../KonvaUtils';
  */
 function Rectangle({
   activeTool,
-  baseStrokeWidth,
   displayMode,
   handleDragEnd,
   handleDragStart,
@@ -39,8 +38,6 @@ function Rectangle({
     onShapeClick(shape);
   };
 
-  const strokeWidth = baseStrokeWidth + shape.strokeWidth;
-
   return (
     <>
       <Rect
@@ -59,7 +56,7 @@ function Rectangle({
         scaleY={shape.scaleY}
         stroke={shape.stroke}
         strokeScaleEnabled={false}
-        strokeWidth={strokeWidth}
+        strokeWidth={shape.strokeWidth}
         width={shape.width}
         x={shape.x || 0}
         y={shape.y || 0}
@@ -75,7 +72,6 @@ function Rectangle({
 
 Rectangle.propTypes = {
   activeTool: PropTypes.string.isRequired,
-  baseStrokeWidth: PropTypes.number.isRequired,
   displayMode: PropTypes.string.isRequired,
   handleDragEnd: PropTypes.func.isRequired,
   handleDragStart: PropTypes.func.isRequired,
