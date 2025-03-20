@@ -5,7 +5,6 @@ import { Line, Transformer } from 'react-konva';
 /** FreeHand shape displaying */
 function Polygon({
   activeTool,
-  baseStrokeWidth,
   handleDragEnd,
   handleDragStart,
   isSelected,
@@ -35,8 +34,6 @@ function Polygon({
     onShapeClick(shape);
   };
 
-  const strokeWidth = baseStrokeWidth + shape.strokeWidth;
-
   return (
     <>
       <Line
@@ -60,7 +57,7 @@ function Polygon({
         stroke={shape.stroke}
         // This line cause SVG export error
         strokeScaleEnabled={false}
-        strokeWidth={strokeWidth}
+        strokeWidth={shape.strokeWidth}
         x={shape.x}
         y={shape.y}
       />
@@ -74,7 +71,6 @@ function Polygon({
 
 Polygon.propTypes = {
   activeTool: PropTypes.string.isRequired,
-  baseStrokeWidth: PropTypes.number.isRequired,
   handleDragEnd: PropTypes.func.isRequired,
   handleDragStart: PropTypes.func.isRequired,
   isSelected: PropTypes.bool.isRequired,

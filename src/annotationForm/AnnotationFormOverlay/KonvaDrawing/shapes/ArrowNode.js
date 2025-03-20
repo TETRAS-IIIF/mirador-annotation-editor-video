@@ -7,7 +7,6 @@ import { Arrow, Transformer } from 'react-konva';
  * @returns {JSX.Element} The TextNode component.
  */function ArrowNode({
   onShapeClick,
-  baseStrokeWidth,
   shape,
   activeTool,
   isSelected,
@@ -35,8 +34,6 @@ import { Arrow, Transformer } from 'react-konva';
     onShapeClick(shape);
   };
 
-  const strokeWidth = baseStrokeWidth + shape.strokeWidth;
-
   return (
     <>
       <Arrow
@@ -48,7 +45,7 @@ import { Arrow, Transformer } from 'react-konva';
         x={shape.x}
         y={shape.y}
         stroke={shape.stroke}
-        strokeWidth={strokeWidth}
+        strokeWidth={shape.strokeWidth}
         points={shape.points}
         id={shape.id}
         draggable={activeTool === 'cursor' || activeTool === 'edit'}
@@ -70,7 +67,6 @@ import { Arrow, Transformer } from 'react-konva';
 
 ArrowNode.propTypes = {
   activeTool: PropTypes.string.isRequired,
-  baseStrokeWidth: PropTypes.number.isRequired,
   handleDragEnd: PropTypes.func.isRequired,
   isSelected: PropTypes.bool.isRequired,
   onShapeClick: PropTypes.func.isRequired,
