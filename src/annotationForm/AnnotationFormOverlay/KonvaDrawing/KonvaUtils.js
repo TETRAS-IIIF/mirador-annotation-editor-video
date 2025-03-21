@@ -17,7 +17,7 @@ export function getKonvaStage(windowId) {
  * @param scale
  * @param hideAfterResize
  */
-export function resizeKonvaStage(windowId, width, height, scale, hideAfterResize = true) {
+export function resizeKonvaStage(windowId, width, height, scale, hideAfterResize = true, scaleStrokeForPNGExport = false) {
   hideKonvaStage();
   const stage = getKonvaStage(windowId);
   stage.width(width);
@@ -26,6 +26,28 @@ export function resizeKonvaStage(windowId, width, height, scale, hideAfterResize
     x: scale,
     y: scale,
   });
+
+  if (scaleStrokeForPNGExport) {
+    stage.find('Rect')
+      .map((node) => {
+        node.strokeWidth(node.strokeWidth() * scale);
+      });
+
+    stage.find('Line')
+      .map((node) => {
+        node.strokeWidth(node.strokeWidth() * scale);
+      });
+
+    stage.find('Circle')
+      .map((node) => {
+        node.strokeWidth(node.strokeWidth() * scale);
+      });
+    stage.find('Ellipse')
+      .map((node) => {
+        node.strokeWidth(node.strokeWidth() * scale);
+      });
+  }
+
   if (!hideAfterResize) {
     showKonvaStage();
   }

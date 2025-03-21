@@ -62,7 +62,7 @@ export const convertAnnotationStateToBeSaved = async (
   }
 
   if (isAnnotationExportableToImage(annotationStateForSaving.maeData)) {
-    annotationStateForSaving.body.id = await getKonvaAsDataURL(windowId, playerReferences.getScale());
+    annotationStateForSaving.body.id = await getKonvaAsDataURL(windowId);
     annotationStateForSaving.body.format = 'image/jpg';
     annotationStateForSaving.type = 'Annotation';
   }
