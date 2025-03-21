@@ -253,6 +253,15 @@ export class WindowPlayer {
     }
     return undefined;
   }
+
+  /**
+   * Get reasonable stroke width for target sha
+   * @returns {number}
+   */
+  getTargetStrokeWidth() {
+    return Math.max(this.getDisplayedMediaWidth() / 500, 3);
+    // TODO DAxid
+  }
 }
 
 /** ***********************
