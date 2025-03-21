@@ -197,6 +197,7 @@ export default function ImageCommentTemplate(
           showFragmentSelector={false}
           tabView={viewTool}
           toolState={toolState}
+          setToolState={setToolState}
           updateCurrentShapeInShapes={updateCurrentShapeInShapes}
           updateScale={updateScale}
           windowId={windowId}

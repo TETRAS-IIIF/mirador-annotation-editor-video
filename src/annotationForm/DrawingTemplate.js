@@ -199,6 +199,7 @@ export default function DrawingTemplate(
           playerReferences={playerReferences}
           scale={scale}
           setColorToolFromCurrentShape={setColorToolFromCurrentShape}
+          setToolState={setToolState}
           setDrawingState={setDrawingState}
           tabView={viewTool}
           toolState={toolState}
