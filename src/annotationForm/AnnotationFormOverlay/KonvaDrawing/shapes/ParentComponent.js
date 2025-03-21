@@ -14,6 +14,7 @@ import { OVERLAY_TOOL, SHAPES_TOOL } from '../KonvaUtils';
 /** Loads Konva and display in function of their type */
 function ParentComponent({
   activeTool,
+  baseStrokeWidth,
   displayMode,
   handleDragEnd,
   handleDragStart,
@@ -67,6 +68,7 @@ function ParentComponent({
                 }}
                 key={shape.id}
                 displayMode={displayMode}
+                baseStrokeWidth={baseStrokeWidth}
               />
             );
           case 'text':
