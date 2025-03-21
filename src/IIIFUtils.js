@@ -1,6 +1,5 @@
 import {
   getKonvaAsDataURL,
-  getKonvaShape,
   getSvg,
   SHAPES_TOOL,
 } from './annotationForm/AnnotationFormOverlay/KonvaDrawing/KonvaUtils';

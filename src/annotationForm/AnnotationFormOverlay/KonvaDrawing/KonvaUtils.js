@@ -54,7 +54,7 @@ export function showKonvaStage() {
  */
 export async function getSvg(windowId) {
   const stage = getKonvaStage(windowId);
-  const exportStrokeWidth = 1;
+  const exportStrokeWidth = 2; // TODO in const
 
   stage.find('Transformer')
     .forEach((node) => node.destroy());
