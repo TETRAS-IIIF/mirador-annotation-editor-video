@@ -253,6 +253,7 @@ export class WindowPlayer {
     }
     if (this.mediaType === MEDIA_TYPES.VIDEO) {
       return this.getDisplayedMediaWidth() / this.getMediaTrueWidth();
+      // There is problem with getZoom method. It's used as get scale
     }
     return undefined;
   }

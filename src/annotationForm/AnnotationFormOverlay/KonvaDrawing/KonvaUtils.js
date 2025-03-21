@@ -91,6 +91,11 @@ export async function getSvg(windowId) {
       cleanNode(node);
     });
 
+  stage.find('Ellipse')
+    .map((node) => {
+      cleanNode(node);
+    });
+
   let svg = await exportStageSVG(stage, false); // TODO clean
   svg = svg.replaceAll('"', '\'');
   return svg;
