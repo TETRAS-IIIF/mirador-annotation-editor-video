@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { Ellipse, Transformer } from 'react-konva';
+import { KONVA_MODE } from '../KonvaUtils';
 
 /**
  * Represents a Elipse node component.
@@ -8,6 +9,8 @@ import { Ellipse, Transformer } from 'react-konva';
  */
 function EllipseNode({
   activeTool,
+  baseStrokeWidth,
+  displayMode,
   handleDragEnd,
   isSelected,
   onShapeClick,
@@ -55,7 +58,7 @@ function EllipseNode({
         scaleY={shape.scaleY}
         stroke={shape.stroke}
         strokeScaleEnabled={false}
-        strokeWidth={shape.strokeWidth}
+        strokeWidth={displayMode === KONVA_MODE.TARGET ? baseStrokeWidth : shape.strokeWidth}
         x={shape.x}
         y={shape.y}
       />
@@ -70,6 +73,8 @@ function EllipseNode({
 
 EllipseNode.propTypes = {
   activeTool: PropTypes.string.isRequired,
+  baseStrokeWidth: PropTypes.number.isRequired,
+  displayMode: PropTypes.string.isRequired,
   handleDragEnd: PropTypes.func.isRequired,
   handleDragStart: PropTypes.func.isRequired,
   isSelected: PropTypes.bool.isRequired,

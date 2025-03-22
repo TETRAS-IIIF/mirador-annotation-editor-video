@@ -51,12 +51,6 @@ export default function AnnotationDrawing(
         currentShape: imageShape,
         shapes: [...drawingState.shapes, imageShape],
       });
-
-      setToolState({
-        ...toolState,
-        activeTool: 'edit',
-        imageEvent: null,
-      });
     }
     setIsDrawing(false);
   }, [toolState]);
@@ -229,7 +223,7 @@ export default function AnnotationDrawing(
     shape.x = editedShape.x;
     shape.y = editedShape.y;
 
-    if (shape.type === OVERLAY_TOOL.IMAGE) {
+    if (shape.type === SHAPES_TOOL.IMAGE) {
       shape.width = editedShape.image.width * editedShape.scaleX;
       shape.height = editedShape.image.height * editedShape.scaleY;
     }
@@ -558,7 +552,7 @@ export default function AnnotationDrawing(
     >
       <ParentComponent
         activeTool={toolState.activeTool}
-        baseStrokeWidth={toolState.strokeWidth}
+        baseStrokeWidth={playerReferences.getTargetStrokeWidth()}
         displayMode={displayMode}
         handleDragEnd={handleDragEnd}
         handleDragStart={handleDragStart}

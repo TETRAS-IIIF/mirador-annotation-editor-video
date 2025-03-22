@@ -70,6 +70,8 @@ export default function DrawingTemplate(
       playerReferences.getMediaTrueWidth(),
       playerReferences.getMediaTrueHeight(),
       1 / playerReferences.getScale(),
+      true,
+      true,
     );
     // Save drawing state in annotation
     annotationState.maeData.target.drawingState = drawingState;
@@ -199,6 +201,7 @@ export default function DrawingTemplate(
           playerReferences={playerReferences}
           scale={scale}
           setColorToolFromCurrentShape={setColorToolFromCurrentShape}
+          setToolState={setToolState}
           setDrawingState={setDrawingState}
           tabView={viewTool}
           toolState={toolState}

@@ -8,6 +8,7 @@ export const manifestsCatalog = [
   { manifestId: 'https://iiif.harvardartmuseums.org/manifests/object/299843' },
   { manifestId: 'https://iiif.io/api/cookbook/recipe/0002-mvm-audio/manifest.json' },
   { manifestId: 'https://files.tetras-libre.fr/dev/vertical_video_with_annot.json' },
+  { manifestId: 'https://purl.stanford.edu/sn904cj3429/iiif/manifest' },
   { manifestId: 'https://coeso.tetras-libre.fr/data/coeso-deliverable/Manual_Network_Configuration.json' },
   { manifestId: 'https://files.tetras-libre.fr/dev/multicanva-video.json' },
   { manifestId: 'https://dzkimgs.l.u-tokyo.ac.jp/videos/iiif_in_japan_2017/manifest.json' },

@@ -17,7 +17,7 @@ export function getKonvaStage(windowId) {
  * @param scale
  * @param hideAfterResize
  */
-export function resizeKonvaStage(windowId, width, height, scale, hideAfterResize = true) {
+export function resizeKonvaStage(windowId, width, height, scale, hideAfterResize = true, scaleStrokeForPNGExport = false) {
   hideKonvaStage();
   const stage = getKonvaStage(windowId);
   stage.width(width);
@@ -26,6 +26,28 @@ export function resizeKonvaStage(windowId, width, height, scale, hideAfterResize
     x: scale,
     y: scale,
   });
+
+  if (scaleStrokeForPNGExport) {
+    stage.find('Rect')
+      .map((node) => {
+        node.strokeWidth(node.strokeWidth() * scale);
+      });
+
+    stage.find('Line')
+      .map((node) => {
+        node.strokeWidth(node.strokeWidth() * scale);
+      });
+
+    stage.find('Circle')
+      .map((node) => {
+        node.strokeWidth(node.strokeWidth() * scale);
+      });
+    stage.find('Ellipse')
+      .map((node) => {
+        node.strokeWidth(node.strokeWidth() * scale);
+      });
+  }
+
   if (!hideAfterResize) {
     showKonvaStage();
   }
@@ -54,7 +76,7 @@ export function showKonvaStage() {
  */
 export async function getSvg(windowId) {
   const stage = getKonvaStage(windowId);
-  const exportStrokeWidth = 1;
+  const exportStrokeWidth = 3;
 
   stage.find('Transformer')
     .forEach((node) => node.destroy());
@@ -87,6 +109,11 @@ export async function getSvg(windowId) {
     });
 
   stage.find('Circle')
+    .map((node) => {
+      cleanNode(node);
+    });
+
+  stage.find('Ellipse')
     .map((node) => {
       cleanNode(node);
     });
@@ -140,6 +167,7 @@ export const SHAPES_TOOL = {
   CIRCLE: 'circle',
   ELLIPSE: 'ellipse',
   FREEHAND: 'freehand',
+  IMAGE: 'image',
   POLYGON: 'polygon',
   RECTANGLE: 'rectangle',
   SHAPES: 'shapes',

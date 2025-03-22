@@ -71,7 +71,6 @@ export const convertAnnotationStateToBeSaved = async (
     annotationStateForSaving.type = 'Annotation';
   }
 
-  // MAEV Specific
   if (annotationStateForSaving.maeData.templateType === TEMPLATE.IMAGE_TYPE) {
     if (annotationStateForSaving.maeData.target.drawingState.shapes.length === 1) {
       // eslint-disable-next-line max-len
@@ -80,7 +79,6 @@ export const convertAnnotationStateToBeSaved = async (
     }
   }
 
-  // TODO Always relevant ?
   annotationStateForSaving.maeData.target.scale = playerReferences.getMediaTrueHeight()
     / playerReferences.getDisplayedMediaHeight() * playerReferences.getZoom();
 

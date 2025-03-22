@@ -1,8 +1,10 @@
-import { getVisibleCanvases } from 'mirador/dist/es/src/state/selectors/canvases';
-import { getVisibleCanvasAudioResources, getVisibleCanvasVideoResources } from 'mirador/dist/es/src/state/selectors';
+import {
+  getVisibleCanvasAudioResources,
+  getVisibleCanvases,
+  getVisibleCanvasVideoResources,
+} from 'mirador/dist/es/src/state/selectors/canvases';
 import { MEDIA_TYPES } from './annotationForm/AnnotationFormUtils';
 
-// TODO All the code related to the video player must be moved in MAEV plugin
 /** */
 export class WindowPlayer {
   actions;
@@ -62,7 +64,7 @@ export class WindowPlayer {
    */
   isInitializedCorrectly() {
     return this.media && ((this.media.current && this.media.current.canvas) || this.media.video)
-        && (this.mediaType !== MEDIA_TYPES.UNKNOWN && this.mediaType !== MEDIA_TYPES.AUDIO);
+      && (this.mediaType !== MEDIA_TYPES.UNKNOWN && this.mediaType !== MEDIA_TYPES.AUDIO);
   }
 
   /** ***********************************************************
@@ -250,6 +252,7 @@ export class WindowPlayer {
     }
     if (this.mediaType === MEDIA_TYPES.VIDEO) {
       return this.getDisplayedMediaWidth() / this.getMediaTrueWidth();
+      // There is problem with getZoom method. It's used as get scale
     }
     return undefined;
   }
@@ -344,6 +347,15 @@ export class WindowPlayer {
       return this.actions.setWindowSeekTo(this.windowId, ...args);
     }
     console.error('Cannot seek time for image');
+  }
+
+  /**
+   * Get reasonable stroke width for target sha
+   * @returns {number}
+   */
+  getTargetStrokeWidth() {
+    return Math.max(this.getDisplayedMediaWidth() / 500, 3);
+    // TODO DAxid
   }
 }
 
