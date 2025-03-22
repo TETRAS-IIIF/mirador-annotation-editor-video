@@ -13,5 +13,4 @@ export const manifestsCatalog = [
   { manifestId: 'https://files.tetras-libre.fr/dev/multicanva-video.json' },
   { manifestId: 'https://dzkimgs.l.u-tokyo.ac.jp/videos/iiif_in_japan_2017/manifest.json' },
   { manifestId: 'https://resource.arvest.app/6b665140d80c98444a02f142c1a8fcb42d201940/8000x6000-Pogacar.json' },
-  { manifestId: 'https://files.tetras-libre.fr/dev/youtube_big_media.json' },
 ];

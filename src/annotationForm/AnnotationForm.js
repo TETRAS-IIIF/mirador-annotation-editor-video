@@ -97,7 +97,6 @@ function AnnotationForm(
       window.removeEventListener('resize', handleResize);
     };
   }, []);
-
   if (!playerReferences?.isInitializedCorrectly()) {
     return (
       <CompanionWindow title={t('media_not_supported')} windowId={windowId} id={id}>
