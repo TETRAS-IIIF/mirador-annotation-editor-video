@@ -109,53 +109,50 @@ function AnnotationFormOverlayTool({
             aria-label={t('tool_selection')}
             size="small"
           >
-            <Tooltip title={t('rectangle')}>
-              <ToggleButton value={SHAPES_TOOL.RECTANGLE} aria-label={t('add_a_rectangle')}>
-                <RectangleIcon />
-              </ToggleButton>
-            </Tooltip>
-              {
-                (displayMode === KONVA_MODE.TARGET) && (
-                  <Tooltip title={t('circle')}>
-                    <ToggleButton value={SHAPES_TOOL.CIRCLE} aria-label={t('add_a_circle')}>
+            {(displayMode !== KONVA_MODE.IMAGE) && (
+              <Tooltip title={t('rectangle')}>
+                <ToggleButton value={SHAPES_TOOL.RECTANGLE} aria-label={t('add_a_rectangle')}>
+                  <RectangleIcon />
+                </ToggleButton>
+              </Tooltip>
+            )}
+            {
+              (displayMode === KONVA_MODE.TARGET) && (
+                <Tooltip title={t('circle')}>
+                  <ToggleButton value={SHAPES_TOOL.CIRCLE} aria-label={t('add_a_circle')}>
+                    <CircleIcon />
+                  </ToggleButton>
+                </Tooltip>
+              )
+            }
+            {(displayMode !== KONVA_MODE.IMAGE) && (
+              <div>
+                <Tooltip title={t('line')}>
+                  <ToggleButton
+                    value={SHAPES_TOOL.POLYGON}
+                    aria-label={t('add_a_line')}
+                  >
+                    <PolygonIcon />
+                  </ToggleButton>
+                </Tooltip>
+              </div>
+            )}
+            {
+              (displayMode === KONVA_MODE.DRAW) && (
+                <>
+                  <Tooltip title="Ellipse shape">
+                    <ToggleButton value={SHAPES_TOOL.ELLIPSE} aria-label={t('add_an_ellipse')}>
                       <CircleIcon />
                     </ToggleButton>
                   </Tooltip>
-                )
-              }
-            <div>
-              <Tooltip title={t('line')}>
-                <ToggleButton
-                  value={SHAPES_TOOL.POLYGON}
-                  aria-label={t('add_a_line')}
-                >
-                  <PolygonIcon />
-                </ToggleButton>
-              </Tooltip>
-              {/* <Tooltip title={t('freehand')}>
-                  <ToggleButton
-                    value={SHAPES_TOOL.FREEHAND}
-                    aria-label={t('add_a_free_hand_shape')}>
-                    <GestureIcon />
-                  </ToggleButton>
-                </Tooltip> */}
-            </div>
-              {
-                (displayMode === KONVA_MODE.DRAW) && (
-                  <>
-                    <Tooltip title="Ellipse shape">
-                      <ToggleButton value={SHAPES_TOOL.ELLIPSE} aria-label={t('add_an_ellipse')}>
-                        <CircleIcon />
-                      </ToggleButton>
-                    </Tooltip>
-                    <Tooltip title={t('arrow')}>
-                      <ToggleButton value={SHAPES_TOOL.ARROW} aria-label={t('add_an_arrow_shape')}>
-                        <ArrowOutwardIcon />
-                      </ToggleButton>
-                    </Tooltip>
-                  </>
-                )
-              }
+                  <Tooltip title={t('arrow')}>
+                    <ToggleButton value={SHAPES_TOOL.ARROW} aria-label={t('add_an_arrow_shape')}>
+                      <ArrowOutwardIcon />
+                    </ToggleButton>
+                  </Tooltip>
+                </>
+              )
+            }
           </StyledToggleButtonGroup>
         )
       }
