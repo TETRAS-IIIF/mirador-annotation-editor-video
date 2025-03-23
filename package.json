@@ -1,6 +1,6 @@
 {
   "name": "arvest-maev",
-  "version": "1.0.87",
+  "version": "1.0.89",
   "description": "Mirador annotation editor video plugin in a React component. Mirador 4 (Alpha 2) compatible ",
   "main": "es/index.js",
   "module": "es/index.js",
