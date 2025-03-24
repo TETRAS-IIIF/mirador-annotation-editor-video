@@ -17,6 +17,8 @@ export class WindowPlayer {
 
   overlay;
 
+  isInitCorrectly;
+
   /**
    * Constructor
    * @param state
@@ -34,6 +36,7 @@ export class WindowPlayer {
     // Get Visible Canvases return an array but inside the array there is only one element
     this.canvases = getVisibleCanvases(state, { windowId });
     this.windowId = windowId;
+    this.isInitCorrectly = false;
 
     if (this.isInitializedCorrectly()) {
       switch (this.mediaType) {
@@ -66,17 +69,24 @@ export class WindowPlayer {
    */
   // eslint-disable-next-line class-methods-use-this,require-jsdoc
   sleep(ms) {
-    return new Promise((resolve) => { setTimeout(resolve, ms); });
+    return new Promise((resolve) => {
+      setTimeout(resolve, ms);
+    });
   }
 
   /**
    * Get player initialisation status
    * @returns {*|boolean}
    */
-  async isInitializedCorrectly() {
-    await this.sleep(100);
-    return this.media && ((this.media.current && this.media.current.canvas) || this.media.video)
+  isInitializedCorrectly() {
+    this.isInitCorrectly = this.media && ((this.mediaType === MEDIA_TYPES.IMAGE && this.media.current && this.media.current.canvas) || (this.mediaType === MEDIA_TYPES.VIDEO && this.media.video && this.media.canvasOverlay))
       && (this.mediaType !== MEDIA_TYPES.UNKNOWN && this.mediaType !== MEDIA_TYPES.AUDIO);
+
+    console.log('this.mediaType', this.mediaType);
+    console.log('this.media.canvasOverlay', this.media.canvasOverlay);
+    console.log('isInitializedCorrectly', this.isInitCorrectly);
+
+    return this.isInitCorrectly;
   }
 
   /** ***********************************************************
@@ -247,7 +257,11 @@ export class WindowPlayer {
    * @returns {number}
    */
   getScale() {
-    return this.getDisplayedMediaWidth() / this.getMediaTrueWidth();
+    if (this.isInitializedCorrectly()) {
+      return this.getDisplayedMediaWidth() / this.getMediaTrueWidth();
+    }
+
+    return null;
   }
 
   /**

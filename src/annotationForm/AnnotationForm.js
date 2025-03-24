@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useReducer, useState } from 'react';
 import CompanionWindow from 'mirador/dist/es/src/containers/CompanionWindow';
 import PropTypes from 'prop-types';
 import { Grid } from '@mui/material';
@@ -32,6 +32,19 @@ function AnnotationForm(
   const [templateType, setTemplateType] = useState(null);
   // eslint-disable-next-line no-underscore-dangle
   const [mediaType, setMediaType] = useState(playerReferences.getMediaType());
+
+  const [containerWidth, setContainerWidth] = useState(0);
+  const [retryCount, setRetryCount] = useState(0);
+
+  const [, forceUpdate] = useReducer((x) => x + 1, 0);
+
+  if (!playerReferences.isInitializedCorrectly() && retryCount < 10) {
+    console.log('AnnotationForm.js: retryCount', retryCount);
+    setTimeout(() => {
+      setRetryCount(retryCount + 1);
+      forceUpdate();
+    }, 100);
+  }
 
   // Add a state to trigger redraw
   const [windowSize, setWindowSize] = useState({
@@ -97,7 +110,11 @@ function AnnotationForm(
       window.removeEventListener('resize', handleResize);
     };
   }, []);
-  if (!playerReferences?.isInitializedCorrectly()) {
+
+  if (!playerReferences.isInitCorrectly) {
+    playerReferences.isInitializedCorrectly();
+  }
+  if (!playerReferences.isInitCorrectly) {
     return (
       <CompanionWindow title={t('media_not_supported')} windowId={windowId} id={id}>
         <Grid container padding={1} spacing={1}>
@@ -167,11 +184,20 @@ function AnnotationForm(
     >
       {templateType === null
         ? (
-          <AnnotationFormTemplateSelector
-            setCommentingType={setTemplateType}
-            mediaType={mediaType}
-            t={t}
-          />
+          <>
+            <AnnotationFormTemplateSelector
+              setCommentingType={setTemplateType}
+              mediaType={mediaType}
+              t={t}
+            />
+            <Grid item>
+              {/*   {debugMode && (
+                <Debug
+                  playerReferences={playerReferences}
+                />
+              )} */}
+            </Grid>
+          </>
         )
         : (
           <Grid container direction="column" spacing={1}>
