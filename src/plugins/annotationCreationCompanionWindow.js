@@ -1,9 +1,9 @@
 import * as actions from 'mirador/dist/es/src/state/actions';
 import { getCompanionWindow } from 'mirador/dist/es/src/state/selectors/companionWindows';
+import { getVisibleCanvases } from 'mirador/dist/es/src/state/selectors/canvases';
 import {
-  getVisibleCanvases,
-} from 'mirador/dist/es/src/state/selectors/canvases';
-import { getPresentAnnotationsOnSelectedCanvases } from 'mirador/dist/es/src/state/selectors/annotations';
+  getPresentAnnotationsOnSelectedCanvases,
+} from 'mirador/dist/es/src/state/selectors/annotations';
 import { OSDReferences } from 'mirador/dist/es/src/plugins/OSDReferences';
 import { VideosReferences } from 'mirador/dist/es/src/plugins/VideosReferences';
 import { withTranslation } from 'react-i18next';
@@ -13,7 +13,10 @@ import { MEDIA_TYPES } from '../annotationForm/AnnotationFormUtils';
 import translations from '../locales/locales';
 
 /** */
-const mapDispatchToProps = (dispatch, { id, windowId }) => ({
+const mapDispatchToProps = (dispatch, {
+  id,
+  windowId,
+}) => ({
   closeCompanionWindow: () => dispatch(
     actions.removeCompanionWindow(windowId, id),
   ),
@@ -23,9 +26,15 @@ const mapDispatchToProps = (dispatch, { id, windowId }) => ({
 });
 
 /** */
-function mapStateToProps(state, { id: companionWindowId, windowId }) {
+function mapStateToProps(state, {
+  id: companionWindowId,
+  windowId,
+}) {
   const currentTime = null;
-  const cw = getCompanionWindow(state, { companionWindowId, windowId });
+  const cw = getCompanionWindow(state, {
+    companionWindowId,
+    windowId,
+  });
   const { annotationid } = cw;
   const canvases = getVisibleCanvases(state, { windowId });
 
@@ -58,7 +67,10 @@ function mapStateToProps(state, { id: companionWindowId, windowId }) {
   return {
     annotation,
     canvases,
-    config: { ...state.config, translations },
+    config: {
+      ...state.config,
+      translations,
+    },
     currentTime,
     playerReferences,
   };
