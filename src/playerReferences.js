@@ -82,10 +82,6 @@ export class WindowPlayer {
     this.isInitCorrectly = this.media && ((this.mediaType === MEDIA_TYPES.IMAGE && this.media.current && this.media.current.canvas) || (this.mediaType === MEDIA_TYPES.VIDEO && this.media.video && this.media.canvasOverlay))
       && (this.mediaType !== MEDIA_TYPES.UNKNOWN && this.mediaType !== MEDIA_TYPES.AUDIO);
 
-    console.log('this.mediaType', this.mediaType);
-    console.log('this.media.canvasOverlay', this.media.canvasOverlay);
-    console.log('isInitializedCorrectly', this.isInitCorrectly);
-
     return this.isInitCorrectly;
   }
 

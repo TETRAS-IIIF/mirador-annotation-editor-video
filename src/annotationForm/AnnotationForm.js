@@ -184,20 +184,11 @@ function AnnotationForm(
     >
       {templateType === null
         ? (
-          <>
-            <AnnotationFormTemplateSelector
-              setCommentingType={setTemplateType}
-              mediaType={mediaType}
-              t={t}
-            />
-            <Grid item>
-              {/*   {debugMode && (
-                <Debug
-                  playerReferences={playerReferences}
-                />
-              )} */}
-            </Grid>
-          </>
+          <AnnotationFormTemplateSelector
+            setCommentingType={setTemplateType}
+            mediaType={mediaType}
+            t={t}
+          />
         )
         : (
           <Grid container direction="column" spacing={1}>
