@@ -193,7 +193,11 @@ export class WindowPlayer {
       }
     }
     if (this.mediaType === MEDIA_TYPES.VIDEO) {
-      return this.overlay.containerHeight;
+      let height = this.overlay.containerHeight;
+      if (height === 0) {
+        height = this.media?.ref?.current?.clientHeight;
+      }
+      return height;
     }
     return undefined;
   }
@@ -213,7 +217,11 @@ export class WindowPlayer {
       }
     }
     if (this.mediaType === MEDIA_TYPES.VIDEO) {
-      return this.overlay.containerWidth;
+      let width = this.overlay.containerWidth;
+      if (width === 0) {
+        width = this.media?.ref?.current?.clientWidth;
+      }
+      return width;
     }
 
     return undefined;
