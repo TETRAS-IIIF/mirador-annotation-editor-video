@@ -138,9 +138,11 @@ export function getKonvaShape(windowId, shapeId) {
 /** Export the stage as a JPG image in a data url */
 export async function getKonvaAsDataURL(windowId) {
   const stage = getKonvaStage(windowId);
+  stage.find('Transformer')
+    .forEach((node) => node.visible(false));
   const dataURL = stage.toDataURL({
     mimeType: 'image/jpg',
-    quality: 0.1,
+    quality: 0.2,
   });
   return dataURL;
 }
