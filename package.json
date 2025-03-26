@@ -1,6 +1,6 @@
 {
   "name": "arvest-maev",
-  "version": "1.0.89",
+  "version": "1.0.92",
   "description": "Mirador annotation editor video plugin in a React component. Mirador 4 (Alpha 2) compatible ",
   "main": "es/index.js",
   "module": "es/index.js",
@@ -93,7 +93,7 @@
     "jest-canvas-mock": "^2.2.0",
     "jest-junit": "^15.0.0",
     "jest-localstorage-mock": "^2.4.2",
-    "mirador": "npm:arvest-mv@^1.0.21",
+    "mirador": "npm:arvest-mv@1.0.22",
     "prop-types": "^15.7.2",
     "react": "^18.2.0",
     "react-dom": "^18.0",
