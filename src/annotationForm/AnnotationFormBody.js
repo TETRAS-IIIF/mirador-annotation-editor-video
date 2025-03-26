@@ -3,9 +3,7 @@ import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import { Grid } from '@mui/material';
 import Typography from '@mui/material/Typography';
-import {
-  TEMPLATE,
-} from './AnnotationFormUtils';
+import { TEMPLATE } from './AnnotationFormUtils';
 import TextCommentTemplate from './TextCommentTemplate';
 import ImageCommentTemplate from './ImageCommentTemplate';
 import NetworkCommentTemplate from './NetworkCommentTemplate';
@@ -15,6 +13,7 @@ import TaggingTemplate from './TaggingTemplate';
 
 import './debug.css';
 import { AdvancedAnnotationEditor } from './AdvancedAnnotationEditor';
+import MultipleBodyTemplate from './MultipleBodyTemplate';
 
 /**
  * This function contain the logic for loading annotation and render proper template type
@@ -100,6 +99,16 @@ export default function AnnotationFormBody(
           }
           {templateType.id === TEMPLATE.TAGGING_TYPE && (
             <TaggingTemplate
+              annotation={annotation}
+              closeFormCompanionWindow={closeFormCompanionWindow}
+              playerReferences={playerReferences}
+              saveAnnotation={saveAnnotation}
+              t={t}
+              windowId={windowId}
+            />
+          )}
+          {templateType.id === TEMPLATE.MULTIPLE_BODY_TYPE && (
+            <MultipleBodyTemplate
               annotation={annotation}
               closeFormCompanionWindow={closeFormCompanionWindow}
               playerReferences={playerReferences}

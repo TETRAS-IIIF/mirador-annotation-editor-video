@@ -17,6 +17,7 @@ export const TEMPLATE = {
   MANIFEST_TYPE: 'manifest',
   TAGGING_TYPE: 'tagging',
   TEXT_TYPE: 'text',
+  MULTIPLE_BODY_TYPE: 'multiple_body',
 };
 
 export const MEDIA_TYPES = {
@@ -35,6 +36,18 @@ export const getTemplateType = (t, templateType) => TEMPLATE_TYPES(t)
  * List of the template types supported
  */
 export const TEMPLATE_TYPES = (t) => [
+  {
+    description: t('MultiBodyTemplate'), // TODO
+    icon: <TextFieldsIcon />,
+    id: TEMPLATE.MULTIPLE_BODY_TYPE,
+    isCompatibleWithTemplate: (mediaType) => {
+      if (mediaType === MEDIA_TYPES.VIDEO) return true;
+      if (mediaType === MEDIA_TYPES.IMAGE) return true;
+      if (mediaType === MEDIA_TYPES.AUDIO) return false;
+      return false;
+    },
+    label: t('MultiBodyTemplate'), // TODO
+  },
   {
     description: t('textual_note_with_target'),
     icon: <TextFieldsIcon />,
