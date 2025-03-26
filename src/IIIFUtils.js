@@ -65,6 +65,18 @@ export const convertAnnotationStateToBeSaved = async (
     }
   }
 
+  if (annotationStateForSaving.maeData.templateType === TEMPLATE.MULTIPLE_BODY_TYPE) {
+    annotationStateForSaving.body = [annotationState.maeData.textBody];
+    annotationStateForSaving.body.push(...annotationState.maeData.tags.map((tag) => ({
+      id: tag.id,
+      type: 'TextualBody',
+      value: tag.value,
+      purpose: 'tagging',
+    }));
+    // TODO Finir generation body
+
+  }
+
   if (isAnnotationExportableToImage(annotationStateForSaving.maeData)) {
     annotationStateForSaving.body.id = await getKonvaAsDataURL(windowId);
     annotationStateForSaving.body.format = 'image/jpg';
@@ -121,6 +133,7 @@ export const getIIIFTargetFromMaeData = (
       return getIIIFTargetFromImageType(maeData, canvasId, windowId, playerScale);
     case TEMPLATE.TAGGING_TYPE:
     case TEMPLATE.MANIFEST_TYPE:
+    case TEMPLATE.MULTIPLE_BODY_TYPE:
     case TEMPLATE.TEXT_TYPE:
       // Note, tagging or Manifest network template
       if (templateType === TEMPLATE.TAGGING_TYPE
