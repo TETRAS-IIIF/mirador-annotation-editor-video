@@ -17,6 +17,7 @@ export default function MultipleBodyTemplate(
     saveAnnotation,
     t,
     windowId,
+    tagsSuggestions,
   },
 ) {
   let maeAnnotation = annotation;
@@ -48,8 +49,8 @@ export default function MultipleBodyTemplate(
     maeAnnotation.maeData.textBody = maeAnnotation.body.find((body) => body.purpose === 'describing');
     maeAnnotation.maeData.tags = maeAnnotation.body.filter((body) => body.purpose === 'tagging')
       .map((tag) => ({
-        text: tag.value,
         id: tag.id,
+        text: tag.value,
       }));
   }
 
@@ -117,6 +118,7 @@ export default function MultipleBodyTemplate(
           t={t}
           tags={annotationState.maeData.tags}
           setTags={setTags}
+          tagsSuggestions={tagsSuggestions}
         />
       </Grid>
       <Grid item>
@@ -166,5 +168,6 @@ MultipleBodyTemplate.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   saveAnnotation: PropTypes.func.isRequired,
   t: PropTypes.func.isRequired,
+  tagsSuggestions: PropTypes.arrayOf(PropTypes.string).isRequired,
   windowId: PropTypes.string.isRequired,
 };

@@ -6,7 +6,9 @@ import { manifestsCatalog } from './manifestsCatalog';
 const config = {
   annotation: {
     adapter: (canvasId) => new LocalStorageAdapter(`localStorage://?canvasId=${canvasId}`, 'Anonymous User'),
+    commentTemplate: '<h1>Comment</h1><p>{{comment}}</p>',
     exportLocalStorageAnnotations: false, // display annotation JSON export button
+    tagsSuggestions: ['Mirador', 'Awesome', 'Viewer', 'IIIF'],
   },
   annotations: {
     htmlSanitizationRuleSet: 'liberal',

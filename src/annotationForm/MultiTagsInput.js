@@ -7,6 +7,7 @@ import { Typography } from '@mui/material';
  * MultiTagsInput component
  * @param t
  * @param tags
+ * @param tagsSuggestions
  * @param setTags
  * @returns {Element}
  * @constructor
@@ -15,6 +16,7 @@ export function MultiTagsInput({
   setTags,
   t,
   tags,
+  tagsSuggestions,
 }) {
   /**
    * Handle tag deletion
@@ -74,8 +76,6 @@ export function MultiTagsInput({
     setTags([]);
   };
 
-  const suggestions = ['Geourjon', 'Anthony', 'Cataegoru'];
-
   return (
     <>
       <Typography variant="formSectionTitle">
@@ -93,7 +93,7 @@ export function MultiTagsInput({
         onClearAll={onClearAll}
         onTagUpdate={onTagUpdate}
         tags={tags}
-        suggestions={suggestions.map((suggestion) => ({
+        suggestions={tagsSuggestions.map((suggestion) => ({
           id: suggestion,
           text: suggestion,
         }))}
@@ -107,4 +107,5 @@ MultiTagsInput.propTypes = {
   t: PropTypes.func.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   tags: PropTypes.any.isRequired,
+  tagsSuggestions: PropTypes.arrayOf(PropTypes.string).isRequired,
 };

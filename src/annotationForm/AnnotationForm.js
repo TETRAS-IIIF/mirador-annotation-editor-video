@@ -204,6 +204,7 @@ function AnnotationForm(
                 annotation={annotation}
                 canvases={canvases}
                 closeFormCompanionWindow={closeFormCompanionWindow}
+                config={config}
                 debugMode={debugMode}
                 playerReferences={playerReferences}
                 saveAnnotation={saveAnnotation}
