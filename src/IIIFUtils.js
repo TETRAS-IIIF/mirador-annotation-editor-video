@@ -58,7 +58,9 @@ export const convertAnnotationStateToBeSaved = async (
   console.info('Annotation state target', annotationState.maeData.target);
 
   if (annotationStateForSaving.maeData.templateType === TEMPLATE.TAGGING_TYPE
-    || annotationStateForSaving.maeData.templateType === TEMPLATE.TEXT_TYPE) {
+    || annotationStateForSaving.maeData.templateType === TEMPLATE.TEXT_TYPE
+    || annotationStateForSaving.maeData.templateType === TEMPLATE.MANIFEST_TYPE
+    || annotationStateForSaving.maeData.templateType === TEMPLATE.MULTIPLE_BODY_TYPE) {
     // Complex annotation
     if (annotationStateForSaving.maeData.target.drawingState.shapes.length > 0) {
       annotationStateForSaving.maeData.target.svg = await getSvg(windowId);
@@ -68,13 +70,11 @@ export const convertAnnotationStateToBeSaved = async (
   if (annotationStateForSaving.maeData.templateType === TEMPLATE.MULTIPLE_BODY_TYPE) {
     annotationStateForSaving.body = [annotationState.maeData.textBody];
     annotationStateForSaving.body.push(...annotationState.maeData.tags.map((tag) => ({
-      id: tag.id,
-      type: 'TextualBody',
-      value: tag.value,
       purpose: 'tagging',
-    }));
-    // TODO Finir generation body
-
+      type: 'TextualBody',
+      value: tag.text,
+      id: tag.id,
+    })));
   }
 
   if (isAnnotationExportableToImage(annotationStateForSaving.maeData)) {
@@ -135,24 +135,18 @@ export const getIIIFTargetFromMaeData = (
     case TEMPLATE.MANIFEST_TYPE:
     case TEMPLATE.MULTIPLE_BODY_TYPE:
     case TEMPLATE.TEXT_TYPE:
-      // Note, tagging or Manifest network template
-      if (templateType === TEMPLATE.TAGGING_TYPE
-        || templateType === TEMPLATE.MANIFEST_TYPE
-        || templateType === TEMPLATE.TEXT_TYPE) {
-        // In some case the target can be simplified in a string
-        if (maeTarget.drawingState.shapes.length === 1
-          && maeTarget.drawingState.shapes[0].type === SHAPES_TOOL.RECTANGLE) {
-          return getIIIFTargetFromRectangleShape(
-            maeTarget,
-            canvasId,
-            maeTarget.drawingState.shapes[0],
-          );
-        }
-        // On the other case, the target is a SVG
-        console.info('Implement target as SVG/Fragment with shapes');
-        return getIIIFTargetAsFragmentSVGSelector(maeTarget, canvasId);
+      // In some case the target can be simplified in a string
+      if (maeTarget.drawingState.shapes.length === 1
+        && maeTarget.drawingState.shapes[0].type === SHAPES_TOOL.RECTANGLE) {
+        return getIIIFTargetFromRectangleShape(
+          maeTarget,
+          canvasId,
+          maeTarget.drawingState.shapes[0],
+        );
       }
-      break;
+      // On the other case, the target is a SVG
+      console.info('Implement target as SVG/Fragment with shapes');
+      return getIIIFTargetAsFragmentSVGSelector(maeTarget, canvasId);
     default:
       return getIIIFTargetFullCanvas(maeData, canvasId);
   }
