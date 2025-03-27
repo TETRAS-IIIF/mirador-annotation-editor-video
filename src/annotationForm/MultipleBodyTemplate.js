@@ -18,6 +18,7 @@ export default function MultipleBodyTemplate(
     t,
     windowId,
     tagsSuggestions,
+    commentTemplate,
   },
 ) {
   let maeAnnotation = annotation;
@@ -33,7 +34,7 @@ export default function MultipleBodyTemplate(
         textBody: {
           purpose: 'describing',
           type: 'TextualBody',
-          value: 'Plop //TODO template',
+          value: commentTemplate,
         },
       },
       motivation: 'commenting',
@@ -161,6 +162,7 @@ MultipleBodyTemplate.propTypes = {
     manifestNetwork: PropTypes.string,
     target: PropTypes.string,
   }).isRequired,
+  commentTemplate: PropTypes.string.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   closeFormCompanionWindow: PropTypes.func.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
