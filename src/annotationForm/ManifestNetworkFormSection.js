@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Grid, Link, TextField, Typography,
 } from '@mui/material';
@@ -8,7 +8,8 @@ import { isValidUrl } from './AnnotationFormUtils';
 /**
  * Handle Manifest Section
  * @param manifestNetwork
- * @param onChange
+ * @param onChange - callback function to handle manifest URL changes
+ * @param t
  * @returns {Element}
  * @constructor
  */
@@ -19,18 +20,6 @@ export default function ManifestNetworkFormSection(
     t,
   },
 ) {
-  // TODO probably useless.  check this state
-  const [manifestUrl, setManifestUrl] = useState('');
-
-  /**
-   * Handle on change
-   * @param value new value
-   */
-  const handlOnChange = (value) => {
-    setManifestUrl(value);
-    onChange(value);
-  };
-
   return (
     <Grid item container direction="column" spacing={1}>
       <Grid item>
@@ -41,14 +30,11 @@ export default function ManifestNetworkFormSection(
       <Grid item>
         <TextField
           value={manifestNetwork}
-          onChange={(event) => handlOnChange(event.target.value.trim())}
+          onChange={(event) => onChange(event.target.value.trim())}
           label={t('manifest_url')}
           type="url"
           error={!isValidUrl(manifestNetwork)}
         />
-      </Grid>
-      <Grid item>
-        <Link href={manifestUrl}>{manifestUrl}</Link>
       </Grid>
       <Grid item>
         {isValidUrl(manifestNetwork) && (

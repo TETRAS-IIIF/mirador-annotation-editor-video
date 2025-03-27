@@ -102,7 +102,7 @@ function NetworkCommentTemplate(
 
     const baseAnnotation = getBaseAnnotation(annotationState.id);
     if (baseAnnotation) {
-      annotationState.id = `${getBaseAnnotation(annotationState.id)}#${annotation.maeData.manifestNetwork}`;
+      annotationState.id = `${baseAnnotation}#${annotation.maeData.manifestNetwork}`;
     }
 
     saveAnnotation(annotationState);
