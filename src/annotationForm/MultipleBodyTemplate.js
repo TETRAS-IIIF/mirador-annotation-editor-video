@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Grid } from '@mui/material';
-import Typography from '@mui/material/Typography';
 import PropTypes from 'prop-types';
 import AnnotationFormFooter from './AnnotationFormFooter';
 import { TEMPLATE } from './AnnotationFormUtils';
@@ -36,7 +35,7 @@ export default function MultipleBodyTemplate(
           value: 'Plop //TODO template',
         },
       },
-      motivation: 'tagging',
+      motivation: 'commenting',
       target: null,
     };
   } else {
@@ -107,12 +106,6 @@ export default function MultipleBodyTemplate(
   return (
     <Grid container direction="column" spacing={2}>
       <Grid item>
-        <Typography variant="formSectionTitle">
-          {t('tag')}
-          {' '}
-        </Typography>
-      </Grid>
-      <Grid item>
         <TextFormSection
           annoHtml={annotationState.maeData.textBody.value}
           updateAnnotationBody={updateAnnotationTextualBodyValue}
@@ -120,7 +113,11 @@ export default function MultipleBodyTemplate(
         />
       </Grid>
       <Grid item>
-        <MultiTagsInput tags={annotationState.maeData.tags} setTags={setTags} />
+        <MultiTagsInput
+          t={t}
+          tags={annotationState.maeData.tags}
+          setTags={setTags}
+        />
       </Grid>
       <Grid item>
         <TargetFormSection

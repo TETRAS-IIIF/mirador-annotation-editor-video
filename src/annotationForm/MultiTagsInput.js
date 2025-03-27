@@ -1,15 +1,18 @@
 import React from 'react';
 import { WithContext as ReactTags } from 'react-tag-input';
 import PropTypes from 'prop-types';
+import { Typography } from '@mui/material';
 
 /**
  * MultiTagsInput component
+ * @param t
  * @param tags
  * @param setTags
  * @returns {Element}
  * @constructor
  */
 export function MultiTagsInput({
+  t,
   tags,
   setTags,
 }) {
@@ -74,18 +77,23 @@ export function MultiTagsInput({
   console.log('tags', tags);
 
   return (
-    <ReactTags
-      tags={tags}
-      handleDelete={handleDelete}
-      handleAddition={handleAddition}
-      handleDrag={handleDrag}
-      handleTagClick={handleTagClick}
-      onTagUpdate={onTagUpdate}
-      inputFieldPosition="bottom"
-      editable
-      clearAll
-      onClearAll={onClearAll}
-    />
+    <>
+      <Typography variant="formSectionTitle">
+        {t('tags')}
+      </Typography>
+      <ReactTags
+        tags={tags}
+        handleDelete={handleDelete}
+        handleAddition={handleAddition}
+        handleDrag={handleDrag}
+        handleTagClick={handleTagClick}
+        onTagUpdate={onTagUpdate}
+        inputFieldPosition="bottom"
+        editable
+        clearAll
+        onClearAll={onClearAll}
+      />
+    </>
   );
 }
 
