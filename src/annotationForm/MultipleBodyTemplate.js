@@ -29,14 +29,14 @@ export default function MultipleBodyTemplate(
       maeData: {
         tags: [],
         target: null,
-        templateType: TEMPLATE.TAGGING_TYPE,
+        templateType: TEMPLATE.MULTIPLE_BODY_TYPE,
         textBody: {
+          purpose: 'describing',
           type: 'TextualBody',
           value: 'Plop //TODO template',
-          purpose: 'describing',
         },
       },
-      motivation: 'commenting',
+      motivation: 'tagging',
       target: null,
     };
   } else {
@@ -48,7 +48,10 @@ export default function MultipleBodyTemplate(
     // We support only one textual body
     maeAnnotation.maeData.textBody = maeAnnotation.body.find((body) => body.purpose === 'describing');
     maeAnnotation.maeData.tags = maeAnnotation.body.filter((body) => body.purpose === 'tagging')
-      .map((body) => body.value);
+      .map((tag) => ({
+        text: tag.value,
+        id: tag.id,
+      }));
   }
 
   const [annotationState, setAnnotationState] = useState(maeAnnotation);
