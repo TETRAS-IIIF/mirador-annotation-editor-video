@@ -12,9 +12,9 @@ import { Typography } from '@mui/material';
  * @constructor
  */
 export function MultiTagsInput({
+  setTags,
   t,
   tags,
-  setTags,
 }) {
   /**
    * Handle tag deletion
@@ -74,7 +74,7 @@ export function MultiTagsInput({
     setTags([]);
   };
 
-  console.log('tags', tags);
+  const suggestions = ['Geourjon', 'Anthony', 'Cataegoru'];
 
   return (
     <>
@@ -82,16 +82,21 @@ export function MultiTagsInput({
         {t('tags')}
       </Typography>
       <ReactTags
-        tags={tags}
-        handleDelete={handleDelete}
+        placeholder={t('pressEnterToAddTag')}
+        clearAll
+        editable
         handleAddition={handleAddition}
+        handleDelete={handleDelete}
         handleDrag={handleDrag}
         handleTagClick={handleTagClick}
-        onTagUpdate={onTagUpdate}
         inputFieldPosition="bottom"
-        editable
-        clearAll
         onClearAll={onClearAll}
+        onTagUpdate={onTagUpdate}
+        tags={tags}
+        suggestions={suggestions.map((suggestion) => ({
+          id: suggestion,
+          text: suggestion,
+        }))}
       />
     </>
   );
@@ -99,6 +104,7 @@ export function MultiTagsInput({
 
 MultiTagsInput.propTypes = {
   setTags: PropTypes.func.isRequired,
+  t: PropTypes.func.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   tags: PropTypes.any.isRequired,
 };

@@ -57,6 +57,7 @@ export const fr = {
   onlyOneImageAllowed: 'Une seule image par annotation',
   overlay: 'Dessin',
   polygon: 'Polygone',
+  pressEnterToAddTag: 'Valider avec "Entrée"',
   pressEscapeToFinish: 'Appuyez sur "Échap" pour terminer la ligne',
   rectangle: 'Rectangle',
   save: 'Sauvegarder',

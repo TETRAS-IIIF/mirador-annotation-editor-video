@@ -57,6 +57,7 @@ export const en = {
   onlyOneImageAllowed: 'Only one image is allowed',
   overlay: 'Overlay',
   polygon: 'Polygon',
+  pressEnterToAddTag: 'Add your tag and press "Enter"',
   pressEscapeToFinish: 'Press "Esc" to finish the line',
   rectangle: 'Rectangle',
   save: 'Save',
