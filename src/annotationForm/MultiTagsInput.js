@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { WithContext as ReactTags } from 'react-tag-input';
 import PropTypes from 'prop-types';
-import { Typography } from '@mui/material';
+import {
+  Divider, FormControlLabel, Switch, Typography,
+} from '@mui/material';
 
 /**
  * MultiTagsInput component
@@ -18,6 +20,13 @@ export function MultiTagsInput({
   tags,
   tagsSuggestions,
 }) {
+  const [showSuggestions, setShowSuggestions] = useState(false);
+
+  const mappedSuggestionsTags = tagsSuggestions.map((suggestion) => ({
+    id: suggestion,
+    text: suggestion,
+  }));
+
   /**
    * Handle tag deletion
    * @param index
@@ -41,8 +50,10 @@ export function MultiTagsInput({
    * Handle tag addition
    * @param tag
    */
-  const handleAddition = (tag) => {
-    setTags([...tags, tag]);
+  const handleAddition = (newTag) => {
+    if (tags.length === 0 || !tags.find((tag) => tag.id === newTag.id)) {
+      setTags([...tags, newTag]);
+    }
   };
 
   /**
@@ -81,6 +92,50 @@ export function MultiTagsInput({
       <Typography variant="formSectionTitle">
         {t('tags')}
       </Typography>
+      {/* Show list of suggestions into a clickable tag */}
+      {/* add a toggle to show hide suggestions */}
+
+      <FormControlLabel
+        control={(
+          <Switch
+            value={showSuggestions}
+            onClick={() => setShowSuggestions(!showSuggestions)}
+          />
+        )}
+        label="Suggestion"
+      />
+      {
+        showSuggestions
+        && (
+          <div style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: '8px',
+          }}
+          >
+            {mappedSuggestionsTags.map((suggestion) => (
+              <button
+                key={suggestion.id}
+                type="button"
+                onClick={() => handleAddition(suggestion)}
+                style={{
+                  padding: '6px 12px',
+                  borderRadius: '16px',
+                  border: '1px solid #ccc',
+                  backgroundColor: '#f1f1f1',
+                  cursor: 'pointer',
+                }}
+              >
+                {suggestion.text}
+              </button>
+            ))}
+          </div>
+        )
+      }
+      <Divider
+        spacing={2}
+      />
+
       <ReactTags
         placeholder={t('pressEnterToAddTag')}
         clearAll
@@ -93,10 +148,9 @@ export function MultiTagsInput({
         onClearAll={onClearAll}
         onTagUpdate={onTagUpdate}
         tags={tags}
-        suggestions={tagsSuggestions.map((suggestion) => ({
-          id: suggestion,
-          text: suggestion,
-        }))}
+        suggestions={mappedSuggestionsTags}
+        minQueryLength={1}
+        autocomplete
       />
     </>
   );
