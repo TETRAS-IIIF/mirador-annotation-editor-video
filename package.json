@@ -52,7 +52,6 @@
     "react-resize-observer": "^1.1.1",
     "react-select": "^5.10.1",
     "react-sortablejs": "^6.1.4",
-    "react-tag-input": "^6.10.6",
     "redux": "^5.0.1",
     "sortablejs": "^1.15.2",
     "use-image": "^1.1.1",
