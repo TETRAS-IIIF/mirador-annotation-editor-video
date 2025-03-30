@@ -74,6 +74,7 @@ export const fr = {
   switch_view_h2: 'Changer le type de vue en vue simple?',
   tag: 'Étiquette',
   tags: 'Étiquettes',
+  tagsPlaceholder: 'Ajouter une étiquette...',
   tag_with_target: 'Étiquette avec cible',
   target: 'Cible',
   text: 'Texte',
