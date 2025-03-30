@@ -74,6 +74,7 @@ export const en = {
   switch_view_h2: 'Switch view type to single view?',
   tag: 'Tag',
   tags: 'Tags',
+  tagsPlaceholder: 'Add tags ...',
   tag_with_target: 'Tag with target',
   target: 'Target',
   text: 'Text',

@@ -1,9 +1,7 @@
-import React, { useState } from 'react';
-import { WithContext as ReactTags } from 'react-tag-input';
+import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  Divider, FormControlLabel, Switch, Typography,
-} from '@mui/material';
+import { Divider, Typography } from '@mui/material';
+import CreatableSelect from 'react-select/creatable';
 
 /**
  * MultiTagsInput component
@@ -20,72 +18,10 @@ export function MultiTagsInput({
   tags,
   tagsSuggestions,
 }) {
-  const [showSuggestions, setShowSuggestions] = useState(false);
-
   const mappedSuggestionsTags = tagsSuggestions.map((suggestion) => ({
-    id: suggestion,
-    text: suggestion,
+    label: suggestion,
+    value: suggestion,
   }));
-
-  /**
-   * Handle tag deletion
-   * @param index
-   */
-  const handleDelete = (index) => {
-    setTags(tags.filter((_, i) => i !== index));
-  };
-
-  /**
-   * Handle tag update
-   * @param index
-   * @param newTag
-   */
-  const onTagUpdate = (index, newTag) => {
-    const updatedTags = [...tags];
-    updatedTags.splice(index, 1, newTag);
-    setTags(updatedTags);
-  };
-
-  /**
-   * Handle tag addition
-   * @param tag
-   */
-  const handleAddition = (newTag) => {
-    if (tags.length === 0 || !tags.find((tag) => tag.id === newTag.id)) {
-      setTags([...tags, newTag]);
-    }
-  };
-
-  /**
-   * Handle tag drag
-   * @param tag
-   * @param currPos
-   * @param newPos
-   */
-  const handleDrag = (tag, currPos, newPos) => {
-    const newTags = tags.slice();
-
-    newTags.splice(currPos, 1);
-    newTags.splice(newPos, 0, tag);
-
-    // re-render
-    setTags(newTags);
-  };
-
-  /**
-   * Handle tag click
-   * @param index
-   */
-  const handleTagClick = (index) => {
-    console.log(`The tag at index ${index} was clicked`);
-  };
-
-  /**
-   * Clear all tags
-   */
-  const onClearAll = () => {
-    setTags([]);
-  };
 
   return (
     <>
@@ -95,63 +31,19 @@ export function MultiTagsInput({
       {/* Show list of suggestions into a clickable tag */}
       {/* add a toggle to show hide suggestions */}
 
-      <FormControlLabel
-        control={(
-          <Switch
-            value={showSuggestions}
-            onClick={() => setShowSuggestions(!showSuggestions)}
-          />
-        )}
-        label="Suggestion"
+      <CreatableSelect
+        isMulti
+        options={mappedSuggestionsTags}
+        value={tags}
+        onChange={setTags}
+        closeMenuOnSelect={false}
+        placeholder={t('tagsPlaceholder')}
       />
-      {
-        showSuggestions
-        && (
-          <div style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            gap: '8px',
-          }}
-          >
-            {mappedSuggestionsTags.map((suggestion) => (
-              <button
-                key={suggestion.id}
-                type="button"
-                onClick={() => handleAddition(suggestion)}
-                style={{
-                  padding: '6px 12px',
-                  borderRadius: '16px',
-                  border: '1px solid #ccc',
-                  backgroundColor: '#f1f1f1',
-                  cursor: 'pointer',
-                }}
-              >
-                {suggestion.text}
-              </button>
-            ))}
-          </div>
-        )
-      }
+
       <Divider
         spacing={2}
       />
 
-      <ReactTags
-        placeholder={t('pressEnterToAddTag')}
-        clearAll
-        editable
-        handleAddition={handleAddition}
-        handleDelete={handleDelete}
-        handleDrag={handleDrag}
-        handleTagClick={handleTagClick}
-        inputFieldPosition="bottom"
-        onClearAll={onClearAll}
-        onTagUpdate={onTagUpdate}
-        tags={tags}
-        suggestions={mappedSuggestionsTags}
-        minQueryLength={1}
-        autocomplete
-      />
     </>
   );
 }
