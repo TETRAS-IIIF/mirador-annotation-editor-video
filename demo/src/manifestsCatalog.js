@@ -10,4 +10,5 @@ export const manifestsCatalog = [
   { manifestId: 'https://files.tetras-libre.fr/dev/vertical_video_with_annot.json' },
   { manifestId: 'https://files.tetras-libre.fr/dev/youtube.json' },
   { manifestId: 'https://files.tetras-libre.fr/dev/peertube.json' },
+  { manifestId: 'https://files.tetras-libre.fr/dev/milansanremo25.json' },
 ];

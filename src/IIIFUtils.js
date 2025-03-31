@@ -72,7 +72,7 @@ export const convertAnnotationStateToBeSaved = async (
     annotationStateForSaving.body.push(...annotationState.maeData.tags.map((tag) => ({
       purpose: 'tagging',
       type: 'TextualBody',
-      value: tag.text,
+      value: tag.value,
       id: tag.id,
     })));
   }
