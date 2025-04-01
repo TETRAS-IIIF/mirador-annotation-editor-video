@@ -194,7 +194,6 @@ const CanvasListItem = forwardRef((props, ref) => {
 });
 
 CanvasListItem.propTypes = {
-  annotationEditCompanionWindowIsOpened: PropTypes.bool.isRequired,
   annotationid: PropTypes.string.isRequired,
   children: PropTypes.oneOfType([
     PropTypes.func,
