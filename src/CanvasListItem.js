@@ -115,6 +115,7 @@ const CanvasListItem = forwardRef((props, ref) => {
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
       className="mirador-annotation-list-item"
+      data-testid="mirador-annotation-list-item"
       ref={ref}
     >
       {(isHovering && editable()) && (

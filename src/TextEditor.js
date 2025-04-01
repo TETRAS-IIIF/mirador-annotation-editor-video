@@ -61,7 +61,7 @@ function TextEditor({
 
   // Data field is needed to set bounds for the editor and avoir tooltip overflow
   return (
-    <div data-text-editor="name">
+    <div data-text-editor="name" data-testid="textEditor">
       <StyledReactQuill
         value={editorHtml}
         onChange={handleChange}
