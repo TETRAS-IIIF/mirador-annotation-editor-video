@@ -124,7 +124,6 @@ MiradorAnnotation.propTypes = {
       exportLocalStorageAnnotations: PropTypes.bool,
     }),
   }).isRequired,
-  createAnnotation: PropTypes.bool.isRequired,
   t: PropTypes.func.isRequired,
   TargetComponent: PropTypes.oneOfType([
     PropTypes.func,
