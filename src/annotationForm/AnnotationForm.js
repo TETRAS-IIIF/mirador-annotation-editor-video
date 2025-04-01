@@ -3,7 +3,7 @@ import CompanionWindow from 'mirador/dist/es/src/containers/CompanionWindow';
 import PropTypes from 'prop-types';
 import { Grid } from '@mui/material';
 import Typography from '@mui/material/Typography';
-import { withTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import i18n from 'i18next';
 import AnnotationFormTemplateSelector from './AnnotationFormTemplateSelector';
 import { getTemplateType, saveAnnotationInStorageAdapter, TEMPLATE } from './AnnotationFormUtils';
@@ -25,10 +25,10 @@ function AnnotationForm(
     id,
     playerReferences,
     receiveAnnotation,
-    t,
     windowId,
   },
 ) {
+  const { t } = useTranslation();
   const [templateType, setTemplateType] = useState(null);
   // eslint-disable-next-line no-underscore-dangle
   const [mediaType, setMediaType] = useState(playerReferences.getMediaType());
@@ -171,7 +171,6 @@ function AnnotationForm(
           <AnnotationFormTemplateSelector
             setCommentingType={setTemplateType}
             mediaType={mediaType}
-            t={t}
           />
         )
         : (
@@ -191,7 +190,6 @@ function AnnotationForm(
                 debugMode={debugMode}
                 playerReferences={playerReferences}
                 saveAnnotation={saveAnnotation}
-                t={t}
                 templateType={templateType}
                 windowId={windowId}
               />
@@ -240,8 +238,7 @@ AnnotationForm.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   playerReferences: PropTypes.object.isRequired,
   receiveAnnotation: PropTypes.func.isRequired,
-  t: PropTypes.func.isRequired,
   windowId: PropTypes.string.isRequired,
 };
 
-export default withTranslation()(AnnotationForm);
+export default AnnotationForm;
