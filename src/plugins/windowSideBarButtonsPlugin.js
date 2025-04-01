@@ -26,7 +26,7 @@ WindowSideBarButtonWrapper.propTypes = {
   targetProps: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
 };
 
-export default {
+export const windowSideBarButtonsPlugin = {
   component: WindowSideBarButtonWrapper,
   mode: 'wrap',
   target: 'WindowSideBarButtons',

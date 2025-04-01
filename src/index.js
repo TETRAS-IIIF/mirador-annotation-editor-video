@@ -1,9 +1,9 @@
 // import miradorAnnotationPlugin from './plugins/miradorAnnotationPlugin';
 import miradorAnnotationPlugin from './containers/miradorAnnotationPlugin';
-import externalStorageAnnotationPlugin from './plugins/externalStorageAnnotationPlugin';
-import canvasAnnotationsPlugin from './plugins/canvasAnnotationsPlugin';
-import annotationCreationCompanionWindow from './plugins/annotationCreationCompanionWindow';
-import windowSideBarButtonsPlugin from './plugins/windowSideBarButtonsPlugin';
+import { externalStorageAnnotationPlugin } from './plugins/externalStorageAnnotationPlugin';
+import { canvasAnnotationsPlugin } from './plugins/canvasAnnotationsPlugin';
+import { annotationCreationCompanionWindowPlugin as annotationCreationCompanionWindow } from './plugins/annotationCreationCompanionWindow';
+import { windowSideBarButtonsPlugin } from './plugins/windowSideBarButtonsPlugin';
 import translations from './locales/locales';
 
 export {
@@ -12,7 +12,7 @@ export {
   windowSideBarButtonsPlugin,
 };
 
-export default [
+export const miradorAnnotationPlugins = [
   {
     component: miradorAnnotationPlugin,
     config: {

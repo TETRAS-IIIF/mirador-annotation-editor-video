@@ -92,7 +92,7 @@ function mapStateToProps(state, { targetProps }) {
   };
 }
 
-export default {
+export const externalStorageAnnotationPlugin = {
   component: ExternalStorageAnnotation,
   mapDispatchToProps,
   mapStateToProps,

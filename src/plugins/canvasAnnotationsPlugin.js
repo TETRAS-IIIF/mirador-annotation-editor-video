@@ -160,12 +160,10 @@ const mapDispatchToProps = (dispatch, props, annotationEditCompanionWindowIsOpen
   ),
 });
 
-const CanvasAnnotationsWrapperContainer = {
+export const canvasAnnotationsPlugin = {
   component: CanvasAnnotationsWrapper,
   mapDispatchToProps,
   mapStateToProps,
   mode: 'wrap',
   target: 'CanvasAnnotations',
 };
-
-export default CanvasAnnotationsWrapperContainer;
