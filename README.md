@@ -8,7 +8,7 @@
 adds annotation creation tools to the user interface. 
 
 It is based on the original [mirador-annotations](https://github.com/ProjectMirador/mirador-annotations/) plugin with a
-lot of technical and functional modifications.
+lot of technical and functional modifications and forked from https://github.com/ARVEST-APP/mirador-annotation-editor
 
 ### Copyrights
 
@@ -46,7 +46,6 @@ The authors of this software are :
 
 - AZOPSOFT SAS 
   - Samuel Jugnet (especially code for the Konvas part)
-- Loïs Poujade (especially the original modifications to annotate videos)
 
 ### General functionalities 
 
