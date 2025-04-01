@@ -220,7 +220,9 @@ AnnotationForm.propTypes = {
     PropTypes.string,
   ]).isRequired,
   // eslint-disable-next-line react/forbid-prop-types
-  canvases: PropTypes.object.isRequired,
+  canvases: PropTypes.arrayOf(
+    PropTypes.shape({ id: PropTypes.string }),
+  ).isRequired,
   closeCompanionWindow: PropTypes.func.isRequired,
   config: PropTypes.shape({
     annotation: PropTypes.shape({
