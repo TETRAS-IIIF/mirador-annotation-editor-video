@@ -107,7 +107,8 @@ const CanvasListItem = forwardRef((props, ref) => {
       .includes(annotationid);
   };
 
-  const { t, ...filteredProps } = props;
+  // eslint-disable-next-line react/prop-types
+  const { t, tReady, ...filteredProps } = props;
 
   return (
     <div
@@ -199,7 +200,6 @@ CanvasListItem.propTypes = {
     PropTypes.func,
     PropTypes.node,
   ]).isRequired,
-  t: PropTypes.func.isRequired,
 };
 
 export default withTranslation()(CanvasListItem);
