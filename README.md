@@ -4,57 +4,54 @@
 
 ### Generalities
 
-`mirador-annotation-editor-video`(also known as "MAEV") is a [Mirador 4](https://github.com/projectmirador/mirador) plugin that 
+`mirador-annotation-editor-video`(also known as "MAEV") is a [Mirador 4](https://github.com/projectmirador/mirador)
+plugin that
 adds annotation creation tools to the user interface. It support both image and video annotation.
 
 ### Copyrights
+
+Originally forked from https://github.com/ARVEST-APP/mirador-annotation-editor-video
 
 #### Licence
 
 This plugin is released under the **GPL v3** license unlike MAE and the original plugin.
 
-Please acknowledge that any modification you make must be distributed under a compatible licence and cannot be closed 
+Please acknowledge that any modification you make must be distributed under a compatible licence and cannot be closed
 source.
 
-If you need to integrate this code base in closed source pieces of software, please contact us, so we can discuss dual 
-licencing. 
+If you need to integrate this code base in closed source pieces of software, please contact us, so we can discuss dual
+licencing.
 
-#### Property
-
-The base of this software (up to V1) is the property of [SATT Ouest Valorisation](https://www.ouest-valorisation.fr/) 
-that funded its development under the French public contract AO-MA2023-0004-DV5189.
-
-#### Authors 
+#### Authors
 
 The authors of this software are :
 
 - Clarisse Bardiot (concept and use cases)
 - Jacob Hart (specifications)
 - [Tétras Libre SARL](https://tetras-libre.fr) (development):
-  - David Rouquet
-  - Anthony Geourjon
-  - Antoine Roy
+    - David Rouquet
+    - Anthony Geourjon
+    - Antoine Roy
 
 #### Contributors (updated february 2024)
 
-- AZOPSOFT SAS 
-  - Samuel Jugnet (especially code for the Konvas part)
-- Loïs Poujade (especially the original modifications to annotate videos)
+- AZOPSOFT SAS
+    - Samuel Jugnet (especially code for the Konvas part)
 
-### General functionalities 
+### General functionalities
 
-- Activate a panel with tools to create annotations on IIIF documents (manifests) containing images **and videos with 
-MAEV**
+- Activate a panel with tools to create annotations on IIIF documents (manifests) containing images **and videos with
+  MAEV**
 - Spatial and temporal targets for annotations
 - Overlay annotations (geometric forms, free hand drawing, text and images)
 - Textual/semantic annotations and tags
 - Annotation metadata (based on Dublin Core)
 - Annotation with another manifest -> network of IIIF documents
 
-### Technical aspects 
+### Technical aspects
 
 - Update to Material UI 5 and React 18 to follow latest Mirador upgrades (We support mirador": "4.0.0-alpha.2",
-- The [paperjs](http://paperjs.org/ ) library has been replaced with [Konvas](https://konvajs.org) 
+- The [paperjs](http://paperjs.org/ ) library has been replaced with [Konvas](https://konvajs.org)
 - Major refactoring since the original `[mirador-annotations](https://github.com/ProjectMirador/mirador-annotations/) 
 plugins`
 - Works with the original [Mirador 4](https://github.com/projectmirador/mirador) if you need only image annotation
@@ -70,18 +67,22 @@ npm install mirador-annotation-editor
 You can override existing annotation plugin with your own versions by using npm. We support React 18 and MUI 5.
 
 Update your `package.json` file to include the following dependencies and devDependencies:
+
 ```js
-"mirador-annotations": "npm:mirador-annotation-editor-video@^1.0.10",
+"mirador-annotations"
+:
+"npm:mirador-annotation-editor-video@^1.0.10",
 ```
 
 You need also to use the custom version of Mirador 4.
 
 ```js
-"mirador" : "npm@mirador-video@^1.0.17",
+"mirador"
+:
+"npm@mirador-video@^1.0.17",
 ```
 
-If you encounter this error : 
-
+If you encounter this error :
 
 ## Install (local)
 
@@ -101,22 +102,22 @@ npm start
 ```
 
 ## Use MAE with video annotation support
-- If you need video annotation, you can use 
-[our fork of Mirador: mirador-video](https://github.com/SCENE-CE/mirador-video)
-- In addition, we have developed a wrapper of MAE to support video annotation. This wrapper is called **MAEV** and is
-available in the [mirador-annotation-editor-video](https://github.com/SCENE-CE/mirador-annotation-editor-video)
-repository.
 
+- If you need video annotation, you can use
+  [our fork of Mirador: mirador-video](https://github.com/SCENE-CE/mirador-video)
+- In addition, we have developed a wrapper of MAE to support video annotation. This wrapper is called **MAEV** and is
+  available in the [mirador-annotation-editor-video](https://github.com/SCENE-CE/mirador-annotation-editor-video)
+  repository.
 
 ## Persisting Annotations
-Persisting annotations requires implementing a IIIF annotation server. Several 
+
+Persisting annotations requires implementing a IIIF annotation server. Several
 [examples of annotation servers](https://github.com/IIIF/awesome-iiif#annotation-servers) are available on iiif-awesome.
 
-`mirador-annotation-editor` currently supports adapters for 
-[annotot](https://github.com/ProjectMirador/mirador-annotations/blob/master/src/AnnototAdapter.js) and 
-[local storage](https://github.com/ProjectMirador/mirador-annotations/blob/master/src/LocalStorageAdapter.js). We 
+`mirador-annotation-editor` currently supports adapters for
+[annotot](https://github.com/ProjectMirador/mirador-annotations/blob/master/src/AnnototAdapter.js) and
+[local storage](https://github.com/ProjectMirador/mirador-annotations/blob/master/src/LocalStorageAdapter.js). We
 welcome contributions of adapters for other annotation servers.
-
 
 ## Contribute
 
