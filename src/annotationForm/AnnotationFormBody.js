@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import { Grid } from '@mui/material';
 import Typography from '@mui/material/Typography';
+import { useTranslation } from 'react-i18next';
 import { TEMPLATE } from './AnnotationFormUtils';
 import TextCommentTemplate from './TextCommentTemplate';
 import IIIFTemplate from './IIIFTemplate';
@@ -22,11 +23,11 @@ export default function AnnotationFormBody(
     debugMode,
     playerReferences,
     saveAnnotation,
-    t,
     templateType,
     windowId,
   },
 ) {
+  const { t } = useTranslation();
   const [showAdvanced, setShowAdvanced] = useState(false);
 
   return (
@@ -150,14 +151,22 @@ AnnotationFormBody.propTypes = {
     target: PropTypes.string,
   }).isRequired,
   // eslint-disable-next-line react/forbid-prop-types
-  canvases: PropTypes.object.isRequired,
+  canvases: PropTypes.arrayOf(
+    PropTypes.shape({ id: PropTypes.string, index: PropTypes.number }),
+  ).isRequired,
   closeFormCompanionWindow: PropTypes.func.isRequired,
   debugMode: PropTypes.bool.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   playerReferences: PropTypes.object.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   saveAnnotation: PropTypes.func.isRequired,
-  t: PropTypes.func.isRequired,
-  templateType: PropTypes.string.isRequired,
+  templateType: PropTypes.shape(
+    {
+      description: PropTypes.string,
+      icon: PropTypes.element,
+      id: PropTypes.string,
+      label: PropTypes.string,
+    },
+  ).isRequired,
   windowId: PropTypes.string.isRequired,
 };

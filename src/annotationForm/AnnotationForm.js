@@ -3,8 +3,7 @@ import CompanionWindow from 'mirador/dist/es/src/containers/CompanionWindow';
 import PropTypes from 'prop-types';
 import { Grid } from '@mui/material';
 import Typography from '@mui/material/Typography';
-import { withTranslation } from 'react-i18next';
-import i18n from 'i18next';
+import { useTranslation } from 'react-i18next';
 import AnnotationFormTemplateSelector from './AnnotationFormTemplateSelector';
 import { getTemplateType, saveAnnotationInStorageAdapter, TEMPLATE } from './AnnotationFormUtils';
 import AnnotationFormHeader from './AnnotationFormHeader';
@@ -25,10 +24,10 @@ function AnnotationForm(
     id,
     playerReferences,
     receiveAnnotation,
-    t,
     windowId,
   },
 ) {
+  const { t } = useTranslation();
   const [templateType, setTemplateType] = useState(null);
   // eslint-disable-next-line no-underscore-dangle
   const [mediaType, setMediaType] = useState(playerReferences.getMediaType());
@@ -52,26 +51,6 @@ function AnnotationForm(
       }
     }
   }
-
-  // Add translations from config to i18n
-  useEffect(() => {
-    if (i18n.isInitialized && config.translations) {
-      Object.keys(config.translations)
-        .forEach((language) => {
-          i18n.addResourceBundle(
-            language,
-            'translation',
-            config.translations[language],
-            true,
-            true,
-          );
-        });
-
-      if (config.language) {
-        i18n.changeLanguage(config.language);
-      }
-    }
-  }, [config.translations, config.language]);
 
   useEffect(() => {
     setTemplateType(null);
@@ -171,7 +150,6 @@ function AnnotationForm(
           <AnnotationFormTemplateSelector
             setCommentingType={setTemplateType}
             mediaType={mediaType}
-            t={t}
           />
         )
         : (
@@ -191,7 +169,6 @@ function AnnotationForm(
                 debugMode={debugMode}
                 playerReferences={playerReferences}
                 saveAnnotation={saveAnnotation}
-                t={t}
                 templateType={templateType}
                 windowId={windowId}
               />
@@ -220,7 +197,9 @@ AnnotationForm.propTypes = {
     PropTypes.string,
   ]).isRequired,
   // eslint-disable-next-line react/forbid-prop-types
-  canvases: PropTypes.object.isRequired,
+  canvases: PropTypes.arrayOf(
+    PropTypes.shape({ id: PropTypes.string }),
+  ).isRequired,
   closeCompanionWindow: PropTypes.func.isRequired,
   config: PropTypes.shape({
     annotation: PropTypes.shape({
@@ -238,8 +217,7 @@ AnnotationForm.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   playerReferences: PropTypes.object.isRequired,
   receiveAnnotation: PropTypes.func.isRequired,
-  t: PropTypes.func.isRequired,
   windowId: PropTypes.string.isRequired,
 };
 
-export default withTranslation()(AnnotationForm);
+export default AnnotationForm;

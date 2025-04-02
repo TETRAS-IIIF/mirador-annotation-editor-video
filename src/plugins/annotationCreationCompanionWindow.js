@@ -3,8 +3,7 @@ import { getCompanionWindow } from 'mirador/dist/es/src/state/selectors/companio
 import { getVisibleCanvases } from 'mirador/dist/es/src/state/selectors/canvases';
 import { getPresentAnnotationsOnSelectedCanvases } from 'mirador/dist/es/src/state/selectors/annotations';
 import { OSDReferences } from 'mirador/dist/es/src/plugins/OSDReferences';
-import { withTranslation } from 'react-i18next';
-import annotationForm from '../annotationForm/AnnotationForm';
+import AnnotationForm from '../annotationForm/AnnotationForm';
 import { WindowPlayer } from '../playerReferences';
 import translations from '../locales/locales';
 
@@ -53,12 +52,11 @@ function mapStateToProps(state, { id: companionWindowId, windowId }) {
   };
 }
 
-// Enhance annotationForm with i18n support
-const AnnotationFormWithTranslation = withTranslation()(annotationForm);
-
-export default {
+const annotationCreationCompanionWindowPlugin = {
   companionWindowKey: 'annotationCreation',
-  component: AnnotationFormWithTranslation,
+  component: AnnotationForm,
   mapDispatchToProps,
   mapStateToProps,
 };
+
+export default annotationCreationCompanionWindowPlugin;

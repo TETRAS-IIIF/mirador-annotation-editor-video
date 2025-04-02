@@ -2,17 +2,17 @@
 import miradorAnnotationPlugin from './containers/miradorAnnotationPlugin';
 import externalStorageAnnotationPlugin from './plugins/externalStorageAnnotationPlugin';
 import canvasAnnotationsPlugin from './plugins/canvasAnnotationsPlugin';
-import annotationCreationCompanionWindow from './plugins/annotationCreationCompanionWindow';
+import annotationCreationCompanionWindowPlugin from './plugins/annotationCreationCompanionWindow';
 import windowSideBarButtonsPlugin from './plugins/windowSideBarButtonsPlugin';
 import translations from './locales/locales';
 
 export {
   miradorAnnotationPlugin, externalStorageAnnotationPlugin,
-  canvasAnnotationsPlugin, annotationCreationCompanionWindow,
+  canvasAnnotationsPlugin, annotationCreationCompanionWindowPlugin,
   windowSideBarButtonsPlugin,
 };
 
-export default [
+const annotationPlugins = [
   {
     component: miradorAnnotationPlugin,
     config: {
@@ -23,6 +23,8 @@ export default [
   },
   externalStorageAnnotationPlugin,
   canvasAnnotationsPlugin,
-  annotationCreationCompanionWindow,
+  annotationCreationCompanionWindowPlugin,
   windowSideBarButtonsPlugin,
 ];
+
+export default annotationPlugins;

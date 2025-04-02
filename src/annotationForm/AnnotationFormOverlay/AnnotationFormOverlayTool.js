@@ -109,6 +109,7 @@ function AnnotationFormOverlayTool({
             onChange={changeTool}
             aria-label={t('tool_selection')}
             size="small"
+            data-testid="tool_selection"
           >
             <Tooltip title={t('rectangle')}>
               <ToggleButton value={SHAPES_TOOL.RECTANGLE} aria-label={t('add_a_rectangle')}>

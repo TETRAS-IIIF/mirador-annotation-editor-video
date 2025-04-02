@@ -161,13 +161,9 @@ ColorPicker.propTypes = {
   openChooseColor: Proptypes.func.isRequired,
   openChooseLineWeight: Proptypes.func.isRequired,
   t: Proptypes.func.isRequired,
-  toolOptions: Proptypes.oneOfType(
+  toolOptions: Proptypes.oneOfType([
     Proptypes.bool,
-    Proptypes.string,
-    Proptypes.bool,
-    Proptypes.string,
-    Proptypes.string,
-  ).isRequired,
+    Proptypes.string]).isRequired,
   toolState: PropTypes.shape({
     activeTool: PropTypes.string.isRequired,
     closedMode: PropTypes.bool.isRequired,

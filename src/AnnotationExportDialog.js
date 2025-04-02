@@ -11,21 +11,14 @@ import Typography from '@mui/material/Typography';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/system';
 
-/**
- * Styles for AnnotationExportDialog
- * @param theme
- * @returns {{listitem: {'&:focus': {backgroundColor}, '&:hover': {backgroundColor: *}}}}
- */
-const styles = (theme) => ({
-  listitem: {
-    '&:focus': {
-      backgroundColor: theme.palette.action.focus,
-    },
-    '&:hover': {
-      backgroundColor: theme.palette.action.hover,
-    },
+const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
+  '&:focus': {
+    backgroundColor: theme.palette.action.focus,
   },
-});
+  '&:hover': {
+    backgroundColor: theme.palette.action.hover,
+  },
+}));
 
 /**
  *
@@ -115,9 +108,8 @@ function AnnotationExportDialog({
         ) : (
           <MenuList>
             {exportLinks.map((dl) => (
-              <MenuItem
+              <StyledMenuItem
                 button
-                className={classes.listitem}
                 component="a"
                 key={dl.canvasId}
                 aria-label={t('export_annotation_for')}
@@ -130,7 +122,7 @@ function AnnotationExportDialog({
                 <ListItemText>
                   {t('export_annotation_for')}
                 </ListItemText>
-              </MenuItem>
+              </StyledMenuItem>
             ))}
           </MenuList>
         )}
@@ -154,4 +146,4 @@ AnnotationExportDialog.propTypes = {
   t: PropTypes.func.isRequired,
 };
 
-export default styled(styles)(AnnotationExportDialog);
+export default AnnotationExportDialog;

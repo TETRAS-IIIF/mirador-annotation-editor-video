@@ -49,7 +49,7 @@ export const en = {
   manifest_url: 'Manifest URL',
   media_not_supported: 'Media not supported',
   media_not_supported_text: 'The media you try to annotate is not supported by this instance at the moment',
-  metadata: 'Métadata',
+  metadata: 'Metadata',
   new_annotation: 'New annotation',
   no_annotation: 'No annotations stored yet.',
   note: 'Note',
