@@ -81,6 +81,7 @@ export const fr = {
   textual_note_with_target: 'Note textuelle avec cible',
   tool_selection: 'Sélection d’outil',
   unsupported_media_message: 'Le type de média de votre canvas actuel n\'est pas pris en charge par l\'éditeur d\'annotations.',
+  useTemplate: 'Utiliser un modèle',
   video_annotation_instruction: 'Si vous souhaitez annoter des vidéos, vous devez installer le plugin Mirador Annotation Editor Video (MAEV) pour créer et modifier des annotations sur les vidéos :',
   your_tag_here: 'Votre étiquette',
   zoom: 'Zoom',

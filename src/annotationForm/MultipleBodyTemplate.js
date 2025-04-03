@@ -5,8 +5,8 @@ import AnnotationFormFooter from './AnnotationFormFooter';
 import { TEMPLATE } from './AnnotationFormUtils';
 import TargetFormSection from './TargetFormSection';
 import { resizeKonvaStage } from './AnnotationFormOverlay/KonvaDrawing/KonvaUtils';
-import TextFormSection from './TextFormSection';
 import { MultiTagsInput } from './MultiTagsInput';
+import { TextCommentInput } from './TextCommentInput';
 
 /** Tagging Template* */
 export default function MultipleBodyTemplate(
@@ -34,7 +34,7 @@ export default function MultipleBodyTemplate(
         textBody: {
           purpose: 'describing',
           type: 'TextualBody',
-          value: commentTemplate,
+          value: '',
         },
       },
       motivation: 'commenting',
@@ -56,6 +56,7 @@ export default function MultipleBodyTemplate(
   }
 
   const [annotationState, setAnnotationState] = useState(maeAnnotation);
+  console.log('annotationState', annotationState);
 
   /**
    * Update the annotation's Body
@@ -108,9 +109,10 @@ export default function MultipleBodyTemplate(
   return (
     <Grid container direction="column" spacing={2}>
       <Grid item>
-        <TextFormSection
-          annoHtml={annotationState.maeData.textBody.value}
-          updateAnnotationBody={updateAnnotationTextualBodyValue}
+        <TextCommentInput
+          commentTemplates={commentTemplate}
+          comment={annotationState.maeData.textBody.value}
+          setComment={updateAnnotationTextualBodyValue}
           t={t}
         />
       </Grid>
