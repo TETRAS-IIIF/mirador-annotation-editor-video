@@ -28,9 +28,6 @@ export function MultiTagsInput({
       <Typography variant="formSectionTitle">
         {t('tags')}
       </Typography>
-      {/* Show list of suggestions into a clickable tag */}
-      {/* add a toggle to show hide suggestions */}
-
       <CreatableSelect
         isMulti
         options={mappedSuggestionsTags}
@@ -39,11 +36,9 @@ export function MultiTagsInput({
         closeMenuOnSelect={false}
         placeholder={t('tagsPlaceholder')}
       />
-
       <Divider
         spacing={2}
       />
-
     </>
   );
 }
