@@ -81,6 +81,7 @@ export const en = {
   textual_note_with_target: 'Textual note with target',
   tool_selection: 'Tool Selection',
   unsupported_media_message: 'Your current canvas media type is not supported by the annotation editor.',
+  useTemplate: 'Use a template',
   video_annotation_instruction: 'If you want to annotate video media, you must install MAEV to create and edit annotations on video:',
   your_tag_here: 'Your tag here:',
   zoom: 'Zoom',
