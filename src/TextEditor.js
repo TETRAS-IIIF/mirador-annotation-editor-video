@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
@@ -12,20 +12,15 @@ const StyledReactQuill = styled(ReactQuill)(({ theme }) => ({
 
 /** Rich text editor for annotation body */
 function TextEditor({
-  annoHtml,
-  updateAnnotationBody,
+  text,
+  setText,
 }) {
-  const [editorHtml, setEditorHtml] = useState(annoHtml);
-
   /**
    * Handle Change On ReactQuil Editor
    * @param html
    */
   const handleChange = (html) => {
-    setEditorHtml(html);
-    if (updateAnnotationBody) {
-      updateAnnotationBody(html);
-    }
+    setText(html);
   };
   const modules = {
     toolbar: [
@@ -63,7 +58,7 @@ function TextEditor({
   return (
     <div data-text-editor="name">
       <StyledReactQuill
-        value={editorHtml}
+        value={text}
         onChange={handleChange}
         placeholder="Your text here"
         bounds='[data-text-editor="name"]'
@@ -75,8 +70,8 @@ function TextEditor({
 }
 
 TextEditor.propTypes = {
-  annoHtml: PropTypes.string.isRequired,
-  updateAnnotationBody: PropTypes.func.isRequired,
+  text: PropTypes.string.isRequired,
+  setText: PropTypes.func.isRequired,
 };
 
 export default TextEditor;
