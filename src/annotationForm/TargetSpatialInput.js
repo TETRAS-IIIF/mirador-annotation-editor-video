@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Typography from '@mui/material/Typography';
 import { Grid } from '@mui/material';
 import AnnotationDrawing from './AnnotationFormOverlay/AnnotationDrawing';
-import { getTargetSVGToolState, TARGET_VIEW } from './AnnotationFormUtils';
+import { TARGET_TOOL_STATE, TARGET_VIEW } from './AnnotationFormUtils';
 import AnnotationFormOverlay from './AnnotationFormOverlay/AnnotationFormOverlay';
 import { KONVA_MODE } from './AnnotationFormOverlay/KonvaDrawing/KonvaUtils';
 
@@ -16,7 +16,7 @@ export function TargetSpatialInput({
   windowId,
 }) {
   // TODO the targetSVGToolSTate is not used. Why the defaultToolState is used?
-  const [toolState, setToolState] = useState(getTargetSVGToolState());
+  const [toolState, setToolState] = useState(TARGET_TOOL_STATE);
   const [viewTool, setViewTool] = useState(TARGET_VIEW);
   const [scale, setScale] = useState(playerReferences.getScale());
   /** Change scale from container / canva */
