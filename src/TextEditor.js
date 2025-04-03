@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { styled } from '@mui/material/styles';
+import { useSelector } from 'react-redux';
+import { getConfig } from 'mirador/dist/es/src/state/selectors';
 
 const StyledReactQuill = styled(ReactQuill)(({ theme }) => ({
   '.ql-editor': {
@@ -16,7 +18,8 @@ function TextEditor({
   updateAnnotationBody,
 }) {
   const [editorHtml, setEditorHtml] = useState(annoHtml);
-
+  const annotationConfig = useSelector((state) => getConfig(state)).annotation;
+  const { formats, modules } = annotationConfig.quillConfig;
   /**
    * Handle Change On ReactQuil Editor
    * @param html
@@ -27,37 +30,6 @@ function TextEditor({
       updateAnnotationBody(html);
     }
   };
-  const modules = {
-    toolbar: [
-      [{ header: [1, 2, false] }],
-      ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-      [
-        { list: 'ordered' },
-        { list: 'bullet' },
-        { indent: '-1' },
-        { indent: '+1' },
-      ],
-      [{ color: [] }, { background: [] }],
-      ['link', 'image'],
-      ['clean'],
-    ],
-  };
-
-  const formats = [
-    'header',
-    'bold',
-    'italic',
-    'underline',
-    'strike',
-    'blockquote',
-    'list',
-    'bullet',
-    'indent',
-    'link',
-    'image',
-    'color',
-    'background',
-  ];
 
   // Data field is needed to set bounds for the editor and avoir tooltip overflow
   return (
