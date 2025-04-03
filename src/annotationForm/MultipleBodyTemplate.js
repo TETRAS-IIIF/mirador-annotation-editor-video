@@ -34,7 +34,7 @@ export default function MultipleBodyTemplate(
         textBody: {
           purpose: 'describing',
           type: 'TextualBody',
-          value: 'Plop',
+          value: '',
         },
       },
       motivation: 'commenting',
