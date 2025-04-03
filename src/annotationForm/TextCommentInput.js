@@ -26,26 +26,31 @@ export function TextCommentInput({
         </Typography>
       </Grid>
       {commentTemplates.length > 0 && (
-        <CreatableSelect
-          options={commentTemplates.map((template) => ({
-            label: template.title,
-            value: template.content,
-            title: template.content, // Add title attribute for tooltip
-          }))}
-          placeholder={t('useTemplate')}
-          onChange={(selectedOption) => {
-            if (selectedOption) {
-              setComment(selectedOption.value);
-            }
-          }}
-          isClearable
-          isSearchable
-          formatOptionLabel={(option) => (
-            <div title={option.title}>
-              {option.label}
-            </div>
-          )}
-        />
+        <Grid item style={{ marginBottom: '10px' }}>
+          <CreatableSelect
+            options={commentTemplates.map((template) => ({
+              label: template.title,
+              value: template.content,
+              title: template.content, // Add title attribute for tooltip
+            }))}
+            placeholder={t('useTemplate')}
+            onChange={(selectedOption) => {
+              if (selectedOption) {
+                setComment(selectedOption.value);
+              }
+            }}
+            isClearable
+            isSearchable
+            formatOptionLabel={(option) => (
+              <div title={option.title}>
+                {option.label}
+              </div>
+            )}
+            styles={{
+              marginBottom: '20px',
+            }}
+          />
+        </Grid>
       )}
 
       <Grid container item>

@@ -56,7 +56,6 @@ export default function MultipleBodyTemplate(
   }
 
   const [annotationState, setAnnotationState] = useState(maeAnnotation);
-  console.log('annotationState', annotationState);
 
   /**
    * Update the annotation's Body

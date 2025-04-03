@@ -70,8 +70,8 @@ function TextEditor({
 }
 
 TextEditor.propTypes = {
-  text: PropTypes.string.isRequired,
   setText: PropTypes.func.isRequired,
+  text: PropTypes.string.isRequired,
 };
 
 export default TextEditor;
