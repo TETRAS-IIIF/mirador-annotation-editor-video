@@ -58,7 +58,8 @@ function AnnotationFormOverlayTool({
         toolState.activeTool === OVERLAY_TOOL.EDIT && (
           <>
             {
-              currentShape && displayMode === KONVA_MODE.DRAW && (
+              ((currentShape && displayMode === KONVA_MODE.DRAW)
+                || (currentShape && displayMode === KONVA_MODE.TARGET)) && (
                 <div>
                   <Typography variant="subFormSectionTitle">
                     {t('selected_object')}
@@ -77,6 +78,7 @@ function AnnotationFormOverlayTool({
                     }}
                     setToolState={customUpdateToolState}
                     displayMode={displayMode}
+                    currentShape={currentShape}
                   />
                 </div>
               )
