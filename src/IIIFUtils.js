@@ -5,7 +5,7 @@ import {
   OVERLAY_TOOL,
   SHAPES_TOOL,
 } from './annotationForm/AnnotationFormOverlay/KonvaDrawing/KonvaUtils';
-import { TEMPLATE } from './annotationForm/AnnotationFormUtils';
+import { TARGET_TOOL_STATE, TEMPLATE } from './annotationForm/AnnotationFormUtils';
 
 /**
  * Check if annotation is exportable to image in case of Konva annotation
@@ -136,8 +136,7 @@ export const getIIIFTargetFromMaeData = (
     case TEMPLATE.MULTIPLE_BODY_TYPE:
     case TEMPLATE.TEXT_TYPE:
       // In some case the target can be simplified in a string
-      if (maeTarget.drawingState.shapes.length === 1
-        && maeTarget.drawingState.shapes[0].type === SHAPES_TOOL.RECTANGLE) {
+      if (isSimpleTarget(maeTarget.drawingState.shapes)) {
         return getIIIFTargetFromRectangleShape(
           maeTarget,
           canvasId,
@@ -154,6 +153,11 @@ export const getIIIFTargetFromMaeData = (
   // Default return
   return getIIIFTargetFullCanvas(maeData, canvasId);
 };
+
+const isSimpleTarget = (shapes) => shapes.length === 1
+    && shapes[0].type === SHAPES_TOOL.RECTANGLE
+    && shapes[0].strokeColor === TARGET_TOOL_STATE.strokeColor
+    && shapes[0].fillColor === TARGET_TOOL_STATE.fillColor;
 
 /**
  * Get the IIIF target from a Konva annotation (Drawing template)

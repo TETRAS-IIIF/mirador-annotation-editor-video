@@ -145,20 +145,16 @@ export const IMAGE_TOOL_STATE = {
 
 /**
  * Specific Tool state for the target SVG
- * @param imageZoom
- * @returns {{activeTool: string, closedMode: string, image: {id: null}, imageEvent: null,
- * strokeColor: string, strokeWidth: number}}
  */
-export function getTargetSVGToolState() {
-  return {
-    activeTool: OVERLAY_TOOL.SHAPE,
-    closedMode: 'closed',
-    image: { id: null },
-    imageEvent: null,
-    strokeColor: 'rgba(255,0, 0, 0.5)',
-    strokeWidth: 5,
-  };
-}
+export const TARGET_TOOL_STATE = {
+  activeTool: OVERLAY_TOOL.SHAPE,
+  closedMode: 'closed',
+  fillColor: 'rgba(100,100,100, 0)',
+  image: { id: null },
+  imageEvent: null,
+  strokeColor: 'rgba(255,0, 0, 0.5)',
+  strokeWidth: 5,
+};
 
 export const TARGET_VIEW = 'target';
 export const OVERLAY_VIEW = 'layer';
