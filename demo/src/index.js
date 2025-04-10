@@ -15,7 +15,7 @@ const config = {
       content: '<h4>Comment2</h4><p>comment content</p>',
     }],
     exportLocalStorageAnnotations: false, // display annotation JSON export button
-    tagsSuggestions: ['Mirador', 'Awesome', 'Viewer', 'IIIF'],
+    tagsSuggestions: ['Mirador', 'Awesome', 'Viewer', 'IIIF', 'Template'],
   },
   annotations: {
     htmlSanitizationRuleSet: 'liberal',

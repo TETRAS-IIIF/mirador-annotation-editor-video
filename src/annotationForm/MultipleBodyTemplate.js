@@ -105,6 +105,37 @@ export default function MultipleBodyTemplate(
     saveAnnotation(annotationState);
   };
 
+  /**
+   * When the user selects a template, we change text comment and try to add the tag with same name
+   * @param selectedTemplate
+   */
+  const onChangeTemplate = (selectedTemplate) => {
+    const associatedTag = mappedSuggestionsTags.find((tag) => tag.value === selectedTemplate.label);
+    if (associatedTag) {
+      if (!annotationState.maeData.tags.find((tag) => tag.value === associatedTag.value)) {
+        setAnnotationState({
+          ...annotationState,
+          maeData: {
+            ...annotationState.maeData,
+            tags: [...annotationState.maeData.tags, associatedTag],
+            textBody: {
+              ...annotationState.maeData.textBody,
+              value: selectedTemplate.value,
+            },
+          },
+        });
+        return;
+      }
+    }
+
+    updateAnnotationTextualBodyValue(selectedTemplate.value);
+  };
+
+  const mappedSuggestionsTags = tagsSuggestions.map((suggestion) => ({
+    label: suggestion,
+    value: suggestion,
+  }));
+
   return (
     <Grid container direction="column" spacing={2}>
       <Grid item>
@@ -112,6 +143,7 @@ export default function MultipleBodyTemplate(
           commentTemplates={commentTemplate}
           comment={annotationState.maeData.textBody.value}
           setComment={updateAnnotationTextualBodyValue}
+          onChangeTemplate={onChangeTemplate}
           t={t}
         />
       </Grid>
@@ -120,7 +152,7 @@ export default function MultipleBodyTemplate(
           t={t}
           tags={annotationState.maeData.tags}
           setTags={setTags}
-          tagsSuggestions={tagsSuggestions}
+          tagsSuggestions={mappedSuggestionsTags}
         />
       </Grid>
       <Grid item>

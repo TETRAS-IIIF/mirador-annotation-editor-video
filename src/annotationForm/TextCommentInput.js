@@ -9,12 +9,14 @@ import TextEditor from '../TextEditor';
  * @param commentTemplates - The list of comment templates
  * @param comment - The current comment
  * @param setComment - Function to set the comment
+ * @param onChangeTemplate - Function to handle template selection
  * @param t - Translation function
  * @constructor
  */
 export function TextCommentInput({
-  commentTemplates,
   comment,
+  commentTemplates,
+  onChangeTemplate,
   setComment,
   t,
 }) {
@@ -30,13 +32,13 @@ export function TextCommentInput({
           <CreatableSelect
             options={commentTemplates.map((template) => ({
               label: template.title,
-              value: template.content,
               title: template.content, // Add title attribute for tooltip
+              value: template.content,
             }))}
             placeholder={t('useTemplate')}
             onChange={(selectedOption) => {
               if (selectedOption) {
-                setComment(selectedOption.value);
+                onChangeTemplate(selectedOption);
               }
             }}
             isClearable
@@ -67,6 +69,7 @@ TextCommentInput.propTypes = {
   comment: PropTypes.string.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   commentTemplates: PropTypes.arrayOf(PropTypes.object).isRequired,
+  onChangeTemplate: PropTypes.func.isRequired,
   setComment: PropTypes.func.isRequired,
   t: PropTypes.func.isRequired,
 };

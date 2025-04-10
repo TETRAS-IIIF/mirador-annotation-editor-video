@@ -6,8 +6,8 @@ import CreatableSelect from 'react-select/creatable';
 /**
  * MultiTagsInput component
  * @param t
- * @param tags
- * @param tagsSuggestions
+ * @param tags as [{ label: string, value: string }]
+ * @param tagsSuggestions as [{ label: string, value: string }]
  * @param setTags
  * @returns {Element}
  * @constructor
@@ -18,11 +18,6 @@ export function MultiTagsInput({
   tags,
   tagsSuggestions,
 }) {
-  const mappedSuggestionsTags = tagsSuggestions.map((suggestion) => ({
-    label: suggestion,
-    value: suggestion,
-  }));
-
   return (
     <>
       <Typography variant="formSectionTitle">
@@ -30,7 +25,7 @@ export function MultiTagsInput({
       </Typography>
       <CreatableSelect
         isMulti
-        options={mappedSuggestionsTags}
+        options={tagsSuggestions}
         value={tags}
         onChange={setTags}
         closeMenuOnSelect={false}
