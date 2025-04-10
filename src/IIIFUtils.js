@@ -73,7 +73,7 @@ export const convertAnnotationStateToBeSaved = async (
       purpose: 'tagging',
       type: 'TextualBody',
       value: tag.value,
-      id: tag.id,
+      id: tag.value,
     })));
   }
 
@@ -155,9 +155,9 @@ export const getIIIFTargetFromMaeData = (
 };
 
 const isSimpleTarget = (shapes) => shapes.length === 1
-    && shapes[0].type === SHAPES_TOOL.RECTANGLE
-    && shapes[0].strokeColor === TARGET_TOOL_STATE.strokeColor
-    && shapes[0].fillColor === TARGET_TOOL_STATE.fillColor;
+  && shapes[0].type === SHAPES_TOOL.RECTANGLE
+  && shapes[0].strokeColor === TARGET_TOOL_STATE.strokeColor
+  && shapes[0].fillColor === TARGET_TOOL_STATE.fillColor;
 
 /**
  * Get the IIIF target from a Konva annotation (Drawing template)

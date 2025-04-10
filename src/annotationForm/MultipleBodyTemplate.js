@@ -50,8 +50,8 @@ export default function MultipleBodyTemplate(
     maeAnnotation.maeData.textBody = maeAnnotation.body.find((body) => body.purpose === 'describing');
     maeAnnotation.maeData.tags = maeAnnotation.body.filter((body) => body.purpose === 'tagging')
       .map((tag) => ({
-        id: tag.id,
-        text: tag.value,
+        label: tag.value,
+        value: tag.value,
       }));
   }
 
