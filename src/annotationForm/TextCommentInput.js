@@ -20,6 +20,27 @@ export function TextCommentInput({
   setComment,
   t,
 }) {
+  /**
+   * Format the option label for the select component
+   * @param option
+   * @returns {React.JSX.Element}
+   */
+  const formatOptionLabel = (option) => (
+    <div title={option.title}>
+      {option.label}
+    </div>
+  );
+
+  /**
+   * Handle template selection change
+   * @param selectedOption
+   */
+  const onLocalChangeTemplate = (selectedOption) => {
+    if (selectedOption) {
+      onChangeTemplate(selectedOption.value);
+    }
+  };
+
   return (
     <>
       <Grid container item>
@@ -36,18 +57,10 @@ export function TextCommentInput({
               value: template.content,
             }))}
             placeholder={t('useTemplate')}
-            onChange={(selectedOption) => {
-              if (selectedOption) {
-                onChangeTemplate(selectedOption);
-              }
-            }}
+            onChange={onLocalChangeTemplate}
             isClearable
             isSearchable
-            formatOptionLabel={(option) => (
-              <div title={option.title}>
-                {option.label}
-              </div>
-            )}
+            formatOptionLabel={formatOptionLabel}
             styles={{
               marginBottom: '20px',
             }}
