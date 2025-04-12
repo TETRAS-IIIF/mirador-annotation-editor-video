@@ -23,6 +23,7 @@ function CanvasAnnotationsWrapper({
   targetProps,
   windowViewType,
   annotationEditCompanionWindowIsOpened,
+  containerRef,
   t,
 }) {
   const [singleCanvasDialogOpen, setSingleCanvasDialogOpen] = useState(false);
@@ -54,7 +55,7 @@ function CanvasAnnotationsWrapper({
       }}
     >
       {/* eslint-disable-next-line react/jsx-props-no-spreading */}
-      <TargetComponent {...props} />
+      <TargetComponent {...props} ref={containerRef} />
       {windowViewType !== 'single' && (
         <SingleCanvasDialog
           handleClose={toggleSingleCanvasDialogOpen}
@@ -67,6 +68,10 @@ function CanvasAnnotationsWrapper({
 }
 
 CanvasAnnotationsWrapper.propTypes = {
+  TargetComponent: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.node,
+  ]).isRequired,
   addCompanionWindow: PropTypes.func.isRequired,
   annotationEditCompanionWindowIsOpened: PropTypes.bool.isRequired,
   annotationsOnCanvases: PropTypes.shape({
@@ -103,13 +108,13 @@ CanvasAnnotationsWrapper.propTypes = {
       adapter: PropTypes.func,
     }),
   }).isRequired,
+  containerRef: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({ current: PropTypes.instanceOf(Element) }),
+  ]),
   receiveAnnotation: PropTypes.func.isRequired,
   switchToSingleCanvasView: PropTypes.func.isRequired,
   t: PropTypes.func.isRequired,
-  TargetComponent: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.node,
-  ]).isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   targetProps: PropTypes.object.isRequired,
   windowViewType: PropTypes.string.isRequired,
