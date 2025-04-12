@@ -3,7 +3,7 @@ import CompanionWindow from 'mirador/dist/es/src/containers/CompanionWindow';
 import PropTypes from 'prop-types';
 import { Grid } from '@mui/material';
 import Typography from '@mui/material/Typography';
-import { useTranslation } from 'react-i18next';
+import { useTranslation, withTranslation } from 'react-i18next';
 import AnnotationFormTemplateSelector from './AnnotationFormTemplateSelector';
 import { getTemplateType, saveAnnotationInStorageAdapter, TEMPLATE } from './AnnotationFormUtils';
 import AnnotationFormHeader from './AnnotationFormHeader';
@@ -32,6 +32,19 @@ function AnnotationForm(
   // eslint-disable-next-line no-underscore-dangle
   const [mediaType, setMediaType] = useState(playerReferences.getMediaType());
 
+  const [containerWidth, setContainerWidth] = useState(0);
+  const [retryCount, setRetryCount] = useState(0);
+
+  const [, forceUpdate] = useReducer((x) => x + 1, 0);
+
+  if (!playerReferences.isInitializedCorrectly() && retryCount < 10) {
+    console.log('AnnotationForm.js: retryCount', retryCount);
+    setTimeout(() => {
+      setRetryCount(retryCount + 1);
+      forceUpdate();
+    }, 100);
+  }
+
   // Add a state to trigger redraw
   const [windowSize, setWindowSize] = useState({
     height: window.innerHeight,
@@ -51,6 +64,26 @@ function AnnotationForm(
       }
     }
   }
+
+  // Add translations from config to i18n
+  useEffect(() => {
+    if (i18n.isInitialized && config.translations) {
+      Object.keys(config.translations)
+        .forEach((language) => {
+          i18n.addResourceBundle(
+            language,
+            'translation',
+            config.translations[language],
+            true,
+            true,
+          );
+        });
+
+      if (config.language) {
+        i18n.changeLanguage(config.language);
+      }
+    }
+  }, [config.translations, config.language]);
 
   useEffect(() => {
     setTemplateType(null);
@@ -77,7 +110,10 @@ function AnnotationForm(
     };
   }, []);
 
-  if (!playerReferences?.isInitializedCorrectly()) {
+  if (!playerReferences.isInitCorrectly) {
+    playerReferences.isInitializedCorrectly();
+  }
+  if (!playerReferences.isInitCorrectly) {
     return (
       <CompanionWindow title={t('media_not_supported')} windowId={windowId} id={id}>
         <Grid container padding={1} spacing={1}>
@@ -220,4 +256,4 @@ AnnotationForm.propTypes = {
   windowId: PropTypes.string.isRequired,
 };
 
-export default AnnotationForm;
+export default withTranslation()(AnnotationForm);

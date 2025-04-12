@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import { Grid } from '@mui/material';
@@ -6,11 +6,10 @@ import Typography from '@mui/material/Typography';
 import { useTranslation } from 'react-i18next';
 import { TEMPLATE } from './AnnotationFormUtils';
 import TextCommentTemplate from './TextCommentTemplate';
-import IIIFTemplate from './IIIFTemplate';
-import TaggingTemplate from './TaggingTemplate';
 
 import './debug.css';
-import { AdvancedAnnotationEditor } from './AdvancedAnnotationEditor';
+import TaggingTemplate from './TaggingTemplate';
+import IIIFTemplate from './IIIFTemplate';
 
 /**
  * This function contain the logic for loading annotation and render proper template type
@@ -20,6 +19,7 @@ export default function AnnotationFormBody(
     annotation,
     canvases,
     closeFormCompanionWindow,
+    config,
     debugMode,
     playerReferences,
     saveAnnotation,
@@ -28,37 +28,38 @@ export default function AnnotationFormBody(
   },
 ) {
   const { t } = useTranslation();
-  const [showAdvanced, setShowAdvanced] = useState(false);
-
   return (
     <Grid container direction="column">
-      {!showAdvanced && (
-        <TemplateContainer item>
-          {
-            templateType.id === TEMPLATE.TEXT_TYPE && (
-              <TextCommentTemplate
-                annotation={annotation}
-                closeFormCompanionWindow={closeFormCompanionWindow}
-                playerReferences={playerReferences}
-                saveAnnotation={saveAnnotation}
-                t={t}
-                windowId={windowId}
-              />
-            )
-          }
-          {
-            templateType.id === TEMPLATE.IIIF_TYPE && (
-              <IIIFTemplate
-                annotation={annotation}
-                canvases={canvases}
-                closeFormCompanionWindow={closeFormCompanionWindow}
-                playerReferences={playerReferences}
-                saveAnnotation={saveAnnotation}
-                t={t}
-              />
-            )
-          }
-          {templateType.id === TEMPLATE.TAGGING_TYPE && (
+
+      <TemplateContainer item>
+        {
+          templateType.id === TEMPLATE.TEXT_TYPE && (
+            <TextCommentTemplate
+              annotation={annotation}
+              closeFormCompanionWindow={closeFormCompanionWindow}
+              playerReferences={playerReferences}
+              saveAnnotation={saveAnnotation}
+              t={t}
+              windowId={windowId}
+            />
+          )
+        }
+        {
+          templateType.id === TEMPLATE.MULTIPLE_BODY_TYPE && (
+            <MultipleBodyTemplate
+              annotation={annotation}
+              closeFormCompanionWindow={closeFormCompanionWindow}
+              playerReferences={playerReferences}
+              saveAnnotation={saveAnnotation}
+              t={t}
+              windowId={windowId}
+              commentTemplate={config?.annotation?.commentTemplates ?? []}
+              tagsSuggestions={config?.annotation?.tagsSuggestions ?? []}
+            />
+          )
+        }
+        {
+          templateType.id === TEMPLATE.TAGGING_TYPE && (
             <TaggingTemplate
               annotation={annotation}
               closeFormCompanionWindow={closeFormCompanionWindow}
@@ -67,23 +68,22 @@ export default function AnnotationFormBody(
               t={t}
               windowId={windowId}
             />
-          )}
-        </TemplateContainer>
-      )}
-      <Grid item>
-        {showAdvanced && (
-          <AdvancedAnnotationEditor
-            value={annotation}
-            onChange={(updatedAnnotation) => {
-              // eslint-disable-next-line no-param-reassign
-              annotation = updatedAnnotation;
-            }}
-            closeFormCompanionWindow={closeFormCompanionWindow}
-            saveAnnotation={saveAnnotation}
-            t={t}
-          />
-        )}
-      </Grid>
+          )
+        }
+        {
+          templateType.id === TEMPLATE.IIIF_TYPE && (
+            <IIIFTemplate
+              annotation={annotation}
+              canvases={canvases}
+              closeFormCompanionWindow={closeFormCompanionWindow}
+              playerReferences={playerReferences}
+              saveAnnotation={saveAnnotation}
+              t={t}
+            />
+          )
+        }
+      </TemplateContainer>
+      {/* TODO Extract as component */}
       {debugMode && (
         <>
           <Typography>
@@ -152,9 +152,14 @@ AnnotationFormBody.propTypes = {
   }).isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   canvases: PropTypes.arrayOf(
-    PropTypes.shape({ id: PropTypes.string, index: PropTypes.number }),
+    PropTypes.shape({
+      id: PropTypes.string,
+      index: PropTypes.number,
+    }),
   ).isRequired,
   closeFormCompanionWindow: PropTypes.func.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  config: PropTypes.object.isRequired,
   debugMode: PropTypes.bool.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   playerReferences: PropTypes.object.isRequired,
