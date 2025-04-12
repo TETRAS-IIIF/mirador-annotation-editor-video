@@ -58,29 +58,30 @@ function AnnotationFormOverlayTool({
         toolState.activeTool === OVERLAY_TOOL.EDIT && (
           <>
             {
-                ((currentShape && displayMode === KONVA_MODE.DRAW)
-                    || (currentShape && displayMode === KONVA_MODE.TARGET)) && (
-                    <div>
-                      <Typography variant="subFormSectionTitle">
-                        {t('selected_object')}
-                      </Typography>
-                      <AnnotationFormOverlayToolOptions
-                        t={t}
-                        toolState={{
-                          ...toolState,
-                          activeTool: currentShape.type,
-                          closedMode: currentShape.closedMode,
-                          fillColor: currentShape.fill,
-                          image: { id: currentShape.url },
-                          strokeColor: currentShape.stroke,
-                          strokeWidth: currentShape.strokeWidth,
-                          text: currentShape.text,
-                        }}
-                        setToolState={customUpdateToolState}
-                        displayMode={displayMode}
-                      />
-                    </div>
-                )
+              ((currentShape && displayMode === KONVA_MODE.DRAW)
+                || (currentShape && displayMode === KONVA_MODE.TARGET)) && (
+                <div>
+                  <Typography variant="subFormSectionTitle">
+                    {t('selected_object')}
+                  </Typography>
+                  <AnnotationFormOverlayToolOptions
+                    t={t}
+                    toolState={{
+                      ...toolState,
+                      activeTool: currentShape.type,
+                      closedMode: currentShape.closedMode,
+                      fillColor: currentShape.fill,
+                      image: { id: currentShape.url },
+                      strokeColor: currentShape.stroke,
+                      strokeWidth: currentShape.strokeWidth,
+                      text: currentShape.text,
+                    }}
+                    setToolState={customUpdateToolState}
+                    displayMode={displayMode}
+                    currentShape={currentShape}
+                  />
+                </div>
+              )
             }
             {
               (displayMode === KONVA_MODE.DRAW && shapes.length > 0) && (
@@ -111,53 +112,50 @@ function AnnotationFormOverlayTool({
             size="small"
             data-testid="tool_selection"
           >
-            <Tooltip title={t('rectangle')}>
-              <ToggleButton value={SHAPES_TOOL.RECTANGLE} aria-label={t('add_a_rectangle')}>
-                <RectangleIcon />
-              </ToggleButton>
-            </Tooltip>
-              {
-                (displayMode === KONVA_MODE.TARGET) && (
-                  <Tooltip title={t('circle')}>
-                    <ToggleButton value={SHAPES_TOOL.CIRCLE} aria-label={t('add_a_circle')}>
+            {(displayMode !== KONVA_MODE.IMAGE) && (
+              <Tooltip title={t('rectangle')}>
+                <ToggleButton value={SHAPES_TOOL.RECTANGLE} aria-label={t('add_a_rectangle')}>
+                  <RectangleIcon />
+                </ToggleButton>
+              </Tooltip>
+            )}
+            {
+              (displayMode === KONVA_MODE.TARGET) && (
+                <Tooltip title={t('circle')}>
+                  <ToggleButton value={SHAPES_TOOL.CIRCLE} aria-label={t('add_a_circle')}>
+                    <CircleIcon />
+                  </ToggleButton>
+                </Tooltip>
+              )
+            }
+            {(displayMode !== KONVA_MODE.IMAGE) && (
+              <div>
+                <Tooltip title={t('line')}>
+                  <ToggleButton
+                    value={SHAPES_TOOL.POLYGON}
+                    aria-label={t('add_a_line')}
+                  >
+                    <PolygonIcon />
+                  </ToggleButton>
+                </Tooltip>
+              </div>
+            )}
+            {
+              (displayMode === KONVA_MODE.DRAW) && (
+                <>
+                  <Tooltip title="Ellipse shape">
+                    <ToggleButton value={SHAPES_TOOL.ELLIPSE} aria-label={t('add_an_ellipse')}>
                       <CircleIcon />
                     </ToggleButton>
                   </Tooltip>
-                )
-              }
-            <div>
-              <Tooltip title={t('line')}>
-                <ToggleButton
-                  value={SHAPES_TOOL.POLYGON}
-                  aria-label={t('add_a_line')}
-                >
-                  <PolygonIcon />
-                </ToggleButton>
-              </Tooltip>
-              {/* <Tooltip title={t('freehand')}>
-                  <ToggleButton
-                    value={SHAPES_TOOL.FREEHAND}
-                    aria-label={t('add_a_free_hand_shape')}>
-                    <GestureIcon />
-                  </ToggleButton>
-                </Tooltip> */}
-            </div>
-              {
-                (displayMode === KONVA_MODE.DRAW) && (
-                  <>
-                    <Tooltip title="Ellipse shape">
-                      <ToggleButton value={SHAPES_TOOL.ELLIPSE} aria-label={t('add_an_ellipse')}>
-                        <CircleIcon />
-                      </ToggleButton>
-                    </Tooltip>
-                    <Tooltip title={t('arrow')}>
-                      <ToggleButton value={SHAPES_TOOL.ARROW} aria-label={t('add_an_arrow_shape')}>
-                        <ArrowOutwardIcon />
-                      </ToggleButton>
-                    </Tooltip>
-                  </>
-                )
-              }
+                  <Tooltip title={t('arrow')}>
+                    <ToggleButton value={SHAPES_TOOL.ARROW} aria-label={t('add_an_arrow_shape')}>
+                      <ArrowOutwardIcon />
+                    </ToggleButton>
+                  </Tooltip>
+                </>
+              )
+            }
           </StyledToggleButtonGroup>
         )
       }

@@ -139,24 +139,24 @@ function AnnotationFormOverlayToolOptions({
   return (
     <div>
       {
-          ((displayMode === KONVA_MODE.DRAW || displayMode === KONVA_MODE.TARGET)
-              && isShapesTool(toolState.activeTool)) && (
-              <Grid container>
-                <ColorPicker
-                  currentColor={currentColor}
-                  changeClosedMode={changeClosedMode}
-                  closeChooseColor={closeChooseColor}
-                  handleCloseLineWeight={handleCloseLineWeight}
-                  handleLineWeightSelect={handleLineWeightSelect}
-                  openChooseColor={openChooseColor}
-                  openChooseLineWeight={openChooseLineWeight}
-                  updateColor={updateColor}
-                  t={t}
-                  toolOptions={toolOptions}
-                  toolState={toolState}
-                />
-              </Grid>
-          )
+        ((displayMode === KONVA_MODE.DRAW || displayMode === KONVA_MODE.TARGET)
+          && isShapesTool(toolState.activeTool)) && (
+          <Grid container>
+            <ColorPicker
+              currentColor={currentColor}
+              changeClosedMode={changeClosedMode}
+              closeChooseColor={closeChooseColor}
+              handleCloseLineWeight={handleCloseLineWeight}
+              handleLineWeightSelect={handleLineWeightSelect}
+              openChooseColor={openChooseColor}
+              openChooseLineWeight={openChooseLineWeight}
+              updateColor={updateColor}
+              t={t}
+              toolOptions={toolOptions}
+              toolState={toolState}
+            />
+          </Grid>
+        )
       }
       {
         toolState.activeTool === OVERLAY_TOOL.TEXT && (
