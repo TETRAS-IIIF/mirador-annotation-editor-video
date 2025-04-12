@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: es/IIIFUtils.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: es/IIIFUtils.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.getIIIFTargetFromMaeData = exports.convertAnnotationStateToBeSaved = void 0;
+var _KonvaUtils = require("./annotationForm/AnnotationFormOverlay/KonvaDrawing/KonvaUtils");
+var _AnnotationFormUtils = require("./annotationForm/AnnotationFormUtils");
+/**
+ * Check if annotation is exportable to image in case of Konva annotation
+ * @param maeData
+ * @returns {boolean}
+ */
+function isAnnotationExportableToImage(maeData) {
+  if (maeData.templateType === _AnnotationFormUtils.TEMPLATE.KONVA_TYPE) {
+    if (maeData.target.drawingState.shapes.length > 1) {
+      return true;
+    }
+    if (maeData.target.drawingState.shapes.length === 1 &amp;&amp; maeData.target.drawingState.shapes[0].type !== 'rectangle') {
+      return true;
+    }
+  }
+  return false;
+}
+
+/**
+ * Convert annotation state to be saved. Function change the annotationState object
+ * @param annotationState
+ * @param canvas
+ * @param windowId
+ * @param playerReferences
+ * @returns {Promise&lt;void>}
+ */
+const convertAnnotationStateToBeSaved = async (annotationState, canvas, windowId, playerReferences) => {
+  const annotationStateForSaving = annotationState;
+  if (annotationState.maeData.templateType === _AnnotationFormUtils.TEMPLATE.IIIF_TYPE) {
+    return annotationState;
+  }
+  console.info('Annotation state to be saved', annotationState);
+  console.info('Annotation state target', annotationState.maeData.target);
+
+  // TODO I dont know why this code is here? To clean the object ?
+  annotationStateForSaving.maeData.target = {
+    drawingState: annotationStateForSaving.maeData.target.drawingState,
+    fullCanvaXYWH: annotationStateForSaving.maeData.target.fullCanvaXYWH,
+    scale: annotationStateForSaving.maeData.target.scale,
+    tend: annotationStateForSaving.maeData.target.tend,
+    tstart: annotationStateForSaving.maeData.target.tstart
+  };
+  console.info('Annotation state target', annotationState.maeData.target);
+  if (annotationStateForSaving.maeData.templateType === _AnnotationFormUtils.TEMPLATE.TAGGING_TYPE || annotationStateForSaving.maeData.templateType === _AnnotationFormUtils.TEMPLATE.TEXT_TYPE) {
+    // Complex annotation
+    if (annotationStateForSaving.maeData.target.drawingState.shapes.length > 0) {
+      annotationStateForSaving.maeData.target.svg = await (0, _KonvaUtils.getSvg)(windowId);
+    }
+  }
+  if (isAnnotationExportableToImage(annotationStateForSaving.maeData)) {
+    annotationStateForSaving.body.id = await (0, _KonvaUtils.getKonvaAsDataURL)(windowId);
+    annotationStateForSaving.body.format = 'image/jpg';
+    annotationStateForSaving.type = 'Annotation';
+  }
+  if (annotationStateForSaving.maeData.templateType === _AnnotationFormUtils.TEMPLATE.IMAGE_TYPE) {
+    if (annotationStateForSaving.maeData.target.drawingState.shapes.length === 1) {
+      // eslint-disable-next-line max-len
+      annotationStateForSaving.body.id = annotationStateForSaving.maeData.target.drawingState.shapes[0].url;
+      annotationStateForSaving.type = 'Annotation';
+    }
+  }
+  annotationStateForSaving.maeData.target.scale = playerReferences.getMediaTrueHeight() / playerReferences.getDisplayedMediaHeight() * playerReferences.getZoom();
+  annotationStateForSaving.target = getIIIFTargetFromMaeData(annotationStateForSaving.maeData, canvas.id, windowId, playerReferences.getScale());
+  annotationStateForSaving.maeData.target.drawingState = JSON.stringify(annotationStateForSaving.maeData.target.drawingState);
+  return annotationStateForSaving;
+};
+
+/** Get the IIIF target from the annotation state
+ * @param maeData
+ * @param canvasId
+ * @param windowId NEEDED By MAEV
+ * @param playerScale NEEDED By MAEV
+ * @returns {{selector: [{type: string, value},{type: string, value: string}], source}|*|string}
+ */
+exports.convertAnnotationStateToBeSaved = convertAnnotationStateToBeSaved;
+const getIIIFTargetFromMaeData = (maeData, canvasId, windowId = null, playerScale = null) => {
+  const maeTarget = maeData.target;
+  const {
+    templateType
+  } = maeData;
+  switch (templateType) {
+    case _AnnotationFormUtils.TEMPLATE.IIIF_TYPE:
+      return maeTarget;
+    case _AnnotationFormUtils.TEMPLATE.KONVA_TYPE:
+      return getIIIFTargetFromKonvaType(maeData, canvasId);
+    case _AnnotationFormUtils.TEMPLATE.IMAGE_TYPE:
+      return getIIIFTargetFromImageType(maeData, canvasId, windowId, playerScale);
+    case _AnnotationFormUtils.TEMPLATE.TAGGING_TYPE:
+    case _AnnotationFormUtils.TEMPLATE.MANIFEST_TYPE:
+    case _AnnotationFormUtils.TEMPLATE.TEXT_TYPE:
+      // Note, tagging or Manifest network template
+      if (templateType === _AnnotationFormUtils.TEMPLATE.TAGGING_TYPE || templateType === _AnnotationFormUtils.TEMPLATE.MANIFEST_TYPE || templateType === _AnnotationFormUtils.TEMPLATE.TEXT_TYPE) {
+        // In some case the target can be simplified in a string
+        if (maeTarget.drawingState.shapes.length === 1 &amp;&amp; maeTarget.drawingState.shapes[0].type === _KonvaUtils.SHAPES_TOOL.RECTANGLE) {
+          return getIIIFTargetFromRectangleShape(maeTarget, canvasId, maeTarget.drawingState.shapes[0]);
+        }
+        // On the other case, the target is a SVG
+        console.info('Implement target as SVG/Fragment with shapes');
+        return getIIIFTargetAsFragmentSVGSelector(maeTarget, canvasId);
+      }
+      break;
+    default:
+      return getIIIFTargetFullCanvas(maeData, canvasId);
+  }
+
+  // Default return
+  return getIIIFTargetFullCanvas(maeData, canvasId);
+};
+
+/**
+ * Get the IIIF target from a Konva annotation (Drawing template)
+ * @param maeData
+ * @param canvasId
+ * @returns {`${string}#${string}`}
+ */
+exports.getIIIFTargetFromMaeData = getIIIFTargetFromMaeData;
+const getIIIFTargetFromKonvaType = (maeData, canvasId) => {
+  // Simplified target for Konva annotation
+  console.log('Implement target as string with Konva annotation');
+  return getIIIFTargetFullCanvas(maeData, canvasId);
+};
+
+/**
+ * Get the IIIF target from an annotation with image template
+ * @param maeData
+ * @param canvasId
+ * @param windowId
+ * @param playerScale
+ * @returns {string}
+ */
+const getIIIFTargetFromImageType = (maeData, canvasId, windowId, playerScale) => {
+  const maeTarget = maeData.target;
+  if (maeTarget.drawingState.shapes.length === 1) {
+    if (maeTarget.drawingState.shapes[0].type === _KonvaUtils.OVERLAY_TOOL.IMAGE) {
+      const {
+        x,
+        y
+      } = maeTarget.drawingState.shapes[0];
+      const imageShape = (0, _KonvaUtils.getKonvaShape)(windowId, maeTarget.drawingState.shapes[0].id);
+      const widthImage = Math.round(imageShape.attrs.image.width * imageShape.attrs.scaleX);
+      const heightImage = Math.round(imageShape.attrs.image.height * imageShape.attrs.scaleY);
+      const xImage = Math.round(x);
+      const yImage = Math.round(y);
+      return `${canvasId}#${maeTarget.tend ? `xywh=${xImage},${yImage},${widthImage},${heightImage}&amp;t=${maeTarget.tstart},${maeTarget.tend}` : `xywh=${xImage},${yImage},${widthImage},${heightImage}`}`;
+    }
+  }
+  // Default return. For example if no image is upload in the annotation
+  return getIIIFTargetFullCanvas(maeData, canvasId);
+};
+
+/**
+ * Get the IIIF target from the full canvas
+ * @param maeData
+ * @param canvasId
+ * @returns {`${string}#${string}`}
+ */
+const getIIIFTargetFullCanvas = (maeData, canvasId) => {
+  console.info('Implement target as string on fullSizeCanvas.');
+  const maeTarget = maeData.target;
+  return `${canvasId}#${maeTarget.tend ? `xywh=${maeTarget.fullCanvaXYWH}&amp;t=${maeTarget.tstart},${maeTarget.tend}` : `xywh=${maeTarget.fullCanvaXYWH}`}`;
+};
+
+/**
+ * Get the IIIF target from a rectangle shape
+ * @param maeTarget
+ * @param canvasId
+ * @param shape
+ * @returns {`${string}#${string}`}
+ */
+const getIIIFTargetFromRectangleShape = (maeTarget, canvasId, shape) => {
+  console.info('Implement target as string with one shape (rectangle)');
+  const {
+    x,
+    y,
+    width,
+    height,
+    scaleX,
+    scaleY
+  } = shape;
+
+  // Image have not tstart and tend
+  // We use scaleX and scaleY to have the real size of the shape, if it has been resized
+  return `${canvasId}#${maeTarget.tend ? `xywh=${x},${y},${width * scaleX},${height * scaleY}&amp;t=${maeTarget.tstart},${maeTarget.tend}` : `xywh=${x},${y},${width * scaleX},${height * scaleY}`}`;
+};
+
+/**
+ * Get the IIIF target as a fragment selector with SVG
+ * @param maeTarget
+ * @param canvasId
+ * @returns {{selector: [{type: string, value},{type: string, value: string}], source}}
+ */
+const getIIIFTargetAsFragmentSVGSelector = (maeTarget, canvasId) => {
+  const fragmentTarget = `${maeTarget.tend ? `t=${maeTarget.tstart},${maeTarget.tend}` : ''}`;
+  return {
+    selector: [{
+      type: 'SvgSelector',
+      value: maeTarget.svg
+    }, {
+      type: 'FragmentSelector',
+      value: `${canvasId}#${fragmentTarget}`
+    }],
+    source: canvasId
+  };
+};</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AnnotationExportDialog.html">AnnotationExportDialog</a></li><li><a href="AnnototAdapter.html">AnnototAdapter</a></li><li><a href="ListItemContent.html">ListItemContent</a></li><li><a href="LocalStorageAdapter.html">LocalStorageAdapter</a></li><li><a href="ManifestNetworkFormSection.html">ManifestNetworkFormSection</a></li><li><a href="ShapesList.html">ShapesList</a></li><li><a href="SimpleAnnotationServerV2Adapter.html">SimpleAnnotationServerV2Adapter</a></li><li><a href="SingleCanvasDialog.html">SingleCanvasDialog</a></li><li><a href="TargetFormSection.html">TargetFormSection</a></li><li><a href="TextFormSection.html">TextFormSection</a></li><li><a href="WhoAndWhenFormSection.html">WhoAndWhenFormSection</a></li><li><a href="global.html#WindowPlayer">WindowPlayer</a></li><li><a href="module.html#.exports">exports</a></li></ul><h3>Global</h3><ul><li><a href="global.html#AdvancedAnnotationEditor">AdvancedAnnotationEditor</a></li><li><a href="global.html#AnnotationDrawing">AnnotationDrawing</a></li><li><a href="global.html#AnnotationForm">AnnotationForm</a></li><li><a href="global.html#AnnotationFormBody">AnnotationFormBody</a></li><li><a href="global.html#AnnotationFormFooter">AnnotationFormFooter</a></li><li><a href="global.html#AnnotationFormHeader">AnnotationFormHeader</a></li><li><a href="global.html#AnnotationFormOverlay">AnnotationFormOverlay</a></li><li><a href="global.html#AnnotationFormOverlayTool">AnnotationFormOverlayTool</a></li><li><a href="global.html#AnnotationFormOverlayToolOptions">AnnotationFormOverlayToolOptions</a></li><li><a href="global.html#AnnotationFormTemplateSelector">AnnotationFormTemplateSelector</a></li><li><a href="global.html#ArrowNode">ArrowNode</a></li><li><a href="global.html#CanvasAnnotationsWrapper">CanvasAnnotationsWrapper</a></li><li><a href="global.html#CircleNode">CircleNode</a></li><li><a href="global.html#ColorPicker">ColorPicker</a></li><li><a href="global.html#CursorIcon">CursorIcon</a></li><li><a href="global.html#DrawingTemplate">DrawingTemplate</a></li><li><a href="global.html#EllipseNode">EllipseNode</a></li><li><a href="global.html#ExternalStorageAnnotation">ExternalStorageAnnotation</a></li><li><a href="global.html#FragmentSelector">FragmentSelector</a></li><li><a href="global.html#Freehand">Freehand</a></li><li><a href="global.html#HMSInput">HMSInput</a></li><li><a href="global.html#IIIFTemplate">IIIFTemplate</a></li><li><a href="global.html#ImageCommentTemplate">ImageCommentTemplate</a></li><li><a href="global.html#ImageFormField">ImageFormField</a></li><li><a href="global.html#ImageShape">ImageShape</a></li><li><a href="global.html#LineNode">LineNode</a></li><li><a href="global.html#MiradorAnnotation">MiradorAnnotation</a></li><li><a href="global.html#NetworkCommentTemplate">NetworkCommentTemplate</a></li><li><a href="global.html#ParentComponent">ParentComponent</a></li><li><a href="global.html#Polygon">Polygon</a></li><li><a href="global.html#Rectangle">Rectangle</a></li><li><a href="global.html#SpatialTarget">SpatialTarget</a></li><li><a href="global.html#TEMPLATE_TYPES">TEMPLATE_TYPES</a></li><li><a href="global.html#TaggingTemplate">TaggingTemplate</a></li><li><a href="global.html#TargetSpatialInput">TargetSpatialInput</a></li><li><a href="global.html#TargetTimeInput">TargetTimeInput</a></li><li><a href="global.html#TextCommentTemplate">TextCommentTemplate</a></li><li><a href="global.html#TextEditor">TextEditor</a></li><li><a href="global.html#TextNode">TextNode</a></li><li><a href="global.html#WindowSideBarButtonWrapper">WindowSideBarButtonWrapper</a></li><li><a href="global.html#all">all</a></li><li><a href="global.html#annotationPageId">annotationPageId</a></li><li><a href="global.html#baseConfig">baseConfig</a></li><li><a href="global.html#checkMediaType">checkMediaType</a></li><li><a href="global.html#convertAnnotationStateToBeSaved">convertAnnotationStateToBeSaved</a></li><li><a href="global.html#create">create</a></li><li><a href="global.html#createAnnotationPage">createAnnotationPage</a></li><li><a href="global.html#createV2Anno">createV2Anno</a></li><li><a href="global.html#createV2AnnoBody">createV2AnnoBody</a></li><li><a href="global.html#createV2AnnoSelector">createV2AnnoSelector</a></li><li><a href="global.html#createV3Anno">createV3Anno</a></li><li><a href="global.html#createV3AnnoBody">createV3AnnoBody</a></li><li><a href="global.html#createV3AnnoSelector">createV3AnnoSelector</a></li><li><a href="global.html#delete">delete</a></li><li><a href="global.html#get">get</a></li><li><a href="global.html#getCurrentDateLocaleString">getCurrentDateLocaleString</a></li><li><a href="global.html#getIIIFTargetAsFragmentSVGSelector">getIIIFTargetAsFragmentSVGSelector</a></li><li><a href="global.html#getIIIFTargetFromImageType">getIIIFTargetFromImageType</a></li><li><a href="global.html#getIIIFTargetFromKonvaType">getIIIFTargetFromKonvaType</a></li><li><a href="global.html#getIIIFTargetFromMaeData">getIIIFTargetFromMaeData</a></li><li><a href="global.html#getIIIFTargetFromRectangleShape">getIIIFTargetFromRectangleShape</a></li><li><a href="global.html#getIIIFTargetFullCanvas">getIIIFTargetFullCanvas</a></li><li><a href="global.html#getKonvaAsDataURL">getKonvaAsDataURL</a></li><li><a href="global.html#getKonvaShape">getKonvaShape</a></li><li><a href="global.html#getKonvaStage">getKonvaStage</a></li><li><a href="global.html#getStorageAdapterUser">getStorageAdapterUser</a></li><li><a href="global.html#getSvg">getSvg</a></li><li><a href="global.html#getTargetSVGToolState">getTargetSVGToolState</a></li><li><a href="global.html#getTemplateType">getTemplateType</a></li><li><a href="global.html#handleClick-Theshapeobjectrepresentingthepropertiesoftheclickedshape.">handleClick
+- The shape object representing the properties of the clicked shape.</a></li><li><a href="global.html#handleDelete">handleDelete</a></li><li><a href="global.html#handleEdit">handleEdit</a></li><li><a href="global.html#handleResize">handleResize</a></li><li><a href="global.html#hideKonvaStage">hideKonvaStage</a></li><li><a href="global.html#isAnnotationExportableToImage">isAnnotationExportableToImage</a></li><li><a href="global.html#isShapesTool">isShapesTool</a></li><li><a href="global.html#isValidUrl">isValidUrl</a></li><li><a href="global.html#mapDispatchToProps">mapDispatchToProps</a></li><li><a href="global.html#mapStateToProps">mapStateToProps</a></li><li><a href="global.html#objToRgba">objToRgba</a></li><li><a href="global.html#resizeKonvaStage">resizeKonvaStage</a></li><li><a href="global.html#rgbaToObj">rgbaToObj</a></li><li><a href="global.html#saveAnnotationInStorageAdapter">saveAnnotationInStorageAdapter</a></li><li><a href="global.html#secondsToHMSarray">secondsToHMSarray</a></li><li><a href="global.html#showKonvaStage">showKonvaStage</a></li><li><a href="global.html#styles">styles</a></li><li><a href="global.html#update">update</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Tue Mar 25 2025 16:41:51 GMT+0100 (Central European Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

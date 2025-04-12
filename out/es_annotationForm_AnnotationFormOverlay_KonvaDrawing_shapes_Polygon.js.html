@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: es/annotationForm/AnnotationFormOverlay/KonvaDrawing/shapes/Polygon.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: es/annotationForm/AnnotationFormOverlay/KonvaDrawing/shapes/Polygon.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+var _react = _interopRequireWildcard(require("react"));
+var _propTypes = _interopRequireDefault(require("prop-types"));
+var _reactKonva = require("react-konva");
+var _KonvaUtils = require("../KonvaUtils");
+function _interopRequireDefault(e) { return e &amp;&amp; e.__esModule ? e : { default: e }; }
+function _getRequireWildcardCache(e) { if ("function" != typeof WeakMap) return null; var r = new WeakMap(), t = new WeakMap(); return (_getRequireWildcardCache = function (e) { return e ? t : r; })(e); }
+function _interopRequireWildcard(e, r) { if (!r &amp;&amp; e &amp;&amp; e.__esModule) return e; if (null === e || "object" != typeof e &amp;&amp; "function" != typeof e) return { default: e }; var t = _getRequireWildcardCache(r); if (t &amp;&amp; t.has(e)) return t.get(e); var n = { __proto__: null }, a = Object.defineProperty &amp;&amp; Object.getOwnPropertyDescriptor; for (var u in e) if ("default" !== u &amp;&amp; {}.hasOwnProperty.call(e, u)) { var i = a ? Object.getOwnPropertyDescriptor(e, u) : null; i &amp;&amp; (i.get || i.set) ? Object.defineProperty(n, u, i) : n[u] = e[u]; } return n.default = e, t &amp;&amp; t.set(e, n), n; }
+/** FreeHand shape displaying */
+function Polygon({
+  activeTool,
+  baseStrokeWidth,
+  displayMode,
+  handleDragEnd,
+  handleDragStart,
+  isSelected,
+  onShapeClick,
+  onTransform,
+  shape
+}) {
+  // TODO check if selectedShapeId is needed
+  const shapeRef = (0, _react.useRef)();
+  const trRef = (0, _react.useRef)();
+  (0, _react.useEffect)(() => {
+    if (trRef.current) {
+      trRef.current.nodes([shapeRef.current]);
+      trRef.current.getLayer().batchDraw();
+    }
+  }, [isSelected, shape]);
+
+  /**
+   * Handles the click event on the shape by invoking the provided callback function.
+   * @function handleClick
+   *- The shape object representing the properties of the clicked shape.
+   * @returns {void}
+   */
+  const handleClick = () => {
+    onShapeClick(shape);
+  };
+  return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement(_reactKonva.Line, {
+    closed: false,
+    draggable: activeTool === 'cursor' || activeTool === 'edit',
+    fill: shape.fill,
+    globalCompositeOperation: "source-over",
+    id: shape.id,
+    lineCap: "round",
+    lineJoin: "round",
+    onClick: handleClick,
+    onDragEnd: handleDragEnd,
+    onDragStart: handleDragStart,
+    onMousedown: handleClick,
+    onTransform: onTransform,
+    points: shape.points,
+    ref: shapeRef,
+    rotation: shape.rotation,
+    scaleX: shape.scaleX,
+    scaleY: shape.scaleY,
+    stroke: shape.stroke
+    // This line cause SVG export error
+    ,
+    strokeScaleEnabled: false,
+    strokeWidth: displayMode === _KonvaUtils.KONVA_MODE.TARGET ? baseStrokeWidth : shape.strokeWidth,
+    x: shape.x,
+    y: shape.y
+  }), /*#__PURE__*/_react.default.createElement(_reactKonva.Transformer, {
+    ref: trRef,
+    visible: activeTool === 'edit' &amp;&amp; isSelected
+  }));
+}
+Polygon.propTypes = {
+  activeTool: _propTypes.default.string.isRequired,
+  baseStrokeWidth: _propTypes.default.number.isRequired,
+  displayMode: _propTypes.default.string.isRequired,
+  handleDragEnd: _propTypes.default.func.isRequired,
+  handleDragStart: _propTypes.default.func.isRequired,
+  isSelected: _propTypes.default.bool.isRequired,
+  onShapeClick: _propTypes.default.func.isRequired,
+  onTransform: _propTypes.default.func.isRequired,
+  shape: _propTypes.default.shape({
+    fill: _propTypes.default.string,
+    id: _propTypes.default.string,
+    points: _propTypes.default.arrayOf(_propTypes.default.number),
+    rotation: _propTypes.default.number,
+    scaleX: _propTypes.default.number,
+    scaleY: _propTypes.default.number,
+    stroke: _propTypes.default.string,
+    strokeWidth: _propTypes.default.number,
+    type: _propTypes.default.string,
+    url: _propTypes.default.string,
+    x: _propTypes.default.number,
+    y: _propTypes.default.number
+  }).isRequired
+};
+var _default = exports.default = Polygon;</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AnnotationExportDialog.html">AnnotationExportDialog</a></li><li><a href="AnnototAdapter.html">AnnototAdapter</a></li><li><a href="ListItemContent.html">ListItemContent</a></li><li><a href="LocalStorageAdapter.html">LocalStorageAdapter</a></li><li><a href="ManifestNetworkFormSection.html">ManifestNetworkFormSection</a></li><li><a href="ShapesList.html">ShapesList</a></li><li><a href="SimpleAnnotationServerV2Adapter.html">SimpleAnnotationServerV2Adapter</a></li><li><a href="SingleCanvasDialog.html">SingleCanvasDialog</a></li><li><a href="TargetFormSection.html">TargetFormSection</a></li><li><a href="TextFormSection.html">TextFormSection</a></li><li><a href="WhoAndWhenFormSection.html">WhoAndWhenFormSection</a></li><li><a href="global.html#WindowPlayer">WindowPlayer</a></li><li><a href="module.html#.exports">exports</a></li></ul><h3>Global</h3><ul><li><a href="global.html#AdvancedAnnotationEditor">AdvancedAnnotationEditor</a></li><li><a href="global.html#AnnotationDrawing">AnnotationDrawing</a></li><li><a href="global.html#AnnotationForm">AnnotationForm</a></li><li><a href="global.html#AnnotationFormBody">AnnotationFormBody</a></li><li><a href="global.html#AnnotationFormFooter">AnnotationFormFooter</a></li><li><a href="global.html#AnnotationFormHeader">AnnotationFormHeader</a></li><li><a href="global.html#AnnotationFormOverlay">AnnotationFormOverlay</a></li><li><a href="global.html#AnnotationFormOverlayTool">AnnotationFormOverlayTool</a></li><li><a href="global.html#AnnotationFormOverlayToolOptions">AnnotationFormOverlayToolOptions</a></li><li><a href="global.html#AnnotationFormTemplateSelector">AnnotationFormTemplateSelector</a></li><li><a href="global.html#ArrowNode">ArrowNode</a></li><li><a href="global.html#CanvasAnnotationsWrapper">CanvasAnnotationsWrapper</a></li><li><a href="global.html#CircleNode">CircleNode</a></li><li><a href="global.html#ColorPicker">ColorPicker</a></li><li><a href="global.html#CursorIcon">CursorIcon</a></li><li><a href="global.html#DrawingTemplate">DrawingTemplate</a></li><li><a href="global.html#EllipseNode">EllipseNode</a></li><li><a href="global.html#ExternalStorageAnnotation">ExternalStorageAnnotation</a></li><li><a href="global.html#FragmentSelector">FragmentSelector</a></li><li><a href="global.html#Freehand">Freehand</a></li><li><a href="global.html#HMSInput">HMSInput</a></li><li><a href="global.html#IIIFTemplate">IIIFTemplate</a></li><li><a href="global.html#ImageCommentTemplate">ImageCommentTemplate</a></li><li><a href="global.html#ImageFormField">ImageFormField</a></li><li><a href="global.html#ImageShape">ImageShape</a></li><li><a href="global.html#LineNode">LineNode</a></li><li><a href="global.html#MiradorAnnotation">MiradorAnnotation</a></li><li><a href="global.html#NetworkCommentTemplate">NetworkCommentTemplate</a></li><li><a href="global.html#ParentComponent">ParentComponent</a></li><li><a href="global.html#Polygon">Polygon</a></li><li><a href="global.html#Rectangle">Rectangle</a></li><li><a href="global.html#SpatialTarget">SpatialTarget</a></li><li><a href="global.html#TEMPLATE_TYPES">TEMPLATE_TYPES</a></li><li><a href="global.html#TaggingTemplate">TaggingTemplate</a></li><li><a href="global.html#TargetSpatialInput">TargetSpatialInput</a></li><li><a href="global.html#TargetTimeInput">TargetTimeInput</a></li><li><a href="global.html#TextCommentTemplate">TextCommentTemplate</a></li><li><a href="global.html#TextEditor">TextEditor</a></li><li><a href="global.html#TextNode">TextNode</a></li><li><a href="global.html#WindowSideBarButtonWrapper">WindowSideBarButtonWrapper</a></li><li><a href="global.html#all">all</a></li><li><a href="global.html#annotationPageId">annotationPageId</a></li><li><a href="global.html#baseConfig">baseConfig</a></li><li><a href="global.html#checkMediaType">checkMediaType</a></li><li><a href="global.html#convertAnnotationStateToBeSaved">convertAnnotationStateToBeSaved</a></li><li><a href="global.html#create">create</a></li><li><a href="global.html#createAnnotationPage">createAnnotationPage</a></li><li><a href="global.html#createV2Anno">createV2Anno</a></li><li><a href="global.html#createV2AnnoBody">createV2AnnoBody</a></li><li><a href="global.html#createV2AnnoSelector">createV2AnnoSelector</a></li><li><a href="global.html#createV3Anno">createV3Anno</a></li><li><a href="global.html#createV3AnnoBody">createV3AnnoBody</a></li><li><a href="global.html#createV3AnnoSelector">createV3AnnoSelector</a></li><li><a href="global.html#delete">delete</a></li><li><a href="global.html#get">get</a></li><li><a href="global.html#getCurrentDateLocaleString">getCurrentDateLocaleString</a></li><li><a href="global.html#getIIIFTargetAsFragmentSVGSelector">getIIIFTargetAsFragmentSVGSelector</a></li><li><a href="global.html#getIIIFTargetFromImageType">getIIIFTargetFromImageType</a></li><li><a href="global.html#getIIIFTargetFromKonvaType">getIIIFTargetFromKonvaType</a></li><li><a href="global.html#getIIIFTargetFromMaeData">getIIIFTargetFromMaeData</a></li><li><a href="global.html#getIIIFTargetFromRectangleShape">getIIIFTargetFromRectangleShape</a></li><li><a href="global.html#getIIIFTargetFullCanvas">getIIIFTargetFullCanvas</a></li><li><a href="global.html#getKonvaAsDataURL">getKonvaAsDataURL</a></li><li><a href="global.html#getKonvaShape">getKonvaShape</a></li><li><a href="global.html#getKonvaStage">getKonvaStage</a></li><li><a href="global.html#getStorageAdapterUser">getStorageAdapterUser</a></li><li><a href="global.html#getSvg">getSvg</a></li><li><a href="global.html#getTargetSVGToolState">getTargetSVGToolState</a></li><li><a href="global.html#getTemplateType">getTemplateType</a></li><li><a href="global.html#handleClick-Theshapeobjectrepresentingthepropertiesoftheclickedshape.">handleClick
+- The shape object representing the properties of the clicked shape.</a></li><li><a href="global.html#handleDelete">handleDelete</a></li><li><a href="global.html#handleEdit">handleEdit</a></li><li><a href="global.html#handleResize">handleResize</a></li><li><a href="global.html#hideKonvaStage">hideKonvaStage</a></li><li><a href="global.html#isAnnotationExportableToImage">isAnnotationExportableToImage</a></li><li><a href="global.html#isShapesTool">isShapesTool</a></li><li><a href="global.html#isValidUrl">isValidUrl</a></li><li><a href="global.html#mapDispatchToProps">mapDispatchToProps</a></li><li><a href="global.html#mapStateToProps">mapStateToProps</a></li><li><a href="global.html#objToRgba">objToRgba</a></li><li><a href="global.html#resizeKonvaStage">resizeKonvaStage</a></li><li><a href="global.html#rgbaToObj">rgbaToObj</a></li><li><a href="global.html#saveAnnotationInStorageAdapter">saveAnnotationInStorageAdapter</a></li><li><a href="global.html#secondsToHMSarray">secondsToHMSarray</a></li><li><a href="global.html#showKonvaStage">showKonvaStage</a></li><li><a href="global.html#styles">styles</a></li><li><a href="global.html#update">update</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Tue Mar 25 2025 16:41:51 GMT+0100 (Central European Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

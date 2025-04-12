@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: es/annotationForm/AnnotationFormOverlay/KonvaDrawing/KonvaUtils.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: es/annotationForm/AnnotationFormOverlay/KonvaDrawing/KonvaUtils.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.defaultLineWeightChoices = exports.SHAPES_TOOL = exports.OVERLAY_TOOL = exports.KONVA_MODE = void 0;
+exports.getKonvaAsDataURL = getKonvaAsDataURL;
+exports.getKonvaShape = getKonvaShape;
+exports.getKonvaStage = getKonvaStage;
+exports.getSvg = getSvg;
+exports.hideKonvaStage = hideKonvaStage;
+exports.isShapesTool = isShapesTool;
+exports.objToRgba = void 0;
+exports.resizeKonvaStage = resizeKonvaStage;
+exports.rgbaToObj = void 0;
+exports.showKonvaStage = showKonvaStage;
+var _reactKonvaToSvg = require("react-konva-to-svg");
+/**
+ * Get the Konva stage associated with the windowId
+ * @param windowId
+ * @returns {Stage}
+ */
+function getKonvaStage(windowId) {
+  return window.Konva.stages.find(s => s.attrs.id === windowId);
+}
+
+/**
+ * Resize the Konva stage and redraw it
+ * @param windowId
+ * @param width
+ * @param height
+ * @param scale
+ * @param hideAfterResize
+ */
+function resizeKonvaStage(windowId, width, height, scale, hideAfterResize = true, scaleStrokeForPNGExport = false) {
+  hideKonvaStage();
+  const stage = getKonvaStage(windowId);
+  stage.width(width);
+  stage.height(height);
+  stage.scale({
+    x: scale,
+    y: scale
+  });
+  if (scaleStrokeForPNGExport) {
+    stage.find('Rect').map(node => {
+      node.strokeWidth(node.strokeWidth() * scale);
+    });
+    stage.find('Line').map(node => {
+      node.strokeWidth(node.strokeWidth() * scale);
+    });
+    stage.find('Circle').map(node => {
+      node.strokeWidth(node.strokeWidth() * scale);
+    });
+    stage.find('Ellipse').map(node => {
+      node.strokeWidth(node.strokeWidth() * scale);
+    });
+  }
+  if (!hideAfterResize) {
+    showKonvaStage();
+  }
+  // stage.draw();
+}
+
+/**
+ * Hide the Konva stage
+ */
+function hideKonvaStage() {
+  const konvaStage = document.getElementsByClassName('konvajs-content');
+  konvaStage[0].style.visibility = 'hidden';
+}
+
+/**
+ * Show the Konva stage
+ */
+function showKonvaStage() {
+  const konvaStage = document.getElementsByClassName('konvajs-content');
+  konvaStage[0].style.visibility = 'visible';
+}
+
+/**
+ * Get SVG picture containing all the stuff draw in the stage (Konva Stage).
+ * This image will be put in overlay of the iiif media
+ */
+async function getSvg(windowId) {
+  const stage = getKonvaStage(windowId);
+  const exportStrokeWidth = 3;
+  stage.find('Transformer').forEach(node => node.destroy());
+
+  /**
+   * Clean the node by removing the strokeScaleEnabled and setting the stroke width
+   * If not done, the SVG export will fail
+   * @param node
+   */
+  function cleanNode(node) {
+    const {
+      r,
+      g,
+      b,
+      a
+    } = rgbaToObj(node.stroke());
+    node.strokeScaleEnabled(true);
+    node.stroke(`rgb(${r},${g},${b}`);
+    node.strokeWidth(exportStrokeWidth);
+  }
+  stage.find('Rect').map(node => {
+    cleanNode(node);
+  });
+  stage.find('Line').map(node => {
+    cleanNode(node);
+  });
+  stage.find('Circle').map(node => {
+    cleanNode(node);
+  });
+  stage.find('Ellipse').map(node => {
+    cleanNode(node);
+  });
+  let svg = await (0, _reactKonvaToSvg.exportStageSVG)(stage, false); // TODO clean
+  svg = svg.replaceAll('"', '\'');
+  return svg;
+}
+
+/**
+ *
+ * @param windowId
+ * @param shapeId
+ * @returns {Node}
+ */
+function getKonvaShape(windowId, shapeId) {
+  const stage = getKonvaStage(windowId);
+  const shape = stage.findOne(`#${shapeId}`);
+  return shape;
+}
+
+/** Export the stage as a JPG image in a data url */
+async function getKonvaAsDataURL(windowId) {
+  const stage = getKonvaStage(windowId);
+  const dataURL = stage.toDataURL({
+    mimeType: 'image/jpg',
+    quality: 0.1
+  });
+  return dataURL;
+}
+const defaultLineWeightChoices = exports.defaultLineWeightChoices = [0, 2, 5, 10, 20, 50];
+const KONVA_MODE = exports.KONVA_MODE = {
+  DRAW: 'draw',
+  IMAGE: 'image',
+  TARGET: 'target'
+};
+const OVERLAY_TOOL = exports.OVERLAY_TOOL = {
+  CURSOR: 'cursor',
+  DELETE: 'delete',
+  EDIT: 'edit',
+  IMAGE: 'image',
+  SHAPE: 'shapes',
+  TEXT: 'text'
+};
+const SHAPES_TOOL = exports.SHAPES_TOOL = {
+  ARROW: 'arrow',
+  CIRCLE: 'circle',
+  ELLIPSE: 'ellipse',
+  FREEHAND: 'freehand',
+  IMAGE: 'image',
+  POLYGON: 'polygon',
+  RECTANGLE: 'rectangle',
+  SHAPES: 'shapes'
+};
+
+/** Check if the active tool is a shape tool */
+function isShapesTool(activeTool) {
+  // Find if active tool in the list of overlay tools. I want a boolean in return
+  return Object.values(SHAPES_TOOL).find(tool => tool === activeTool);
+}
+
+/** Utils functions to convert string to object */
+const rgbaToObj = (rgba = 'rgba(255,255,255,0.5)') => {
+  const rgbaArray = rgba.split(',');
+  return {
+    // eslint-disable-next-line sort-keys
+    r: Number(rgbaArray[0].split('(')[1]),
+    // eslint-disable-next-line sort-keys
+    g: Number(rgbaArray[1]),
+    // eslint-disable-next-line sort-keys
+    b: Number(rgbaArray[2]),
+    // eslint-disable-next-line sort-keys
+    a: Number(rgbaArray[3].split(')')[0])
+  };
+};
+
+/** Convert color object to rgba string */
+exports.rgbaToObj = rgbaToObj;
+const objToRgba = (obj = {
+  // eslint-disable-next-line sort-keys
+  r: 255,
+  g: 255,
+  b: 255,
+  a: 0.5
+}) => `rgba(${obj.r},${obj.g},${obj.b},${obj.a})`;
+exports.objToRgba = objToRgba;</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AnnotationExportDialog.html">AnnotationExportDialog</a></li><li><a href="AnnototAdapter.html">AnnototAdapter</a></li><li><a href="ListItemContent.html">ListItemContent</a></li><li><a href="LocalStorageAdapter.html">LocalStorageAdapter</a></li><li><a href="ManifestNetworkFormSection.html">ManifestNetworkFormSection</a></li><li><a href="ShapesList.html">ShapesList</a></li><li><a href="SimpleAnnotationServerV2Adapter.html">SimpleAnnotationServerV2Adapter</a></li><li><a href="SingleCanvasDialog.html">SingleCanvasDialog</a></li><li><a href="TargetFormSection.html">TargetFormSection</a></li><li><a href="TextFormSection.html">TextFormSection</a></li><li><a href="WhoAndWhenFormSection.html">WhoAndWhenFormSection</a></li><li><a href="global.html#WindowPlayer">WindowPlayer</a></li><li><a href="module.html#.exports">exports</a></li></ul><h3>Global</h3><ul><li><a href="global.html#AdvancedAnnotationEditor">AdvancedAnnotationEditor</a></li><li><a href="global.html#AnnotationDrawing">AnnotationDrawing</a></li><li><a href="global.html#AnnotationForm">AnnotationForm</a></li><li><a href="global.html#AnnotationFormBody">AnnotationFormBody</a></li><li><a href="global.html#AnnotationFormFooter">AnnotationFormFooter</a></li><li><a href="global.html#AnnotationFormHeader">AnnotationFormHeader</a></li><li><a href="global.html#AnnotationFormOverlay">AnnotationFormOverlay</a></li><li><a href="global.html#AnnotationFormOverlayTool">AnnotationFormOverlayTool</a></li><li><a href="global.html#AnnotationFormOverlayToolOptions">AnnotationFormOverlayToolOptions</a></li><li><a href="global.html#AnnotationFormTemplateSelector">AnnotationFormTemplateSelector</a></li><li><a href="global.html#ArrowNode">ArrowNode</a></li><li><a href="global.html#CanvasAnnotationsWrapper">CanvasAnnotationsWrapper</a></li><li><a href="global.html#CircleNode">CircleNode</a></li><li><a href="global.html#ColorPicker">ColorPicker</a></li><li><a href="global.html#CursorIcon">CursorIcon</a></li><li><a href="global.html#DrawingTemplate">DrawingTemplate</a></li><li><a href="global.html#EllipseNode">EllipseNode</a></li><li><a href="global.html#ExternalStorageAnnotation">ExternalStorageAnnotation</a></li><li><a href="global.html#FragmentSelector">FragmentSelector</a></li><li><a href="global.html#Freehand">Freehand</a></li><li><a href="global.html#HMSInput">HMSInput</a></li><li><a href="global.html#IIIFTemplate">IIIFTemplate</a></li><li><a href="global.html#ImageCommentTemplate">ImageCommentTemplate</a></li><li><a href="global.html#ImageFormField">ImageFormField</a></li><li><a href="global.html#ImageShape">ImageShape</a></li><li><a href="global.html#LineNode">LineNode</a></li><li><a href="global.html#MiradorAnnotation">MiradorAnnotation</a></li><li><a href="global.html#NetworkCommentTemplate">NetworkCommentTemplate</a></li><li><a href="global.html#ParentComponent">ParentComponent</a></li><li><a href="global.html#Polygon">Polygon</a></li><li><a href="global.html#Rectangle">Rectangle</a></li><li><a href="global.html#SpatialTarget">SpatialTarget</a></li><li><a href="global.html#TEMPLATE_TYPES">TEMPLATE_TYPES</a></li><li><a href="global.html#TaggingTemplate">TaggingTemplate</a></li><li><a href="global.html#TargetSpatialInput">TargetSpatialInput</a></li><li><a href="global.html#TargetTimeInput">TargetTimeInput</a></li><li><a href="global.html#TextCommentTemplate">TextCommentTemplate</a></li><li><a href="global.html#TextEditor">TextEditor</a></li><li><a href="global.html#TextNode">TextNode</a></li><li><a href="global.html#WindowSideBarButtonWrapper">WindowSideBarButtonWrapper</a></li><li><a href="global.html#all">all</a></li><li><a href="global.html#annotationPageId">annotationPageId</a></li><li><a href="global.html#baseConfig">baseConfig</a></li><li><a href="global.html#checkMediaType">checkMediaType</a></li><li><a href="global.html#convertAnnotationStateToBeSaved">convertAnnotationStateToBeSaved</a></li><li><a href="global.html#create">create</a></li><li><a href="global.html#createAnnotationPage">createAnnotationPage</a></li><li><a href="global.html#createV2Anno">createV2Anno</a></li><li><a href="global.html#createV2AnnoBody">createV2AnnoBody</a></li><li><a href="global.html#createV2AnnoSelector">createV2AnnoSelector</a></li><li><a href="global.html#createV3Anno">createV3Anno</a></li><li><a href="global.html#createV3AnnoBody">createV3AnnoBody</a></li><li><a href="global.html#createV3AnnoSelector">createV3AnnoSelector</a></li><li><a href="global.html#delete">delete</a></li><li><a href="global.html#get">get</a></li><li><a href="global.html#getCurrentDateLocaleString">getCurrentDateLocaleString</a></li><li><a href="global.html#getIIIFTargetAsFragmentSVGSelector">getIIIFTargetAsFragmentSVGSelector</a></li><li><a href="global.html#getIIIFTargetFromImageType">getIIIFTargetFromImageType</a></li><li><a href="global.html#getIIIFTargetFromKonvaType">getIIIFTargetFromKonvaType</a></li><li><a href="global.html#getIIIFTargetFromMaeData">getIIIFTargetFromMaeData</a></li><li><a href="global.html#getIIIFTargetFromRectangleShape">getIIIFTargetFromRectangleShape</a></li><li><a href="global.html#getIIIFTargetFullCanvas">getIIIFTargetFullCanvas</a></li><li><a href="global.html#getKonvaAsDataURL">getKonvaAsDataURL</a></li><li><a href="global.html#getKonvaShape">getKonvaShape</a></li><li><a href="global.html#getKonvaStage">getKonvaStage</a></li><li><a href="global.html#getStorageAdapterUser">getStorageAdapterUser</a></li><li><a href="global.html#getSvg">getSvg</a></li><li><a href="global.html#getTargetSVGToolState">getTargetSVGToolState</a></li><li><a href="global.html#getTemplateType">getTemplateType</a></li><li><a href="global.html#handleClick-Theshapeobjectrepresentingthepropertiesoftheclickedshape.">handleClick
+- The shape object representing the properties of the clicked shape.</a></li><li><a href="global.html#handleDelete">handleDelete</a></li><li><a href="global.html#handleEdit">handleEdit</a></li><li><a href="global.html#handleResize">handleResize</a></li><li><a href="global.html#hideKonvaStage">hideKonvaStage</a></li><li><a href="global.html#isAnnotationExportableToImage">isAnnotationExportableToImage</a></li><li><a href="global.html#isShapesTool">isShapesTool</a></li><li><a href="global.html#isValidUrl">isValidUrl</a></li><li><a href="global.html#mapDispatchToProps">mapDispatchToProps</a></li><li><a href="global.html#mapStateToProps">mapStateToProps</a></li><li><a href="global.html#objToRgba">objToRgba</a></li><li><a href="global.html#resizeKonvaStage">resizeKonvaStage</a></li><li><a href="global.html#rgbaToObj">rgbaToObj</a></li><li><a href="global.html#saveAnnotationInStorageAdapter">saveAnnotationInStorageAdapter</a></li><li><a href="global.html#secondsToHMSarray">secondsToHMSarray</a></li><li><a href="global.html#showKonvaStage">showKonvaStage</a></li><li><a href="global.html#styles">styles</a></li><li><a href="global.html#update">update</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Tue Mar 25 2025 16:41:51 GMT+0100 (Central European Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
