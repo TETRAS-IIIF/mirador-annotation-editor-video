@@ -7,6 +7,7 @@ import { quillConfig } from './quillConfig';
 const config = {
   annotation: {
     adapter: (canvasId) => new LocalStorageAdapter(`localStorage://?canvasId=${canvasId}`, 'Anonymous User'),
+    allowTargetShapesStyling: false,
     commentTemplates: [{
       content: '<h4>Comment</h4><p>Comment content</p>',
       title: 'Template',
@@ -14,7 +15,7 @@ const config = {
     {
       content: '<h4>Comment2</h4><p>Comment content</p>',
       title: 'Template 2',
-    }], // display annotation JSON export button
+    }],
     exportLocalStorageAnnotations: false,
     quillConfig,
     tagsSuggestions: ['Mirador', 'Awesome', 'Viewer', 'IIIF', 'Template'],

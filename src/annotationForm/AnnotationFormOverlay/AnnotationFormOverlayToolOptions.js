@@ -3,6 +3,8 @@ import Typography from '@mui/material/Typography';
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { v4 as uuidv4 } from 'uuid';
+import { useSelector } from 'react-redux';
+import { getConfig } from 'mirador/dist/es/src/state/selectors';
 import ImageFormField from './ImageFormField';
 import {
   isShapesTool,
@@ -136,10 +138,14 @@ function AnnotationFormOverlayToolOptions({
       },
     );
   };
+
+  const annotationConfig = useSelector((state) => getConfig(state)).annotation;
+  const allowTargetShapesStyling = annotationConfig?.allowTargetShapesStyling === true;
+
   return (
     <div>
       {
-        ((displayMode === KONVA_MODE.DRAW || displayMode === KONVA_MODE.TARGET)
+        ((displayMode === KONVA_MODE.DRAW || (allowTargetShapesStyling && displayMode === KONVA_MODE.TARGET))
           && isShapesTool(toolState.activeTool)) && (
           <Grid container>
             <ColorPicker
