@@ -28,14 +28,11 @@ function AnnotationForm(
     windowId,
   },
 ) {
-  console.log('config.annotation', config.annotation);
-
   const { t } = useTranslation();
   const [templateType, setTemplateType] = useState(null);
   // eslint-disable-next-line no-underscore-dangle
   const [mediaType, setMediaType] = useState(playerReferences.getMediaType());
 
-  const [containerWidth, setContainerWidth] = useState(0);
   const [retryCount, setRetryCount] = useState(0);
 
   const [, forceUpdate] = useReducer((x) => x + 1, 0);

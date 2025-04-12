@@ -131,18 +131,6 @@ export async function getSvg(windowId) {
   return svg;
 }
 
-// TODO Became useless ?
-/**
- *
- * @param windowId
- * @param shapeId
- * @returns {Node}
- */
-export function getKonvaShape(windowId, shapeId) {
-  const stage = getKonvaStage(windowId);
-  return stage.findOne(`#${shapeId}`);
-}
-
 /** Export the stage as a JPG image in a data url */
 export async function getKonvaAsDataURL(windowId) {
   const stage = getKonvaStage(windowId);

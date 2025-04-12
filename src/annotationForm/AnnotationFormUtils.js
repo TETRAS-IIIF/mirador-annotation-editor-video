@@ -43,16 +43,6 @@ export const TEMPLATE_TYPES = (t) => [
     label: t('note'),
   },
   {
-    description: t('textual_note_with_target'), // TODO Remove
-    icon: <TextFieldsIcon />,
-    id: TEMPLATE.TEXT_TYPE,
-    isCompatibleWithTemplate: (mediaType) => {
-      if (mediaType === MEDIA_TYPES.IMAGE) return false;
-      return false;
-    },
-    label: t('oldnote'),
-  },
-  {
     description: t('tag_with_target'),
     icon: <LocalOfferIcon fontSize="small" />,
     id: TEMPLATE.TAGGING_TYPE,
@@ -108,8 +98,6 @@ export const TARGET_TOOL_STATE = {
 
 export const TARGET_VIEW = 'target';
 export const OVERLAY_VIEW = 'layer';
-export const TAG_VIEW = 'tag';
-export const MANIFEST_LINK_VIEW = 'link';
 
 /** Split a second to { hours, minutes, seconds }  */
 export function secondsToHMSarray(secs) {
