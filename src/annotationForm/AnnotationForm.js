@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useReducer, useState } from 'react';
 import CompanionWindow from 'mirador/dist/es/src/containers/CompanionWindow';
 import PropTypes from 'prop-types';
 import { Grid } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { useTranslation, withTranslation } from 'react-i18next';
+import i18n from 'i18next';
 import AnnotationFormTemplateSelector from './AnnotationFormTemplateSelector';
 import { getTemplateType, saveAnnotationInStorageAdapter, TEMPLATE } from './AnnotationFormUtils';
 import AnnotationFormHeader from './AnnotationFormHeader';
@@ -27,6 +28,8 @@ function AnnotationForm(
     windowId,
   },
 ) {
+  console.log('config.annotation', config.annotation);
+
   const { t } = useTranslation();
   const [templateType, setTemplateType] = useState(null);
   // eslint-disable-next-line no-underscore-dangle
@@ -207,6 +210,7 @@ function AnnotationForm(
                 saveAnnotation={saveAnnotation}
                 templateType={templateType}
                 windowId={windowId}
+                config={config}
               />
             </Grid>
           </Grid>

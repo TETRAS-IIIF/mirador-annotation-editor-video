@@ -10,6 +10,7 @@ import TextCommentTemplate from './TextCommentTemplate';
 import './debug.css';
 import TaggingTemplate from './TaggingTemplate';
 import IIIFTemplate from './IIIFTemplate';
+import MultipleBodyTemplate from './MultipleBodyTemplate';
 
 /**
  * This function contain the logic for loading annotation and render proper template type
