@@ -108,7 +108,6 @@ function MiradorAnnotation(
           config={config}
           handleClose={toggleCanvasExportDialog}
           open={annotationExportDialogOpen}
-          t={t}
         />
       )}
     </div>

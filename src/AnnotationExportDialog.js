@@ -10,6 +10,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/system';
+import { useTranslation } from 'react-i18next';
 
 const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
   '&:focus': {
@@ -26,7 +27,6 @@ const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
  * @param config
  * @param handleClose
  * @param open
- * @param t
  * @returns {JSX.Element}
  * @constructor AnnotationExportDialog
  */
@@ -35,9 +35,9 @@ function AnnotationExportDialog({
   config,
   handleClose,
   open,
-  t,
 }) {
   const [exportLinks, setExportLinks] = useState([]);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (!open) return;
@@ -140,7 +140,6 @@ AnnotationExportDialog.propTypes = {
   }).isRequired,
   handleClose: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
-  t: PropTypes.func.isRequired,
 };
 
 export default AnnotationExportDialog;
