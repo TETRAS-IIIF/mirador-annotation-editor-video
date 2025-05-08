@@ -88,7 +88,6 @@ function MiradorAnnotation(
           open={singleCanvasDialogOpen}
           handleClose={toggleSingleCanvasDialogOpen}
           switchToSingleCanvasView={switchToSingleCanvasView}
-          t={t}
         />
       )}
       {offerExportDialog && (

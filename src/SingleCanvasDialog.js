@@ -8,8 +8,6 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Typography from '@mui/material/Typography';
 import PropTypes from 'prop-types';
 import { Tooltip } from '@mui/material';
-import { withTranslation } from 'react-i18next';
-import i18n from 'i18next';
 
 /**
  * Dialog to enforce single view for annotation creation / editing
@@ -36,7 +34,6 @@ class SingleCanvasDialog extends Component {
     const {
       handleClose,
       open,
-      t,
     } = this.props;
 
     return (
