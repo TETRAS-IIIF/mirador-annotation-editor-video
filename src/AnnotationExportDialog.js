@@ -23,7 +23,6 @@ const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
 /**
  *
  * @param canvases
- * @param classes
  * @param config
  * @param handleClose
  * @param open
@@ -33,7 +32,6 @@ const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
  */
 function AnnotationExportDialog({
   canvases,
-  classes,
   config,
   handleClose,
   open,
@@ -135,7 +133,6 @@ AnnotationExportDialog.propTypes = {
   canvases: PropTypes.arrayOf(
     PropTypes.shape({ id: PropTypes.string }),
   ).isRequired,
-  classes: PropTypes.objectOf(PropTypes.string).isRequired,
   config: PropTypes.shape({
     annotation: PropTypes.shape({
       adapter: PropTypes.func,
