@@ -166,7 +166,7 @@ ColorPicker.propTypes = {
     Proptypes.string]).isRequired,
   toolState: PropTypes.shape({
     activeTool: PropTypes.string.isRequired,
-    closedMode: PropTypes.bool.isRequired,
+    closedMode: PropTypes.string.isRequired,
     fillColor: PropTypes.string.isRequired,
     image: PropTypes.shape({
       id: PropTypes.string,
