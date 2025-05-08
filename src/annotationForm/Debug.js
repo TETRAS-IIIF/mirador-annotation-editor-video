@@ -5,7 +5,7 @@ import { JsonEditor as Editor } from 'jsoneditor-react';
 import ace from 'brace';
 import PropTypes from 'prop-types';
 import { MEDIA_TYPES } from './AnnotationFormUtils';
-import {playerReferences} from "../playerReferences";
+import { playerReferences } from '../playerReferences';
 
 /** Debug Component * */
 export function Debug(
@@ -16,7 +16,7 @@ export function Debug(
 ) {
   const [updateComp, setUpdateComp] = useState(drawingState);
   const jsonEditorRef = useRef(null);
-/** update the jsonEditor dynamicly **/
+  /** update the jsonEditor dynamicly * */
   const setRef = (instance) => {
     if (instance) {
       jsonEditorRef.current = instance.jsonEditor;
@@ -24,7 +24,7 @@ export function Debug(
       jsonEditorRef.current = null;
     }
   };
-  /**check if mediaType = video and if it is set border around video**/
+  /** check if mediaType = video and if it is set border around video* */
   if (playerReferences.getMediaType() === MEDIA_TYPES.VIDEO) {
     const videoElement = document.querySelector('video');
     const parentVideoElement = videoElement.parentElement;

@@ -8,9 +8,11 @@ import { MiradorMenuButton } from 'mirador/dist/es/src/components/MiradorMenuBut
 import { getVisibleCanvases } from 'mirador/dist/es/src/state/selectors/canvases';
 import { useDispatch, useSelector } from 'react-redux';
 import { Tooltip } from '@mui/material';
+import { getCompanionWindowsForContent } from 'mirador/dist/es/src/state/selectors/companionWindows';
 import SingleCanvasDialog from '../SingleCanvasDialog';
 import AnnotationExportDialog from '../AnnotationExportDialog';
 import LocalStorageAdapter from '../annotationAdapter/LocalStorageAdapter';
+import translations from '../locales/locales';
 
 /** Mirador annotation plugin component. Get all the stuff
  * and info to manage annotation functionnality */
@@ -134,4 +136,33 @@ MiradorAnnotation.propTypes = {
   windowViewType: PropTypes.string.isRequired,
 };
 
-export default MiradorAnnotation;
+// TODO use selector in main componenent
+/**
+ * this function map the state to the annotationPlugin's props
+ * */
+function mapStateToProps(state, { targetProps: { windowId } }) {
+  // Annotation edit companion window ou annotation creation companion window is the same thing
+  const annotationCreationCompanionWindows = getCompanionWindowsForContent(state, { content: 'annotationCreation', windowId });
+  let annotationEditCompanionWindowIsOpened = true;
+  if (Object.keys(annotationCreationCompanionWindows).length !== 0) {
+    annotationEditCompanionWindowIsOpened = false;
+  }
+  return {
+    annotationEditCompanionWindowIsOpened,
+    canvases: getVisibleCanvases(state, { windowId }),
+    config: state.config,
+    windowViewType: getWindowViewType(state, { windowId }),
+  };
+}
+
+const miradorAnnotationPlugin = {
+  component: MiradorAnnotation,
+  config: {
+    translations,
+  },
+  mapStateToProps,
+  mode: 'wrap',
+  target: 'AnnotationSettings',
+};
+
+export default miradorAnnotationPlugin;
