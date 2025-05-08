@@ -5,6 +5,7 @@ import canvasAnnotationsPlugin from './plugins/canvasAnnotationsPlugin';
 import annotationCreationCompanionWindowPlugin from './plugins/annotationCreationCompanionWindow';
 import windowSideBarButtonsPlugin from './plugins/windowSideBarButtonsPlugin';
 import translations from './locales/locales';
+import annotationSagaPlugin from './plugins/annotationSaga';
 
 export {
   miradorAnnotationPlugin, externalStorageAnnotationPlugin,
@@ -25,6 +26,7 @@ const annotationPlugins = [
   canvasAnnotationsPlugin,
   annotationCreationCompanionWindowPlugin,
   windowSideBarButtonsPlugin,
+  annotationSagaPlugin,
 ];
 
 export default annotationPlugins;
