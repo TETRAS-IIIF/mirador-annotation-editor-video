@@ -95,7 +95,6 @@ export default function TaggingTemplate(
           onChangeTarget={updateTargetState}
           playerReferences={playerReferences}
           spatialTarget
-          t={t}
           target={annotationState.maeData.target}
           windowId={windowId}
         />

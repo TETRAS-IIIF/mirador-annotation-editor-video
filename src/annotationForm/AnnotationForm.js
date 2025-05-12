@@ -2,15 +2,14 @@ import React, { useEffect, useState } from 'react';
 import CompanionWindow from 'mirador/dist/es/src/containers/CompanionWindow';
 import PropTypes from 'prop-types';
 import { Grid } from '@mui/material';
-import Typography from '@mui/material/Typography';
 import { useTranslation } from 'react-i18next';
 import AnnotationFormTemplateSelector from './AnnotationFormTemplateSelector';
 import { getTemplateType, saveAnnotationInStorageAdapter, TEMPLATE } from './AnnotationFormUtils';
 import AnnotationFormHeader from './AnnotationFormHeader';
 import AnnotationFormBody from './AnnotationFormBody';
 import { convertAnnotationStateToBeSaved } from '../IIIFUtils';
-import '../118n';
 import '../custom.css';
+import UnsupportedMedia from './UnsupportedMedia';
 
 /**
  * Component for submitting a form to create or edit an annotation.
@@ -79,18 +78,7 @@ function AnnotationForm(
 
   if (!playerReferences?.isInitializedCorrectly()) {
     return (
-      <CompanionWindow title={t('media_not_supported')} windowId={windowId} id={id}>
-        <Grid container padding={1} spacing={1}>
-          <Grid item>
-            <Typography>{t('media_not_supported')}</Typography>
-          </Grid>
-          <Grid item>
-            <Typography>
-              {t('detected_media_type', { mediaType })}
-            </Typography>
-          </Grid>
-        </Grid>
-      </CompanionWindow>
+      <UnsupportedMedia id={id} mediaType={mediaType} windowId={windowId} />
     );
   }
 
