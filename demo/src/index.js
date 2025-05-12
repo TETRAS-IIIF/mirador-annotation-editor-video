@@ -3,12 +3,15 @@ import annotationPlugins from '../../src';
 import LocalStorageAdapter from '../../src/annotationAdapter/LocalStorageAdapter';
 import { manifestsCatalog } from './manifestsCatalog';
 import { quillConfig } from './quillConfig';
+import { TEMPLATE } from '../../src/annotationForm/AnnotationFormUtils';
 
 const config = {
   annotation: {
     adapter: (canvasId) => new LocalStorageAdapter(`localStorage://?canvasId=${canvasId}`, 'Anonymous User'),
     exportLocalStorageAnnotations: false, // display annotation JSON export button
     quillConfig,
+    // preselect templateType to disable template selection and always use wanted type
+    // templateType: TEMPLATE.TEXT_TYPE,
   },
   annotations: {
     htmlSanitizationRuleSet: 'liberal',

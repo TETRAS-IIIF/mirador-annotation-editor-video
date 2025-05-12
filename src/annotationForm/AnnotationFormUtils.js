@@ -22,7 +22,7 @@ export const MEDIA_TYPES = {
 };
 
 /** Return template type * */
-export const getTemplateType = (t, templateType) => TEMPLATE_TYPES(t)
+export const getTemplateType = (templateType) => TEMPLATE_TYPES()
   .find(
     (type) => type.id === templateType,
   );
@@ -30,36 +30,36 @@ export const getTemplateType = (t, templateType) => TEMPLATE_TYPES(t)
 /**
  * List of the template types supported
  */
-export const TEMPLATE_TYPES = (t) => [
+export const TEMPLATE_TYPES = () => [
   {
-    description: t('textual_note_with_target'),
+    description: 'textual_note_with_target',
     icon: <TextFieldsIcon />,
     id: TEMPLATE.TEXT_TYPE,
     isCompatibleWithTemplate: (mediaType) => {
       if (mediaType === MEDIA_TYPES.IMAGE) return true;
       return false;
     },
-    label: t('note'),
+    label: 'note',
   },
   {
-    description: t('tag_with_target'),
+    description: 'tag_with_target',
     icon: <LocalOfferIcon fontSize="small" />,
     id: TEMPLATE.TAGGING_TYPE,
     isCompatibleWithTemplate: (mediaType) => {
       if (mediaType === MEDIA_TYPES.IMAGE) return true;
       return false;
     },
-    label: t('tag'),
+    label: 'tag',
   },
   {
-    description: t('edit_iiif_json_code'),
+    description: 'edit_iiif_json_code',
     icon: <DataObjectIcon fontSize="small" />,
     id: TEMPLATE.IIIF_TYPE,
     isCompatibleWithTemplate: (mediaType) => {
       if (mediaType === MEDIA_TYPES.IMAGE) return true;
       return false;
     },
-    label: t('expert_mode'),
+    label: 'expert_mode',
   },
 ];
 export const DEFAULT_TOOL_STATE = {
