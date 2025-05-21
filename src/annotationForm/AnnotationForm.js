@@ -23,13 +23,12 @@ function AnnotationForm(
     id,
     playerReferences,
     receiveAnnotation,
-    template,
     windowId,
   },
 ) {
   const { t } = useTranslation();
 
-  const [templateType, setTemplateType] = useState(template);
+  const [templateType, setTemplateType] = useState(null);
   // eslint-disable-next-line no-underscore-dangle
   const [mediaType, setMediaType] = useState(playerReferences.getMediaType());
 
@@ -54,6 +53,7 @@ function AnnotationForm(
   }
 
   useEffect(() => {
+    setTemplateType(null)
     setMediaType(playerReferences.getMediaType());
   }, [canvases[0].index]);
 
@@ -206,7 +206,6 @@ AnnotationForm.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   playerReferences: PropTypes.object.isRequired,
   receiveAnnotation: PropTypes.func.isRequired,
-  template: PropTypes.string.isRequired,
   windowId: PropTypes.string.isRequired,
 };
 
