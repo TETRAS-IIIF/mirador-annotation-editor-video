@@ -27,7 +27,6 @@ function AnnotationForm(
   },
 ) {
   const { t } = useTranslation();
-
   const [templateType, setTemplateType] = useState(null);
   // eslint-disable-next-line no-underscore-dangle
   const [mediaType, setMediaType] = useState(playerReferences.getMediaType());
@@ -53,7 +52,7 @@ function AnnotationForm(
   }
 
   useEffect(() => {
-    setTemplateType(null)
+    setTemplateType(null);
     setMediaType(playerReferences.getMediaType());
   }, [canvases[0].index]);
 

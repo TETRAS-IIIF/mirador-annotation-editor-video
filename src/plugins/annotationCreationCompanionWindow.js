@@ -6,7 +6,6 @@ import { OSDReferences } from 'mirador/dist/es/src/plugins/OSDReferences';
 import AnnotationForm from '../annotationForm/AnnotationForm';
 import { WindowPlayer } from '../playerReferences';
 import translations from '../locales/locales';
-import { getTemplateType } from '../annotationForm/AnnotationFormUtils';
 
 /** */
 const mapDispatchToProps = (dispatch, { id, windowId }) => ({
@@ -50,7 +49,6 @@ function mapStateToProps(state, { id: companionWindowId, windowId }) {
     config: { ...state.config, translations },
     currentTime,
     playerReferences,
-    template: getTemplateType(state.config.annotation.templateType) ?? null,
   };
 }
 
