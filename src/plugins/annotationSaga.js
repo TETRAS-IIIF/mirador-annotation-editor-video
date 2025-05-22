@@ -2,10 +2,7 @@ import {
   all, call, put, select, takeEvery,
 } from 'redux-saga/effects';
 
-import {
-  receiveAnnotation,
-  requestCanvasAnnotations,
-} from 'mirador/dist/es/src/state/actions';
+import { receiveAnnotation } from 'mirador/dist/es/src/state/actions';
 import ActionTypes from 'mirador/dist/es/src/state/actions/action-types';
 import {
   getConfig,
@@ -31,12 +28,10 @@ function* retrieveAnnotationsFormStore(canvasId) {
 
 /**
  * A generator function which takesEvery SET_CANVAS mirador action
- * and fetches the associated annotations.
+ * and fetches the associated annotations from the store.
  */
 function* setAnnotations(action) {
-  const { canvasId, windowId } = action;
-
-  yield put(requestCanvasAnnotations(windowId, canvasId));
+  const { canvasId } = action;
 
   yield call(retrieveAnnotationsFormStore, canvasId);
 }
