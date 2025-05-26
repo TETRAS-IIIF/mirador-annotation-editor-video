@@ -2,51 +2,43 @@ import {
   all, call, put, select, takeEvery,
 } from 'redux-saga/effects';
 
-import {
-  receiveAnnotation,
-  requestCanvasAnnotations,
-} from 'mirador/dist/es/src/state/actions';
+import { receiveAnnotation } from 'mirador/dist/es/src/state/actions';
 import ActionTypes from 'mirador/dist/es/src/state/actions/action-types';
 import {
-  getCanvases,
   getConfig,
 } from 'mirador/dist/es/src/state/selectors';
 
 /** Retrieves all the annotations available in the annotation adapter */
-function* retrieveAnnotationsFormStore(canvas) {
+function* retrieveAnnotationsFormStore(canvasId) {
   const config = yield select(getConfig);
 
   if (config && config.annotation.adapter) {
-    const storageAdapter = config.annotation.adapter(canvas.id);
+    const storageAdapter = config.annotation.adapter(canvasId);
     const annoPage = yield call([
       storageAdapter,
       storageAdapter.all,
     ]);
     if (annoPage) {
       yield put(
-        receiveAnnotation(canvas.id, storageAdapter.annotationPageId, annoPage),
+        receiveAnnotation(canvasId, storageAdapter.annotationPageId, annoPage),
       );
     }
   }
 }
 
-/** */
-function* setAllAnnotations(action) {
-  const { windowId } = action;
-  // @ts-ignore
-  const canvases = yield select(getCanvases, { windowId });
+/**
+ * A generator function which takesEvery SET_CANVAS mirador action
+ * and fetches the associated annotations from the store.
+ */
+function* setAnnotations(action) {
+  const { canvasId } = action;
 
-  yield all(
-    canvases.map((canvas) => put(requestCanvasAnnotations(windowId, canvas.id))),
-  );
-  yield all(
-    canvases.map((canvas) => call(retrieveAnnotationsFormStore, canvas)),
-  );
+  yield call(retrieveAnnotationsFormStore, canvasId);
 }
 
-/** Annotation saga for setting all available annotations */
+/** Annotation saga for setting inital annotations */
 function* annotationSaga() {
-  yield all([takeEvery(ActionTypes.SET_CANVAS, setAllAnnotations)]);
+  yield all([takeEvery(ActionTypes.SET_CANVAS, setAnnotations)]);
 }
 
 const annotationSagaPlugin = {
