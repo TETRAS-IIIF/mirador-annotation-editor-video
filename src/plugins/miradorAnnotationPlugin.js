@@ -67,6 +67,9 @@ function MiradorAnnotation(
   const offerExportDialog = config.annotation && storageAdapter instanceof LocalStorageAdapter
       && config.annotation.exportLocalStorageAnnotations;
 
+  if(config.readonly === true) {
+      return
+  }
   return (
     <div>
       {/* eslint-disable-next-line react/jsx-props-no-spreading */}
@@ -123,6 +126,7 @@ MiradorAnnotation.propTypes = {
       adapter: PropTypes.func,
       exportLocalStorageAnnotations: PropTypes.bool,
     }),
+      readonly : PropTypes.bool
   }).isRequired,
   createAnnotation: PropTypes.bool.isRequired,
   t: PropTypes.func.isRequired,
