@@ -107,10 +107,6 @@
     "webpack-cli": "^5.1.4",
     "webpack-dev-server": "^4.15.2"
   },
-  "overrides": {
-    "@testing-library/react": "^14",
-    "i18next": "^25.4.1"
-  },
   "author": "",
   "homepage": "",
   "license": "Apache-2.0",
