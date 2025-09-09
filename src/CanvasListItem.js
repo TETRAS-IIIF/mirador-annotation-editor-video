@@ -107,13 +107,15 @@ const CanvasListItem = forwardRef((props, ref) => {
       .includes(annotationid);
   };
 
-  const { t } = context;
+  // eslint-disable-next-line react/prop-types
+  const { t, tReady, ...filteredProps } = props;
 
   return (
     <div
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
       className="mirador-annotation-list-item"
+      data-testid="mirador-annotation-list-item"
       ref={ref}
     >
       {(isHovering && editable()) && (
@@ -184,7 +186,7 @@ const CanvasListItem = forwardRef((props, ref) => {
         </div>
       )}
       {/* eslint-disable-next-line react/jsx-props-no-spreading */}
-      <li {...props}>
+      <li {...filteredProps}>
         {props.children}
       </li>
     </div>
@@ -192,7 +194,6 @@ const CanvasListItem = forwardRef((props, ref) => {
 });
 
 CanvasListItem.propTypes = {
-  annotationEditCompanionWindowIsOpened: PropTypes.bool.isRequired,
   annotationid: PropTypes.string.isRequired,
   children: PropTypes.oneOfType([
     PropTypes.func,

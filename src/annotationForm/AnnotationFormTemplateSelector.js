@@ -4,6 +4,7 @@ import { styled } from '@mui/material/styles';
 import {
   Card, CardActionArea, CardContent, Grid,
 } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import { MEDIA_TYPES, TEMPLATE_TYPES } from './AnnotationFormUtils';
 /**
@@ -13,11 +14,11 @@ import { MEDIA_TYPES, TEMPLATE_TYPES } from './AnnotationFormUtils';
 export default function AnnotationFormTemplateSelector({
   mediaType,
   setCommentingType,
-  t,
 }) {
+  const { t } = useTranslation();
   /**
-     * Sets the comment type for the application.
-     */
+   * Sets the comment type for the application.
+  */
   const setCommentType = (template) => setCommentingType(template);
   const templates = TEMPLATE_TYPES(t);
 
@@ -53,9 +54,7 @@ export default function AnnotationFormTemplateSelector({
     </CardContainer>
   );
 }
-const CardContainer = styled('div')(({
-  theme,
-}) => ({
+const CardContainer = styled('div')(() => ({
   display: 'flex',
   flexDirection: 'column',
   gap: '30px',
@@ -76,5 +75,4 @@ const DescriptionCardTypography = styled(Typography, { name: 'CompanionWindow', 
 AnnotationFormTemplateSelector.propTypes = {
   mediaType: PropTypes.string.isRequired,
   setCommentingType: PropTypes.func.isRequired,
-  t: PropTypes.func.isRequired,
 };

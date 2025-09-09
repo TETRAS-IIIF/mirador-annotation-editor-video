@@ -33,7 +33,7 @@ export default function AnnotationFormHeader(
       <Grid item>
         {annotation.id == null
         && (
-          <MiradorMenuButton ariaLabel="back" TooltipProps="back">
+          <MiradorMenuButton aria-label="back" TooltipProps="back">
             <ChevronLeftIcon onClick={goBackToTemplateSelection} />
           </MiradorMenuButton>
         )}
@@ -62,12 +62,12 @@ AnnotationFormHeader.propTypes = {
     PropTypes.string,
   ]).isRequired,
   setCommentingType: PropTypes.func.isRequired,
-  templateType: PropTypes.arrayOf(PropTypes.shape(
+  templateType: PropTypes.shape(
     {
       description: PropTypes.string,
       icon: PropTypes.element,
       id: PropTypes.string,
       label: PropTypes.string,
     },
-  )).isRequired,
+  ).isRequired,
 };
