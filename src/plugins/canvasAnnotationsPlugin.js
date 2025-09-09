@@ -13,8 +13,7 @@ import AnnotationActionsContext from '../AnnotationActionsContext';
 import SingleCanvasDialog from '../SingleCanvasDialog';
 import translations from '../locales/locales';
 import {
-  firstScrollableDescendant, closestScrollableAncestor, isScrollable, getWindowScroller,
-  computeTargetWindow, computeTargetContainer,
+  firstScrollableDescendant, closestScrollableAncestor, runScrollOnce, scrollToSelectedAnnotation
 } from './canvasAnnotationsPluginUtils';
 
 /**
@@ -42,10 +41,6 @@ function CanvasAnnotationsWrapper({
   windowViewType,
   annotationEditCompanionWindowIsOpened,
   t,
-  scrollOffsetTop = 96,
-  scrollRetries = 3,
-  scrollRetryDelay = 24,
-  scrollBehavior = 'smooth',
 }) {
   const [singleCanvasDialogOpen, setSingleCanvasDialogOpen] = useState(false);
 
@@ -57,8 +52,9 @@ function CanvasAnnotationsWrapper({
     const root = wrapperRef.current;
     if (!root) return;
 
+    // eslint-disable-next-line
     const resolve = () => {
-      let chosen = root.querySelector(`.${markerClass}`)
+      const chosen = root.querySelector(`.${markerClass}`)
         || firstScrollableDescendant(root)
         || closestScrollableAncestor(root)
         || null;
@@ -75,6 +71,7 @@ function CanvasAnnotationsWrapper({
     const mo = new MutationObserver(resolve);
     mo.observe(root, { childList: true, subtree: true });
 
+    // eslint-disable-next-line consistent-return
     return () => mo.disconnect();
   }, [targetProps?.windowId, markerClass]);
 
@@ -86,97 +83,9 @@ function CanvasAnnotationsWrapper({
             || wrapperRef.current?.querySelector('li.MuiMenuItem-root.Mui-selected');
     if (!node) return;
 
-    /**
-       * Attempt a single scroll operation to bring the selected annotation node into view.
-       *
-       * - Uses double `requestAnimationFrame` to wait until layout and paints have settled.
-       * - Resolves the correct scroll container (bridged ref, closest ancestor, or window).
-       * - Computes the target scroll position using `computeTargetWindow` or
-       * `computeTargetContainer`.
-       * - Performs the scroll with the configured `scrollBehavior`.
-       * - After a short delay (`scrollRetryDelay`),
-       * checks whether the scroll position actually changed.
-       *
-       * @returns {Promise<boolean>} Promise resolving to `true` if the scroll succeeded
-       *                             (element is in view or scrollTop changed),
-       *                             or `false` if it was reverted/unchanged.
-       *
-       * @closure
-       * - `node` {HTMLElement} The DOM node to scroll into view.
-       * - `selId` {string} The currently selected annotation id (for logging).
-       * - `bridgedScrollRef` {React.RefObject<HTMLElement>} Ref holding candidate scroll container.
-       * - `scrollOffsetTop` {number} Pixels reserved at the top of the container.
-       * - `scrollBehavior` {"auto"|"smooth"} Scrolling animation mode.
-       * - `scrollRetryDelay` {number} Milliseconds to wait before verifying the scroll.
-       */
-    const runOnce = () => new Promise((resolve) => {
-      requestAnimationFrame(() => {
-        // eslint-disable-next-line consistent-return
-        requestAnimationFrame(() => {
-          let container = bridgedScrollRef.current;
-          if (!isScrollable(container)) container = closestScrollableAncestor(node);
-          if (!isScrollable(container)) container = getWindowScroller();
-
-          const isWindow = container === document.body
-                        || container === document.documentElement
-                        || container === document.scrollingElement;
-
-          if (isWindow) {
-            const topWindow = computeTargetWindow(node, scrollOffsetTop);
-            if (topWindow == null) return resolve(true);
-            const before = window.scrollY;
-            window.scrollTo({
-              behavior: scrollBehavior,
-              top: topWindow,
-            });
-            setTimeout(() => {
-              const after = window.scrollY;
-              resolve(Math.abs(after - before) > 0.5);
-            }, scrollRetryDelay);
-            // eslint-disable-next-line consistent-return
-            return;
-          }
-
-          const top = computeTargetContainer(container, node, scrollOffsetTop);
-          if (top == null) return resolve(true);
-          const before = container.scrollTop;
-          if (typeof container.scrollTo === 'function') {
-            container.scrollTo({
-              behavior: scrollBehavior,
-              top,
-            });
-          } else {
-            container.scrollTop = t;
-          }
-          setTimeout(() => {
-            const after = container.scrollTop;
-            resolve(Math.abs(after - before) > 0.5);
-          }, scrollRetryDelay);
-        });
-      });
-    });
-
-    (async () => {
-      let attempt = 0;
-      let ok = false;
-      while (attempt <= scrollRetries && !ok) {
-        // eslint-disable-next-line no-await-in-loop
-        ok = await runOnce();
-        if (!ok) {
-          attempt += 1;
-          if (attempt <= scrollRetries) {
-            // eslint-disable-next-line no-await-in-loop
-            await new Promise((r) => { setTimeout(r, scrollRetryDelay); });
-          }
-        }
-      }
-    })();
+    scrollToSelectedAnnotation(node, bridgedScrollRef);
   }, [
     targetProps?.selectedAnnotationId,
-    scrollOffsetTop,
-    scrollRetries,
-    scrollRetryDelay,
-    scrollBehavior,
   ]);
   /**
      * Toggle the visibility state of the single canvas dialog.
@@ -249,10 +158,6 @@ CanvasAnnotationsWrapper.propTypes = {
   canvases: PropTypes.arrayOf(PropTypes.shape({ id: PropTypes.string, index: PropTypes.number })).isRequired,
   config: PropTypes.shape({ annotation: PropTypes.shape({ adapter: PropTypes.func }) }).isRequired,
   receiveAnnotation: PropTypes.func.isRequired,
-  scrollBehavior: PropTypes.oneOf(['auto', 'smooth']).isRequired,
-  scrollOffsetTop: PropTypes.number.isRequired,
-  scrollRetries: PropTypes.number.isRequired,
-  scrollRetryDelay: PropTypes.number.isRequired,
   switchToSingleCanvasView: PropTypes.func.isRequired,
   t: PropTypes.func.isRequired,
   TargetComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.node]).isRequired,

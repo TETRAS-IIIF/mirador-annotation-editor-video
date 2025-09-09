@@ -122,3 +122,98 @@ export function computeTargetWindow(node, offsetTop) {
     ? nodeTop - offsetTop
     : Math.max(nodeBottom - window.innerHeight, nodeTop - offsetTop);
 }
+
+/**
+ * Attempt a single scroll operation to bring the selected annotation node into view.
+ *
+ * - Uses double `requestAnimationFrame` to wait until layout and paints have settled.
+ * - Resolves the correct scroll container (bridged ref, closest ancestor, or window).
+ * - Computes the target scroll position using `computeTargetWindow` or
+ * `computeTargetContainer`.
+ * - Performs the scroll with the configured `scrollBehavior`.
+ * - After a short delay (`scrollRetryDelay`),
+ * checks whether the scroll position actually changed.
+ *
+ * @returns {Promise<boolean>} Promise resolving to `true` if the scroll succeeded
+ *                             (element is in view or scrollTop changed),
+ *                             or `false` if it was reverted/unchanged.
+ *
+ * @closure
+ * - `node` {HTMLElement} The DOM node to scroll into view.
+ * - `selId` {string} The currently selected annotation id (for logging).
+ * - `bridgedScrollRef` {React.RefObject<HTMLElement>} Ref holding candidate scroll container.
+ * - `scrollOffsetTop` {number} Pixels reserved at the top of the container.
+ * - `scrollBehavior` {"auto"|"smooth"} Scrolling animation mode.
+ * - `scrollRetryDelay` {number} Milliseconds to wait before verifying the scroll.
+ */
+export const runScrollOnce = (node, bridgedScrollRef, scrollRetryDelay) => new Promise((resolve) => {
+  const scrollBehavior = 'smooth';
+  const scrollOffsetTop = 96;
+
+  requestAnimationFrame(() => {
+    // eslint-disable-next-line consistent-return
+    requestAnimationFrame(() => {
+      let container = bridgedScrollRef.current;
+      if (!isScrollable(container)) container = closestScrollableAncestor(node);
+      if (!isScrollable(container)) container = getWindowScroller();
+
+      const isWindow = container === document.body
+        || container === document.documentElement
+        || container === document.scrollingElement;
+
+      if (isWindow) {
+        const topWindow = computeTargetWindow(node, scrollOffsetTop);
+        if (topWindow == null) return resolve(true);
+        const before = window.scrollY;
+        window.scrollTo({
+          behavior: scrollBehavior,
+          top: topWindow,
+        });
+        setTimeout(() => {
+          const after = window.scrollY;
+          resolve(Math.abs(after - before) > 0.5);
+        }, scrollRetryDelay);
+        // eslint-disable-next-line consistent-return
+        return;
+      }
+
+      const top = computeTargetContainer(container, node, scrollOffsetTop);
+      if (top == null) return resolve(true);
+      const before = container.scrollTop;
+      if (typeof container.scrollTo === 'function') {
+        container.scrollTo({
+          behavior: scrollBehavior,
+          top,
+        });
+      } else {
+        container.scrollTop = t;
+      }
+      setTimeout(() => {
+        const after = container.scrollTop;
+        resolve(Math.abs(after - before) > 0.5);
+      }, scrollRetryDelay);
+    });
+  });
+});
+
+export const scrollToSelectedAnnotation = async (node, bridgedScrollRef) => {
+
+  const scrollRetries = 3;
+  const scrollRetryDelay = 24;
+
+  let attempt = 0;
+  let ok = false;
+  while (attempt <= scrollRetries && !ok) {
+    // eslint-disable-next-line no-await-in-loop
+    ok = await runScrollOnce(node, bridgedScrollRef, scrollRetryDelay);
+    if (!ok) {
+      attempt += 1;
+      if (attempt <= scrollRetries) {
+        // eslint-disable-next-line no-await-in-loop
+        await new Promise((r) => {
+          setTimeout(r, scrollRetryDelay);
+        });
+      }
+    }
+  }
+};
