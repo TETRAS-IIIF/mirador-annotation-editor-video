@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { Grid, Typography } from '@mui/material';
 import CreatableSelect from 'react-select/creatable';
 import TextEditor from '../TextEditor';
+import { useSelector } from 'react-redux';
+import { getConfig } from 'mirador/dist/es/src/state/selectors';
 
 /**
  * TextCommentInput component
@@ -15,7 +17,6 @@ import TextEditor from '../TextEditor';
  */
 export function TextCommentInput({
   comment,
-  commentTemplates,
   onChangeTemplate,
   setComment,
   t,
@@ -30,6 +31,8 @@ export function TextCommentInput({
       {option.label}
     </div>
   );
+  const annotationConfig = useSelector((state) => getConfig(state)).annotation;
+  const commentTemplates = annotationConfig.commentTemplates ?? [];
 
   /**
    * Handle template selection change
@@ -80,8 +83,6 @@ export function TextCommentInput({
 
 TextCommentInput.propTypes = {
   comment: PropTypes.string.isRequired,
-  // eslint-disable-next-line react/forbid-prop-types
-  commentTemplates: PropTypes.arrayOf(PropTypes.object).isRequired,
   onChangeTemplate: PropTypes.func.isRequired,
   setComment: PropTypes.func.isRequired,
   t: PropTypes.func.isRequired,

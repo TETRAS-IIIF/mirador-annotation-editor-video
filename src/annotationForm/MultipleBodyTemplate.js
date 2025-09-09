@@ -23,7 +23,6 @@ export default function MultipleBodyTemplate(
 ) {
   const annotationConfig = useSelector((state) => getConfig(state)).annotation;
   const tagsSuggestions = annotationConfig.tagsSuggestions ?? [];
-  const commentTemplate = annotationConfig.commentTemplates ?? [];
 
   let maeAnnotation = annotation;
 
@@ -144,7 +143,6 @@ export default function MultipleBodyTemplate(
     <Grid container direction="column" spacing={2}>
       <Grid item>
         <TextCommentInput
-          commentTemplates={commentTemplate}
           comment={annotationState.maeData.textBody.value}
           setComment={updateAnnotationTextualBodyValue}
           onChangeTemplate={onChangeTemplate}
