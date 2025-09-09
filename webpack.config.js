@@ -84,6 +84,7 @@ module.exports = (env, options) => {
       publicPath: '/',
     },
     devServer: {
+      allowedHosts: 'all',
       hot: true,
       static: [
         './demo/dist/',

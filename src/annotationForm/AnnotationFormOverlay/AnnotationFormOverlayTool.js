@@ -110,6 +110,7 @@ function AnnotationFormOverlayTool({
             onChange={changeTool}
             aria-label={t('tool_selection')}
             size="small"
+            data-testid="tool_selection"
           >
             {(displayMode !== KONVA_MODE.IMAGE) && (
               <Tooltip title={t('rectangle')}>
@@ -198,7 +199,7 @@ AnnotationFormOverlayTool.propTypes = {
   t: PropTypes.func.isRequired,
   toolState: PropTypes.shape({
     activeTool: PropTypes.string.isRequired,
-    closedMode: PropTypes.bool.isRequired,
+    closedMode: PropTypes.string.isRequired,
     fillColor: PropTypes.string.isRequired,
     image: PropTypes.shape({
       id: PropTypes.string,

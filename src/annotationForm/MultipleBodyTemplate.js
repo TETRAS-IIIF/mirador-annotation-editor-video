@@ -7,6 +7,8 @@ import TargetFormSection from './TargetFormSection';
 import { resizeKonvaStage } from './AnnotationFormOverlay/KonvaDrawing/KonvaUtils';
 import { MultiTagsInput } from './MultiTagsInput';
 import { TextCommentInput } from './TextCommentInput';
+import { useSelector } from 'react-redux';
+import { getConfig } from 'mirador/dist/es/src/state/selectors';
 
 /** Tagging Template* */
 export default function MultipleBodyTemplate(
@@ -17,10 +19,11 @@ export default function MultipleBodyTemplate(
     saveAnnotation,
     t,
     windowId,
-    tagsSuggestions,
-    commentTemplate,
   },
 ) {
+  const annotationConfig = useSelector((state) => getConfig(state)).annotation;
+  const tagsSuggestions = annotationConfig.tagsSuggestions ?? [];
+
   let maeAnnotation = annotation;
 
   if (!maeAnnotation.id) {
@@ -110,7 +113,7 @@ export default function MultipleBodyTemplate(
    * @param selectedTemplate
    */
   const onChangeTemplate = (selectedTemplate) => {
-    const associatedTag = mappedSuggestionsTags.find((tag) => tag.value === selectedTemplate.label);
+    const associatedTag = mappedSuggestionsTags.find((tag) => tag.value === selectedTemplate.title);
     if (associatedTag) {
       if (!annotationState.maeData.tags.find((tag) => tag.value === associatedTag.value)) {
         setAnnotationState({
@@ -128,7 +131,7 @@ export default function MultipleBodyTemplate(
       }
     }
 
-    updateAnnotationTextualBodyValue(selectedTemplate.value);
+    updateAnnotationTextualBodyValue(selectedTemplate.content);
   };
 
   const mappedSuggestionsTags = tagsSuggestions.map((suggestion) => ({
@@ -140,7 +143,6 @@ export default function MultipleBodyTemplate(
     <Grid container direction="column" spacing={2}>
       <Grid item>
         <TextCommentInput
-          commentTemplates={commentTemplate}
           comment={annotationState.maeData.textBody.value}
           setComment={updateAnnotationTextualBodyValue}
           onChangeTemplate={onChangeTemplate}
@@ -195,14 +197,11 @@ MultipleBodyTemplate.propTypes = {
     manifestNetwork: PropTypes.string,
     target: PropTypes.string,
   }).isRequired,
-  commentTemplate: PropTypes.string.isRequired,
-  // eslint-disable-next-line react/forbid-prop-types
   closeFormCompanionWindow: PropTypes.func.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   playerReferences: PropTypes.object.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   saveAnnotation: PropTypes.func.isRequired,
   t: PropTypes.func.isRequired,
-  tagsSuggestions: PropTypes.arrayOf(PropTypes.string).isRequired,
   windowId: PropTypes.string.isRequired,
 };

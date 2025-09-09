@@ -99,7 +99,6 @@ function TextCommentTemplate(
           onChangeTarget={updateTargetState}
           playerReferences={playerReferences}
           spatialTarget
-          t={t}
           target={annotationState.maeData.target}
           timeTarget
           windowId={windowId}

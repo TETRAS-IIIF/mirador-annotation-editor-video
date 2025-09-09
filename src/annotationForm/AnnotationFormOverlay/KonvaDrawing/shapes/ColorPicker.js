@@ -1,3 +1,4 @@
+/* eslint-disable react/forbid-prop-types */
 import {
   ClickAwayListener,
   Divider,
@@ -21,6 +22,7 @@ import React from 'react';
 import { styled } from '@mui/material/styles';
 import * as Proptypes from 'prop-types';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 import { defaultLineWeightChoices, OVERLAY_TOOL } from '../KonvaUtils';
 
 /** Display color picker and border * */
@@ -33,12 +35,13 @@ export default function ColorPicker(
     handleLineWeightSelect,
     openChooseColor,
     openChooseLineWeight,
-    t,
     toolOptions,
     toolState,
     updateColor,
   },
 ) {
+  const { t } = useTranslation();
+
   return (
     <Grid container spacing={1}>
       <Grid item xs={12}>
@@ -160,18 +163,17 @@ ColorPicker.propTypes = {
   handleLineWeightSelect: Proptypes.func.isRequired,
   openChooseColor: Proptypes.func.isRequired,
   openChooseLineWeight: Proptypes.func.isRequired,
-  t: Proptypes.func.isRequired,
-  toolOptions: Proptypes.oneOfType(
-    Proptypes.bool,
-    Proptypes.string,
-    Proptypes.bool,
-    Proptypes.string,
-    Proptypes.string,
-  ).isRequired,
+  toolOptions: Proptypes.shape({
+    colorPopoverOpen: PropTypes.bool,
+    currentColorType: PropTypes.any,
+    lineWeightPopoverOpen: PropTypes.bool,
+    popoverAnchorEl: PropTypes.any,
+    popoverLineWeightAnchorEl: PropTypes.any,
+  }).isRequired,
   toolState: PropTypes.shape({
     activeTool: PropTypes.string.isRequired,
-    closedMode: PropTypes.bool.isRequired,
-    fillColor: PropTypes.string.isRequired,
+    closedMode: PropTypes.string.isRequired,
+    fillColor: PropTypes.string,
     image: PropTypes.shape({
       id: PropTypes.string,
     }),
@@ -179,7 +181,7 @@ ColorPicker.propTypes = {
     strokeWidth: PropTypes.number.isRequired,
     text: PropTypes.string,
     textBody: PropTypes.string,
-    updateColor: PropTypes.func.isRequired,
+    updateColor: PropTypes.func,
   }).isRequired,
   updateColor: Proptypes.func.isRequired,
 };

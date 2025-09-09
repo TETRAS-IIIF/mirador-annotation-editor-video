@@ -76,11 +76,14 @@ export class WindowPlayer {
 
   /**
    * Get player initialisation status
+   * // TODO in MAEV env add this.media.canvasOverlay check
    * @returns {*|boolean}
    */
   isInitializedCorrectly() {
-    this.isInitCorrectly = this.media && ((this.mediaType === MEDIA_TYPES.IMAGE && this.media.current && this.media.current.canvas) || (this.mediaType === MEDIA_TYPES.VIDEO && this.media.video && this.media.canvasOverlay))
-      && (this.mediaType !== MEDIA_TYPES.UNKNOWN && this.mediaType !== MEDIA_TYPES.AUDIO);
+    this.isInitCorrectly = this.media
+      && ((this.mediaType === MEDIA_TYPES.IMAGE && this.media.current && this.media.current.canvas)
+        || (this.mediaType === MEDIA_TYPES.VIDEO && this.media.video
+          && this.media.canvasOverlay));
 
     return this.isInitCorrectly;
   }

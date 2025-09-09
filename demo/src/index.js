@@ -2,19 +2,22 @@ import mirador from 'mirador/dist/es/src/index';
 import annotationPlugins from '../../src';
 import LocalStorageAdapter from '../../src/annotationAdapter/LocalStorageAdapter';
 import { manifestsCatalog } from './manifestsCatalog';
+import { quillConfig } from './quillConfig';
 
 const config = {
   annotation: {
     adapter: (canvasId) => new LocalStorageAdapter(`localStorage://?canvasId=${canvasId}`, 'Anonymous User'),
+    allowTargetShapesStyling: false,
     commentTemplates: [{
+      content: '<h4>Comment</h4><p>Comment content</p>',
       title: 'Template',
-      content: '<h4>Comment</h4><p>comment content</p>',
     },
     {
+      content: '<h4>Comment2</h4><p>Comment content</p>',
       title: 'Template 2',
-      content: '<h4>Comment2</h4><p>comment content</p>',
     }],
-    exportLocalStorageAnnotations: false, // display annotation JSON export button
+    exportLocalStorageAnnotations: false,
+    quillConfig,
     tagsSuggestions: ['Mirador', 'Awesome', 'Viewer', 'IIIF', 'Template'],
   },
   annotations: {
@@ -66,7 +69,9 @@ const config = {
     defaultSideBarPanel: 'annotations',
     sideBarOpenByDefault: true,
   },
-  windows: [],
+  windows: [
+    { manifestId: ' https://iiif.harvardartmuseums.org/manifests/object/299843' },
+  ],
 };
 
 mirador.viewer(config, [...annotationPlugins]);
