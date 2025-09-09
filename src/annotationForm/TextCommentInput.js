@@ -54,7 +54,7 @@ export function TextCommentInput({
             options={commentTemplates.map((template) => ({
               label: template.title,
               title: template.content, // Add title attribute for tooltip
-              value: template.content,
+              value: template,
             }))}
             placeholder={t('useTemplate')}
             onChange={onLocalChangeTemplate}

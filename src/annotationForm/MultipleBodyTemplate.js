@@ -110,7 +110,7 @@ export default function MultipleBodyTemplate(
    * @param selectedTemplate
    */
   const onChangeTemplate = (selectedTemplate) => {
-    const associatedTag = mappedSuggestionsTags.find((tag) => tag.value === selectedTemplate.label);
+    const associatedTag = mappedSuggestionsTags.find((tag) => tag.value === selectedTemplate.title);
     if (associatedTag) {
       if (!annotationState.maeData.tags.find((tag) => tag.value === associatedTag.value)) {
         setAnnotationState({
@@ -128,7 +128,7 @@ export default function MultipleBodyTemplate(
       }
     }
 
-    updateAnnotationTextualBodyValue(selectedTemplate.value);
+    updateAnnotationTextualBodyValue(selectedTemplate.content);
   };
 
   const mappedSuggestionsTags = tagsSuggestions.map((suggestion) => ({

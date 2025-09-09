@@ -23,6 +23,8 @@ export function TargetSpatialInput({
     setScale(playerReferences.getScale());
   };
 
+  const { t } = useTranslation();
+
   const [drawingState, setDrawingState] = useState({
     ...targetDrawingState,
     currentShape: null,
