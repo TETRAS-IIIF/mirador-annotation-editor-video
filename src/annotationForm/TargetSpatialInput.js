@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import Typography from '@mui/material/Typography';
 import { Grid } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import AnnotationDrawing from './AnnotationFormOverlay/AnnotationDrawing';
 import { TARGET_TOOL_STATE, TARGET_VIEW } from './AnnotationFormUtils';
 import AnnotationFormOverlay from './AnnotationFormOverlay/AnnotationFormOverlay';
@@ -11,7 +12,6 @@ import { KONVA_MODE } from './AnnotationFormOverlay/KonvaDrawing/KonvaUtils';
 export function TargetSpatialInput({
   playerReferences,
   setTargetDrawingState,
-  t,
   targetDrawingState,
   windowId,
 }) {
@@ -129,7 +129,6 @@ TargetSpatialInput.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   playerReferences: PropTypes.object.isRequired,
   setTargetDrawingState: PropTypes.func.isRequired,
-  t: PropTypes.func.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   targetDrawingState: PropTypes.object.isRequired,
   windowId: PropTypes.string.isRequired,

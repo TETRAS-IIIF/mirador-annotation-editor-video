@@ -142,6 +142,7 @@ function AnnotationFormOverlayToolOptions({
   const annotationConfig = useSelector((state) => getConfig(state)).annotation;
   const allowTargetShapesStyling = annotationConfig?.allowTargetShapesStyling === true;
 
+
   return (
     <div>
       {
@@ -157,7 +158,6 @@ function AnnotationFormOverlayToolOptions({
               openChooseColor={openChooseColor}
               openChooseLineWeight={openChooseLineWeight}
               updateColor={updateColor}
-              t={t}
               toolOptions={toolOptions}
               toolState={toolState}
             />
@@ -191,7 +191,6 @@ function AnnotationFormOverlayToolOptions({
                     handleLineWeightSelect={handleLineWeightSelect}
                     openChooseColor={openChooseColor}
                     openChooseLineWeight={openChooseLineWeight}
-                    t={t}
                     toolOptions={toolOptions}
                     toolState={toolState}
                     updateColor={updateColor}
@@ -239,8 +238,8 @@ AnnotationFormOverlayToolOptions.propTypes = {
   t: PropTypes.func.isRequired,
   toolState: PropTypes.shape({
     activeTool: PropTypes.string.isRequired,
-    closedMode: PropTypes.bool.isRequired,
-    fillColor: PropTypes.string.isRequired,
+    closedMode: PropTypes.string.isRequired,
+    fillColor: PropTypes.string,
     image: PropTypes.shape({
       id: PropTypes.string,
     }),
@@ -248,7 +247,7 @@ AnnotationFormOverlayToolOptions.propTypes = {
     strokeWidth: PropTypes.number.isRequired,
     text: PropTypes.string,
     textBody: PropTypes.string,
-    updateColor: PropTypes.func.isRequired,
+    updateColor: PropTypes.func,
   }).isRequired,
 };
 
