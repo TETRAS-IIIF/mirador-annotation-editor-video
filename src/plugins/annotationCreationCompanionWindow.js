@@ -10,13 +10,12 @@ import { withTranslation } from 'react-i18next';
 import annotationForm from '../annotationForm/AnnotationForm';
 import { checkMediaType, WindowPlayer } from '../playerReferences';
 import { MEDIA_TYPES } from '../annotationForm/AnnotationFormUtils';
+import AnnotationForm from '../annotationForm/AnnotationForm';
+import { WindowPlayer } from '../playerReferences';
 import translations from '../locales/locales';
 
 /** */
-const mapDispatchToProps = (dispatch, {
-  id,
-  windowId,
-}) => ({
+const mapDispatchToProps = (dispatch, { id, windowId }) => ({
   closeCompanionWindow: () => dispatch(
     actions.removeCompanionWindow(windowId, id),
   ),
@@ -26,15 +25,9 @@ const mapDispatchToProps = (dispatch, {
 });
 
 /** */
-function mapStateToProps(state, {
-  id: companionWindowId,
-  windowId,
-}) {
+function mapStateToProps(state, { id: companionWindowId, windowId }) {
   const currentTime = null;
-  const cw = getCompanionWindow(state, {
-    companionWindowId,
-    windowId,
-  });
+  const cw = getCompanionWindow(state, { companionWindowId, windowId });
   const { annotationid } = cw;
   const canvases = getVisibleCanvases(state, { windowId });
 
@@ -67,21 +60,17 @@ function mapStateToProps(state, {
   return {
     annotation,
     canvases,
-    config: {
-      ...state.config,
-      translations,
-    },
+    config: { ...state.config, translations },
     currentTime,
     playerReferences,
   };
 }
 
-const AnnotationFormWithTranslation = withTranslation()(annotationForm);
-
-// eslint-disable-next-line import/no-anonymous-default-export
-export default {
+const annotationCreationCompanionWindowPlugin = {
   companionWindowKey: 'annotationCreation',
-  component: AnnotationFormWithTranslation,
+  component: AnnotationForm,
   mapDispatchToProps,
   mapStateToProps,
 };
+
+export default annotationCreationCompanionWindowPlugin;

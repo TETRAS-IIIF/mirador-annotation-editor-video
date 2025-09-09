@@ -20,12 +20,14 @@ export const TEMPLATE = {
   TEXT_TYPE: 'text',
 };
 
+// TODO Move in MediaUtils
 export const MEDIA_TYPES = {
   AUDIO: 'Audio',
   IMAGE: 'Image',
   UNKNOWN: 'Unknown',
   VIDEO: 'Video',
 };
+
 /** Return template type * */
 export const getTemplateType = (t, templateType) => TEMPLATE_TYPES(t)
   .find(

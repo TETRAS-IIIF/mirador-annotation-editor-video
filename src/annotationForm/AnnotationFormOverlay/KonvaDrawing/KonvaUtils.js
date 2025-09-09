@@ -16,8 +16,16 @@ export function getKonvaStage(windowId) {
  * @param height
  * @param scale
  * @param hideAfterResize
+ * @param scaleStrokeForPNGExport
  */
-export function resizeKonvaStage(windowId, width, height, scale, hideAfterResize = true, scaleStrokeForPNGExport = false) {
+export function resizeKonvaStage(
+  windowId,
+  width,
+  height,
+  scale,
+  hideAfterResize = true,
+  scaleStrokeForPNGExport = false,
+) {
   hideKonvaStage();
   const stage = getKonvaStage(windowId);
   stage.width(width);
@@ -123,28 +131,15 @@ export async function getSvg(windowId) {
   return svg;
 }
 
-/**
- *
- * @param windowId
- * @param shapeId
- * @returns {Node}
- */
-export function getKonvaShape(windowId, shapeId) {
-  const stage = getKonvaStage(windowId);
-  const shape = stage.findOne(`#${shapeId}`);
-  return shape;
-}
-
 /** Export the stage as a JPG image in a data url */
 export async function getKonvaAsDataURL(windowId) {
   const stage = getKonvaStage(windowId);
   stage.find('Transformer')
     .forEach((node) => node.visible(false));
-  const dataURL = stage.toDataURL({
+  return stage.toDataURL({
     mimeType: 'image/jpg',
     quality: 0.2,
   });
-  return dataURL;
 }
 
 export const defaultLineWeightChoices = [0, 2, 5, 10, 20, 50];
@@ -186,22 +181,21 @@ export function isShapesTool(activeTool) {
 export const rgbaToObj = (rgba = 'rgba(255,255,255,0.5)') => {
   const rgbaArray = rgba.split(',');
   return {
-    // eslint-disable-next-line sort-keys
+    /* eslint-disable sort-keys */
     r: Number(rgbaArray[0].split('(')[1]),
-    // eslint-disable-next-line sort-keys
     g: Number(rgbaArray[1]),
-    // eslint-disable-next-line sort-keys
     b: Number(rgbaArray[2]),
-    // eslint-disable-next-line sort-keys
     a: Number(rgbaArray[3].split(')')[0]),
+    /* eslint-enable sort-keys */
   };
 };
 
 /** Convert color object to rgba string */
 export const objToRgba = (obj = {
-  // eslint-disable-next-line sort-keys
+  /* eslint-disable sort-keys */
   r: 255,
   g: 255,
   b: 255,
   a: 0.5,
+  /* eslint-enable sort-keys */
 }) => `rgba(${obj.r},${obj.g},${obj.b},${obj.a})`;

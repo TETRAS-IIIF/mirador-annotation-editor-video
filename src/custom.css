@@ -19,19 +19,6 @@
     width: 100%;
 }
 
-/*
-.ReactTags__tag {
-    background-color: #f0f0f0;
-    border: 1px solid #ccc;
-    border-radius: 3px;
-    color: #333;
-    display: inline-block;
-    margin: 0 5px 5px 0;
-    padding: 5px 10px;
-}
-*/
-
-
 .ReactTags__clearAll {
     cursor: pointer;
     padding: 10px;

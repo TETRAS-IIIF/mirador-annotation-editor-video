@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { Grid, Typography } from '@mui/material';
 import CreatableSelect from 'react-select/creatable';
 import TextEditor from '../TextEditor';
+import { useSelector } from 'react-redux';
+import { getConfig } from 'mirador/dist/es/src/state/selectors';
 
 /**
  * TextCommentInput component
@@ -15,11 +17,33 @@ import TextEditor from '../TextEditor';
  */
 export function TextCommentInput({
   comment,
-  commentTemplates,
   onChangeTemplate,
   setComment,
   t,
 }) {
+  /**
+   * Format the option label for the select component
+   * @param option
+   * @returns {React.JSX.Element}
+   */
+  const formatOptionLabel = (option) => (
+    <div title={option.title}>
+      {option.label}
+    </div>
+  );
+  const annotationConfig = useSelector((state) => getConfig(state)).annotation;
+  const commentTemplates = annotationConfig.commentTemplates ?? [];
+
+  /**
+   * Handle template selection change
+   * @param selectedOption
+   */
+  const onLocalChangeTemplate = (selectedOption) => {
+    if (selectedOption) {
+      onChangeTemplate(selectedOption.value);
+    }
+  };
+
   return (
     <>
       <Grid container item>
@@ -33,21 +57,13 @@ export function TextCommentInput({
             options={commentTemplates.map((template) => ({
               label: template.title,
               title: template.content, // Add title attribute for tooltip
-              value: template.content,
+              value: template,
             }))}
             placeholder={t('useTemplate')}
-            onChange={(selectedOption) => {
-              if (selectedOption) {
-                onChangeTemplate(selectedOption);
-              }
-            }}
+            onChange={onLocalChangeTemplate}
             isClearable
             isSearchable
-            formatOptionLabel={(option) => (
-              <div title={option.title}>
-                {option.label}
-              </div>
-            )}
+            formatOptionLabel={formatOptionLabel}
             styles={{
               marginBottom: '20px',
             }}
@@ -67,8 +83,6 @@ export function TextCommentInput({
 
 TextCommentInput.propTypes = {
   comment: PropTypes.string.isRequired,
-  // eslint-disable-next-line react/forbid-prop-types
-  commentTemplates: PropTypes.arrayOf(PropTypes.object).isRequired,
   onChangeTemplate: PropTypes.func.isRequired,
   setComment: PropTypes.func.isRequired,
   t: PropTypes.func.isRequired,

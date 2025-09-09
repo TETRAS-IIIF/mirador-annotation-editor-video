@@ -70,10 +70,10 @@ export const convertAnnotationStateToBeSaved = async (
   if (annotationStateForSaving.maeData.templateType === TEMPLATE.MULTIPLE_BODY_TYPE) {
     annotationStateForSaving.body = [annotationState.maeData.textBody];
     annotationStateForSaving.body.push(...annotationState.maeData.tags.map((tag) => ({
+      id: tag.value,
       purpose: 'tagging',
       type: 'TextualBody',
       value: tag.value,
-      id: tag.value,
     })));
   }
 
@@ -91,6 +91,7 @@ export const convertAnnotationStateToBeSaved = async (
     }
   }
 
+  // TODO Always relevant ?
   annotationStateForSaving.maeData.target.scale = playerReferences.getMediaTrueHeight()
     / playerReferences.getDisplayedMediaHeight() * playerReferences.getZoom();
 
@@ -135,6 +136,8 @@ export const getIIIFTargetFromMaeData = (
     case TEMPLATE.MANIFEST_TYPE:
     case TEMPLATE.MULTIPLE_BODY_TYPE:
     case TEMPLATE.TEXT_TYPE:
+    case TEMPLATE.MULTIPLE_BODY_TYPE:
+        // In some case the target can be simplified in a string
       // In some case the target can be simplified in a string
       if (isSimpleTarget(maeTarget.drawingState.shapes)) {
         return getIIIFTargetFromRectangleShape(
@@ -154,10 +157,35 @@ export const getIIIFTargetFromMaeData = (
   return getIIIFTargetFullCanvas(maeData, canvasId);
 };
 
-const isSimpleTarget = (shapes) => shapes.length === 1
-  && shapes[0].type === SHAPES_TOOL.RECTANGLE
-  && shapes[0].strokeColor === TARGET_TOOL_STATE.strokeColor
-  && shapes[0].fillColor === TARGET_TOOL_STATE.fillColor;
+/**
+ * Check if the target is a simple rectangle with the same color as the tool
+ * @param shapes
+ * @returns {boolean}
+ */
+const isSimpleTarget = (shapes) => {
+  if (shapes.length !== 1) return false;
+  const shape = shapes[0];
+  return isRectangleShape(shape) && hasMatchingStrokeAndFillColors(shape);
+};
+
+/**
+ * Check if the shape is a rectangle
+ * @param shape
+ * @returns {boolean}
+ */
+const isRectangleShape = (shape) => {
+  return shape.type === SHAPES_TOOL.RECTANGLE;
+};
+
+/**
+ * Check if the shape has the same stroke and fill colors as the TARGET_TOOL_STATE
+ * @param shape
+ * @returns {boolean}
+ */
+const hasMatchingStrokeAndFillColors = (shape) => {
+  return shape.strokeColor === TARGET_TOOL_STATE.strokeColor
+    && shape.fillColor === TARGET_TOOL_STATE.fillColor;
+};
 
 /**
  * Get the IIIF target from a Konva annotation (Drawing template)

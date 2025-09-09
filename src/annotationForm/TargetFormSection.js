@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Grid, Typography } from '@mui/material';
+import { useTranslation } from 'react-i18next';
+import { MEDIA_TYPES } from './AnnotationFormUtils';
 import { MEDIA_TYPES, TEMPLATE } from './AnnotationFormUtils';
 import TargetTimeInput from './TargetTimeInput';
 import { TargetSpatialInput } from './TargetSpatialInput';
@@ -9,7 +11,6 @@ import { TargetSpatialInput } from './TargetSpatialInput';
  *
  * @param onChangeTarget
  * @param spatialTarget
- * @param t
  * @param playerReferences
  * @param target
  * @param timeTarget
@@ -21,13 +22,13 @@ export default function TargetFormSection(
   {
     onChangeTarget,
     spatialTarget,
-    t,
     playerReferences,
     target,
     timeTarget,
     windowId,
   },
 ) {
+  const { t } = useTranslation();
   if (!target) {
     // eslint-disable-next-line no-param-reassign
     target = {};
@@ -122,7 +123,6 @@ TargetFormSection.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   playerReferences: PropTypes.object.isRequired,
   spatialTarget: PropTypes.bool.isRequired,
-  t: PropTypes.func.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   target: PropTypes.object.isRequired,
   timeTarget: PropTypes.bool.isRequired,

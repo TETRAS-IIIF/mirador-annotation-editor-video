@@ -470,6 +470,7 @@ export default function AnnotationDrawing(
             pos.y = drawingState.currentShape.y;
           }
 
+          // eslint-disable-next-line no-case-declarations
           const radius = Math.sqrt(
             (pos.x - drawingState.currentShape.x) ** 2
             + (pos.y - drawingState.currentShape.y) ** 2,
@@ -644,17 +645,10 @@ AnnotationDrawing.propTypes = {
   setDrawingState: PropTypes.func.isRequired,
   setToolState: PropTypes.func.isRequired,
   tabView: PropTypes.string.isRequired,
-  toolState: PropTypes.oneOfType(
-    PropTypes.string,
-    PropTypes.string,
-    PropTypes.string,
-    PropTypes.oneOfType(
-      PropTypes.string,
-    ),
-    PropTypes.string,
+  toolState: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.number,
-  ).isRequired,
+  ]).isRequired,
   updateCurrentShapeInShapes: PropTypes.func.isRequired,
   updateScale: PropTypes.func.isRequired,
   windowId: PropTypes.string.isRequired,
