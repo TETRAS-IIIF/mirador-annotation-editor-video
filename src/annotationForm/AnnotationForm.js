@@ -64,26 +64,6 @@ function AnnotationForm(
     }
   }
 
-  // Add translations from config to i18n
-  useEffect(() => {
-    if (i18n.isInitialized && config.translations) {
-      Object.keys(config.translations)
-        .forEach((language) => {
-          i18n.addResourceBundle(
-            language,
-            'translation',
-            config.translations[language],
-            true,
-            true,
-          );
-        });
-
-      if (config.language) {
-        i18n.changeLanguage(config.language);
-      }
-    }
-  }, [config.translations, config.language]);
-
   useEffect(() => {
     setTemplateType(null);
     setMediaType(playerReferences.getMediaType());
