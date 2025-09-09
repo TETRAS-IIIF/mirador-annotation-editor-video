@@ -4,3 +4,118 @@
 .ql-tooltip {
     white-space: normal !important;
 }
+
+[data-text-editor="name"] {
+    width: 100%;
+}
+
+/* React Tags style */
+
+.ReactTags__tags.react-tags-wrapper {
+    width: 100%;
+}
+
+.ReactTags__tagInputField {
+    width: 100%;
+}
+
+.ReactTags__clearAll {
+    cursor: pointer;
+    padding: 10px;
+    border: none;
+}
+
+.ReactTags__tagInput {
+    border-radius: 5px;
+    display: inline-block;
+    width: 98%;
+}
+
+.ReactTags__tagInput input.ReactTags__tagInputField {
+    height: 32px;
+    margin: 10px 0;
+    padding: 5px;
+    font-size: 14px;
+    border: 1px solid #eee;
+    min-width: 180px;
+}
+
+.ReactTags__editInput {
+    border-radius: 5px;
+}
+
+.ReactTags__editTagInput {
+    display: inline-flex;
+}
+
+.ReactTags__remove {
+    display: flex;
+    cursor: pointer;
+    background: none;
+    padding: 5px;
+    border: none;
+}
+
+.ReactTags__selected {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.ReactTags__selected span.ReactTags__tag {
+    border: 1px solid #ddd;
+    background: #ebebeb;
+    color: black;
+    font-size: 14px;
+    padding: 5px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+}
+
+.ReactTags__suggestions {
+    position: absolute;
+}
+
+.ReactTags__suggestions ul {
+    list-style-type: none;
+    box-shadow: 0.05em 0.01em 0.5em rgba(0, 0, 0, 0.2);
+    background: white;
+    width: 200px;
+    padding: 5px 0;
+}
+
+.ReactTags__suggestions li {
+    padding: 5px 10px;
+    margin: 0;
+    text-align: left;
+}
+
+.ReactTags__suggestions li mark {
+    text-decoration: underline;
+    background: none;
+}
+
+.ReactTags__suggestions li.ReactTags__activeSuggestion {
+    background: #4dabf7;
+    color: #fff;
+    cursor: pointer;
+}
+
+.ReactTags__suggestions li.ReactTags__activeSuggestion span mark {
+    color: #fff;
+}
+
+.ReactTags__error {
+    color: #e03131;
+    font-size: 16px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ReactTags__error svg {
+    padding: 0 5px;
+}

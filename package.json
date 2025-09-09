@@ -50,6 +50,7 @@
     "react-refresh": "^0.14.0",
     "react-refresh-webpack-plugin": "^0.1.0",
     "react-resize-observer": "^1.1.1",
+    "react-select": "^5.10.1",
     "react-sortablejs": "^6.1.4",
     "redux": "^5.0.1",
     "redux-saga": "^1.3.0",

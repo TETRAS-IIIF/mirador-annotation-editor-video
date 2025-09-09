@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useReducer, useState } from 'react';
 import CompanionWindow from 'mirador/dist/es/src/containers/CompanionWindow';
 import PropTypes from 'prop-types';
 import { Grid } from '@mui/material';
-import { useTranslation } from 'react-i18next';
+import { useTranslation, withTranslation } from 'react-i18next';
+import i18n from 'i18next';
 import AnnotationFormTemplateSelector from './AnnotationFormTemplateSelector';
 import { getTemplateType, saveAnnotationInStorageAdapter, TEMPLATE } from './AnnotationFormUtils';
 import AnnotationFormHeader from './AnnotationFormHeader';
@@ -31,13 +32,23 @@ function AnnotationForm(
   // eslint-disable-next-line no-underscore-dangle
   const [mediaType, setMediaType] = useState(playerReferences.getMediaType());
 
+  const [retryCount, setRetryCount] = useState(0);
+
+  const [, forceUpdate] = useReducer((x) => x + 1, 0);
+
+  if (!playerReferences.isInitializedCorrectly() && retryCount < 10) {
+    console.log('AnnotationForm.js: retryCount', retryCount);
+    setTimeout(() => {
+      setRetryCount(retryCount + 1);
+      forceUpdate();
+    }, 100);
+  }
+
   // Add a state to trigger redraw
   const [windowSize, setWindowSize] = useState({
     height: window.innerHeight,
     width: window.innerWidth,
   });
-
-  const debugMode = config.debug === true;
 
   if (!templateType) {
     if (annotation.id) {
@@ -76,7 +87,10 @@ function AnnotationForm(
     };
   }, []);
 
-  if (!playerReferences?.isInitializedCorrectly()) {
+  if (!playerReferences.isInitCorrectly) {
+    playerReferences.isInitializedCorrectly();
+  }
+  if (!playerReferences.isInitCorrectly) {
     return (
       <UnsupportedMedia id={id} mediaType={mediaType} windowId={windowId} />
     );
@@ -154,7 +168,6 @@ function AnnotationForm(
                 annotation={annotation}
                 canvases={canvases}
                 closeFormCompanionWindow={closeFormCompanionWindow}
-                debugMode={debugMode}
                 playerReferences={playerReferences}
                 saveAnnotation={saveAnnotation}
                 templateType={templateType}

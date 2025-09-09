@@ -17,6 +17,8 @@ export class WindowPlayer {
 
   overlay;
 
+  isInitCorrectly;
+
   /**
    * Constructor
    * @param state
@@ -34,6 +36,7 @@ export class WindowPlayer {
     // Get Visible Canvases return an array but inside the array there is only one element
     this.canvases = getVisibleCanvases(state, { windowId });
     this.windowId = windowId;
+    this.isInitCorrectly = false;
 
     if (this.isInitializedCorrectly()) {
       switch (this.mediaType) {
@@ -53,12 +56,30 @@ export class WindowPlayer {
   }
 
   /**
+   * Pauses execution for a specified amount of time.
+   *
+   * @param {number} ms - The number of milliseconds to sleep.
+   * @returns {Promise<void>} A promise that resolves after the specified duration.
+   */
+  // eslint-disable-next-line class-methods-use-this,require-jsdoc
+  sleep(ms) {
+    return new Promise((resolve) => {
+      setTimeout(resolve, ms);
+    });
+  }
+
+  /**
    * Get player initialisation status
+   * // TODO in MAEV env add this.media.canvasOverlay check
    * @returns {*|boolean}
    */
   isInitializedCorrectly() {
-    return this.media && ((this.media.current && this.media.current.canvas) || this.media.video)
+    this.isInitCorrectly = this.media
+      && ((this.mediaType === MEDIA_TYPES.IMAGE && this.media.current && this.media.current.canvas)
+        || (this.mediaType === MEDIA_TYPES.VIDEO && this.media.video))
       && (this.mediaType !== MEDIA_TYPES.UNKNOWN && this.mediaType !== MEDIA_TYPES.AUDIO);
+
+    return this.isInitCorrectly;
   }
 
   /** ***********************************************************
@@ -211,7 +232,11 @@ export class WindowPlayer {
    * @returns {number}
    */
   getScale() {
-    return this.getDisplayedMediaWidth() / this.getMediaTrueWidth();
+    if (this.isInitializedCorrectly()) {
+      return this.getDisplayedMediaWidth() / this.getMediaTrueWidth();
+    }
+
+    return null;
   }
 
   /**

@@ -40,7 +40,7 @@ export default function AnnotationDrawing(
         rotation: 0,
         scaleX: 0.2,
         scaleY: 0.2,
-        type: SHAPES_TOOL.IMAGE,
+        type: OVERLAY_TOOL.IMAGE,
         url: toolState.imageEvent.id,
         x: 60,
         y: 60,
@@ -50,12 +50,6 @@ export default function AnnotationDrawing(
         ...drawingState,
         currentShape: imageShape,
         shapes: [...drawingState.shapes, imageShape],
-      });
-
-      setToolState({
-        ...toolState,
-        activeTool: 'edit',
-        imageEvent: null,
       });
     }
     setIsDrawing(false);
@@ -210,7 +204,7 @@ export default function AnnotationDrawing(
     const shape = drawingState.shapes.find((s) => s.id === modifiedShape.id);
 
     Object.assign(shape, modifiedShape);
-    if (shape.type === SHAPES_TOOL.IMAGE) {
+    if (shape.type === OVERLAY_TOOL.IMAGE) {
       shape.width = modifiedShape.image.width * modifiedShape.scaleX;
       shape.height = modifiedShape.image.height * modifiedShape.scaleY;
     }
@@ -476,6 +470,7 @@ export default function AnnotationDrawing(
             pos.y = drawingState.currentShape.y;
           }
 
+          // eslint-disable-next-line no-case-declarations
           const radius = Math.sqrt(
             (pos.x - drawingState.currentShape.x) ** 2
             + (pos.y - drawingState.currentShape.y) ** 2,
@@ -558,7 +553,7 @@ export default function AnnotationDrawing(
     >
       <ParentComponent
         activeTool={toolState.activeTool}
-        baseStrokeWidth={toolState.strokeWidth}
+        baseStrokeWidth={playerReferences.getTargetStrokeWidth()}
         displayMode={displayMode}
         handleDragEnd={handleDragEnd}
         handleDragStart={handleDragStart}

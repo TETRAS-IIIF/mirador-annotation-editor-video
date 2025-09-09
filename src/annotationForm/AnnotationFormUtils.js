@@ -9,6 +9,7 @@ import { OVERLAY_TOOL } from './AnnotationFormOverlay/KonvaDrawing/KonvaUtils';
 
 export const TEMPLATE = {
   IIIF_TYPE: 'iiif',
+  MULTIPLE_BODY_TYPE: 'multiple_body',
   TAGGING_TYPE: 'tagging',
   TEXT_TYPE: 'text',
 };
@@ -34,7 +35,7 @@ export const TEMPLATE_TYPES = (t) => [
   {
     description: t('textual_note_with_target'),
     icon: <TextFieldsIcon />,
-    id: TEMPLATE.TEXT_TYPE,
+    id: TEMPLATE.MULTIPLE_BODY_TYPE,
     isCompatibleWithTemplate: (mediaType) => {
       if (mediaType === MEDIA_TYPES.IMAGE) return true;
       return false;
@@ -84,25 +85,19 @@ export const IMAGE_TOOL_STATE = {
 
 /**
  * Specific Tool state for the target SVG
- * @param imageZoom
- * @returns {{activeTool: string, closedMode: string, image: {id: null}, imageEvent: null,
- * strokeColor: string, strokeWidth: number}}
  */
-export function getTargetSVGToolState() {
-  return {
-    activeTool: OVERLAY_TOOL.SHAPE,
-    closedMode: 'closed',
-    image: { id: null },
-    imageEvent: null,
-    strokeColor: 'rgba(255,0, 0, 0.5)',
-    strokeWidth: 5,
-  };
-}
+export const TARGET_TOOL_STATE = {
+  activeTool: OVERLAY_TOOL.SHAPE,
+  closedMode: 'closed',
+  fillColor: 'rgba(100,100,100, 0)',
+  image: { id: null },
+  imageEvent: null,
+  strokeColor: 'rgba(255,0, 0, 0.5)',
+  strokeWidth: 5,
+};
 
 export const TARGET_VIEW = 'target';
 export const OVERLAY_VIEW = 'layer';
-export const TAG_VIEW = 'tag';
-export const MANIFEST_LINK_VIEW = 'link';
 
 /** Split a second to { hours, minutes, seconds }  */
 export function secondsToHMSarray(secs) {
