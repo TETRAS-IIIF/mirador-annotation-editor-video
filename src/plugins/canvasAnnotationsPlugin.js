@@ -46,46 +46,8 @@ function CanvasAnnotationsWrapper({
 
   const wrapperRef = useRef(null);
   const bridgedScrollRef = useRef(null);
-  const markerClass = useMemo(() => ns('scrollto-scrollable'), []);
 
-  useEffect(() => {
-    const root = wrapperRef.current;
-    if (!root) return;
-
-    /**
-     * Callback to find and mark the scrollable container to use for scrolling to annotations.
-     * - Prefers an element with the marker class if present.
-     * - Otherwise, prefers the first scrollable descendant of the root.
-     * - Otherwise, prefers the closest scrollable ancestor of the root.
-     * - Marks the chosen element with the marker class for future reference.
-     * - Updates the `bridgedScrollRef` to point to the chosen element or null if none found.
-     * - Observes DOM mutations to re-evaluate the scrollable container if the structure changes.
-     * @function
-     * @returns {void}
-     */
-    const updateScrollableContainer = () => {
-      const chosen = root.querySelector(`.${markerClass}`)
-        || firstScrollableDescendant(root)
-        || closestScrollableAncestor(root)
-        || null;
-
-      if (chosen) {
-        chosen.classList.add(markerClass);
-        bridgedScrollRef.current = chosen;
-      } else {
-        bridgedScrollRef.current = null;
-      }
-    };
-
-    updateScrollableContainer();
-    const mo = new MutationObserver(updateScrollableContainer);
-    mo.observe(root, { childList: true, subtree: true });
-
-    // eslint-disable-next-line consistent-return
-    return () => mo.disconnect();
-  }, [targetProps?.windowId, markerClass]);
-
-  useEffect(() => {
+   useEffect(() => {
     const selId = targetProps?.selectedAnnotationId;
     if (!selId) return;
 
