@@ -6,12 +6,9 @@ import {
 } from 'mirador/dist/es/src/state/selectors/annotations';
 import { OSDReferences } from 'mirador/dist/es/src/plugins/OSDReferences';
 import { VideosReferences } from 'mirador/dist/es/src/plugins/VideosReferences';
-import { withTranslation } from 'react-i18next';
-import annotationForm from '../annotationForm/AnnotationForm';
 import { checkMediaType, WindowPlayer } from '../playerReferences';
 import { MEDIA_TYPES } from '../annotationForm/AnnotationFormUtils';
 import AnnotationForm from '../annotationForm/AnnotationForm';
-import { WindowPlayer } from '../playerReferences';
 import translations from '../locales/locales';
 
 /** */

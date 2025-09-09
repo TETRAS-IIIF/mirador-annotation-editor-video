@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Grid, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { MEDIA_TYPES } from './AnnotationFormUtils';
 import { MEDIA_TYPES, TEMPLATE } from './AnnotationFormUtils';
 import TargetTimeInput from './TargetTimeInput';
 import { TargetSpatialInput } from './TargetSpatialInput';
