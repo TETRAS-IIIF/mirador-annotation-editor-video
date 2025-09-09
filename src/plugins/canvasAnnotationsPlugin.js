@@ -13,7 +13,7 @@ import AnnotationActionsContext from '../AnnotationActionsContext';
 import SingleCanvasDialog from '../SingleCanvasDialog';
 import translations from '../locales/locales';
 import {
-  firstScrollableDescendant, closestScrollableAncestor, scrollToSelectedAnnotation
+  firstScrollableDescendant, closestScrollableAncestor, scrollToSelectedAnnotation,
 } from './canvasAnnotationsPluginUtils';
 
 /**

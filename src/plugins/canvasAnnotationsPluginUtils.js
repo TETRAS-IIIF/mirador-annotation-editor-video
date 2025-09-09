@@ -88,7 +88,8 @@ export function computeTargetContainer(container, node, offsetTop) {
   const above = nodeTopInContainer < visibleTop;
   const below = nodeBottomInContainer > visibleBottom;
   if (!above && !below) return null;
-  return above ? nodeTopInContainer - offsetTop : Math.max(nodeBottomInContainer - container.clientHeight, nodeTopInContainer - offsetTop);
+  return above ? nodeTopInContainer - offsetTop
+    : Math.max(nodeBottomInContainer - container.clientHeight, nodeTopInContainer - offsetTop);
 }
 
 /**
@@ -117,7 +118,8 @@ export function computeTargetWindow(node, offsetTop) {
   const above = nodeTop < viewTop;
   const below = nodeBottom > viewBottom;
   if (!above && !below) return null;
-  return above ? nodeTop - offsetTop : Math.max(nodeBottom - window.innerHeight, nodeTop - offsetTop);
+  return above ? nodeTop - offsetTop
+    : Math.max(nodeBottom - window.innerHeight, nodeTop - offsetTop);
 }
 
 /**
@@ -139,7 +141,8 @@ export function computeTargetWindow(node, offsetTop) {
 export const runScrollOnce = (
   node,
   bridgedScrollRef,
-  scrollRetryDelay) => new Promise((resolve) => {
+  scrollRetryDelay,
+) => new Promise((resolve) => {
   const scrollBehavior = 'smooth';
   const scrollOffsetTop = 96;
 
@@ -150,8 +153,7 @@ export const runScrollOnce = (
       if (!isScrollable(container)) container = closestScrollableAncestor(node);
       if (!isScrollable(container)) container = getWindowScroller();
 
-      const isWindow =
-        container === document.body
+      const isWindow = container === document.body
         || container === document.documentElement
         || container === document.scrollingElement;
 
@@ -161,7 +163,7 @@ export const runScrollOnce = (
         const before = window.scrollY;
         window.scrollTo({
           behavior: scrollBehavior,
-          top: topWindow
+          top: topWindow,
         });
         setTimeout(() => {
           const after = window.scrollY;
@@ -177,7 +179,7 @@ export const runScrollOnce = (
       if (typeof container.scrollTo === 'function') {
         container.scrollTo({
           behavior: scrollBehavior,
-          top
+          top,
         });
       }
       setTimeout(() => {
@@ -198,6 +200,7 @@ export const scrollToSelectedAnnotation = async (node, bridgedScrollRef) => {
   const maxScrollRetries = 3;
   const scrollRetryDelay = 24;
 
+  // eslint-disable-next-line no-plusplus
   for (let attempt = 0; attempt <= maxScrollRetries; attempt++) {
     // eslint-disable-next-line no-await-in-loop
     const ok = await runScrollOnce(node, bridgedScrollRef, scrollRetryDelay);
@@ -207,7 +210,7 @@ export const scrollToSelectedAnnotation = async (node, bridgedScrollRef) => {
 
     if (attempt < maxScrollRetries) {
       // eslint-disable-next-line no-await-in-loop
-      await new Promise((resolve) => setTimeout(resolve, scrollRetryDelay));
+      await new Promise((resolve) => { setTimeout(resolve, scrollRetryDelay); });
     }
   }
 };
