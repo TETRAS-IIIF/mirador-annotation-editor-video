@@ -2,15 +2,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import { Grid } from '@mui/material';
-import Typography from '@mui/material/Typography';
 import { useTranslation } from 'react-i18next';
-import { TEMPLATE } from './AnnotationFormUtils';
+import { useSelector } from 'react-redux';
+import { getConfig } from 'mirador/dist/es/src/state/selectors';
 import TextCommentTemplate from './TextCommentTemplate';
-
 import './debug.css';
 import TaggingTemplate from './TaggingTemplate';
 import IIIFTemplate from './IIIFTemplate';
 import MultipleBodyTemplate from './MultipleBodyTemplate';
+import { DebugInformation } from './DebugInformation';
+import { TEMPLATE } from './AnnotationFormUtils';
 
 /**
  * This function contain the logic for loading annotation and render proper template type
@@ -20,8 +21,6 @@ export default function AnnotationFormBody(
     annotation,
     canvases,
     closeFormCompanionWindow,
-    config,
-    debugMode,
     playerReferences,
     saveAnnotation,
     templateType,
@@ -29,6 +28,8 @@ export default function AnnotationFormBody(
   },
 ) {
   const { t } = useTranslation();
+
+  const debugMode = useSelector((state) => getConfig(state)).debug ?? false;
   return (
     <Grid container direction="column">
 
@@ -54,8 +55,6 @@ export default function AnnotationFormBody(
               saveAnnotation={saveAnnotation}
               t={t}
               windowId={windowId}
-              commentTemplate={config?.annotation?.commentTemplates ?? []}
-              tagsSuggestions={config?.annotation?.tagsSuggestions ?? []}
             />
           )
         }
@@ -84,47 +83,11 @@ export default function AnnotationFormBody(
           )
         }
       </TemplateContainer>
-      {/* TODO Extract as component */}
       {debugMode && (
-        <>
-          <Typography>
-            {playerReferences.getMediaType()}
-          </Typography>
-          <Typography>
-            {t('scale')}
-            :
-            {playerReferences.getScale()}
-          </Typography>
-          <Typography>
-            {t('zoom')}
-            :
-            {playerReferences.getZoom()}
-          </Typography>
-          <Typography>
-            {t('image_true_size')}
-            :
-            {playerReferences.getMediaTrueWidth()}
-            {' '}
-            x
-            {playerReferences.getMediaTrueHeight()}
-          </Typography>
-          <Typography>
-            {t('container_size')}
-            :
-            {playerReferences.getContainerWidth()}
-            {' '}
-            x
-            {playerReferences.getContainerHeight()}
-          </Typography>
-          <Typography>
-            {t('image_displayed')}
-            :
-            {playerReferences.getDisplayedMediaWidth()}
-            {' '}
-            x
-            {playerReferences.getDisplayedMediaHeight()}
-          </Typography>
-        </>
+        <DebugInformation
+          playerReferences={playerReferences}
+          t={t}
+        />
       )}
     </Grid>
   );
@@ -159,9 +122,6 @@ AnnotationFormBody.propTypes = {
     }),
   ).isRequired,
   closeFormCompanionWindow: PropTypes.func.isRequired,
-  // eslint-disable-next-line react/forbid-prop-types
-  config: PropTypes.object.isRequired,
-  debugMode: PropTypes.bool.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   playerReferences: PropTypes.object.isRequired,
   // eslint-disable-next-line react/forbid-prop-types

@@ -7,6 +7,8 @@ import TargetFormSection from './TargetFormSection';
 import { resizeKonvaStage } from './AnnotationFormOverlay/KonvaDrawing/KonvaUtils';
 import { MultiTagsInput } from './MultiTagsInput';
 import { TextCommentInput } from './TextCommentInput';
+import { useSelector } from 'react-redux';
+import { getConfig } from 'mirador/dist/es/src/state/selectors';
 
 /** Tagging Template* */
 export default function MultipleBodyTemplate(
@@ -17,10 +19,12 @@ export default function MultipleBodyTemplate(
     saveAnnotation,
     t,
     windowId,
-    tagsSuggestions,
-    commentTemplate,
   },
 ) {
+  const annotationConfig = useSelector((state) => getConfig(state)).annotation;
+  const tagsSuggestions = annotationConfig.tagsSuggestions ?? [];
+  const commentTemplate = annotationConfig.commentTemplates ?? [];
+
   let maeAnnotation = annotation;
 
   if (!maeAnnotation.id) {
@@ -197,12 +201,9 @@ MultipleBodyTemplate.propTypes = {
   }).isRequired,
   closeFormCompanionWindow: PropTypes.func.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
-  commentTemplate: PropTypes.string.isRequired,
-  // eslint-disable-next-line react/forbid-prop-types
   playerReferences: PropTypes.object.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   saveAnnotation: PropTypes.func.isRequired,
   t: PropTypes.func.isRequired,
-  tagsSuggestions: PropTypes.arrayOf(PropTypes.string).isRequired,
   windowId: PropTypes.string.isRequired,
 };

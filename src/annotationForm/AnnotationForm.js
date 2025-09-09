@@ -50,8 +50,6 @@ function AnnotationForm(
     width: window.innerWidth,
   });
 
-  const debugMode = config.debug === true;
-
   if (!templateType) {
     if (annotation.id) {
       if (annotation.maeData && annotation.maeData.templateType) {
@@ -170,12 +168,10 @@ function AnnotationForm(
                 annotation={annotation}
                 canvases={canvases}
                 closeFormCompanionWindow={closeFormCompanionWindow}
-                debugMode={debugMode}
                 playerReferences={playerReferences}
                 saveAnnotation={saveAnnotation}
                 templateType={templateType}
                 windowId={windowId}
-                config={config}
               />
             </Grid>
           </Grid>
