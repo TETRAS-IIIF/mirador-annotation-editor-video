@@ -56,12 +56,12 @@ function CanvasAnnotationsWrapper({
   useEffect(() => {
     const root = wrapperRef.current;
     if (!root) return;
-    /** */
+
     const resolve = () => {
-      const chosen = root.querySelector(`.${markerClass}`)
-                || firstScrollableDescendant(root)
-                || closestScrollableAncestor(root)
-                || null;
+      let chosen = root.querySelector(`.${markerClass}`)
+        || firstScrollableDescendant(root)
+        || closestScrollableAncestor(root)
+        || null;
 
       if (chosen) {
         chosen.classList.add(markerClass);
@@ -72,15 +72,10 @@ function CanvasAnnotationsWrapper({
     };
 
     resolve();
-    const raf = requestAnimationFrame(resolve);
     const mo = new MutationObserver(resolve);
     mo.observe(root, { childList: true, subtree: true });
 
-    // eslint-disable-next-line consistent-return
-    return () => {
-      cancelAnimationFrame(raf);
-      mo.disconnect();
-    };
+    return () => mo.disconnect();
   }, [targetProps?.windowId, markerClass]);
 
   useEffect(() => {
