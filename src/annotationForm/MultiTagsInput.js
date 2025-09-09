@@ -43,5 +43,8 @@ MultiTagsInput.propTypes = {
   t: PropTypes.func.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   tags: PropTypes.any.isRequired,
-  tagsSuggestions: PropTypes.arrayOf(PropTypes.string).isRequired,
+  tagsSuggestions: PropTypes.arrayOf(PropTypes.shape({
+    label: PropTypes.string,
+    value: PropTypes.string,
+  })).isRequired,
 };
