@@ -225,4 +225,4 @@ AnnotationForm.propTypes = {
   windowId: PropTypes.string.isRequired,
 };
 
-export default withTranslation()(AnnotationForm);
+export default AnnotationForm;
