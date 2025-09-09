@@ -1,7 +1,8 @@
 # CHANGELOG 
 
-## [ 1.0.88]
+## [ 1.1.16]
 
+### Change From MAE 1.0.88
 - ADD : Implement Multibody template 
 - ADD : Tags suggestion in annotation edition
 - FIX : Use selector to get config data
