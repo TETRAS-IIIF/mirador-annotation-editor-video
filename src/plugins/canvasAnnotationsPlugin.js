@@ -7,13 +7,12 @@ import { getVisibleCanvases } from 'mirador/dist/es/src/state/selectors/canvases
 import * as actions from 'mirador/dist/es/src/state/actions';
 import { getWindowViewType } from 'mirador/dist/es/src/state/selectors';
 import { getCompanionWindowsForContent } from 'mirador/dist/es/src/state/selectors/companionWindows';
-import ns from 'mirador/dist/es/src/config/css-ns';
 import CanvasListItem from '../CanvasListItem';
 import AnnotationActionsContext from '../AnnotationActionsContext';
 import SingleCanvasDialog from '../SingleCanvasDialog';
 import translations from '../locales/locales';
 import {
-  firstScrollableDescendant, closestScrollableAncestor, scrollToSelectedAnnotation,
+  scrollToSelectedAnnotation,
 } from './canvasAnnotationsPluginUtils';
 
 /**
@@ -47,7 +46,7 @@ function CanvasAnnotationsWrapper({
   const wrapperRef = useRef(null);
   const bridgedScrollRef = useRef(null);
 
-   useEffect(() => {
+  useEffect(() => {
     const selId = targetProps?.selectedAnnotationId;
     if (!selId) return;
 

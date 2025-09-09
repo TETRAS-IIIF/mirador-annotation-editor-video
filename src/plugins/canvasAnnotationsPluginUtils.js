@@ -7,6 +7,7 @@ export const isScrollable = (el) => {
   const oy = cs.overflowY || cs.overflow || '';
   return /(auto|scroll|overlay)/.test(oy) && el.scrollHeight > el.clientHeight;
 };
+
 /**
  * Find the closest scrollable ancestor of a given DOM node.
  *
@@ -28,25 +29,7 @@ export const closestScrollableAncestor = (node) => {
   }
   return null;
 };
-/**
- * Find the first scrollable descendant of a given root element.
- *
- * - Checks the immediate children of `root` first.
- * - If none are scrollable, scans all descendants (via `querySelectorAll('*')`).
- * - A scrollable element is one where `overflowY` (or `overflow`) is set
- *   to `auto`, `scroll`, or `overlay` **and** the element's `scrollHeight`
- *   exceeds its `clientHeight`.
- * - Returns `null` if no scrollable descendant is found.
- *
- * @param {HTMLElement|null} root - The root element to search within.
- * @returns {HTMLElement|null} The first scrollable descendant element, or null if none exist.
- */
-export const firstScrollableDescendant = (root) => {
-  if (!root) return null;
-  for (const el of Array.from(root.children)) if (isScrollable(el)) return el;
-  for (const el of Array.from(root.querySelectorAll('*'))) if (isScrollable(el)) return el;
-  return null;
-};
+
 /**
  * Get the primary scrollable element for the browser window.
  *
