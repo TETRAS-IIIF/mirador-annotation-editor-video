@@ -58,6 +58,7 @@ export const firstScrollableDescendant = (root) => {
  * @returns {HTMLElement} The DOM element representing the window's scrolling container.
  */
 export const getWindowScroller = () => document.scrollingElement || document.documentElement;
+
 /**
  * Compute the vertical scroll position needed to bring a node into view
  * within a given scrollable container element.
@@ -87,9 +88,7 @@ export function computeTargetContainer(container, node, offsetTop) {
   const above = nodeTopInContainer < visibleTop;
   const below = nodeBottomInContainer > visibleBottom;
   if (!above && !below) return null;
-  return above
-    ? nodeTopInContainer - offsetTop
-    : Math.max(nodeBottomInContainer - container.clientHeight, nodeTopInContainer - offsetTop);
+  return above ? nodeTopInContainer - offsetTop : Math.max(nodeBottomInContainer - container.clientHeight, nodeTopInContainer - offsetTop);
 }
 
 /**
@@ -118,9 +117,7 @@ export function computeTargetWindow(node, offsetTop) {
   const above = nodeTop < viewTop;
   const below = nodeBottom > viewBottom;
   if (!above && !below) return null;
-  return above
-    ? nodeTop - offsetTop
-    : Math.max(nodeBottom - window.innerHeight, nodeTop - offsetTop);
+  return above ? nodeTop - offsetTop : Math.max(nodeBottom - window.innerHeight, nodeTop - offsetTop);
 }
 
 /**
@@ -134,12 +131,15 @@ export function computeTargetWindow(node, offsetTop) {
  * - After a short delay (`scrollRetryDelay`),
  * checks whether the scroll position actually changed.
  *
-  * @param {HTMLElement} node - The DOM element to scroll into view.
+ * @param {HTMLElement} node - The DOM element to scroll into view.
  * @param {React.RefObject<HTMLElement>} bridgedScrollRef - Ref to a preferred scrollable container.
  * @param {number} scrollRetryDelay - Delay in ms before checking if the scroll succeeded.
  * @returns {Promise<boolean>} Resolves to true if the scroll moved the container, false otherwise.
  */
-export const runScrollOnce = (node, bridgedScrollRef, scrollRetryDelay) => new Promise((resolve) => {
+export const runScrollOnce = (
+  node,
+  bridgedScrollRef,
+  scrollRetryDelay) => new Promise((resolve) => {
   const scrollBehavior = 'smooth';
   const scrollOffsetTop = 96;
 
@@ -150,7 +150,8 @@ export const runScrollOnce = (node, bridgedScrollRef, scrollRetryDelay) => new P
       if (!isScrollable(container)) container = closestScrollableAncestor(node);
       if (!isScrollable(container)) container = getWindowScroller();
 
-      const isWindow = container === document.body
+      const isWindow =
+        container === document.body
         || container === document.documentElement
         || container === document.scrollingElement;
 
@@ -160,7 +161,7 @@ export const runScrollOnce = (node, bridgedScrollRef, scrollRetryDelay) => new P
         const before = window.scrollY;
         window.scrollTo({
           behavior: scrollBehavior,
-          top: topWindow,
+          top: topWindow
         });
         setTimeout(() => {
           const after = window.scrollY;
@@ -176,10 +177,8 @@ export const runScrollOnce = (node, bridgedScrollRef, scrollRetryDelay) => new P
       if (typeof container.scrollTo === 'function') {
         container.scrollTo({
           behavior: scrollBehavior,
-          top,
+          top
         });
-      } else {
-        container.scrollTop = t;
       }
       setTimeout(() => {
         const after = container.scrollTop;
@@ -189,21 +188,26 @@ export const runScrollOnce = (node, bridgedScrollRef, scrollRetryDelay) => new P
   });
 });
 
+/**
+ * Scroll the selected annotation into view, retrying if necessary.
+ * @param node
+ * @param bridgedScrollRef
+ * @returns {Promise<void>}
+ */
 export const scrollToSelectedAnnotation = async (node, bridgedScrollRef) => {
-  const scrollRetries = 3;
+  const maxScrollRetries = 3;
   const scrollRetryDelay = 24;
 
-  for (let attempt = 0; attempt <= scrollRetries; attempt++) {
+  for (let attempt = 0; attempt <= maxScrollRetries; attempt++) {
     // eslint-disable-next-line no-await-in-loop
     const ok = await runScrollOnce(node, bridgedScrollRef, scrollRetryDelay);
-    if (ok) return true;
+    if (ok) {
+      break;
+    }
 
-    if (attempt < scrollRetries) {
+    if (attempt < maxScrollRetries) {
       // eslint-disable-next-line no-await-in-loop
       await new Promise((resolve) => setTimeout(resolve, scrollRetryDelay));
     }
   }
-
-  return false;
 };
-

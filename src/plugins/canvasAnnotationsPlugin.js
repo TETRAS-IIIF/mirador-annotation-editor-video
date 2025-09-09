@@ -13,7 +13,7 @@ import AnnotationActionsContext from '../AnnotationActionsContext';
 import SingleCanvasDialog from '../SingleCanvasDialog';
 import translations from '../locales/locales';
 import {
-  firstScrollableDescendant, closestScrollableAncestor, runScrollOnce, scrollToSelectedAnnotation
+  firstScrollableDescendant, closestScrollableAncestor, scrollToSelectedAnnotation
 } from './canvasAnnotationsPluginUtils';
 
 /**
@@ -52,8 +52,18 @@ function CanvasAnnotationsWrapper({
     const root = wrapperRef.current;
     if (!root) return;
 
-    // eslint-disable-next-line
-    const resolve = () => {
+    /**
+     * Callback to find and mark the scrollable container to use for scrolling to annotations.
+     * - Prefers an element with the marker class if present.
+     * - Otherwise, prefers the first scrollable descendant of the root.
+     * - Otherwise, prefers the closest scrollable ancestor of the root.
+     * - Marks the chosen element with the marker class for future reference.
+     * - Updates the `bridgedScrollRef` to point to the chosen element or null if none found.
+     * - Observes DOM mutations to re-evaluate the scrollable container if the structure changes.
+     * @function
+     * @returns {void}
+     */
+    const updateScrollableContainer = () => {
       const chosen = root.querySelector(`.${markerClass}`)
         || firstScrollableDescendant(root)
         || closestScrollableAncestor(root)
@@ -67,8 +77,8 @@ function CanvasAnnotationsWrapper({
       }
     };
 
-    resolve();
-    const mo = new MutationObserver(resolve);
+    updateScrollableContainer();
+    const mo = new MutationObserver(updateScrollableContainer);
     mo.observe(root, { childList: true, subtree: true });
 
     // eslint-disable-next-line consistent-return
@@ -150,7 +160,6 @@ function CanvasAnnotationsWrapper({
 }
 
 CanvasAnnotationsWrapper.propTypes = {
-
   addCompanionWindow: PropTypes.func.isRequired,
   annotationEditCompanionWindowIsOpened: PropTypes.bool.isRequired,
   annotationsOnCanvases: PropTypes.shape({}).isRequired,
