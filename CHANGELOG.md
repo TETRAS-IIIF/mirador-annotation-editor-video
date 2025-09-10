@@ -1,6 +1,10 @@
 # CHANGELOG 
 
-## [ 1.1.16]
+## [ 1.1.7]
+
+- FIX : GetKonvaShape 
+
+## [ 1.1.6]
 
 ### Change From MAE 1.0.88
 - ADD : Implement Multibody template 
