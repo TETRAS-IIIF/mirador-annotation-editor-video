@@ -1,5 +1,9 @@
 # CHANGELOG 
 
+## New changes not yet released
+
+- ADD : readonly mode for annotation viewer
+
 ## [ 1.0.88]
 
 - ADD : Implement Multibody template 
