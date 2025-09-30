@@ -1,8 +1,12 @@
-# CHANGELOG 
+# CHANGELOG
+
+## New changes not yet released
+
+- ADD : readonly mode for annotation viewer
 
 ## [ 1.1.7]
 
-- FIX : GetKonvaShape 
+- FIX : GetKonvaShape
 
 ## [ 1.1.6]
 
