@@ -18,6 +18,7 @@ const config = {
     }],
     exportLocalStorageAnnotations: false,
     quillConfig,
+    readonly: true,
     tagsSuggestions: ['Mirador', 'Awesome', 'Viewer', 'IIIF', 'Template'],
   },
   annotations: {
