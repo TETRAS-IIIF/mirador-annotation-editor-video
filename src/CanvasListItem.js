@@ -162,26 +162,32 @@ const CanvasListItem = forwardRef((props, ref) => {
                 <InfoIcon />
               </ToggleButton>
             </Tooltip>
-            <Tooltip title={t('edit_annotation')}>
-              <ToggleButton
-                aria-label="Edit"
-                onClick={context.windowViewType === 'single' ? handleEdit : context.toggleSingleCanvasDialogOpen}
-                value="edit"
-                disabled={!context.annotationEditCompanionWindowIsOpened}
-              >
-                <EditIcon />
-              </ToggleButton>
-            </Tooltip>
-            <Tooltip title={t('deleteAnnotation')}>
-              <ToggleButton
-                aria-label="Delete"
-                onClick={handleDelete}
-                value="delete"
-                disabled={!context.annotationEditCompanionWindowIsOpened}
-              >
-                <DeleteIcon />
-              </ToggleButton>
-            </Tooltip>
+            {
+              context.config?.annotation?.readonly !== true && (
+                <>
+                  <Tooltip title={t('edit_annotation')}>
+                    <ToggleButton
+                      aria-label="Edit"
+                      onClick={context.windowViewType === 'single' ? handleEdit : context.toggleSingleCanvasDialogOpen}
+                      value="edit"
+                      disabled={!context.annotationEditCompanionWindowIsOpened}
+                    >
+                      <EditIcon />
+                    </ToggleButton>
+                  </Tooltip>
+                  <Tooltip title={t('deleteAnnotation')}>
+                    <ToggleButton
+                      aria-label="Delete"
+                      onClick={handleDelete}
+                      value="delete"
+                      disabled={!context.annotationEditCompanionWindowIsOpened}
+                    >
+                      <DeleteIcon />
+                    </ToggleButton>
+                  </Tooltip>
+                </>
+              )
+            }
           </ToggleButtonGroup>
         </div>
       )}

@@ -73,16 +73,20 @@ function MiradorAnnotation(
     <div>
       {/* eslint-disable-next-line react/jsx-props-no-spreading */}
       <TargetComponent {...targetProps} />
-      <Tooltip title={t('create_annotation')}>
-        <MiradorMenuButton
-          aria-label={t('create_annotation')}
-          onClick={windowViewType === 'single' ? openCreateAnnotationCompanionWindow : toggleSingleCanvasDialogOpen}
-          size="small"
-          disabled={!annotationEditCompanionWindowIsOpened}
-        >
-          <AddBoxIcon />
-        </MiradorMenuButton>
-      </Tooltip>
+      {
+        config?.annotation?.readonly === true ? null : (
+          <Tooltip title={t('create_annotation')}>
+            <MiradorMenuButton
+              aria-label={t('create_annotation')}
+              onClick={windowViewType === 'single' ? openCreateAnnotationCompanionWindow : toggleSingleCanvasDialogOpen}
+              size="small"
+              disabled={!annotationEditCompanionWindowIsOpened}
+            >
+              <AddBoxIcon />
+            </MiradorMenuButton>
+          </Tooltip>
+        )
+      }
       {singleCanvasDialogOpen && (
         <SingleCanvasDialog
           open={singleCanvasDialogOpen}
@@ -122,6 +126,7 @@ MiradorAnnotation.propTypes = {
     annotation: PropTypes.shape({
       adapter: PropTypes.func,
       exportLocalStorageAnnotations: PropTypes.bool,
+      readonly: PropTypes.bool,
     }),
   }).isRequired,
   t: PropTypes.func.isRequired,
