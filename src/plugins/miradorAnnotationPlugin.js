@@ -69,24 +69,24 @@ function MiradorAnnotation(
   const offerExportDialog = config.annotation && storageAdapter instanceof LocalStorageAdapter
       && config.annotation.exportLocalStorageAnnotations;
 
-  if (config.annotation.readonly === true) {
-    return <div />;
-  }
-
   return (
     <div>
       {/* eslint-disable-next-line react/jsx-props-no-spreading */}
       <TargetComponent {...targetProps} />
-      <Tooltip title={t('create_annotation')}>
-        <MiradorMenuButton
-          aria-label={t('create_annotation')}
-          onClick={windowViewType === 'single' ? openCreateAnnotationCompanionWindow : toggleSingleCanvasDialogOpen}
-          size="small"
-          disabled={!annotationEditCompanionWindowIsOpened}
-        >
-          <AddBoxIcon />
-        </MiradorMenuButton>
-      </Tooltip>
+      {
+        config?.annotation?.readonly === true ? null : (
+          <Tooltip title={t('create_annotation')}>
+            <MiradorMenuButton
+              aria-label={t('create_annotation')}
+              onClick={windowViewType === 'single' ? openCreateAnnotationCompanionWindow : toggleSingleCanvasDialogOpen}
+              size="small"
+              disabled={!annotationEditCompanionWindowIsOpened}
+            >
+              <AddBoxIcon />
+            </MiradorMenuButton>
+          </Tooltip>
+        )
+      }
       {singleCanvasDialogOpen && (
         <SingleCanvasDialog
           open={singleCanvasDialogOpen}
