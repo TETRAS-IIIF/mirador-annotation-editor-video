@@ -1,6 +1,7 @@
-import React, { useEffect, useState, useRef, useMemo } from 'react';
+import React, { useEffect, useState, useRef, useMemo, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import {
+  addCompanionWindow,
   addCompanionWindow as addCompanionWindowAction,
   getCompanionWindowsForContent,
   getVisibleCanvases,
@@ -72,10 +73,9 @@ function CanvasAnnotationsWrapper({
    * @function
    * @returns {void}
    */
-  /* const toggleSingleCanvasDialogOpen = useCallback(
-    () => setSingleCanvasDialogOpen((p) => !p),
-    [],
-  );*/
+  const toggleSingleCanvasDialogOpen = useCallback(() => {
+    setSingleCanvasDialogOpen((prev) => !prev);
+  });
 
   // Add translations from config to i18n
   useEffect(() => {
@@ -96,11 +96,6 @@ function CanvasAnnotationsWrapper({
       }
     }
   }, [config.translations, config.language]);
-
-  /** */
-  const toggleSingleCanvasDialogOpen = () => {
-    setSingleCanvasDialogOpen((prev) => !prev);
-  };
 
   const props = {
     containerRef: bridgedScrollRef,
@@ -251,7 +246,7 @@ function mapStateToProps(state, { targetProps: { windowId } }) {
  * @property {function():void} switchToSingleCanvasView
  */
 const mapDispatchToProps = (dispatch, props) => ({
-  addCompanionWindow: (content, additionalProps) => dispatch(actions.addCompanionWindow(
+  addCompanionWindow: (content, additionalProps) => dispatch(addCompanionWindow(
     props.targetProps.windowId,
     { content, ...additionalProps },
   )),
