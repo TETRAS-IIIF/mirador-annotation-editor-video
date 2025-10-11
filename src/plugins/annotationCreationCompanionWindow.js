@@ -1,26 +1,40 @@
-import * as actions from 'mirador/dist/es/src/state/actions';
-import { getCompanionWindow } from 'mirador/dist/es/src/state/selectors/companionWindows';
-import { getVisibleCanvases } from 'mirador/dist/es/src/state/selectors/canvases';
-import { getPresentAnnotationsOnSelectedCanvases } from 'mirador/dist/es/src/state/selectors/annotations';
-import { OSDReferences } from 'mirador/dist/es/src/plugins/OSDReferences';
-import AnnotationForm from '../annotationForm/AnnotationForm';
+import * as actions from 'mirador';
+import {
+  getCompanionWindow,
+  getVisibleCanvases,
+  getPresentAnnotationsOnSelectedCanvases,
+  OSDReferences,
+  removeCompanionWindow as removeCompanionWindowAction,
+  receiveAnnotation as receiveAnnotationAction,
+} from 'mirador';
+
+import annotationForm from '../annotationForm/AnnotationForm';
 import { WindowPlayer } from '../playerReferences';
 import translations from '../locales/locales';
 
 /** */
-const mapDispatchToProps = (dispatch, { id, windowId }) => ({
+const mapDispatchToProps = (dispatch, {
+  id,
+  windowId,
+}) => ({
   closeCompanionWindow: () => dispatch(
-    actions.removeCompanionWindow(windowId, id),
+    removeCompanionWindowAction(windowId, id),
   ),
   receiveAnnotation: (targetId, annoId, annotation) => dispatch(
-    actions.receiveAnnotation(targetId, annoId, annotation),
+    receiveAnnotationAction(targetId, annoId, annotation),
   ),
 });
 
 /** */
-function mapStateToProps(state, { id: companionWindowId, windowId }) {
+function mapStateToProps(state, {
+  id: companionWindowId,
+  windowId,
+}) {
   const currentTime = null;
-  const cw = getCompanionWindow(state, { companionWindowId, windowId });
+  const cw = getCompanionWindow(state, {
+    companionWindowId,
+    windowId,
+  });
   const { annotationid } = cw;
 
   // This architecture lead to recreate the playerReferences each time the component is rendered
@@ -46,17 +60,23 @@ function mapStateToProps(state, { id: companionWindowId, windowId }) {
   return {
     annotation,
     canvases,
-    config: { ...state.config, translations },
+    config: {
+      ...state.config,
+      translations,
+    },
     currentTime,
     playerReferences,
   };
 }
 
-const annotationCreationCompanionWindowPlugin = {
+// TODO attention
+
+
+const annotationCreationCompanionWindow = {
   companionWindowKey: 'annotationCreation',
-  component: AnnotationForm,
+  component: annotationForm,
   mapDispatchToProps,
   mapStateToProps,
 };
 
-export default annotationCreationCompanionWindowPlugin;
+export default annotationCreationCompanionWindow;

@@ -7,6 +7,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import { MEDIA_TYPES, TEMPLATE_TYPES } from './AnnotationFormUtils';
+
 /**
  * A component that renders a selection of annotation
  * form templates for different types of comments.
@@ -18,7 +19,7 @@ export default function AnnotationFormTemplateSelector({
   const { t } = useTranslation();
   /**
    * Sets the comment type for the application.
-  */
+   */
   const setCommentType = (template) => setCommentingType(template);
   const templates = TEMPLATE_TYPES(t);
 
@@ -61,12 +62,18 @@ const CardContainer = styled('div')(() => ({
   margin: '10px',
 }));
 
-const CardTypography = styled(Typography, { name: 'CompanionWindow', slot: 'body1Next' })({
+const CardTypography = styled(Typography, {
+  name: 'CompanionWindow',
+  slot: 'body1Next',
+})({
   display: 'flex',
   justifyContent: 'space-between',
 });
 
-const DescriptionCardTypography = styled(Typography, { name: 'CompanionWindow', slot: 'body1Next' })({
+const DescriptionCardTypography = styled(Typography, {
+  name: 'CompanionWindow',
+  slot: 'body1Next',
+})({
   color: '#adabab',
   display: 'flex',
   justifyContent: 'space-between',

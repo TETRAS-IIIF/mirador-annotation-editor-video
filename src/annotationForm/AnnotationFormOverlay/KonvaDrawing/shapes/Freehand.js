@@ -48,9 +48,9 @@ function Freehand({
         onDragStart={handleDragStart}
         id={shape.id}
       >
-        {shape.lines.map((line, i) => (
+        {shape.lines.map((line) => (
           <Line
-            key={i}
+            key={line.points.join(',')}
             fill={shape.stroke}
             points={line.points}
             stroke={shape.stroke}

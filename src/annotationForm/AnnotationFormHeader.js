@@ -1,7 +1,7 @@
 import React from 'react';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import PropTypes from 'prop-types';
-import { MiradorMenuButton } from 'mirador/dist/es/src/components/MiradorMenuButton';
+import { MiradorMenuButton } from 'mirador';
 import { Grid } from '@mui/material';
 
 /**
@@ -15,8 +15,8 @@ export default function AnnotationFormHeader(
   },
 ) {
   /**
-     * Function to navigate back to the template selection.
-     */
+   * Function to navigate back to the template selection.
+   */
   const goBackToTemplateSelection = () => {
     setCommentingType(null);
   };
@@ -32,11 +32,11 @@ export default function AnnotationFormHeader(
     >
       <Grid item>
         {annotation.id == null
-        && (
-          <MiradorMenuButton aria-label="back" TooltipProps="back">
-            <ChevronLeftIcon onClick={goBackToTemplateSelection} />
-          </MiradorMenuButton>
-        )}
+          && (
+            <MiradorMenuButton ariaLabel="back" TooltipProps="back">
+              <ChevronLeftIcon onClick={goBackToTemplateSelection} />
+            </MiradorMenuButton>
+          )}
       </Grid>
       <Grid item>
         {templateType.icon}

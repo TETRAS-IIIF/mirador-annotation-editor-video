@@ -1,4 +1,4 @@
-import mirador from 'mirador/dist/es/src/index';
+import Mirador from 'mirador';
 import annotationPlugins from '../../src';
 import LocalStorageAdapter from '../../src/annotationAdapter/LocalStorageAdapter';
 import { manifestsCatalog } from './manifestsCatalog';
@@ -27,7 +27,7 @@ const config = {
   catalog: manifestsCatalog,
   debug: true,
   id: 'demo',
-  language: 'fr',
+  language: 'en',
   themes: {
     dark: {
       typography: {
@@ -75,4 +75,4 @@ const config = {
   ],
 };
 
-mirador.viewer(config, [...annotationPlugins]);
+Mirador.viewer(config, [...annotationPlugins]);

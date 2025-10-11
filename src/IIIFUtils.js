@@ -33,8 +33,6 @@ export const convertAnnotationStateToBeSaved = async (
   if (annotationState.maeData.templateType === TEMPLATE.IIIF_TYPE) {
     return annotationState;
   }
-  console.info('Annotation state to be saved', annotationState);
-  console.info('Annotation state target', annotationState.maeData.target);
 
   // TODO I dont know why this code is here? To clean the object ?
   annotationStateForSaving.maeData.target = {

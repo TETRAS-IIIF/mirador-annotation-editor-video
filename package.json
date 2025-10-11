@@ -1,25 +1,25 @@
 {
   "name": "mirador-annotation-editor",
   "version": "1.0.88",
-  "description": "Mirador annotation editor  plugin in a React component. Mirador 4 (Alpha 2) compatible ",
+  "description": "Mirador annotation editor plugin in a React component. Mirador 4 compatible ",
   "main": "es/index.js",
-  "module": "es/index.js",
+  "module": "./dist/mirador-annotation-editor.es.js",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    "./src": "./src/index.js"
+  },
+
   "scripts": {
-    "build": "npm run build:es",
-    "build:umd": "NODE_ENV=production webpack --mode=production",
-    "build:es": "mkdir -p es && cp -r src/* es && NODE_ENV=production MODULE_FORMAT=es npx babel es -d es",
-    "build:cjs": "mkdir -p lib && cp -r src/* lib && NODE_ENV=production MODULE_FORMAT=cjs npx babel lib -d lib",
-    "build:demo": "NODE_ENV=development webpack --mode=development",
-    "clean": "rm -rf ./umd && rm -rf ./es && rm -rf ./lib && rm -rf ./demo/dist",
-    "clean-deps": "rm -rf package-lock.json && rm -rf node_modules",
-    "lint": "eslint ./src ./__tests__",
     "prepare": "npm run build",
-    "prepublishOnly": "npm run clean && npm run build:es",
-    "start": "NODE_ENV=development webpack serve --open",
-    "test": "npm run lint && jest",
-    "test:coverage": "jest --coverage",
-    "test:watch": "jest --watch",
-    "test:ci": "jest --ci --reporters=default --reporters=jest-junit --watchAll=false"
+    "build": "vite build --config vite.config.js",
+    "clean": "rm -rf ./dist && rm -rf node_modules",
+    "lint": "npx eslint ./",
+    "prepublishOnly": "npm run build",
+    "start": "vite",
+    "test": "npx vitest run",
+    "test:coverage": "npm run lint && npx vitest run --coverage"
   },
   "contributors": [
     "Anthony Geourjon <anthony.geourjon@tetras-libre.fr> (https://www.tetras-libre.fr)",
@@ -39,7 +39,7 @@
     "html-loader": "^5.0.0",
     "i18next": "^25.4.1",
     "json-edit-react": "^1.22.2",
-    "react-color": "^2.18.1",
+    "react-color": "^2.19.3",
     "react-i18next": "^15.4.0",
     "react-konva": "^19.0.10",
     "react-konva-to-svg": "^1.0.2",

@@ -9,7 +9,7 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import flatten from 'lodash/flatten';
 import { Tooltip } from '@mui/material';
-import { withTranslation } from 'react-i18next';
+import { useTranslation, withTranslation } from 'react-i18next';
 import InfoIcon from '@mui/icons-material/Info';
 import AnnotationActionsContext from './AnnotationActionsContext';
 import WhoAndWhenFormSection, { TOOLTIP_MODE } from './annotationForm/WhoAndWhenFormSection';
@@ -107,8 +107,8 @@ const CanvasListItem = forwardRef((props, ref) => {
       .includes(annotationid);
   };
 
-  // eslint-disable-next-line react/prop-types
-  const { t, tReady, ...filteredProps } = props;
+    // TODO perhaps M4 regression with props
+  const { t } = useTranslation();
 
   return (
     <div
@@ -193,7 +193,7 @@ const CanvasListItem = forwardRef((props, ref) => {
         </div>
       )}
       {/* eslint-disable-next-line react/jsx-props-no-spreading */}
-      <li {...filteredProps}>
+      <li {...props}>
         {props.children}
       </li>
     </div>
@@ -201,6 +201,7 @@ const CanvasListItem = forwardRef((props, ref) => {
 });
 
 CanvasListItem.propTypes = {
+  annotationEditCompanionWindowIsOpened: PropTypes.bool.isRequired,
   annotationid: PropTypes.string.isRequired,
   children: PropTypes.oneOfType([
     PropTypes.func,

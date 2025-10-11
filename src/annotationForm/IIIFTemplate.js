@@ -7,16 +7,17 @@ import AnnotationFormFooter from './AnnotationFormFooter';
 /**
  * IIIFTemplate component
  * @param annotation
- * @param saveAnnotation
- * @param closeFormCompanionWindow
  * @param canvases
+ * @param closeFormCompanionWindow
+ * @param saveAnnotation
+ * @param t
  * @returns {JSX.Element}
  */
 export default function IIIFTemplate({
   annotation,
-  saveAnnotation,
-  closeFormCompanionWindow,
   canvases,
+  closeFormCompanionWindow,
+  saveAnnotation,
   t,
 }) {
   const [annotationState, setAnnotationState] = useState(annotation);
@@ -42,7 +43,6 @@ export default function IIIFTemplate({
         elevation={0}
         style={{ minHeight: '300px' }}
       >
-
         <JsonEditor
           data={annotationState}
           onUpdate={setAnnotationState}

@@ -1,4 +1,3 @@
-/* eslint-disable react/forbid-prop-types */
 import {
   ClickAwayListener,
   Divider,
@@ -144,7 +143,7 @@ export default function ColorPicker(
         <SketchPicker
           disableAlpha={false}
           color={currentColor}
-          onChange={updateColor}
+          onChange={updateColor} // TODO M4 merge onchangeComplete
         />
       </Popover>
     </Grid>
@@ -163,6 +162,7 @@ ColorPicker.propTypes = {
   handleLineWeightSelect: Proptypes.func.isRequired,
   openChooseColor: Proptypes.func.isRequired,
   openChooseLineWeight: Proptypes.func.isRequired,
+  t: Proptypes.func.isRequired,
   toolOptions: Proptypes.shape({
     colorPopoverOpen: PropTypes.bool,
     currentColorType: PropTypes.any,

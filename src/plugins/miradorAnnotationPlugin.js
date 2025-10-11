@@ -1,18 +1,26 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import AddBoxIcon from '@mui/icons-material/AddBox';
 import GetAppIcon from '@mui/icons-material/GetApp';
-import { getWindowViewType } from 'mirador/dist/es/src/state/selectors';
-import * as actions from 'mirador/dist/es/src/state/actions';
-import { MiradorMenuButton } from 'mirador/dist/es/src/components/MiradorMenuButton';
-import { getVisibleCanvases } from 'mirador/dist/es/src/state/selectors/canvases';
+import {
+  getWindowViewType,
+  MiradorMenuButton,
+  getVisibleCanvases,
+  addCompanionWindow as addCompanionWindowAction,
+  setWindowViewType as setWindowViewTypeAction,
+  getCompanionWindowsForContent
+} from 'mirador';
 import { useDispatch, useSelector } from 'react-redux';
 import { Tooltip } from '@mui/material';
-import { getCompanionWindowsForContent } from 'mirador/dist/es/src/state/selectors/companionWindows';
 import SingleCanvasDialog from '../SingleCanvasDialog';
+import { styled } from '@mui/material/styles';
 import AnnotationExportDialog from '../AnnotationExportDialog';
 import LocalStorageAdapter from '../annotationAdapter/LocalStorageAdapter';
 import translations from '../locales/locales';
+
+const StyledDiv = styled('div')(() => ({
+  display: 'flex',
+}));
 
 /** Mirador annotation plugin component. Get all the stuff
  * and info to manage annotation functionnality */
@@ -33,14 +41,14 @@ function MiradorAnnotation(
   /** Open the companion window for annotation */
   const addCompanionWindow = (content, additionalProps) => {
     setCurrentCompanionWindowId(targetProps.windowId);
-    dispatch(actions.addCompanionWindow(targetProps.windowId, { content, ...additionalProps }));
+    dispatch(addCompanionWindowAction(targetProps.windowId, { content, ...additionalProps }));
   };
 
   useEffect(() => {
   }, [annotationEditCompanionWindowIsOpened]);
   /** */
   const switchToSingleCanvasView = () => {
-    dispatch(actions.setWindowViewType(targetProps.windowId, 'single'));
+    dispatch(setWindowViewTypeAction(targetProps.windowId, 'single'));
   };
 
   const windowViewType = useSelector(
@@ -67,10 +75,10 @@ function MiradorAnnotation(
 
   const storageAdapter = config?.annotation?.adapter && config.annotation.adapter('poke');
   const offerExportDialog = config.annotation && storageAdapter instanceof LocalStorageAdapter
-      && config.annotation.exportLocalStorageAnnotations;
+    && config.annotation.exportLocalStorageAnnotations;
 
   return (
-    <div>
+    <StyledDiv>
       {/* eslint-disable-next-line react/jsx-props-no-spreading */}
       <TargetComponent {...targetProps} />
       {
@@ -96,13 +104,15 @@ function MiradorAnnotation(
       )}
       {offerExportDialog && (
         <Tooltip title={t('export_local_annotation')}>
-          <MiradorMenuButton
-            aria-label="Export local annotations for visible items"
-            onClick={toggleCanvasExportDialog}
-            size="small"
-          >
-            <GetAppIcon />
-          </MiradorMenuButton>
+          <div>
+            <MiradorMenuButton
+              aria-label="Export local annotations for visible items"
+              onClick={toggleCanvasExportDialog}
+              size="small"
+            >
+              <GetAppIcon />
+            </MiradorMenuButton>
+          </div>
         </Tooltip>
       )}
       {offerExportDialog && (
@@ -113,14 +123,17 @@ function MiradorAnnotation(
           open={annotationExportDialogOpen}
         />
       )}
-    </div>
+    </StyledDiv>
   );
 }
 
 MiradorAnnotation.propTypes = {
   annotationEditCompanionWindowIsOpened: PropTypes.bool.isRequired,
   canvases: PropTypes.arrayOf(
-    PropTypes.shape({ id: PropTypes.string, index: PropTypes.number }),
+    PropTypes.shape({
+      id: PropTypes.string,
+      index: PropTypes.number,
+    }),
   ).isRequired,
   config: PropTypes.shape({
     annotation: PropTypes.shape({

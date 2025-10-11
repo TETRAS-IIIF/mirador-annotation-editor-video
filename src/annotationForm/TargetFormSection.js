@@ -6,7 +6,7 @@ import { MEDIA_TYPES } from './AnnotationFormUtils';
 import { TargetSpatialInput } from './TargetSpatialInput';
 
 /**
- *
+ * Section of Time and Space Target
  * @param onChangeTarget
  * @param spatialTarget
  * @param playerReferences
