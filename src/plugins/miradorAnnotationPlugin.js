@@ -8,12 +8,13 @@ import {
   getVisibleCanvases,
   addCompanionWindow as addCompanionWindowAction,
   setWindowViewType as setWindowViewTypeAction,
-  getCompanionWindowsForContent
+  getCompanionWindowsForContent,
 } from 'mirador';
 import { useDispatch, useSelector } from 'react-redux';
 import { Tooltip } from '@mui/material';
-import SingleCanvasDialog from '../SingleCanvasDialog';
 import { styled } from '@mui/material/styles';
+import { useTranslation } from 'react-i18next';
+import SingleCanvasDialog from '../SingleCanvasDialog';
 import AnnotationExportDialog from '../AnnotationExportDialog';
 import LocalStorageAdapter from '../annotationAdapter/LocalStorageAdapter';
 import translations from '../locales/locales';
@@ -29,9 +30,11 @@ function MiradorAnnotation(
     targetProps,
     TargetComponent,
     annotationEditCompanionWindowIsOpened,
-    t,
   },
 ) {
+
+  const { t } = useTranslation();
+
   const [annotationExportDialogOpen, setAnnotationExportDialogOpen] = useState(false);
   const [singleCanvasDialogOpen, setSingleCanvasDialogOpen] = useState(false);
   const [currentCompanionWindowId, setCurrentCompanionWindowId] = useState(null);

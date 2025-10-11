@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import {
   addCompanionWindow as addCompanionWindowAction,
@@ -19,8 +19,6 @@ import {
 } from './canvasAnnotationsPluginUtils';
 
 // TODO Attention merge M4upstream
-
-
 /**
  * CanvasAnnotationsWrapper
  *
