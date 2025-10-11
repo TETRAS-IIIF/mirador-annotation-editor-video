@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { Grid, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
@@ -15,49 +15,50 @@ import { TargetSpatialInput } from './TargetSpatialInput';
  * @returns {Element}
  * @constructor
  */
-export default function TargetFormSection({
-  onChangeTarget,
-  spatialTarget,
-  playerReferences,
-  target,
-  windowId,
-}) {
+export default function TargetFormSection(
+  {
+    onChangeTarget,
+    spatialTarget,
+    playerReferences,
+    target,
+    windowId,
+  },
+) {
   const { t } = useTranslation();
+  if (!target) {
+    // eslint-disable-next-line no-param-reassign
+    target = {};
 
-  const mediaType = playerReferences.getMediaType();
-  const defaultTarget = useMemo(() => {
-    if (target) return target;
-
-    const next = {
-      drawingState: {
-        currentShape: null,
-        isDrawing: false,
-        shapes: [],
-      },
-    };
-
-    if (mediaType === MEDIA_TYPES.IMAGE) {
-      next.fullCanvaXYWH = `0,0,${playerReferences.getMediaTrueWidth()},${playerReferences.getMediaTrueHeight()}`;
+    // TODO Check if its possible to use overlay ?
+    switch (playerReferences.getMediaType()) {
+      case MEDIA_TYPES.IMAGE:
+        // eslint-disable-next-line no-param-reassign
+        target.fullCanvaXYWH = `0,0,${playerReferences.getMediaTrueWidth()},${playerReferences.getMediaTrueHeight()}`;
+        break;
+      default:
+        break;
     }
 
-    return next;
-    // Only depends on values used to compute defaults
-    // DO NOT include onChangeTarget here
-  }, [target, mediaType, playerReferences]);
+    target.drawingState = {
+      currentShape: null,
+      isDrawing: false,
+      shapes: [],
+    };
 
-  // Post-render sync: if parent didn't provide target, set it once
-  useEffect(() => {
-    if (!target) onChangeTarget(defaultTarget);
-  }, [target, defaultTarget, onChangeTarget]);
+    onChangeTarget(target);
+  }
 
+  /** Handle spatialTargetInput* */
   const onChangeTargetInput = (newData) => {
     onChangeTarget({
-      ...defaultTarget,
+      ...target,
       ...newData,
     });
   };
 
-  if (!spatialTarget) return null;
+  if (!spatialTarget) {
+    return <> </>;
+  }
 
   return (
     <Grid item container direction="column" spacing={1}>
@@ -66,25 +67,28 @@ export default function TargetFormSection({
           {t('target')}
         </Typography>
       </Grid>
-
-      {spatialTarget && mediaType !== MEDIA_TYPES.AUDIO && (
-        <Grid item container direction="column">
-          <TargetSpatialInput
-            playerReferences={playerReferences}
-            setTargetDrawingState={onChangeTargetInput}
-            targetDrawingState={defaultTarget.drawingState}
-            windowId={windowId}
-          />
-        </Grid>
-      )}
+      {
+        (spatialTarget && playerReferences.getMediaType() !== MEDIA_TYPES.AUDIO) && (
+          <Grid item container direction="column">
+            <TargetSpatialInput
+              playerReferences={playerReferences}
+              setTargetDrawingState={onChangeTargetInput}
+              targetDrawingState={target.drawingState}
+              windowId={windowId}
+            />
+          </Grid>
+        )
+      }
     </Grid>
   );
 }
 
 TargetFormSection.propTypes = {
   onChangeTarget: PropTypes.func.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
   playerReferences: PropTypes.object.isRequired,
   spatialTarget: PropTypes.bool.isRequired,
-  target: PropTypes.object, // allow undefined/null; child will hydrate once
+  // eslint-disable-next-line react/forbid-prop-types
+  target: PropTypes.object.isRequired,
   windowId: PropTypes.string.isRequired,
 };
