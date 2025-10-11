@@ -107,7 +107,7 @@ const CanvasListItem = forwardRef((props, ref) => {
       .includes(annotationid);
   };
 
-    // TODO perhaps M4 regression with props
+  // TODO perhaps M4 regression with props
   const { t } = useTranslation();
 
   return (
@@ -130,66 +130,59 @@ const CanvasListItem = forwardRef((props, ref) => {
               zIndex: 10000,
             }}
           >
-            {
-              context.config?.debug && (
-                <Tooltip title={t('debugAnnotation')}>
-                  <ToggleButton
-                    aria-label="Debug"
-                    onClick={() => console.log(annotationData)} // TODO Open IIIIF debug window
-                    value="Debug in console"
-                    visible={context.config.debug}
-                  >
-                    <SettingsIcon />
-                  </ToggleButton>
-                </Tooltip>
-              )
-            }
-            <Tooltip title={(
-              <WhoAndWhenFormSection
-                creator={annotationData.creator}
-                creationDate={annotationData.creationDate}
-                lastEditor={annotationData.lastEditor}
-                lastSavedDate={annotationData.lastSavedDate}
-                displayMode={TOOLTIP_MODE}
-                t={t}
-              />
+            {context.config?.debug && (
+              <Tooltip title={t('debugAnnotation')}>
+                <ToggleButton
+                  aria-label="Debug"
+                  onClick={() => console.log(annotationData)}
+                  value="debug"
+                >
+                  <SettingsIcon />
+                </ToggleButton>
+              </Tooltip>
             )}
-            >
-              <ToggleButton
-                aria-label="Metadata"
-                value="metadata"
-                visible={annotationData?.creator}
+
+            {!!annotationData?.creator && (
+              <Tooltip
+                title={(
+                  <WhoAndWhenFormSection
+                    creator={annotationData.creator}
+                    creationDate={annotationData.creationDate}
+                    lastEditor={annotationData.lastEditor}
+                    lastSavedDate={annotationData.lastSavedDate}
+                    displayMode={TOOLTIP_MODE}
+                    t={t}
+                  />
+                )}
               >
-                <InfoIcon />
-              </ToggleButton>
-            </Tooltip>
-            {
-              context.config?.annotation?.readonly !== true && (
-                <>
-                  <Tooltip title={t('edit_annotation')}>
-                    <ToggleButton
-                      aria-label="Edit"
-                      onClick={context.windowViewType === 'single' ? handleEdit : context.toggleSingleCanvasDialogOpen}
-                      value="edit"
-                      disabled={!context.annotationEditCompanionWindowIsOpened}
-                    >
-                      <EditIcon />
-                    </ToggleButton>
-                  </Tooltip>
-                  <Tooltip title={t('deleteAnnotation')}>
-                    <ToggleButton
-                      aria-label="Delete"
-                      onClick={handleDelete}
-                      value="delete"
-                      disabled={!context.annotationEditCompanionWindowIsOpened}
-                    >
-                      <DeleteIcon />
-                    </ToggleButton>
-                  </Tooltip>
-                </>
-              )
-            }
+                <ToggleButton aria-label="Metadata" value="metadata">
+                  <InfoIcon />
+                </ToggleButton>
+              </Tooltip>
+            )}
+
+            {context.config?.annotation?.readonly !== true && [(
+              <Tooltip title={t('edit_annotation')} key="edit">
+                <ToggleButton
+                  aria-label="Edit"
+                  onClick={context.windowViewType === 'single' ? handleEdit : context.toggleSingleCanvasDialogOpen}
+                  value="edit"
+                  disabled={!context.annotationEditCompanionWindowIsOpened}
+                >
+                  <EditIcon />
+                </ToggleButton>
+              </Tooltip>), (<Tooltip title={t('deleteAnnotation')} key="delete">
+                <ToggleButton
+                  aria-label="Delete"
+                  onClick={handleDelete}
+                  value="delete"
+                  disabled={!context.annotationEditCompanionWindowIsOpened}
+                >
+                  <DeleteIcon />
+                </ToggleButton>
+              </Tooltip>)]}
           </ToggleButtonGroup>
+
         </div>
       )}
       {/* eslint-disable-next-line react/jsx-props-no-spreading */}
@@ -203,10 +196,7 @@ const CanvasListItem = forwardRef((props, ref) => {
 CanvasListItem.propTypes = {
   annotationEditCompanionWindowIsOpened: PropTypes.bool.isRequired,
   annotationid: PropTypes.string.isRequired,
-  children: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.node,
-  ]).isRequired,
+  children: PropTypes.oneOfType([PropTypes.func, PropTypes.node]).isRequired,
 };
 
 export default withTranslation()(CanvasListItem);
