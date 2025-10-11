@@ -4,7 +4,7 @@ import { styled } from '@mui/material/styles';
 import { Grid } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import { getConfig } from 'mirador/dist/es/src/state/selectors';
+import { getConfig } from 'mirador';
 import TextCommentTemplate from './TextCommentTemplate';
 import './debug.css';
 import TaggingTemplate from './TaggingTemplate';

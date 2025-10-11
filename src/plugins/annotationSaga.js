@@ -2,11 +2,7 @@ import {
   all, call, put, select, takeEvery,
 } from 'redux-saga/effects';
 
-import { receiveAnnotation } from 'mirador/dist/es/src/state/actions';
-import ActionTypes from 'mirador/dist/es/src/state/actions/action-types';
-import {
-  getConfig,
-} from 'mirador/dist/es/src/state/selectors';
+import { receiveAnnotation, ActionTypes, getConfig } from 'mirador';
 
 /** Retrieves all the annotations available in the annotation adapter */
 function* retrieveAnnotationsFormStore(canvasId) {

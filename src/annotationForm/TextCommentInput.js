@@ -4,7 +4,7 @@ import { Grid, Typography } from '@mui/material';
 import CreatableSelect from 'react-select/creatable';
 import TextEditor from '../TextEditor';
 import { useSelector } from 'react-redux';
-import { getConfig } from 'mirador/dist/es/src/state/selectors';
+import { getConfig } from 'mirador';
 
 /**
  * TextCommentInput component

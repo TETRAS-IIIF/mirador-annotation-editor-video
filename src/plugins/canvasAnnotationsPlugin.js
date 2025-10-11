@@ -74,10 +74,10 @@ function CanvasAnnotationsWrapper({
    * @function
    * @returns {void}
    */
-  const toggleSingleCanvasDialogOpen = useCallback(
+  /* const toggleSingleCanvasDialogOpen = useCallback(
     () => setSingleCanvasDialogOpen((p) => !p),
     [],
-  );
+  );*/
 
   // Add translations from config to i18n
   useEffect(() => {

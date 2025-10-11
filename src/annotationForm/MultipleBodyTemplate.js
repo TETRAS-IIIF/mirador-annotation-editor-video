@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { Grid } from '@mui/material';
 import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
+import { getConfig } from 'mirador';
 import AnnotationFormFooter from './AnnotationFormFooter';
 import { TEMPLATE } from './AnnotationFormUtils';
 import TargetFormSection from './TargetFormSection';
 import { resizeKonvaStage } from './AnnotationFormOverlay/KonvaDrawing/KonvaUtils';
 import { MultiTagsInput } from './MultiTagsInput';
 import { TextCommentInput } from './TextCommentInput';
-import { useSelector } from 'react-redux';
-import { getConfig } from 'mirador/dist/es/src/state/selectors';
 
 /** Tagging Template* */
 export default function MultipleBodyTemplate(
