@@ -1,5 +1,5 @@
 import React from 'react';
-import CompanionWindow from 'mirador/dist/es/src/containers/CompanionWindow';
+import { CompanionWindow } from 'mirador';
 import { Grid } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { useTranslation } from 'react-i18next';
