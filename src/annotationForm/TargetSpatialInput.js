@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useLayoutEffect, useRef, useState, useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Typography from '@mui/material/Typography';
 import { Grid } from '@mui/material';
@@ -8,130 +8,128 @@ import { TARGET_TOOL_STATE, TARGET_VIEW } from './AnnotationFormUtils';
 import AnnotationFormOverlay from './AnnotationFormOverlay/AnnotationFormOverlay';
 import { KONVA_MODE } from './AnnotationFormOverlay/KonvaDrawing/KonvaUtils';
 
-/** Handle target spacial for annot templates * */
+// Always schedule after commit
+function useMacrotaskSetter(setState) {
+  const ref = useRef(setState);
+  useEffect(() => { ref.current = setState; }, [setState]);
+  return useCallback((update) => {
+    setTimeout(() => {
+      ref.current((prev) => (typeof update === 'function' ? update(prev) : update));
+    }, 0);
+  }, []);
+}
+
 export function TargetSpatialInput({
   playerReferences,
   setTargetDrawingState,
   targetDrawingState,
   windowId,
 }) {
+  const { t } = useTranslation();
+
+  const [drawingState, setDrawingState] = useState(() => ({
+    currentShape: null,
+    isDrawing: false,
+    shapes: Array.isArray(targetDrawingState?.shapes) ? targetDrawingState.shapes : [],
+    ...targetDrawingState,
+  }));
+
   const [toolState, setToolState] = useState(TARGET_TOOL_STATE);
   const [viewTool, setViewTool] = useState(TARGET_VIEW);
   const [scale, setScale] = useState(playerReferences.getScale());
-  /** Change scale from container / canva */
-  const updateScale = () => {
-    setScale(playerReferences.getScale());
-  };
 
-  const { t } = useTranslation();
+  const safeSetToolState = useMacrotaskSetter(setToolState);
+  const safeSetViewTool  = useMacrotaskSetter(setViewTool);
 
-  const [drawingState, setDrawingState] = useState({
-    ...targetDrawingState,
-    currentShape: null,
-    isDrawing: false,
-  });
-  useEffect(() => {
+  const updateScale = useCallback(() => {
+    const nxt = playerReferences.getScale();
+    setScale((prev) => (prev === nxt ? prev : nxt));
+  }, [playerReferences]);
+
+  // Emit to parent only when shapes identity actually changes
+  const lastShapesRef = useRef(drawingState.shapes);
+  useLayoutEffect(() => {
+    const prev = lastShapesRef.current;
+    const next = drawingState.shapes;
+    if (prev === next) return;
+    if (prev && next && prev.length === next.length && prev.every((s, i) => s === next[i])) return;
+    lastShapesRef.current = next;
     setTargetDrawingState({ drawingState });
-  }, [drawingState.shapes]);
+  }, [drawingState.shapes, setTargetDrawingState, drawingState]);
 
-  /**
-   * Deletes a shape from the drawing state based on its ID.
-   * If no shape ID is provided, clears all shapes from the drawing state.
-   *
-   * @param {string} [shapeId] - The ID of the shape to delete.
-   * If not provided, clears all shapes.
-   */
-  const deleteShape = (shapeId) => {
-    if (!shapeId) {
-      setDrawingState((prevState) => ({
-        ...prevState,
-        currentShape: null,
-        shapes: [],
-      }));
-    } else {
-      setDrawingState((prevState) => ({
-        ...prevState,
-        currentShape: null,
-        shapes: prevState.shapes.filter((shape) => shape.id !== shapeId),
-      }));
-    }
-  };
-
-  /** handle the update of currentShape into drawingState */
-  const updateCurrentShapeInShapes = (currentShape) => {
-    if (currentShape) {
-      const index = drawingState.shapes.findIndex((s) => s.id === currentShape.id);
-      if (index !== -1) {
-        // eslint-disable-next-line max-len
-        const updatedShapes = drawingState.shapes.map((shape, i) => (i === index ? currentShape : shape));
-        setDrawingState({
-          ...drawingState,
-          currentShape,
-          shapes: updatedShapes,
-        });
-      } else {
-        setDrawingState({
-          ...drawingState,
-          currentShape,
-          shapes: [...drawingState.shapes, currentShape],
-        });
+  const deleteShape = useCallback((shapeId) => {
+    setDrawingState((prev) => {
+      if (!shapeId) {
+        if (prev.shapes.length === 0 && prev.currentShape == null) return prev;
+        return { ...prev, currentShape: null, shapes: [] };
       }
-    } else {
-      setDrawingState({
-        ...drawingState,
-        currentShape,
+      const filtered = prev.shapes.filter((s) => s.id !== shapeId);
+      if (filtered.length === prev.shapes.length) return prev;
+      return { ...prev, currentShape: null, shapes: filtered };
+    });
+  }, []);
+
+  const updateCurrentShapeInShapes = useCallback((currentShape) => {
+    // Defer in case Overlay calls during render
+    setTimeout(() => {
+      setDrawingState((prev) => {
+        if (!currentShape) {
+          if (prev.currentShape == null) return prev;
+          return { ...prev, currentShape: null };
+        }
+        const idx = prev.shapes.findIndex((s) => s.id === currentShape.id);
+        if (idx !== -1) {
+          const prevShape = prev.shapes[idx];
+          if (prevShape === currentShape && prev.currentShape === currentShape) return prev;
+          const nextShapes = prev.shapes === undefined ? [] : [...prev.shapes];
+          nextShapes[idx] = currentShape;
+          return { ...prev, currentShape, shapes: nextShapes };
+        }
+        return { ...prev, currentShape, shapes: [...(prev.shapes || []), currentShape] };
       });
-    }
-  };
-  const showSVGSelector = true;
+    }, 0);
+  }, []);
 
   return (
     <Grid container direction="column">
-      {showSVGSelector && (
-        <Grid item container direction="column">
-          <Typography variant="subFormSectionTitle">
-            {t('spatialTarget')}
-          </Typography>
-          <Grid item direction="row" spacing={2}>
-            <AnnotationDrawing
-              displayMode={KONVA_MODE.TARGET}
-              drawingState={drawingState}
-              playerReferences={playerReferences}
-              scale={scale}
-              setColorToolFromCurrentShape={() => {
-              }}
-              setDrawingState={setDrawingState}
-              tabView="edit" // TODO change
-              toolState={toolState}
-              updateCurrentShapeInShapes={updateCurrentShapeInShapes}
-              updateScale={updateScale}
-              windowId={windowId}
-              setToolState={setToolState}
-            />
+      <Grid item container direction="column">
+        <Typography variant="subFormSectionTitle">{t('spatialTarget')}</Typography>
+        <Grid item direction="row" spacing={2}>
+          <AnnotationDrawing
+            displayMode={KONVA_MODE.TARGET}
+            drawingState={drawingState}
+            playerReferences={playerReferences}
+            scale={scale}
+            setColorToolFromCurrentShape={() => {}}
+            setDrawingState={setDrawingState}
+            tabView="edit"
+            toolState={toolState}
+            updateCurrentShapeInShapes={updateCurrentShapeInShapes}
+            updateScale={updateScale}
+            windowId={windowId}
+            setToolState={setToolState}
+          />
 
-            <AnnotationFormOverlay
-              toolState={toolState}
-              deleteShape={deleteShape}
-              setToolState={setToolState}
-              shapes={drawingState.shapes}
-              currentShape={drawingState.currentShape}
-              setViewTool={setViewTool}
-              t={t}
-              displayMode={KONVA_MODE.TARGET}
-              updateCurrentShapeInShapes={updateCurrentShapeInShapes}
-            />
-          </Grid>
+          <AnnotationFormOverlay
+            toolState={toolState}
+            deleteShape={deleteShape}
+            setToolState={safeSetToolState}
+            shapes={drawingState.shapes}
+            currentShape={drawingState.currentShape}
+            setViewTool={safeSetViewTool}
+            t={t}
+            displayMode={KONVA_MODE.TARGET}
+            updateCurrentShapeInShapes={updateCurrentShapeInShapes}
+          />
         </Grid>
-      )}
+      </Grid>
     </Grid>
   );
 }
 
 TargetSpatialInput.propTypes = {
-  // eslint-disable-next-line react/forbid-prop-types
   playerReferences: PropTypes.object.isRequired,
   setTargetDrawingState: PropTypes.func.isRequired,
-  // eslint-disable-next-line react/forbid-prop-types
   targetDrawingState: PropTypes.object.isRequired,
   windowId: PropTypes.string.isRequired,
 };
