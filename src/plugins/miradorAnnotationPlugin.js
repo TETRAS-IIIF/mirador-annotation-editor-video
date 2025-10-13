@@ -87,14 +87,20 @@ function MiradorAnnotation(
       {
         config?.annotation?.readonly === true ? null : (
           <Tooltip title={t('create_annotation')}>
-            <MiradorMenuButton
-              aria-label={t('create_annotation')}
-              onClick={windowViewType === 'single' ? openCreateAnnotationCompanionWindow : toggleSingleCanvasDialogOpen}
-              size="small"
-              disabled={!annotationEditCompanionWindowIsOpened}
-            >
-              <AddBoxIcon />
-            </MiradorMenuButton>
+            <span>
+              <MiradorMenuButton
+                aria-label={t('create_annotation')}
+                onClick={
+                  windowViewType === 'single'
+                    ? openCreateAnnotationCompanionWindow
+                    : toggleSingleCanvasDialogOpen
+                }
+                size="small"
+                disabled={!annotationEditCompanionWindowIsOpened}
+              >
+                <AddBoxIcon />
+              </MiradorMenuButton>
+            </span>
           </Tooltip>
         )
       }
