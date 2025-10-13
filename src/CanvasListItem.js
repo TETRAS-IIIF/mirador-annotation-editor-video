@@ -119,59 +119,70 @@ const CanvasListItem = forwardRef((props, ref) => {
       ref={ref}
     >
       {(isHovering && editable()) && (
-        <div>
-          <ToggleButtonGroup
-            aria-label="annotation tools"
-            size="small"
-            style={{
-              backgroundColor: 'white',
-              position: 'absolute',
-              right: 0,
-              zIndex: 10000,
-            }}
-          >
-            {context.config?.debug && (
-              <Tooltip title={t('debugAnnotation')}>
-                <ToggleButton
-                  aria-label="Debug"
-                  onClick={() => console.log(annotationData)}
-                  value="debug"
-                >
-                  <SettingsIcon />
-                </ToggleButton>
-              </Tooltip>
-            )}
-
-            {!!annotationData?.creator && (
-              <Tooltip
-                title={(
-                  <WhoAndWhenFormSection
-                    creator={annotationData.creator}
-                    creationDate={annotationData.creationDate}
-                    lastEditor={annotationData.lastEditor}
-                    lastSavedDate={annotationData.lastSavedDate}
-                    displayMode={TOOLTIP_MODE}
-                    t={t}
-                  />
-                )}
+      <div>
+        <ToggleButtonGroup
+          aria-label="annotation tools"
+          size="small"
+          style={{
+            backgroundColor: 'white',
+            position: 'absolute',
+            right: 0,
+            zIndex: 10000,
+          }}
+        >
+          {context.config?.debug && (
+          <Tooltip title={t('debugAnnotation')}>
+            <span>
+              <ToggleButton
+                aria-label="Debug"
+                onClick={() => console.log(annotationData)}
+                value="debug"
               >
-                <ToggleButton aria-label="Metadata" value="metadata">
-                  <InfoIcon />
-                </ToggleButton>
-              </Tooltip>
-            )}
+                <SettingsIcon />
+              </ToggleButton>
+            </span>
+          </Tooltip>
+          )}
 
-            {context.config?.annotation?.readonly !== true && [(
-              <Tooltip title={t('edit_annotation')} key="edit">
-                <ToggleButton
-                  aria-label="Edit"
-                  onClick={context.windowViewType === 'single' ? handleEdit : context.toggleSingleCanvasDialogOpen}
-                  value="edit"
-                  disabled={!context.annotationEditCompanionWindowIsOpened}
-                >
-                  <EditIcon />
-                </ToggleButton>
-              </Tooltip>), (<Tooltip title={t('deleteAnnotation')} key="delete">
+          {!!annotationData?.creator && (
+          <Tooltip
+            title={(
+              <WhoAndWhenFormSection
+                creator={annotationData.creator}
+                creationDate={annotationData.creationDate}
+                lastEditor={annotationData.lastEditor}
+                lastSavedDate={annotationData.lastSavedDate}
+                displayMode={TOOLTIP_MODE}
+                t={t}
+              />
+)}
+          >
+            <span>
+              <ToggleButton aria-label="Metadata" value="metadata">
+                <InfoIcon />
+              </ToggleButton>
+            </span>
+          </Tooltip>
+          )}
+
+          {context.config?.annotation?.readonly !== true && [<Tooltip
+            title={t('edit_annotation')}
+            key="edit"
+          >
+            <span>
+              <ToggleButton
+                aria-label="Edit"
+                onClick={context.windowViewType === 'single' ? handleEdit : context.toggleSingleCanvasDialogOpen}
+                value="edit"
+                disabled={!context.annotationEditCompanionWindowIsOpened}
+              >
+                <EditIcon />
+              </ToggleButton>
+            </span>
+          </Tooltip>,
+
+            <Tooltip title={t('deleteAnnotation')} key="delete">
+              <span>
                 <ToggleButton
                   aria-label="Delete"
                   onClick={handleDelete}
@@ -180,10 +191,11 @@ const CanvasListItem = forwardRef((props, ref) => {
                 >
                   <DeleteIcon />
                 </ToggleButton>
-              </Tooltip>)]}
-          </ToggleButtonGroup>
+              </span>
+            </Tooltip>]}
+        </ToggleButtonGroup>
+      </div>
 
-        </div>
       )}
       {/* eslint-disable-next-line react/jsx-props-no-spreading */}
       <li {...props}>
