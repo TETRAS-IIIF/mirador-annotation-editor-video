@@ -209,11 +209,11 @@ AnnotationForm.propTypes = {
   config: PropTypes.shape({
     annotation: PropTypes.shape({
       adapter: PropTypes.func,
+      debug: PropTypes.bool,
       defaults: PropTypes.objectOf(
-        PropTypes.oneOfType([PropTypes.bool, PropTypes.func, PropTypes.number, PropTypes.string]),
+        PropTypes.oneOfType([PropTypes.bool, PropTypes.func, PropTypes.number, PropTypes.string])
       ),
     }),
-    debug: PropTypes.bool,
     language: PropTypes.string,
     // eslint-disable-next-line react/forbid-prop-types
     translations: PropTypes.objectOf(PropTypes.object),

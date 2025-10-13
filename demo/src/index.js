@@ -16,6 +16,7 @@ const config = {
       content: '<h4>Comment2</h4><p>Comment content</p>',
       title: 'Template 2',
     }],
+    debug: true,
     exportLocalStorageAnnotations: false,
     quillConfig,
     readonly: false,
@@ -25,7 +26,6 @@ const config = {
     htmlSanitizationRuleSet: 'liberal',
   },
   catalog: manifestsCatalog,
-  debug: true,
   id: 'demo',
   language: 'en',
   themes: {

@@ -11,6 +11,8 @@ import PropTypes from 'prop-types';
 export function DebugInformation({ playerReferences, t }) {
   return (
     <>
+      <h4>Debug info </h4>
+      <p>Only visible in debug mode</p>
       <Typography>
         {playerReferences.getMediaType()}
       </Typography>
