@@ -129,10 +129,6 @@ export default function ColorPicker({
   );
 }
 
-const StyledDivider = styled(Divider)(({ theme }) => ({
-  margin: theme.spacing(1, 0.5),
-}));
-
 ColorPicker.propTypes = {
   closeChooseColor: Proptypes.func.isRequired,
   currentColor: Proptypes.string.isRequired,
