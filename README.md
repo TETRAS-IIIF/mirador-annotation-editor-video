@@ -76,19 +76,19 @@ npm install mirador-annotation-editor
 You can override existing annotation plugin with your own versions by using npm. We support React 18 and MUI 5.
 
 Update your `package.json` file to include the following dependencies and devDependencies:
-```js
+```json
 "mirador-annotations": "npm:mirador-annotation-editor@^1.0.10",
 ```
 
 You need also to use the latest version of Mirador 4.
 
-```js
-"mirador" : "4.0.0-alpha.2",
+```json
+"mirador" : "4.0.0-alpha.2"
 ```
 
 If you encounter this error : 
 
-```js
+```
 Module not found: Error: Can't resolve 'mirador-annotations/es/LocalStorageAdapter' in '/home/anthony/Documents/2024-scene/mirador-integration/src'
 ```
 Update your import :
@@ -132,11 +132,30 @@ repository.
 Persisting annotations requires implementing a IIIF annotation server. Several 
 [examples of annotation servers](https://github.com/IIIF/awesome-iiif#annotation-servers) are available on iiif-awesome.
 
-`mirador-annotation-editor` currently supports adapters for 
-[annotot](https://github.com/ProjectMirador/mirador-annotations/blob/master/src/AnnototAdapter.js) and 
-[local storage](https://github.com/ProjectMirador/mirador-annotations/blob/master/src/LocalStorageAdapter.js). We 
-welcome contributions of adapters for other annotation servers.
+We provide a full Mirador workspace with persistance at https://app.mirador-multi-user.com.
 
+## Configuration 
+
+See `demo/src/index.js` for a full configuration sample.
+
+```js
+ let annotationConfig = { // Annotation plugin related
+    adapter: (canvasId) => new LocalStorageAdapter(`localStorage://?canvasId=${canvasId}`, 'Anonymous User'), // Adapter to persist annotations
+    allowTargetShapesStyling: true, // Allow user to change color, line ... Color rendering is not fully supported by Mirador viewer in some case
+    commentTemplates: [{ // Templates for comment creation
+      content: '<h4>Comment</h4><p>Comment content</p>',
+      title: 'Template',
+    },
+    {
+      content: '<h4>Comment2</h4><p>Comment content</p>',
+      title: 'Template 2',
+    }],
+    exportLocalStorageAnnotations: false, 
+    quillConfig, // Configuration for the quill editor
+    readonly: false, // If true, no annotation creation, edit, deleting is allowed
+    tagsSuggestions: ['Mirador', 'Awesome', 'Viewer', 'IIIF', 'Template'], // Tags suggestions for autocompletion
+};
+```
 
 ## Contribute
 

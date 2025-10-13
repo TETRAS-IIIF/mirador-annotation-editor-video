@@ -7,7 +7,7 @@ import { quillConfig } from './quillConfig';
 const config = {
   annotation: {
     adapter: (canvasId) => new LocalStorageAdapter(`localStorage://?canvasId=${canvasId}`, 'Anonymous User'),
-    allowTargetShapesStyling: false,
+    allowTargetShapesStyling: true,
     commentTemplates: [{
       content: '<h4>Comment</h4><p>Comment content</p>',
       title: 'Template',
