@@ -25,93 +25,91 @@ import { useTranslation } from 'react-i18next';
 import { defaultLineWeightChoices, OVERLAY_TOOL } from '../KonvaUtils';
 
 /** Display color picker and border * */
-export default function ColorPicker(
-  {
-    changeClosedMode,
-    closeChooseColor,
-    currentColor,
-    handleCloseLineWeight,
-    handleLineWeightSelect,
-    openChooseColor,
-    openChooseLineWeight,
-    toolOptions,
-    toolState,
-    updateColor,
-  },
-) {
+export default function ColorPicker({
+  changeClosedMode,
+  closeChooseColor,
+  currentColor,
+  handleCloseLineWeight,
+  handleLineWeightSelect,
+  openChooseColor,
+  openChooseLineWeight,
+  toolOptions,
+  toolState,
+  updateColor,
+}) {
   const { t } = useTranslation();
 
   return (
     <Grid container spacing={1}>
-      <Grid item xs={12}>
+      <Grid item size={{ xs: 12 }}>
         <Typography variant="overline">
           {t('style')}
         </Typography>
       </Grid>
-      <Grid item xs={12}>
-        <ToggleButtonGroup
-          aria-label={t('style_selection')}
-          size="small"
-        >
-          {
-            toolState.activeTool !== OVERLAY_TOOL.TEXT && (
-              <>
-                <Tooltip title={t('border_color')}>
-                  <ToggleButton
-                    value="strokeColor"
-                    aria-label={t('border_color')}
-                    onClick={openChooseColor}
-                  >
-                    <StrokeColorIcon style={{ fill: toolState.strokeColor }} />
-                    <ArrowDropDownIcon />
-                  </ToggleButton>
-                </Tooltip>
-                <Tooltip title={t('line_weight')}>
-                  <ToggleButton
-                    value="strokeColor"
-                    aria-label={t('line_weight')}
-                    onClick={openChooseLineWeight}
-                  >
-                    <LineWeightIcon />
-                    <ArrowDropDownIcon />
-                  </ToggleButton>
-                </Tooltip>
-              </>
-            )
-          }
-          <Tooltip title={t('fill_color')}>
 
+      <Grid item size={{ xs: 12 }}>
+        <ToggleButtonGroup aria-label={t('style_selection')} size="small">
+          {toolState.activeTool !== OVERLAY_TOOL.TEXT && [
             <ToggleButton
-              value="fillColor"
-              aria-label={t('fill_color')}
+              key="strokeColor"
+              value="strokeColor"
+              aria-label={t('border_color')}
               onClick={openChooseColor}
             >
-              <FormatColorFillIcon style={{ fill: toolState.fillColor }} />
+              <Tooltip title={t('border_color')}>
+                <span>
+                  <StrokeColorIcon style={{ fill: toolState.strokeColor }} />
+                </span>
+              </Tooltip>
               <ArrowDropDownIcon />
-            </ToggleButton>
-          </Tooltip>
+            </ToggleButton>,
+            <ToggleButton
+              key="lineWeight"
+              value="lineWeight"
+              aria-label={t('line_weight')}
+              onClick={openChooseLineWeight}
+            >
+              <Tooltip title={t('line_weight')}>
+                <span>
+                  <LineWeightIcon />
+                </span>
+              </Tooltip>
+              <ArrowDropDownIcon />
+            </ToggleButton>,
+          ]}
+
+          <ToggleButton
+            value="fillColor"
+            aria-label={t('fill_color')}
+            onClick={openChooseColor}
+          >
+            <Tooltip title={t('fill_color')}>
+              <span>
+                <FormatColorFillIcon style={{ fill: toolState.fillColor }} />
+              </span>
+            </Tooltip>
+            <ArrowDropDownIcon />
+          </ToggleButton>
         </ToggleButtonGroup>
 
         <StyledDivider flexItem orientation="vertical" />
-        { /* close / open polygon mode only for freehand drawing mode. */
-          /* TODO: When does this happen ? */
-          false
-          && (
-            <ToggleButtonGroup
-              size="small"
-              value={toolState.closedMode}
-              onChange={changeClosedMode}
-            >
-              <ToggleButton value="closed">
-                <ClosedPolygonIcon />
-              </ToggleButton>
-              <ToggleButton value="open">
-                <OpenPolygonIcon />
-              </ToggleButton>
-            </ToggleButtonGroup>
-          )
-        }
+
+        {false && (
+          <ToggleButtonGroup
+            size="small"
+            value={toolState.closedMode}
+            onChange={changeClosedMode}
+          >
+            <ToggleButton value="closed">
+              <ClosedPolygonIcon />
+            </ToggleButton>
+            <ToggleButton value="open">
+              <OpenPolygonIcon />
+            </ToggleButton>
+          </ToggleButtonGroup>
+        )}
       </Grid>
+
       <Popover
         open={toolOptions.lineWeightPopoverOpen}
         anchorEl={toolOptions.popoverLineWeightAnchorEl}
@@ -119,7 +117,7 @@ export default function ColorPicker(
         <div>
           <ClickAwayListener onClickAway={handleCloseLineWeight}>
             <MenuList autoFocus role="listbox">
-              {defaultLineWeightChoices.map((option, index) => (
+              {defaultLineWeightChoices.map((option) => (
                 <MenuItem
                   key={option}
                   onClick={handleLineWeightSelect}
@@ -135,6 +133,7 @@ export default function ColorPicker(
           </ClickAwayListener>
         </div>
       </Popover>
+
       <Popover
         open={toolOptions.colorPopoverOpen}
         anchorEl={toolOptions.popoverAnchorEl}
@@ -143,7 +142,7 @@ export default function ColorPicker(
         <SketchPicker
           disableAlpha={false}
           color={currentColor}
-          onChange={updateColor} // TODO M4 merge onchangeComplete
+          onChange={updateColor}
         />
       </Popover>
     </Grid>
@@ -162,7 +161,7 @@ ColorPicker.propTypes = {
   handleLineWeightSelect: Proptypes.func.isRequired,
   openChooseColor: Proptypes.func.isRequired,
   openChooseLineWeight: Proptypes.func.isRequired,
-  t: Proptypes.func.isRequired,
+  t: Proptypes.func,
   toolOptions: Proptypes.shape({
     colorPopoverOpen: PropTypes.bool,
     currentColorType: PropTypes.any,
