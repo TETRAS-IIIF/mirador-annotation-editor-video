@@ -14,8 +14,6 @@ import StrokeColorIcon from '@mui/icons-material/BorderColor';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import LineWeightIcon from '@mui/icons-material/LineWeight';
 import FormatColorFillIcon from '@mui/icons-material/FormatColorFill';
-import ClosedPolygonIcon from '@mui/icons-material/ChangeHistory';
-import OpenPolygonIcon from '@mui/icons-material/ShowChart';
 import { SketchPicker } from 'react-color';
 import React from 'react';
 import { styled } from '@mui/material/styles';
@@ -26,7 +24,6 @@ import { defaultLineWeightChoices, OVERLAY_TOOL } from '../KonvaUtils';
 
 /** Display color picker and border * */
 export default function ColorPicker({
-  changeClosedMode,
   closeChooseColor,
   currentColor,
   handleCloseLineWeight,
@@ -91,23 +88,6 @@ export default function ColorPicker({
             <ArrowDropDownIcon />
           </ToggleButton>
         </ToggleButtonGroup>
-
-        <StyledDivider flexItem orientation="vertical" />
-
-        {false && (
-          <ToggleButtonGroup
-            size="small"
-            value={toolState.closedMode}
-            onChange={changeClosedMode}
-          >
-            <ToggleButton value="closed">
-              <ClosedPolygonIcon />
-            </ToggleButton>
-            <ToggleButton value="open">
-              <OpenPolygonIcon />
-            </ToggleButton>
-          </ToggleButtonGroup>
-        )}
       </Grid>
 
       <Popover
@@ -154,14 +134,12 @@ const StyledDivider = styled(Divider)(({ theme }) => ({
 }));
 
 ColorPicker.propTypes = {
-  changeClosedMode: Proptypes.func.isRequired,
   closeChooseColor: Proptypes.func.isRequired,
   currentColor: Proptypes.string.isRequired,
   handleCloseLineWeight: Proptypes.func.isRequired,
   handleLineWeightSelect: Proptypes.func.isRequired,
   openChooseColor: Proptypes.func.isRequired,
   openChooseLineWeight: Proptypes.func.isRequired,
-  t: Proptypes.func,
   toolOptions: Proptypes.shape({
     colorPopoverOpen: PropTypes.bool,
     currentColorType: PropTypes.any,
