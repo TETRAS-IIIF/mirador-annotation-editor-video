@@ -11,10 +11,10 @@ export default function UnsupportedMedia({ id, windowId, mediaType }) {
   return (
     <CompanionWindow title={t('media_not_supported')} windowId={windowId} id={id}>
       <Grid container padding={1} spacing={1}>
-        <Grid item>
+        <Grid>
           <Typography>{t('media_not_supported')}</Typography>
         </Grid>
-        <Grid item>
+        <Grid>
           <Typography>
             {t('detected_media_type', { mediaType })}
           </Typography>

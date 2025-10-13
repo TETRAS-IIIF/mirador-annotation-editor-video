@@ -60,15 +60,15 @@ export default function TargetFormSection({
   if (!spatialTarget) return null;
 
   return (
-    <Grid item container direction="column" spacing={1}>
-      <Grid item>
+    <Grid container direction="column" spacing={1}>
+      <Grid>
         <Typography variant="formSectionTitle">
           {t('target')}
         </Typography>
       </Grid>
 
       {spatialTarget && mediaType !== MEDIA_TYPES.AUDIO && (
-        <Grid item container direction="column">
+        <Grid container direction="column">
           <TargetSpatialInput
             playerReferences={playerReferences}
             setTargetDrawingState={onChangeTargetInput}

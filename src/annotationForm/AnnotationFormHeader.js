@@ -30,7 +30,7 @@ export default function AnnotationFormHeader(
       sx={{ marginRight: '10px' }}
       spacing={2}
     >
-      <Grid item>
+      <Grid>
         {annotation.id == null
           && (
             <MiradorMenuButton aria-label="back" TooltipProps="back">
@@ -38,7 +38,7 @@ export default function AnnotationFormHeader(
             </MiradorMenuButton>
           )}
       </Grid>
-      <Grid item>
+      <Grid>
         {templateType.icon}
       </Grid>
     </Grid>

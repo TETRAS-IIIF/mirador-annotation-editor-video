@@ -27,7 +27,7 @@ export default function AnnotationFormTemplateSelector({
     <CardContainer>
       {mediaType === MEDIA_TYPES.AUDIO ? (
         <Grid container spacing={1} direction="column">
-          <Grid item>
+          <Grid>
             <Typography>
               {t('audio_not_supported')}
             </Typography>

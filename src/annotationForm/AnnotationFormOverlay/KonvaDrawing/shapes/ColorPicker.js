@@ -38,13 +38,13 @@ export default function ColorPicker({
 
   return (
     <Grid container spacing={1}>
-      <Grid item size={{ xs: 12 }}>
+      <Grid size={{ xs: 12 }}>
         <Typography variant="overline">
           {t('style')}
         </Typography>
       </Grid>
 
-      <Grid item size={{ xs: 12 }}>
+      <Grid size={{ xs: 12 }}>
         <ToggleButtonGroup aria-label={t('style_selection')} size="small">
           {toolState.activeTool !== OVERLAY_TOOL.TEXT && [
             <ToggleButton

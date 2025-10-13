@@ -160,14 +160,14 @@ function AnnotationForm(
         )
         : (
           <Grid container direction="column" spacing={1}>
-            <Grid item container>
+            <Grid container>
               <AnnotationFormHeader
                 setCommentingType={setTemplateType}
                 templateType={templateType}
                 annotation={annotation}
               />
             </Grid>
-            <Grid item>
+            <Grid>
               <AnnotationFormBody
                 annotation={annotation}
                 canvases={canvases}

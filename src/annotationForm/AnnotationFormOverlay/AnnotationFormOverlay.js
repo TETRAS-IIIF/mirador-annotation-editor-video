@@ -72,7 +72,7 @@ function AnnotationFormOverlay(
 
   return (
     <Grid container>
-      <OverlayIconAndTitleContainer item size={{ xs: 12 }}>
+      <OverlayIconAndTitleContainer size={{ xs: 12 }}>
         <StyledToggleButtonGroup
           value={activeTool} // State or props ?
           exclusive

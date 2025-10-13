@@ -92,9 +92,9 @@ export function TargetSpatialInput({
 
   return (
     <Grid container direction="column">
-      <Grid item container direction="column">
+      <Grid container direction="column">
         <Typography variant="subFormSectionTitle">{t('spatialTarget')}</Typography>
-        <Grid item direction="row" spacing={2}>
+        <Grid direction="row" spacing={2}>
           <AnnotationDrawing
             displayMode={KONVA_MODE.TARGET}
             drawingState={drawingState}

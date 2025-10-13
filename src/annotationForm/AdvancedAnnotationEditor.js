@@ -19,10 +19,7 @@ export function AdvancedAnnotationEditor({
 }) {
   return (
     <Grid container direction="column" spacing={1} justifyContent="flex-end" padding={1}>
-      <Grid item>
-
-      </Grid>
-      <Grid item marginTop={1}>
+      <Grid marginTop={1}>
         <AnnotationFormFooter
           closeFormCompanionWindow={closeFormCompanionWindow}
           saveAnnotation={saveAnnotation}

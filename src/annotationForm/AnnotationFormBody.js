@@ -33,7 +33,7 @@ export default function AnnotationFormBody(
   return (
     <Grid container direction="column">
 
-      <TemplateContainer item>
+      <TemplateContainer>
         {
           templateType.id === TEMPLATE.TEXT_TYPE && (
             <TextCommentTemplate
