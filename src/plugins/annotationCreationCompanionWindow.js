@@ -3,7 +3,8 @@ import {
   getCompanionWindow,
   getVisibleCanvases,
   getPresentAnnotationsOnSelectedCanvases,
-  OSDReferences, VideosReferences
+  OSDReferences,
+  VideosReferences,
   removeCompanionWindow as removeCompanionWindowAction,
   receiveAnnotation as receiveAnnotationAction,
 } from 'mirador';
