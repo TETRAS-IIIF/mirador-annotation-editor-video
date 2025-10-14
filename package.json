@@ -1,6 +1,6 @@
 {
   "name": "mirador-annotation-editor",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Mirador annotation editor plugin in a React component. Mirador 4 compatible ",
   "main": "es/index.js",
   "module": "./dist/mirador-annotation-editor.es.js",
@@ -57,8 +57,8 @@
   "peerDependencies": {
     "lodash": "^4.17.11",
     "prop-types": "^15.7.2",
-    "react": "^18.2.0",
-    "react-dom": "^18.0.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.0.0",
     "uuid": "^8.0.0"
   },
   "devDependencies": {
