@@ -134,23 +134,30 @@ export default class AiiinotateAdapter {
   }
 
   /**
+   * convert a Mirador annotation from v3 to v2 to match the Aiiinotate expected annotation version
+   * @param {object} annotation
+   * @returns {object}
+   */
+  maybeConvert(annotation) {
+    return this.iiifPresentationVersion === 2
+      ? createV2Anno(annotation)
+      : annotation;
+  }
+
+  /**
    * @param {WebAnnotation} annotation
    */
   async create(annotation) {
-    console.log(">>>>>>>>>>>>>>>>>>", annotation);
-    console.log("<<<<<<<<<<<<<<<<<<", createV2Anno(annotation));
+    annotation = this.maybeConvert(annotation);
     return fetch(`${this.endpointUrlAnnotations}/create`, {
       method: 'POST',
-      body: JSON.stringify(createV2Anno(annotation)),
+      body: JSON.stringify(annotation),
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
       },
     })
-    .then(async (r) => {
-      logResponse("create", r);
-      return this.all()
-    })
+    .then(async (r) => this.all())
     .catch((err) => {
       logError('create', err);
       return this.all()
@@ -161,18 +168,16 @@ export default class AiiinotateAdapter {
    * @param {WebAnnotation} annotation
    */
   async update(annotation) {
+    annotation = this.maybeConvert(annotation);
     return fetch(`${this.endpointUrlAnnotations}/update`, {
       method: "POST",
-      body: JSON.stringify(createV2Anno(annotation)),
+      body: JSON.stringify(annotation),
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
       },
     })
-    .then(async (r) => {
-      logResponse("update", r);
-      return this.all()
-    })
+    .then(async (r) => this.all())
     .catch((err) => {
       logError('update', err);
       return this.all()
@@ -184,10 +189,7 @@ export default class AiiinotateAdapter {
     return fetch(`${this.endpointUrlAnnotations}/delete?uri=${annotationId}`, {
       method: "DELETE",
     })
-    .then(async (r) => {
-      logResponse("delete", r);
-      return this.all()
-    })
+    .then(async (r) => this.all())
     .catch((err) => {
       logError("delete", err);
       return this.all();
@@ -205,8 +207,8 @@ export default class AiiinotateAdapter {
   async all() {
     const r = await fetch(this.annotationPageId);
     const annotations = await r.json();
-    if (this.iiifPresentationVersion === 2) {
-      return createAnnotationPage(annotations.resources, this.annotationPageId);
-    }
+    return this.iiifPresentationVersion === 2
+      ? createAnnotationPage(annotations.resources, this.annotationPageId)
+      : annotations;
   }
 }

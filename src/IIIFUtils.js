@@ -274,7 +274,13 @@ export function createV2Anno(v3anno) {
     motivation: 'oa:commenting',
     on: {
       '@type': 'oa:SpecificResource',
-      full: v3anno.target.source.id || v3anno.target.source,
+      full:
+        // `target` has a `source` with `id` object pointing to the proper canvas
+        v3anno.target.source?.id
+        // `target` has an id
+        || v3anno.target.id
+        // source is a string
+        || v3anno.target.source,
     },
   };
   // copy id if it is SAS-generated
@@ -298,7 +304,7 @@ export function createV2Anno(v3anno) {
     } else {
       v2anno.on.selector = createV2AnnoSelector(v3anno.target.selector);
     }
-    if (v3anno.target.source.partOf) {
+    if (v3anno.target.source?.partOf) {
       v2anno.on.within = {
         '@id': v3anno.target.source.partOf.id,
         '@type': 'sc:Manifest',
