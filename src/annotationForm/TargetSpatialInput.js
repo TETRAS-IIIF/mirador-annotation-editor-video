@@ -19,6 +19,13 @@ function useMacrotaskSetter(setState) {
   }, []);
 }
 
+/**
+ * TargetSpatialInput - Target spatial input component
+ * @param playerReferences
+ * @param setTargetDrawingState
+ * @param targetDrawingState
+ * @param windowId
+ */
 export function TargetSpatialInput({
   playerReferences,
   setTargetDrawingState,
@@ -69,18 +76,24 @@ export function TargetSpatialInput({
     });
   }, []);
 
+  // Synchronize currentShape with both drawingState.currentShape and
+  // drawingState.shapes without triggering redundant re-renders or state churn.
   const updateCurrentShapeInShapes = useCallback((currentShape) => {
     // Defer in case Overlay calls during render
     setTimeout(() => {
       setDrawingState((prev) => {
         if (!currentShape) {
-          if (prev.currentShape == null) return prev;
+          if (prev.currentShape == null) {
+            return prev;
+          }
           return { ...prev, currentShape: null };
         }
         const idx = prev.shapes.findIndex((s) => s.id === currentShape.id);
         if (idx !== -1) {
           const prevShape = prev.shapes[idx];
-          if (prevShape === currentShape && prev.currentShape === currentShape) return prev;
+          if (prevShape === currentShape && prev.currentShape === currentShape) {
+            return prev;
+          }
           const nextShapes = prev.shapes === undefined ? [] : [...prev.shapes];
           nextShapes[idx] = currentShape;
           return { ...prev, currentShape, shapes: nextShapes };
