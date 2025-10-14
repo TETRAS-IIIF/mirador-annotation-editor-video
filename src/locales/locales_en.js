@@ -71,6 +71,8 @@ export const en = {
   style: 'Style',
   style_selection: 'Style selection',
   switch_view: 'Switch to single view',
+  switch_view_content: 'Annotations can only be edited in single canvas view type.\n'
+    + 'Switch view type to single view now?',
   switch_view_h2: 'Switch view type to single view?',
   tag: 'Tag',
   tags: 'Tags',

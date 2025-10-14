@@ -1,4 +1,3 @@
-/* eslint-disable react/forbid-prop-types */
 import {
   ClickAwayListener,
   Divider,
@@ -15,8 +14,6 @@ import StrokeColorIcon from '@mui/icons-material/BorderColor';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import LineWeightIcon from '@mui/icons-material/LineWeight';
 import FormatColorFillIcon from '@mui/icons-material/FormatColorFill';
-import ClosedPolygonIcon from '@mui/icons-material/ChangeHistory';
-import OpenPolygonIcon from '@mui/icons-material/ShowChart';
 import { SketchPicker } from 'react-color';
 import React from 'react';
 import { styled } from '@mui/material/styles';
@@ -26,93 +23,73 @@ import { useTranslation } from 'react-i18next';
 import { defaultLineWeightChoices, OVERLAY_TOOL } from '../KonvaUtils';
 
 /** Display color picker and border * */
-export default function ColorPicker(
-  {
-    changeClosedMode,
-    closeChooseColor,
-    currentColor,
-    handleCloseLineWeight,
-    handleLineWeightSelect,
-    openChooseColor,
-    openChooseLineWeight,
-    toolOptions,
-    toolState,
-    updateColor,
-  },
-) {
+export default function ColorPicker({
+  closeChooseColor,
+  currentColor,
+  handleCloseLineWeight,
+  handleLineWeightSelect,
+  openChooseColor,
+  openChooseLineWeight,
+  toolOptions,
+  toolState,
+  updateColor,
+}) {
   const { t } = useTranslation();
 
   return (
     <Grid container spacing={1}>
-      <Grid item xs={12}>
+      <Grid size={{ xs: 12 }}>
         <Typography variant="overline">
           {t('style')}
         </Typography>
       </Grid>
-      <Grid item xs={12}>
-        <ToggleButtonGroup
-          aria-label={t('style_selection')}
-          size="small"
-        >
-          {
-            toolState.activeTool !== OVERLAY_TOOL.TEXT && (
-              <>
-                <Tooltip title={t('border_color')}>
-                  <ToggleButton
-                    value="strokeColor"
-                    aria-label={t('border_color')}
-                    onClick={openChooseColor}
-                  >
-                    <StrokeColorIcon style={{ fill: toolState.strokeColor }} />
-                    <ArrowDropDownIcon />
-                  </ToggleButton>
-                </Tooltip>
-                <Tooltip title={t('line_weight')}>
-                  <ToggleButton
-                    value="strokeColor"
-                    aria-label={t('line_weight')}
-                    onClick={openChooseLineWeight}
-                  >
-                    <LineWeightIcon />
-                    <ArrowDropDownIcon />
-                  </ToggleButton>
-                </Tooltip>
-              </>
-            )
-          }
-          <Tooltip title={t('fill_color')}>
 
+      <Grid size={{ xs: 12 }}>
+        <ToggleButtonGroup aria-label={t('style_selection')} size="small">
+          {toolState.activeTool !== OVERLAY_TOOL.TEXT && [
             <ToggleButton
-              value="fillColor"
-              aria-label={t('fill_color')}
+              key="strokeColor"
+              value="strokeColor"
+              aria-label={t('border_color')}
               onClick={openChooseColor}
             >
-              <FormatColorFillIcon style={{ fill: toolState.fillColor }} />
+              <Tooltip title={t('border_color')}>
+                <span>
+                  <StrokeColorIcon style={{ fill: toolState.strokeColor }} />
+                </span>
+              </Tooltip>
               <ArrowDropDownIcon />
-            </ToggleButton>
-          </Tooltip>
-        </ToggleButtonGroup>
-
-        <StyledDivider flexItem orientation="vertical" />
-        { /* close / open polygon mode only for freehand drawing mode. */
-          /* TODO: When does this happen ? */
-          false
-          && (
-            <ToggleButtonGroup
-              size="small"
-              value={toolState.closedMode}
-              onChange={changeClosedMode}
+            </ToggleButton>,
+            <ToggleButton
+              key="lineWeight"
+              value="lineWeight"
+              aria-label={t('line_weight')}
+              onClick={openChooseLineWeight}
             >
-              <ToggleButton value="closed">
-                <ClosedPolygonIcon />
-              </ToggleButton>
-              <ToggleButton value="open">
-                <OpenPolygonIcon />
-              </ToggleButton>
-            </ToggleButtonGroup>
-          )
-        }
+              <Tooltip title={t('line_weight')}>
+                <span>
+                  <LineWeightIcon />
+                </span>
+              </Tooltip>
+              <ArrowDropDownIcon />
+            </ToggleButton>,
+          ]}
+
+          <ToggleButton
+            value="fillColor"
+            aria-label={t('fill_color')}
+            onClick={openChooseColor}
+          >
+            <Tooltip title={t('fill_color')}>
+              <span>
+                <FormatColorFillIcon style={{ fill: toolState.fillColor }} />
+              </span>
+            </Tooltip>
+            <ArrowDropDownIcon />
+          </ToggleButton>
+        </ToggleButtonGroup>
       </Grid>
+
       <Popover
         open={toolOptions.lineWeightPopoverOpen}
         anchorEl={toolOptions.popoverLineWeightAnchorEl}
@@ -120,7 +97,7 @@ export default function ColorPicker(
         <div>
           <ClickAwayListener onClickAway={handleCloseLineWeight}>
             <MenuList autoFocus role="listbox">
-              {defaultLineWeightChoices.map((option, index) => (
+              {defaultLineWeightChoices.map((option) => (
                 <MenuItem
                   key={option}
                   onClick={handleLineWeightSelect}
@@ -136,6 +113,7 @@ export default function ColorPicker(
           </ClickAwayListener>
         </div>
       </Popover>
+
       <Popover
         open={toolOptions.colorPopoverOpen}
         anchorEl={toolOptions.popoverAnchorEl}
@@ -151,12 +129,7 @@ export default function ColorPicker(
   );
 }
 
-const StyledDivider = styled(Divider)(({ theme }) => ({
-  margin: theme.spacing(1, 0.5),
-}));
-
 ColorPicker.propTypes = {
-  changeClosedMode: Proptypes.func.isRequired,
   closeChooseColor: Proptypes.func.isRequired,
   currentColor: Proptypes.string.isRequired,
   handleCloseLineWeight: Proptypes.func.isRequired,

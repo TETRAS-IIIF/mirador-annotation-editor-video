@@ -4,7 +4,7 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { styled } from '@mui/material/styles';
 import { useSelector } from 'react-redux';
-import { getConfig } from 'mirador/dist/es/src/state/selectors';
+import { getConfig } from 'mirador';
 
 const StyledReactQuill = styled(ReactQuill)(({ theme }) => ({
   '.ql-editor': {

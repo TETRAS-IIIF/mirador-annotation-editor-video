@@ -75,13 +75,13 @@ export default function TaggingTemplate(
 
   return (
     <Grid container direction="column" spacing={2}>
-      <Grid item>
+      <Grid>
         <Typography variant="formSectionTitle">
           {t('tag')}
           {' '}
         </Typography>
       </Grid>
-      <Grid item>
+      <Grid>
         <TextField
           id="outlined-basic"
           label={t('your_tag_here')}
@@ -90,7 +90,7 @@ export default function TaggingTemplate(
           onChange={(event) => updateTaggingValue(event.target.value)}
         />
       </Grid>
-      <Grid item>
+      <Grid>
         <TargetFormSection
           onChangeTarget={updateTargetState}
           playerReferences={playerReferences}
@@ -100,7 +100,7 @@ export default function TaggingTemplate(
           windowId={windowId}
         />
       </Grid>
-      <Grid item>
+      <Grid>
         <AnnotationFormFooter
           closeFormCompanionWindow={closeFormCompanionWindow}
           saveAnnotation={saveFunction}

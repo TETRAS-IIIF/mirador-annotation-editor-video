@@ -1,9 +1,6 @@
 import React from 'react';
 import { Provider } from 'react-redux';
-
-import createRootReducer from 'mirador/dist/es/src/state/reducers/rootReducer';
-import settings from 'mirador/dist/es/src/config/settings';
-
+import { rootReducer as createRootReducer, settings } from 'mirador';
 import { createTheme, ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 import { render } from '@testing-library/react';
 import { createStore, applyMiddleware } from 'redux';

@@ -1,8 +1,8 @@
 import {
-  getVisibleCanvasAudioResources,
   getVisibleCanvases,
+  getVisibleCanvasAudioResources,
   getVisibleCanvasVideoResources,
-} from 'mirador/dist/es/src/state/selectors/canvases';
+} from 'mirador';
 import { MEDIA_TYPES } from './annotationForm/AnnotationFormUtils';
 
 /** */
