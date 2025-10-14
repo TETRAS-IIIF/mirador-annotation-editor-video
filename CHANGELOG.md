@@ -9,6 +9,15 @@ Entries types:
 - `FIXED` for any bug fixes.
 - `SECURITY` to invite users to upgrade in case of vulnerabilities.
 
+## [ 1.1.0 ]
+
+- ADDED : Mirador 4 support, some minor regression can be feared
+- ADDED : React 19 and MUI 7 support
+- FIXED : Minor regression about shape edition
+- ADDED : Read only mode for annotation viewer
+- CHANGED : Remove Webpack and use Vite for build
+- CHANGED : Move to react-quill-new for rich text editor
+
 ## New changes not yet released
 
 - ADD : readonly mode for annotation viewer
