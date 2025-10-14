@@ -1,8 +1,9 @@
 import React, { useEffect, useReducer, useState } from 'react';
-import CompanionWindow from 'mirador/dist/es/src/containers/CompanionWindow';
+import { ConnectedCompanionWindow } from 'mirador';
 import PropTypes from 'prop-types';
 import { Grid } from '@mui/material';
 import { useTranslation, withTranslation } from 'react-i18next';
+import Typography from '@mui/material/Typography';
 import i18n from 'i18next';
 import AnnotationFormTemplateSelector from './AnnotationFormTemplateSelector';
 import { getTemplateType, saveAnnotationInStorageAdapter, TEMPLATE } from './AnnotationFormUtils';
@@ -32,6 +33,7 @@ function AnnotationForm(
   // eslint-disable-next-line no-underscore-dangle
   const [mediaType, setMediaType] = useState(playerReferences.getMediaType());
 
+  // TDOO perhaps useless
   const [retryCount, setRetryCount] = useState(0);
 
   const [, forceUpdate] = useReducer((x) => x + 1, 0);
@@ -43,6 +45,8 @@ function AnnotationForm(
       forceUpdate();
     }, 100);
   }
+  // TDOO perhaps useless
+
 
   // Add a state to trigger redraw
   const [windowSize, setWindowSize] = useState({
@@ -142,7 +146,7 @@ function AnnotationForm(
   };
 
   return (
-    <CompanionWindow
+    <ConnectedCompanionWindow
       title={annotation.id ? t('edit_annotation') : t('new_annotation')}
       windowId={windowId}
       id={id}
@@ -156,14 +160,14 @@ function AnnotationForm(
         )
         : (
           <Grid container direction="column" spacing={1}>
-            <Grid item container>
+            <Grid container>
               <AnnotationFormHeader
                 setCommentingType={setTemplateType}
                 templateType={templateType}
                 annotation={annotation}
               />
             </Grid>
-            <Grid item>
+            <Grid>
               <AnnotationFormBody
                 annotation={annotation}
                 canvases={canvases}
@@ -176,7 +180,7 @@ function AnnotationForm(
             </Grid>
           </Grid>
         )}
-    </CompanionWindow>
+    </ConnectedCompanionWindow>
   );
 }
 
@@ -205,11 +209,11 @@ AnnotationForm.propTypes = {
   config: PropTypes.shape({
     annotation: PropTypes.shape({
       adapter: PropTypes.func,
+      debug: PropTypes.bool,
       defaults: PropTypes.objectOf(
-        PropTypes.oneOfType([PropTypes.bool, PropTypes.func, PropTypes.number, PropTypes.string]),
+        PropTypes.oneOfType([PropTypes.bool, PropTypes.func, PropTypes.number, PropTypes.string])
       ),
     }),
-    debug: PropTypes.bool,
     language: PropTypes.string,
     // eslint-disable-next-line react/forbid-prop-types
     translations: PropTypes.objectOf(PropTypes.object),

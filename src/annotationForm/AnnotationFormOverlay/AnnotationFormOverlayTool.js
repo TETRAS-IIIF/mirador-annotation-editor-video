@@ -177,6 +177,7 @@ function AnnotationFormOverlayTool({
           </>
         )
       }
+      <pre>{JSON.stringify(toolState, null, 2)}</pre>
       <AnnotationFormOverlayToolOptions
         t={t}
         toolState={toolState}
@@ -184,6 +185,7 @@ function AnnotationFormOverlayTool({
         displayMode={displayMode}
         currentShape={currentShape}
       />
+
     </>
   );
 }

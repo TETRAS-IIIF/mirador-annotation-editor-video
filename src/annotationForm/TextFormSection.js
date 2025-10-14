@@ -19,12 +19,12 @@ export default function TextFormSection(
 ) {
   return (
     <Grid container direction="column" spacing={1}>
-      <Grid container item>
+      <Grid container>
         <Typography variant="formSectionTitle">
           {t('note')}
         </Typography>
       </Grid>
-      <Grid container item>
+      <Grid container>
         <TextEditor
           annoHtml={annoHtml}
           updateAnnotationBody={updateAnnotationBody}

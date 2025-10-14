@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+// TODO attantion merge
+
 /** Functional component version of ExternalStorageAnnotation */
 function ExternalStorageAnnotation({
   PluginComponents = [],

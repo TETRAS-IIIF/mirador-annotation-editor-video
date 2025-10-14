@@ -1,4 +1,6 @@
-import React, { useEffect, useLayoutEffect, useState } from 'react';
+import React, {
+  useEffect, useState, useLayoutEffect,
+} from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { Stage } from 'react-konva';

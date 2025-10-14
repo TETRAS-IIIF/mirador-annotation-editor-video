@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { Grid } from '@mui/material';
 import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
+import { getConfig } from 'mirador';
 import AnnotationFormFooter from './AnnotationFormFooter';
 import { TEMPLATE } from './AnnotationFormUtils';
 import TargetFormSection from './TargetFormSection';
 import { resizeKonvaStage } from './AnnotationFormOverlay/KonvaDrawing/KonvaUtils';
 import { MultiTagsInput } from './MultiTagsInput';
 import { TextCommentInput } from './TextCommentInput';
-import { useSelector } from 'react-redux';
-import { getConfig } from 'mirador/dist/es/src/state/selectors';
 
 /** Tagging Template* */
 export default function MultipleBodyTemplate(
@@ -141,7 +141,7 @@ export default function MultipleBodyTemplate(
 
   return (
     <Grid container direction="column" spacing={2}>
-      <Grid item>
+      <Grid>
         <TextCommentInput
           comment={annotationState.maeData.textBody.value}
           setComment={updateAnnotationTextualBodyValue}
@@ -149,7 +149,7 @@ export default function MultipleBodyTemplate(
           t={t}
         />
       </Grid>
-      <Grid item>
+      <Grid>
         <MultiTagsInput
           t={t}
           tags={annotationState.maeData.tags}
@@ -157,7 +157,7 @@ export default function MultipleBodyTemplate(
           tagsSuggestions={mappedSuggestionsTags}
         />
       </Grid>
-      <Grid item>
+      <Grid>
         <TargetFormSection
           onChangeTarget={updateTargetState}
           playerReferences={playerReferences}
@@ -168,7 +168,7 @@ export default function MultipleBodyTemplate(
           windowId={windowId}
         />
       </Grid>
-      <Grid item>
+      <Grid>
         <AnnotationFormFooter
           closeFormCompanionWindow={closeFormCompanionWindow}
           saveAnnotation={saveFunction}

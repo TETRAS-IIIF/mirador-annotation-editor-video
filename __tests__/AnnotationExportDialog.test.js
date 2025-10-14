@@ -3,11 +3,11 @@ import React from 'react';
 import AnnotationExportDialog from '../src/AnnotationExportDialog';
 import { screen, render, waitFor } from './test-utils';
 
-window.URL.createObjectURL = jest.fn((data) => ('downloadurl'));
+window.URL.createObjectURL = vi.fn((data) => ('downloadurl'));
 
-const adapter = jest.fn(() => (
+const adapter = vi.fn(() => (
   {
-    all: jest.fn().mockResolvedValue(
+    all: vi.fn().mockResolvedValue(
       {
         id: 'pageId/3',
         items: [
@@ -22,13 +22,13 @@ const adapter = jest.fn(() => (
 
 /** */
 function createWrapper(props) {
-  const mockT = jest.fn().mockImplementation((key) => key);
+  const mockT = vi.fn().mockImplementation((key) => key);
   return render(
     <AnnotationExportDialog
       canvases={[]}
       classes={{ listitem: 'testClass' }}
       config={{ annotation: { adapter } }}
-      handleClose={jest.fn()}
+      handleClose={vi.fn()}
       open
       t={mockT}
       {...props}

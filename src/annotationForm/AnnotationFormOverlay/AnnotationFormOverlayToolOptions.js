@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { v4 as uuidv4 } from 'uuid';
 import { useSelector } from 'react-redux';
-import { getConfig } from 'mirador/dist/es/src/state/selectors';
+import { getConfig } from 'mirador';
 import ImageFormField from './ImageFormField';
 import {
   isShapesTool,
@@ -167,14 +167,14 @@ function AnnotationFormOverlayToolOptions({
       {
         toolState.activeTool === OVERLAY_TOOL.TEXT && (
           <Grid container direction="column" spacing={1}>
-            <Grid item>
+            <Grid>
               <Typography variant="overline">
                 {t('text')}
               </Typography>
             </Grid>
             {currentShape ? (
               <>
-                <Grid item>
+                <Grid>
                   <TextField
                     value={toolState.text}
                     placeholder={t('text')}
@@ -182,7 +182,7 @@ function AnnotationFormOverlayToolOptions({
                     onChange={handleTextChange}
                   />
                 </Grid>
-                <Grid item>
+                <Grid>
                   <ColorPicker
                     changeClosedMode={changeClosedMode}
                     closeChooseColor={closeChooseColor}
@@ -198,7 +198,7 @@ function AnnotationFormOverlayToolOptions({
                 </Grid>
               </>
             ) : (
-              <Grid item>
+              <Grid>
                 <Typography>{t('click_on_canvas_to_write')}</Typography>
               </Grid>
             )}
@@ -209,7 +209,7 @@ function AnnotationFormOverlayToolOptions({
         toolState.activeTool === OVERLAY_TOOL.IMAGE && (
           <Grid container>
             <ImageFormField
-              xs={8}
+              size={{ xs: 8 }}
               imageUrl={toolState.image?.id}
               onChange={handleImgChange}
               isReadOnly={Boolean(currentShape)}

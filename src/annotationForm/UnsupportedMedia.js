@@ -1,5 +1,5 @@
 import React from 'react';
-import CompanionWindow from 'mirador/dist/es/src/containers/CompanionWindow';
+import { CompanionWindow } from 'mirador';
 import { Grid } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { useTranslation } from 'react-i18next';
@@ -11,10 +11,10 @@ export default function UnsupportedMedia({ id, windowId, mediaType }) {
   return (
     <CompanionWindow title={t('media_not_supported')} windowId={windowId} id={id}>
       <Grid container padding={1} spacing={1}>
-        <Grid item>
+        <Grid>
           <Typography>{t('media_not_supported')}</Typography>
         </Grid>
-        <Grid item>
+        <Grid>
           <Typography>
             {t('detected_media_type', { mediaType })}
           </Typography>
