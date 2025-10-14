@@ -40,8 +40,8 @@ function mapStateToProps(state, {
   const { annotationid } = cw;
 
   // This architecture lead to recreate the playerReferences each time the component is rendered
-  //const media = OSDReferences.get(windowId);
-  //const playerReferences = new WindowPlayer(state, windowId, media, actions);
+  // const media = OSDReferences.get(windowId);
+  // const playerReferences = new WindowPlayer(state, windowId, media, actions);
 
   // This could be removed but it's serve the useEffect in AnnotationForm for now.
   const canvases = getVisibleCanvases(state, { windowId });
