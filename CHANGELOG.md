@@ -1,12 +1,19 @@
-# CHANGELOG
+# Changelog
 
-## New changes not yet released
+Entries types:
 
-- ADD : readonly mode for annotation viewer
+- `ADDED` for new features.
+- `CHANGED` for changes in existing functionality.
+- `DEPRECATED` for soon-to-be removed features.
+- `REMOVED` for now removed features.
+- `FIXED` for any bug fixes.
+- `SECURITY` to invite users to upgrade in case of vulnerabilities.
+- `MERGE` Merge MAE
 
 ## [ 1.1.7]
 
-- FIX : GetKonvaShape
+- MERGE : MAE 1.1.2
+
 
 ## [ 1.1.6]
 

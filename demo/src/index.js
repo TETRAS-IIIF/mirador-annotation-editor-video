@@ -1,4 +1,4 @@
-import mirador from 'mirador/dist/es/src/index';
+import Mirador from 'mirador';
 import annotationPlugins from '../../src';
 import LocalStorageAdapter from '../../src/annotationAdapter/LocalStorageAdapter';
 import { manifestsCatalog } from './manifestsCatalog';
@@ -7,7 +7,7 @@ import { quillConfig } from './quillConfig';
 const config = {
   annotation: {
     adapter: (canvasId) => new LocalStorageAdapter(`localStorage://?canvasId=${canvasId}`, 'Anonymous User'),
-    allowTargetShapesStyling: false,
+    allowTargetShapesStyling: true,
     commentTemplates: [{
       content: '<h4>Comment</h4><p>Comment content</p>',
       title: 'Template',
@@ -16,18 +16,18 @@ const config = {
       content: '<h4>Comment2</h4><p>Comment content</p>',
       title: 'Template 2',
     }],
+    debug: true,
     exportLocalStorageAnnotations: false,
     quillConfig,
-    readonly: true,
+    readonly: false,
     tagsSuggestions: ['Mirador', 'Awesome', 'Viewer', 'IIIF', 'Template'],
   },
   annotations: {
     htmlSanitizationRuleSet: 'liberal',
   },
   catalog: manifestsCatalog,
-  debug: true,
   id: 'demo',
-  language: 'fr',
+  language: 'en',
   themes: {
     dark: {
       typography: {
@@ -71,8 +71,8 @@ const config = {
     sideBarOpenByDefault: true,
   },
   windows: [
-    { manifestId: ' https://iiif.harvardartmuseums.org/manifests/object/299843' },
+    { manifestId: 'https://files.tetras-libre.fr/dev/Clock/manifestWithAnnotationTemplates_MAE.json' },
   ],
 };
 
-mirador.viewer(config, [...annotationPlugins]);
+Mirador.viewer(config, [...annotationPlugins]);

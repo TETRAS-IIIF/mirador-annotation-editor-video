@@ -1,6 +1,7 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Text, Transformer } from 'react-konva';
 import PropTypes from 'prop-types';
+
 /**
  * Represents a text node component.
  * @returns {JSX.Element} The TextNode component.
@@ -19,18 +20,19 @@ function TextNode({
   const trRef = useRef();
 
   /**
-     * Handles the click event on the shape by invoking the provided callback function.
-     * @function handleClick
-     *- The shape object representing the properties of the clicked shape.
-     * @returns {void}
-     */
+   * Handles the click event on the shape by invoking the provided callback function.
+   * @function handleClick
+   *- The shape object representing the properties of the clicked shape.
+   * @returns {void}
+   */
   const handleClick = () => {
     onShapeClick(shape);
   };
   useEffect(() => {
     if (trRef.current) {
       trRef.current.nodes([shapeRef.current]);
-      trRef.current.getLayer().batchDraw();
+      trRef.current.getLayer()
+        .batchDraw();
     }
   }, []);
 
@@ -84,6 +86,7 @@ TextNode.propTypes = {
     x: PropTypes.number,
     y: PropTypes.number,
   }).isRequired,
+  text: PropTypes.string.isRequired,
 };
 
 export default TextNode;

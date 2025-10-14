@@ -184,6 +184,7 @@ function AnnotationFormOverlayTool({
         displayMode={displayMode}
         currentShape={currentShape}
       />
+
     </>
   );
 }

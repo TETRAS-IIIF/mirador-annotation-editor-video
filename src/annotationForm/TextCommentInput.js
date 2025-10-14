@@ -4,7 +4,7 @@ import { Grid, Typography } from '@mui/material';
 import CreatableSelect from 'react-select/creatable';
 import TextEditor from '../TextEditor';
 import { useSelector } from 'react-redux';
-import { getConfig } from 'mirador/dist/es/src/state/selectors';
+import { getConfig } from 'mirador';
 
 /**
  * TextCommentInput component
@@ -46,13 +46,13 @@ export function TextCommentInput({
 
   return (
     <>
-      <Grid container item>
+      <Grid container>
         <Typography variant="formSectionTitle">
           {t('note')}
         </Typography>
       </Grid>
       {commentTemplates.length > 0 && (
-        <Grid item style={{ marginBottom: '10px' }}>
+        <Grid style={{ marginBottom: '10px' }}>
           <CreatableSelect
             options={commentTemplates.map((template) => ({
               label: template.title,
@@ -71,7 +71,7 @@ export function TextCommentInput({
         </Grid>
       )}
 
-      <Grid container item>
+      <Grid container>
         <TextEditor
           text={comment}
           setText={setComment}

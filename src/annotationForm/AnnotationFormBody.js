@@ -4,7 +4,7 @@ import { styled } from '@mui/material/styles';
 import { Grid } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import { getConfig } from 'mirador/dist/es/src/state/selectors';
+import { getConfig } from 'mirador';
 import TextCommentTemplate from './TextCommentTemplate';
 import ImageCommentTemplate from './ImageCommentTemplate';
 import NetworkCommentTemplate from './NetworkCommentTemplate';
@@ -32,11 +32,11 @@ export default function AnnotationFormBody(
 ) {
   const { t } = useTranslation();
 
-  const debugMode = useSelector((state) => getConfig(state)).debug ?? false;
+  const debugMode = useSelector((state) => getConfig(state)).annotation.debug ?? false;
   return (
     <Grid container direction="column">
 
-      <TemplateContainer item>
+      <TemplateContainer>
         {
           templateType.id === TEMPLATE.TEXT_TYPE && (
             <TextCommentTemplate

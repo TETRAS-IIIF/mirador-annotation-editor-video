@@ -8,9 +8,9 @@
 plugin that
 adds annotation creation tools to the user interface. It support both image and video annotation.
 
+It is based on the original [mirador-annotations](https://github.com/ProjectMirador/mirador-annotations/) plugin with a
+lot of technical and functional modifications (including migration from PaperJS to Konvas for the drawing part).
 ### Copyrights
-
-Originally forked from https://github.com/ARVEST-APP/mirador-annotation-editor-video
 
 #### Licence
 
@@ -22,39 +22,25 @@ source.
 If you need to integrate this code base in closed source pieces of software, please contact us, so we can discuss dual
 licencing.
 
-#### Authors
 
-The authors of this software are :
 
-- Clarisse Bardiot (concept and use cases)
-- Jacob Hart (specifications)
-- [Tétras Libre SARL](https://tetras-libre.fr) (development):
-    - David Rouquet
-    - Anthony Geourjon
-    - Antoine Roy
-
-#### Contributors (updated february 2024)
-
-- AZOPSOFT SAS
-    - Samuel Jugnet (especially code for the Konvas part)
 
 ### General functionalities
 
-- Activate a panel with tools to create annotations on IIIF documents (manifests) containing images **and videos with
-  MAEV**
+- Activate a panel with tools to create annotations on IIIF documents (manifests) containing images **and videos with 
+MAEV**
 - Spatial and temporal targets for annotations
 - Overlay annotations (geometric forms, free hand drawing, text and images)
 - Textual/semantic annotations and tags
 - Annotation metadata (based on Dublin Core)
 - Annotation with another manifest -> network of IIIF documents
 
-### Technical aspects
+### Technical aspects 
 
-- Update to Material UI 5 and React 18 to follow latest Mirador upgrades (We support mirador": "4.0.0-alpha.2",
-- The [paperjs](http://paperjs.org/ ) library has been replaced with [Konvas](https://konvajs.org)
+- Update to Material UI 7 and React 19 to follow latest Mirador upgrades (We support official M4 releases),
+- The [paperjs](http://paperjs.org/ ) library has been replaced with [Konvas](https://konvajs.org) 
 - Major refactoring since the original `[mirador-annotations](https://github.com/ProjectMirador/mirador-annotations/) 
 plugins`
-- Works with the original [Mirador 4](https://github.com/projectmirador/mirador) if you need only image annotation
 
 ## Use in npm projects
 
@@ -69,27 +55,21 @@ You can override existing annotation plugin with your own versions by using npm.
 Update your `package.json` file to include the following dependencies and devDependencies:
 
 ```js
-"mirador-annotations"
-:
-"npm:mirador-annotation-editor-video@^1.0.10",
+"mirador-annotations":"npm:mirador-annotation-editor-video@^1.0.10",
 ```
 
 You need also to use the custom version of Mirador 4.
 
-```js
-"mirador"
-:
-"npm@mirador-video@^1.0.17",
+```json
+"mirador" : "npm@mirador-video@^1.2.0","
 ```
-
-If you encounter this error :
 
 ## Install (local)
 
 This method requires `nvm`, `npm`.
 
 ```
-git clone git@github.com:SCENE-CE/mirador-annotation-editor.git
+git clone git@github.com:TETRAS-IIIF/mirador-annotation-editor-video.git
 cd mirador-annotation-editor
 nvm use
 npm install
@@ -101,23 +81,37 @@ Run a demo with Mirador and the MAE plugin :
 npm start
 ```
 
-## Use MAE with video annotation support
 
-- If you need video annotation, you can use
-  [our fork of Mirador: mirador-video](https://github.com/SCENE-CE/mirador-video)
-- In addition, we have developed a wrapper of MAE to support video annotation. This wrapper is called **MAEV** and is
-  available in the [mirador-annotation-editor-video](https://github.com/SCENE-CE/mirador-annotation-editor-video)
-  repository.
 
 ## Persisting Annotations
-
-Persisting annotations requires implementing a IIIF annotation server. Several
+Persisting annotations requires implementing a IIIF annotation server. Several 
 [examples of annotation servers](https://github.com/IIIF/awesome-iiif#annotation-servers) are available on iiif-awesome.
 
-`mirador-annotation-editor` currently supports adapters for
-[annotot](https://github.com/ProjectMirador/mirador-annotations/blob/master/src/AnnototAdapter.js) and
-[local storage](https://github.com/ProjectMirador/mirador-annotations/blob/master/src/LocalStorageAdapter.js). We
-welcome contributions of adapters for other annotation servers.
+We provide a full Mirador workspace with persistance at https://app.mirador-multi-user.com.
+
+## Configuration 
+
+See `demo/src/index.js` for a full configuration sample.
+
+```js
+ let annotationConfig = { // Annotation plugin related
+    adapter: (canvasId) => new LocalStorageAdapter(`localStorage://?canvasId=${canvasId}`, 'Anonymous User'), // Adapter to persist annotations
+    allowTargetShapesStyling: true, // Allow user to change color, line ... Color rendering is not fully supported by Mirador viewer in some case
+    commentTemplates: [{ // Templates for comment creation
+      content: '<h4>Comment</h4><p>Comment content</p>',
+      title: 'Template',
+    },
+    {
+      content: '<h4>Comment2</h4><p>Comment content</p>',
+      title: 'Template 2',
+    }],
+    exportLocalStorageAnnotations: false, 
+    quillConfig, // Configuration for the quill editor
+    readonly: false, // If true, no annotation creation, edit, deleting is allowed
+    tagsSuggestions: ['Mirador', 'Awesome', 'Viewer', 'IIIF', 'Template'], // Tags suggestions for autocompletion
+};
+```
+
 
 ## Contribute
 
@@ -125,3 +119,16 @@ Our plugin follow the Mirador guidelines. Development, design, and maintenance i
 feedback and discussion.
 To suggest features, report bugs, and clarify usage, please submit a GitHub issue.
 
+#### Contributor
+
+The contributors of this software are :
+
+- [Tétras Libre SARL](https://tetras-libre.fr)
+  - David Rouquet
+  - Anthony Geourjon
+  - Antoine Roy
+
+#### Property
+
+The base of this software (up to V1) is the property of [SATT Ouest Valorisation](https://www.ouest-valorisation.fr/)
+that funded its development under the French public contract AO-MA2023-0004-DV5189.

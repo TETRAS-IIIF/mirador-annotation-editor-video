@@ -9,7 +9,7 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import flatten from 'lodash/flatten';
 import { Tooltip } from '@mui/material';
-import { withTranslation } from 'react-i18next';
+import { useTranslation, withTranslation } from 'react-i18next';
 import InfoIcon from '@mui/icons-material/Info';
 import AnnotationActionsContext from './AnnotationActionsContext';
 import WhoAndWhenFormSection, { TOOLTIP_MODE } from './annotationForm/WhoAndWhenFormSection';
@@ -107,8 +107,8 @@ const CanvasListItem = forwardRef((props, ref) => {
       .includes(annotationid);
   };
 
-  // eslint-disable-next-line react/prop-types
-  const { t, tReady, ...filteredProps } = props;
+  // TODO perhaps M4 regression with props
+  const { t } = useTranslation();
 
   return (
     <div
@@ -119,31 +119,34 @@ const CanvasListItem = forwardRef((props, ref) => {
       ref={ref}
     >
       {(isHovering && editable()) && (
-        <div>
-          <ToggleButtonGroup
-            aria-label="annotation tools"
-            size="small"
-            style={{
-              backgroundColor: 'white',
-              position: 'absolute',
-              right: 0,
-              zIndex: 10000,
-            }}
-          >
-            {
-              context?.config?.debug && (
-                <Tooltip title={t('debugAnnotation')}>
-                  <ToggleButton
-                    aria-label="Debug"
-                    onClick={() => console.log(annotationData)} // TODO Open IIIIF debug window
-                    value="Debug in console"
-                  >
-                    <SettingsIcon />
-                  </ToggleButton>
-                </Tooltip>
-              )
-            }
-            <Tooltip title={(
+      <div>
+        <ToggleButtonGroup
+          aria-label="annotation tools"
+          size="small"
+          style={{
+            backgroundColor: 'white',
+            position: 'absolute',
+            right: 0,
+            zIndex: 10000,
+          }}
+        >
+          {context.config?.debug && (
+          <Tooltip title={t('debugAnnotation')}>
+            <span>
+              <ToggleButton
+                aria-label="Debug"
+                onClick={() => console.log(annotationData)}
+                value="debug"
+              >
+                <SettingsIcon />
+              </ToggleButton>
+            </span>
+          </Tooltip>
+          )}
+
+          {!!annotationData?.creator && (
+          <Tooltip
+            title={(
               <WhoAndWhenFormSection
                 creator={annotationData.creator}
                 creationDate={annotationData.creationDate}
@@ -152,47 +155,50 @@ const CanvasListItem = forwardRef((props, ref) => {
                 displayMode={TOOLTIP_MODE}
                 t={t}
               />
-            )}
-            >
-              <ToggleButton
-                aria-label="Metadata"
-                value="metadata"
-                visible={annotationData?.creator}
-              >
+)}
+          >
+            <span>
+              <ToggleButton aria-label="Metadata" value="metadata">
                 <InfoIcon />
               </ToggleButton>
-            </Tooltip>
-            {
-              context.config?.annotation?.readonly !== true && (
-                <>
-                  <Tooltip title={t('edit_annotation')}>
-                    <ToggleButton
-                      aria-label="Edit"
-                      onClick={context.windowViewType === 'single' ? handleEdit : context.toggleSingleCanvasDialogOpen}
-                      value="edit"
-                      disabled={!context.annotationEditCompanionWindowIsOpened}
-                    >
-                      <EditIcon />
-                    </ToggleButton>
-                  </Tooltip>
-                  <Tooltip title={t('deleteAnnotation')}>
-                    <ToggleButton
-                      aria-label="Delete"
-                      onClick={handleDelete}
-                      value="delete"
-                      disabled={!context.annotationEditCompanionWindowIsOpened}
-                    >
-                      <DeleteIcon />
-                    </ToggleButton>
-                  </Tooltip>
-                </>
-              )
-            }
-          </ToggleButtonGroup>
-        </div>
+            </span>
+          </Tooltip>
+          )}
+
+          {context.config?.annotation?.readonly !== true && [<Tooltip
+            title={t('edit_annotation')}
+            key="edit"
+          >
+            <span>
+              <ToggleButton
+                aria-label="Edit"
+                onClick={context.windowViewType === 'single' ? handleEdit : context.toggleSingleCanvasDialogOpen}
+                value="edit"
+                disabled={!context.annotationEditCompanionWindowIsOpened}
+              >
+                <EditIcon />
+              </ToggleButton>
+            </span>
+          </Tooltip>,
+
+            <Tooltip title={t('deleteAnnotation')} key="delete">
+              <span>
+                <ToggleButton
+                  aria-label="Delete"
+                  onClick={handleDelete}
+                  value="delete"
+                  disabled={!context.annotationEditCompanionWindowIsOpened}
+                >
+                  <DeleteIcon />
+                </ToggleButton>
+              </span>
+            </Tooltip>]}
+        </ToggleButtonGroup>
+      </div>
+
       )}
       {/* eslint-disable-next-line react/jsx-props-no-spreading */}
-      <li {...filteredProps}>
+      <li {...props}>
         {props.children}
       </li>
     </div>
@@ -200,11 +206,9 @@ const CanvasListItem = forwardRef((props, ref) => {
 });
 
 CanvasListItem.propTypes = {
+  annotationEditCompanionWindowIsOpened: PropTypes.bool.isRequired,
   annotationid: PropTypes.string.isRequired,
-  children: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.node,
-  ]).isRequired,
+  children: PropTypes.oneOfType([PropTypes.func, PropTypes.node]).isRequired,
 };
 
 export default withTranslation()(CanvasListItem);

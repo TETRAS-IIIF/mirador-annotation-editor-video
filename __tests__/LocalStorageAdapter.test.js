@@ -44,6 +44,8 @@ describe('LocalStorageAdapter', () => {
   });
   describe('all', () => {
     it('parses and returns an item based on its annotationPageId', async () => {
+      const originalGetItem = localStorage.getItem;
+      vi.spyOn(localStorage, 'getItem').mockImplementation((key) => originalGetItem.call(localStorage, key));
       const annoPage = await subject.all();
       expect(localStorage.getItem).toHaveBeenLastCalledWith('//foo');
       expect(annoPage.items.length).toBe(1);

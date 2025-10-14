@@ -8,7 +8,6 @@ export const quillConfig = {
     'strike',
     'blockquote',
     'list',
-    'bullet',
     'indent',
     'link',
     'image',

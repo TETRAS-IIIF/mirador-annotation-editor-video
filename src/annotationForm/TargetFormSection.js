@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Grid, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
@@ -7,7 +7,7 @@ import TargetTimeInput from './TargetTimeInput';
 import { TargetSpatialInput } from './TargetSpatialInput';
 
 /**
- *
+ * Section of Time and Space Target
  * @param onChangeTarget
  * @param spatialTarget
  * @param playerReferences
@@ -17,55 +17,53 @@ import { TargetSpatialInput } from './TargetSpatialInput';
  * @returns {Element}
  * @constructor
  */
-export default function TargetFormSection(
-  {
-    onChangeTarget,
-    spatialTarget,
-    playerReferences,
-    target,
-    timeTarget,
-    windowId,
-  },
-) {
+export default function TargetFormSection({
+  onChangeTarget,
+  spatialTarget,
+  playerReferences,
+  target,
+  timeTarget,
+  windowId,
+}) {
   const { t } = useTranslation();
-  if (!target) {
-    // eslint-disable-next-line no-param-reassign
-    target = {};
-    if (playerReferences.getMediaType() === MEDIA_TYPES.VIDEO) {
-      // eslint-disable-next-line no-param-reassign
-      target.tstart = playerReferences.getCurrentTime() || 0;
-      target.tend = playerReferences.getMediaDuration()
-        ? Math.floor(playerReferences.getMediaDuration()) : 0;
-    }
 
-    // TODO Check if its possible to use overlay ?
-    switch (playerReferences.getMediaType()) {
-      case MEDIA_TYPES.IMAGE:
-      case MEDIA_TYPES.VIDEO:
-        // eslint-disable-next-line no-param-reassign
-        target.fullCanvaXYWH = `0,0,${playerReferences.getMediaTrueWidth()},${playerReferences.getMediaTrueHeight()}`;
-        break;
-      default:
-        break;
-    }
+  const mediaType = playerReferences.getMediaType();
+  const defaultTarget = useMemo(() => {
+    if (target) return target;
 
-    if (target.templateType !== TEMPLATE.IMAGE_TYPE
-      && target.templateType !== TEMPLATE.KONVA_TYPE) {
-      // eslint-disable-next-line no-param-reassign
-      target.drawingState = {
+    const next = {
+      drawingState: {
         currentShape: null,
         isDrawing: false,
         shapes: [],
-      };
+      },
+    };
+
+    if (mediaType === MEDIA_TYPES.IMAGE) {
+      next.fullCanvaXYWH = `0,0,${playerReferences.getMediaTrueWidth()},${playerReferences.getMediaTrueHeight()}`;
     }
 
-    onChangeTarget(target);
-  }
+    if (mediaType === MEDIA_TYPES.VIDEO) {
+      next.fullCanvaXYWH = `0,0,${playerReferences.getMediaTrueWidth()},${playerReferences.getMediaTrueHeight()}`;
+      next.tstart = playerReferences.getCurrentTime() || 0;
+      next.tend = playerReferences.getMediaDuration()
+        ? Math.floor(playerReferences.getMediaDuration()) : 0;
+    }
 
-  /** Handle timeTargetInput  and spatialTargetInput* */
+    /** Handle timeTargetInput  and spatialTargetInput* */
+    return next;
+    // Only depends on values used to compute defaults
+    // DO NOT include onChangeTarget here
+  }, [target, mediaType, playerReferences]);
+
+  // Post-render sync: if parent didn't provide target, set it once
+  useEffect(() => {
+    if (!target) onChangeTarget(defaultTarget);
+  }, [target, defaultTarget, onChangeTarget]);
+
   const onChangeTargetInput = (newData) => {
     onChangeTarget({
-      ...target,
+      ...defaultTarget,
       ...newData,
     });
   };
@@ -80,50 +78,47 @@ export default function TargetFormSection(
   }
 
   return (
-    <Grid item container direction="column" spacing={1}>
-      <Grid item>
+    <Grid container direction="column" spacing={1}>
+      <Grid>
         <Typography variant="formSectionTitle">
           {t('target')}
         </Typography>
       </Grid>
-      {
-        (spatialTarget && playerReferences.getMediaType() !== MEDIA_TYPES.AUDIO) && (
-          <Grid item container direction="column">
-            <TargetSpatialInput
-              playerReferences={playerReferences}
-              setTargetDrawingState={onChangeTargetInput}
-              targetDrawingState={target.drawingState}
-              windowId={windowId}
-              t={t}
-            />
-          </Grid>
-        )
-      }
+
+      {spatialTarget && mediaType !== MEDIA_TYPES.AUDIO && (
+        <Grid container direction="column">
+          <TargetSpatialInput
+            playerReferences={playerReferences}
+            setTargetDrawingState={onChangeTargetInput}
+            targetDrawingState={defaultTarget.drawingState}
+            windowId={windowId}
+          />
+        </Grid>
+      )}
       {
         (timeTarget && playerReferences.getMediaType() !== MEDIA_TYPES.IMAGE) && (
-          <Grid item container direction="column">
+          <Grid container direction="column">
             <TargetTimeInput
               playerReferences={playerReferences}
-              tstart={target.tstart}
-              tend={target.tend}
+              tstart={defaultTarget.tstart}
+              tend={defaultTarget.tend}
               onChange={onChangeTargetInput}
               windowId={windowId}
               t={t}
             />
           </Grid>
         )
-      }
+}
     </Grid>
   );
 }
 
 TargetFormSection.propTypes = {
   onChangeTarget: PropTypes.func.isRequired,
-  // eslint-disable-next-line react/forbid-prop-types
   playerReferences: PropTypes.object.isRequired,
   spatialTarget: PropTypes.bool.isRequired,
+  target: PropTypes.object, // allow undefined/null; child will hydrate once
   // eslint-disable-next-line react/forbid-prop-types
-  target: PropTypes.object.isRequired,
   timeTarget: PropTypes.bool.isRequired,
   windowId: PropTypes.string.isRequired,
 };

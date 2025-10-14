@@ -71,6 +71,8 @@ export const fr = {
   style: 'Style',
   style_selection: 'Sélection du style',
   switch_view: 'Passer à la vue simple',
+  switch_view_content: 'Les annotations peuvent seulement être éditées en vue simple.\n'
+    + 'Passer en vue simple simplement ?',
   switch_view_h2: 'Changer le type de vue en vue simple?',
   tag: 'Étiquette',
   tags: 'Étiquettes',
