@@ -100,8 +100,8 @@ export default function TargetFormSection({
           <Grid container direction="column">
             <TargetTimeInput
               playerReferences={playerReferences}
-              tstart={target.tstart}
-              tend={target.tend}
+              tstart={defaultTarget.tstart}
+              tend={defaultTarget.tend}
               onChange={onChangeTargetInput}
               windowId={windowId}
               t={t}
