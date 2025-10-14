@@ -1,12 +1,7 @@
 import {
   createV2Anno,
-  createV2AnnoBody,
-  createV2AnnoSelector,
-  createV3Anno,
-  createV3AnnoBody,
-  createV3AnnoSelector,
   createAnnotationPage,
-} from './utils';
+} from '../IIIFUtils';
 
 /**
  * @typedef WebAnnotationBodyContent
@@ -80,6 +75,22 @@ import {
 /** @typedef {AiiinotateAdapter} AiiinotateAdapterType */
 
 /**
+ * @param {string} funcName
+ * @param {Promise<Response>} response
+ * @returns {void}
+ */
+const logResponse = async (funcName, response) =>
+  console.log(`AiinotateAdapter.${funcName} response:`, await response.json());
+
+/**
+ * @param {string} funcName
+ * @param {Error} err
+ * @returns {void}
+ */
+const logError = (funcName, err) =>
+  console.error(`AiinotateAdapter.${funcName} error: `, err);
+
+/**
  * @class
  * @type {AiiinotateAdapterType}
  */
@@ -87,7 +98,7 @@ export default class AiiinotateAdapter {
   /**
    * @type {string} canvasId
    * @type {endpointUrl} string
-   * @type {2 | 3} iiifPresentationVersion
+   * @type {2 | 3} iiifPresentationVersion - the IIIF presentation API version in which to store annotations.
    */
   constructor(canvasId, endpointUrl, iiifPresentationVersion) {
     if (![2, 3].includes(iiifPresentationVersion)) {
@@ -123,9 +134,12 @@ export default class AiiinotateAdapter {
         'Content-Type': 'application/json',
       },
     })
-    .then(async (r) => this.all())
+    .then(async (r) => {
+      logResponse("create", r);
+      return this.all()
+    })
     .catch((err) => {
-      console.error('Aiiinotate.create error', err);
+      logError('create', err);
       return this.all()
     });
   }
@@ -142,9 +156,12 @@ export default class AiiinotateAdapter {
         'Content-Type': 'application/json',
       },
     })
-    .then(async (r) => this.all())
+    .then(async (r) => {
+      logResponse("update", r);
+      return this.all()
+    })
     .catch((err) => {
-      console.error('Aiiinotate.create error', err);
+      logError('update', err);
       return this.all()
     });
   }
@@ -154,9 +171,12 @@ export default class AiiinotateAdapter {
     return fetch(`${this.endpointUrlAnnotations}/delete?uri=${annotationId}`, {
       method: "DELETE",
     })
-    .then(async (r) => this.all())
+    .then(async (r) => {
+      logResponse("delete", r);
+      return this.all()
+    })
     .catch((err) => {
-      console.error("Aiiinotate.delete error", err);
+      logError("delete", err);
       return this.all();
     });
   }

@@ -1,12 +1,14 @@
 import Mirador from 'mirador';
 import annotationPlugins from '../../src';
 import LocalStorageAdapter from '../../src/annotationAdapter/LocalStorageAdapter';
+import AiiinotateAdapter from '../../src/annotationAdapter/AiiinotateAdapter';
 import { manifestsCatalog } from './manifestsCatalog';
 import { quillConfig } from './quillConfig';
 
 const config = {
   annotation: {
     adapter: (canvasId) => new LocalStorageAdapter(`localStorage://?canvasId=${canvasId}`, 'Anonymous User'),
+    // adapter: (canvasId) => new AiiinotateAdapter(canvasId, 2),
     allowTargetShapesStyling: true,
     commentTemplates: [{
       content: '<h4>Comment</h4><p>Comment content</p>',
