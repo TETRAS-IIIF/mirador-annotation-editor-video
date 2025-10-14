@@ -7,8 +7,8 @@ import { quillConfig } from './quillConfig';
 
 const config = {
   annotation: {
-    adapter: (canvasId) => new LocalStorageAdapter(`localStorage://?canvasId=${canvasId}`, 'Anonymous User'),
-    // adapter: (canvasId) => new AiiinotateAdapter(canvasId, 2),
+    // adapter: (canvasId) => new LocalStorageAdapter(`localStorage://?canvasId=${canvasId}`, 'Anonymous User'),
+    adapter: (canvasId) => new AiiinotateAdapter("http://127.0.0.1:4000", 2, "Anonymous user", canvasId),
     allowTargetShapesStyling: true,
     commentTemplates: [{
       content: '<h4>Comment</h4><p>Comment content</p>',

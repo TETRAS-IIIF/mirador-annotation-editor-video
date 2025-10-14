@@ -274,7 +274,7 @@ export function createV2Anno(v3anno) {
     motivation: 'oa:commenting',
     on: {
       '@type': 'oa:SpecificResource',
-      full: v3anno.target.source.id,
+      full: v3anno.target.source.id || v3anno.target.source,
     },
   };
   // copy id if it is SAS-generated

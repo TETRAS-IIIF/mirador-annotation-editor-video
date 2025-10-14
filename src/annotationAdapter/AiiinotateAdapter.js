@@ -2,6 +2,7 @@ import {
   createV2Anno,
   createAnnotationPage,
 } from '../IIIFUtils';
+import { ANONYMOUS_USER } from './LocalStorageAdapter';
 
 /**
  * @typedef WebAnnotationBodyContent
@@ -96,20 +97,30 @@ const logError = (funcName, err) =>
  */
 export default class AiiinotateAdapter {
   /**
-   * @type {string} canvasId
-   * @type {endpointUrl} string
-   * @type {2 | 3} iiifPresentationVersion - the IIIF presentation API version in which to store annotations.
+   * @param {endpointUrl} string - URL of the annotation server
+   * @param {2 | 3} iiifPresentationVersion - the IIIF presentation API version in which to store annotations.
+   * @param {string} user
+   * @param {string} canvasId
    */
-  constructor(canvasId, endpointUrl, iiifPresentationVersion) {
+  constructor(endpointUrl, iiifPresentationVersion, user, canvasId) {
     if (![2, 3].includes(iiifPresentationVersion)) {
       throw new Error(`AiiinotateAdapter: unrecognized value for 'iiifPresentationVersion'. expected one of [2,3], got '${iiifPresentationVersion}'`);
     }
+    this.user = user || ANONYMOUS_USER;
     this.canvasId = canvasId;
     this.iiifPresentationVersion = iiifPresentationVersion;
     this.endpointUrl = endpointUrl;
     this.endpointUrlAnnotations = `${this.endpointUrl}/annotations/${iiifPresentationVersion}`;
     this.endpointUrlManifests = `${this.endpointUrl}/manifests/${iiifPresentationVersion}`;
   }
+
+  /**
+   * Get the storage adapter user
+   * @returns {string}
+   */
+    getStorageAdapterUser() {
+      return this.user;
+    }
 
   /**
    * NOTE: if `this.iiifPresentationVersion===2`, an URI to an annotationList will be returned.
@@ -126,6 +137,8 @@ export default class AiiinotateAdapter {
    * @param {WebAnnotation} annotation
    */
   async create(annotation) {
+    console.log(">>>>>>>>>>>>>>>>>>", annotation);
+    console.log("<<<<<<<<<<<<<<<<<<", createV2Anno(annotation));
     return fetch(`${this.endpointUrlAnnotations}/create`, {
       method: 'POST',
       body: JSON.stringify(createV2Anno(annotation)),
