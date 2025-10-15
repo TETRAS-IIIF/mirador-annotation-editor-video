@@ -5,8 +5,8 @@ import { fileURLToPath } from 'url';
 import pkg from './package.json';
 
 /**
-* Vite configuration
-*/
+ * Vite configuration
+ */
 export default defineConfig({
 
   build: {
