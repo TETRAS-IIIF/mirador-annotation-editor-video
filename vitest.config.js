@@ -15,13 +15,11 @@ export default defineConfig({
     ? {
       build: {
         emptyOutDir: true,
-        outDir: 'dist',
-        rollupOptions: {
-          external: ['__tests__/*', '__mocks__/*'],
-          input: fileURLToPath(new URL('./demo/src/index.html', import.meta.url)),
-        },
+        outDir: fileURLToPath(new URL('./dist', import.meta.url)),
         sourcemap: true,
       },
+      plugins: [react()],
+      root: fileURLToPath(new URL('./demo/src', import.meta.url)),
     }
     : {
       esbuild: {
