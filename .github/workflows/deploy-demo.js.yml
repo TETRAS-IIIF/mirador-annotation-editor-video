@@ -2,7 +2,7 @@ name: Stable + latest demo deploy
 
 on:
   push:
-    branches: [ main, demo ]
+    branches: [ main, demo, main-demo ]
   workflow_dispatch:
 
 permissions:
