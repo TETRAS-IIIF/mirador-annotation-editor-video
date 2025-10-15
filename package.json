@@ -18,7 +18,8 @@
     "prepublishOnly": "npm run build",
     "start": "vite",
     "test": "npx vitest run",
-    "test:coverage": "npm run lint && npx vitest run --coverage"
+    "test:coverage": "npm run lint && npx vitest run --coverage",
+    "build:demo": "GITHUB_PAGES=true npm run build"
   },
   "contributors": [
     "Anthony Geourjon <anthony.geourjon@tetras-libre.fr> (https://www.tetras-libre.fr)",
