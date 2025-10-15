@@ -237,6 +237,9 @@ function createV2AnnoBody(v3body) {
   if (v3body.language) {
     v2body.language = v3body.language;
   }
+  if (v3body.purpose) {
+    v2body.motivation = v3body.purpose;
+  }
   return v2body;
 }
 
@@ -282,6 +285,7 @@ export function createV2Anno(v3anno) {
         // source is a string
         || v3anno.target.source,
     },
+    maeData: v3anno.maeData || {},
   };
   // copy id if it is SAS-generated
   if (v3anno.id && v3anno.id.startsWith('http')) {
@@ -324,6 +328,9 @@ function createV3AnnoBody(v2body) {
     type: 'TextualBody',
     value: v2body.chars,
   };
+  if (v2body.motivation) {
+    v3body.purpose = v2body.motivation;
+  }
   if (v2body.format) {
     v3body.format = v2body.format;
   }
@@ -374,6 +381,7 @@ function createV3Anno(v2anno) {
     id: v2anno['@id'],
     motivation: 'commenting',
     type: 'Annotation',
+    maeData: v2anno.maeData || {}
   };
   if (Array.isArray(v2anno.resource)) {
     v3anno.body = v2anno.resource.map((b) => createV3AnnoBody(b));

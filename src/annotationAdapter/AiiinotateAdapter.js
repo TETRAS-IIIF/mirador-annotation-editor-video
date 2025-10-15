@@ -148,7 +148,9 @@ export default class AiiinotateAdapter {
    * @param {WebAnnotation} annotation
    */
   async create(annotation) {
+    console.log("AIIINOTATE ADAPTER create PRE", annotation);
     annotation = this.maybeConvert(annotation);
+    console.log("AIIINOTATE ADAPTER create POST", annotation);
     return fetch(`${this.endpointUrlAnnotations}/create`, {
       method: 'POST',
       body: JSON.stringify(annotation),
@@ -209,6 +211,7 @@ export default class AiiinotateAdapter {
   async all() {
     const r = await fetch(this.annotationPageId);
     const annotations = await r.json();
+    console.log(createAnnotationPage(annotations.resources, this.annotationPageId))
     return this.iiifPresentationVersion === 2
       ? createAnnotationPage(annotations.resources, this.annotationPageId)
       : annotations;
