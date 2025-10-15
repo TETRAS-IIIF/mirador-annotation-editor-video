@@ -39,7 +39,7 @@ jobs:
       - name: Checkout latest (main)
         uses: actions/checkout@v4
         with:
-          ref: main
+          ref: main-demo
           path: main_src
 
       # --- node setup ---
