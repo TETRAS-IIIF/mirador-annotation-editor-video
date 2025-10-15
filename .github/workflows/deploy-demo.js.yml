@@ -62,7 +62,8 @@ jobs:
         env:
           GITHUB_PAGES: "true"
           BASE_PATH: "/${{ env.REPO_NAME }}/stable/"
-        run: npm run build:demo
+        run: | 
+          npm run build:demo
 
       - name: Debug + normalize (stable)
         working-directory: demo_src
