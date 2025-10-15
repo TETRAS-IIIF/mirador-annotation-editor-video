@@ -62,49 +62,7 @@ jobs:
         env:
           GITHUB_PAGES: "true"
           BASE_PATH: "/${{ env.REPO_NAME }}/stable/"
-        run: | 
-          npm run build:demo
-
-      - name: Debug + normalize (stable)
-        working-directory: demo_src
-        env:
-          BASE_PATH: "/${{ env.REPO_NAME }}/stable/"
-          GITHUB_PAGES: "true"
-        run: |
-          set -euxo pipefail
-          echo "== STABLE (demo) BUILD DEBUG =="
-          echo "PWD: $(pwd)"
-          echo "Node: $(node -v)  NPM: $(npm -v)"
-          echo "GIT BRANCH: $(git rev-parse --abbrev-ref HEAD)"
-          echo "HEAD: $(git rev-parse HEAD)"
-          echo "BASE_PATH=${BASE_PATH}  GITHUB_PAGES=${GITHUB_PAGES}"
-          echo "Repo root:"
-          ls -la || true
-          echo "dist tree:"
-          (command -v tree >/dev/null && tree -a dist) || (ls -laR dist || true)
-          echo "index.html candidates:"
-          (find dist -type f -name index.html -print || true)
-          
-          # normalize dist/index.html
-          mkdir -p dist
-          if [ -f dist/index.html ]; then
-            echo "OK: dist/index.html present"
-          elif [ -f dist/demo/src/index.html ]; then
-            echo "MOVE: dist/demo/src/index.html -> dist/index.html"
-            mv dist/demo/src/index.html dist/index.html
-          else
-            echo "ERROR: index.html not found at expected locations"
-            echo "Dumping dist again:"
-            ls -laR dist || true
-            exit 1
-          fi
-          
-          # create SPA fallback
-          cp dist/index.html dist/404.html
-          
-          echo "Preview first 40 lines of dist/index.html:"
-          head -n 40 dist/index.html || true
-
+        run: npm run build:demo
 
       - name: Metadata (stable)
         working-directory: demo_src
