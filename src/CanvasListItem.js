@@ -89,7 +89,8 @@ const CanvasListItem = forwardRef((props, ref) => {
       annotationsOnCanvases,
       canvases,
     } = context;
-    const { annotationid } = props;
+    const { annotationId } = props;
+    console.log( 1, annotationsOnCanvases, canvases, annotationId );
     const annoIds = canvases.map((canvas) => {
       if (annotationsOnCanvases[canvas.id]) {
         return flatten(Object.entries(annotationsOnCanvases[canvas.id])
@@ -103,8 +104,9 @@ const CanvasListItem = forwardRef((props, ref) => {
       }
       return [];
     });
+    console.log( 2, flatten(annoIds).includes(annotationId) );
     return flatten(annoIds)
-      .includes(annotationid);
+      .includes(annotationId);
   };
 
   // TODO perhaps M4 regression with props
@@ -155,7 +157,7 @@ const CanvasListItem = forwardRef((props, ref) => {
                 displayMode={TOOLTIP_MODE}
                 t={t}
               />
-)}
+            )}
           >
             <span>
               <ToggleButton aria-label="Metadata" value="metadata">

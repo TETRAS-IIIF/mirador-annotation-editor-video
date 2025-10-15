@@ -9,7 +9,7 @@ const
 
 describe('AiiinotateAdapter', () => {
   // let subject;
-  let subject = new AiiinotateAdapter(endpointUrl, iiifPresentationVersion, "test user", canvasId);;
+  let subject = new AiiinotateAdapter(endpointUrl, iiifPresentationVersion, canvasId, "Test User");;
   beforeEach(async () => {
     // delete all annotations on canvas `canvasId`
     await fetch(`${endpointUrl}/annotations/2/delete?canvasUri=${canvasId}`, { method: "DELETE" });

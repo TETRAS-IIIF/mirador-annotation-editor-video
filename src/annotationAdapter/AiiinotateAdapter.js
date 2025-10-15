@@ -99,10 +99,10 @@ export default class AiiinotateAdapter {
   /**
    * @param {endpointUrl} string - URL of the annotation server
    * @param {2 | 3} iiifPresentationVersion - the IIIF presentation API version in which to store annotations.
-   * @param {string} user
    * @param {string} canvasId
+   * @param {string} user
    */
-  constructor(endpointUrl, iiifPresentationVersion, user, canvasId) {
+  constructor(endpointUrl, iiifPresentationVersion, canvasId, user) {
     if (![2, 3].includes(iiifPresentationVersion)) {
       throw new Error(`AiiinotateAdapter: unrecognized value for 'iiifPresentationVersion'. expected one of [2,3], got '${iiifPresentationVersion}'`);
     }
@@ -135,7 +135,7 @@ export default class AiiinotateAdapter {
 
   /**
    * convert a Mirador annotation from v3 to v2 to match the Aiiinotate expected annotation version
-   * @param {object} annotation
+   * @param {WebAnnotation} annotation
    * @returns {object}
    */
   maybeConvert(annotation) {
@@ -198,6 +198,8 @@ export default class AiiinotateAdapter {
 
   /**
    * get a single annotation
+   * @param {string} annotationId
+   * @returns {object} - {} if `annotationId` was not found, an annotation otherwise
    */
   async get(annotationId) {
     return await fetch(annotationId);
