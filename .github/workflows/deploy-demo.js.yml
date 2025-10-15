@@ -2,7 +2,7 @@ name: Stable + latest demo deploy
 
 on:
   push:
-    branches: [ main, demo, main-demo ]
+    branches: [ main, demo ]
   workflow_dispatch:
 
 permissions:
@@ -39,7 +39,7 @@ jobs:
       - name: Checkout latest (main)
         uses: actions/checkout@v4
         with:
-          ref: main-demo
+          ref: main
           path: main_src
 
       # --- node setup ---
