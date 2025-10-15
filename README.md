@@ -1,6 +1,6 @@
-# Mirador Annotation Editor - Apache edition
+# Mirador Annotation Editor Video - GPL edition
 
-[Online demos](https://tetras-iiif.github.io/mirador-annotation-editor/)
+[Online demos](https://tetras-iiif.github.io/mirador-annotation-editor-video/)
 
 ## Presentation
 
@@ -57,13 +57,13 @@ You can override existing annotation plugin with your own versions by using npm.
 Update your `package.json` file to include the following dependencies and devDependencies:
 
 ```js
-"mirador-annotations":"npm:mirador-annotation-editor-video@^1.0.10",
+"mirador-annotations":"npm:mirador-annotation-editor-video@^1.2.2",
 ```
 
 You need also to use the custom version of Mirador 4.
 
 ```json
-"mirador" : "npm@mirador-video@^1.2.0","
+"mirador" : "npm@mirador-video@^1.2.0",
 ```
 
 ## Install (local)

@@ -10,10 +10,13 @@ Entries types:
 - `SECURITY` to invite users to upgrade in case of vulnerabilities.
 - `MERGE` Merge MAE
 
+## [ 1.2.3 ]
+
+- MERGE : MAE 1.1.3
+
 ## [ 1.1.7]
 
 - MERGE : MAE 1.1.2
-
 
 ## [ 1.1.6]
 
