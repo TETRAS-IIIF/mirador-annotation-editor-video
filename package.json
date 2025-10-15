@@ -19,7 +19,7 @@
     "start": "vite",
     "test": "npx vitest run",
     "test:coverage": "npm run lint && npx vitest run --coverage",
-    "build:demo": "GITHUB_PAGES=true npm run build"
+    "build:demo": "GITHUB_PAGES=true vite build -c vite.demo.config.ts"
   },
   "contributors": [
     "Anthony Geourjon <anthony.geourjon@tetras-libre.fr> (https://www.tetras-libre.fr)",
