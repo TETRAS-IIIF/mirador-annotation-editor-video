@@ -7,7 +7,6 @@ import pkg from './package.json';
 const safeName = pkg.name.replace(/[^a-zA-Z0-9]/g, '');
 
 export default defineConfig({
-
   build: {
     lib: {
       entry: './src/index.js',
@@ -22,9 +21,18 @@ export default defineConfig({
         ...Object.keys(pkg.peerDependencies || {}),
         '__tests__/*',
         '__mocks__/*',
+        /^react(\/.*)?$/,        // ensure all react subpaths stay external
+        /^react-dom(\/.*)?$/,
       ],
       output: {
         assetFileNames: `${pkg.name}.[ext]`,
+        exports: 'named',        // silences "named + default" warning
+        globals: {               // silences "guessing global" warnings
+          react: 'React',
+          'react-dom': 'ReactDOM',
+          'prop-types': 'PropTypes',
+          uuid: 'uuid',
+        },
       },
     },
     sourcemap: true,
