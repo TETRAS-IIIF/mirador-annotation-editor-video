@@ -88,8 +88,18 @@ const logResponse = async (funcName, response) =>
  * @param {Error} err
  * @returns {void}
  */
-const logError = (funcName, err) =>
+const logError = (funcName, err) => {
   console.error(`AiinotateAdapter.${funcName} error: `, err);
+}
+
+/**
+ * @param {Response} r
+ */
+const successOrThrow = async (r) => {
+  if (! r.ok ) {
+    throw new Error(`Fetch error: response ${r.status} on url: ${r.url}`);
+  }
+}
 
 /**
  * @class
@@ -144,13 +154,21 @@ export default class AiiinotateAdapter {
       : annotation;
   }
 
+  handleResponse = async (funcName, r) => {
+    await successOrThrow(r);
+    return this.all();
+  }
+
+  handleError = (funcName, r) => {
+    logError(funcName, r);
+    return this.all();
+  }
+
   /**
    * @param {WebAnnotation} annotation
    */
   async create(annotation) {
-    console.log("AIIINOTATE ADAPTER create PRE", annotation);
     annotation = this.maybeConvert(annotation);
-    console.log("AIIINOTATE ADAPTER create POST", annotation);
     return fetch(`${this.endpointUrlAnnotations}/create`, {
       method: 'POST',
       body: JSON.stringify(annotation),
@@ -159,11 +177,8 @@ export default class AiiinotateAdapter {
         'Content-Type': 'application/json',
       },
     })
-    .then(async (r) => this.all())
-    .catch((err) => {
-      logError('create', err);
-      return this.all()
-    });
+    .then(async (r) => await this.handleResponse("create", r))
+    .catch((err) => this.handleError("create", err));
   }
 
   /**
@@ -179,11 +194,8 @@ export default class AiiinotateAdapter {
         'Content-Type': 'application/json',
       },
     })
-    .then(async (r) => this.all())
-    .catch((err) => {
-      logError('update', err);
-      return this.all()
-    });
+    .then(async (r) => await this.handleResponse("update", r))
+    .catch((err) => this.handleError("update", err));
   }
 
   /** @param {string} annotationId */
@@ -191,11 +203,8 @@ export default class AiiinotateAdapter {
     return fetch(`${this.endpointUrlAnnotations}/delete?uri=${annotationId}`, {
       method: "DELETE",
     })
-    .then(async (r) => this.all())
-    .catch((err) => {
-      logError("delete", err);
-      return this.all();
-    });
+    .then(async (r) => await this.handleResponse("delete", r))
+    .catch((err) => this.handleError("delete", err));
   }
 
   /**
@@ -211,7 +220,6 @@ export default class AiiinotateAdapter {
   async all() {
     const r = await fetch(this.annotationPageId);
     const annotations = await r.json();
-    console.log(createAnnotationPage(annotations.resources, this.annotationPageId))
     return this.iiifPresentationVersion === 2
       ? createAnnotationPage(annotations.resources, this.annotationPageId)
       : annotations;
