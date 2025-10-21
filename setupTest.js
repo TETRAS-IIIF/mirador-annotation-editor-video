@@ -12,11 +12,11 @@ await i18n.use(initReactI18next).init({
   lng: 'en',
   react: {
     // Prevent adding tReady/t to DOM by internal HOCs
-    useSuspense: false
+    useSuspense: false,
   },
   resources: {
-    en: { translation: {} }
-  }
+    en: { translation: {} },
+  },
 });
 
 export { i18n };
