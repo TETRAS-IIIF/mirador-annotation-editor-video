@@ -17,7 +17,7 @@ const config = {
       title: 'Template 2',
     }],
     debug: true,
-    exportLocalStorageAnnotations: false,
+    exportLocalStorageAnnotations: true,
     quillConfig,
     readonly: false,
     tagsSuggestions: ['Mirador', 'Awesome', 'Viewer', 'IIIF', 'Template'],
