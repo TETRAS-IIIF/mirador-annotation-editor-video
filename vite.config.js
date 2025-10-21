@@ -5,77 +5,68 @@ import { fileURLToPath } from 'url';
 import pkg from './package.json';
 
 const safeName = pkg.name.replace(/[^a-zA-Z0-9]/g, '');
-const baseName = pkg.name.startsWith('/') ? pkg.name : `/${pkg.name}/`;
 
 export default defineConfig({
-  base: process.env.GITHUB_PAGES
-    ? (process.env.BASE_PATH || baseName)
-    : '/',
-
-  ...(process.env.GITHUB_PAGES
-    ? {
-      build: {
-        emptyOutDir: true,
-        outDir: 'dist',
-        rollupOptions: {
-          external: ['__tests__/*', '__mocks__/*'],
-          input: fileURLToPath(new URL('./demo/src/index.html', import.meta.url))
+  build: {
+    lib: {
+      entry: './src/index.js',
+      fileName: (format) => (format === 'umd'
+        ? `${pkg.name}.js`
+        : `${pkg.name}.es.js`),
+      formats: ['es', 'umd'],
+      name: safeName,
+    },
+    rollupOptions: {
+      external: [
+        ...Object.keys(pkg.peerDependencies || {}),
+        '__tests__/*',
+        '__mocks__/*',
+        /^react(\/.*)?$/, // ensure all react subpaths stay external
+        /^react-dom(\/.*)?$/,
+      ],
+      output: {
+        assetFileNames: `${pkg.name}.[ext]`,
+        exports: 'named', // silences "named + default" warning
+        globals: { // silences "guessing global" warnings
+          react: 'React',
+          'react-dom': 'ReactDOM',
+          'prop-types': 'PropTypes',
+          uuid: 'uuid',
         },
-        sourcemap: true
       },
-    }
-    : {
-      build: {
-        lib: {
-          entry: './src/index.js',
-          fileName: (format) => (format === 'umd'
-            ? `${pkg.name}.js`
-            : `${pkg.name}.es.js`),
-          formats: ['es', 'umd'],
-          name: safeName,
-        },
-        rollupOptions: {
-          external: [
-            ...Object.keys(pkg.peerDependencies || {}),
-            '__tests__/*',
-            '__mocks__/*',
-          ],
-          output: {
-            assetFileNames: `${pkg.name}.[ext]`,
+    },
+    sourcemap: true,
+  },
+  esbuild: {
+    exclude: [],
+    include: [/__tests__\/.*\.(js|jsx)$/, /src\/.*\.jsx?$/],
+    loader: 'jsx',
+  },
+  optimizeDeps: {
+    esbuildOptions: {
+      plugins: [
+        {
+          name: 'load-js-files-as-jsx',
+          setup(build) {
+            build.onLoad({ filter: /(src|__tests__)\/.*\.js$/ }, async (args) => ({
+              contents: await fs.readFile(args.path, 'utf8'),
+              loader: 'jsx',
+            }));
           },
         },
-        sourcemap: true,
-      },
-      esbuild: {
-        exclude: [],
-        include: [/__tests__\/.*\.(js|jsx)$/, /src\/.*\.jsx?$/],
-        loader: 'jsx',
-      },
-      optimizeDeps: {
-        esbuildOptions: {
-          plugins: [
-            {
-              name: 'load-js-files-as-jsx',
-              setup(build) {
-                build.onLoad({ filter: /(src|__tests__)\/.*\.js$/ }, async (args) => ({
-                  contents: await fs.readFile(args.path, 'utf8'),
-                  loader: 'jsx',
-                }));
-              },
-            },
-          ],
-        },
-        include: ['@emotion/react'],
-      },
-      plugins: [react()],
-      resolve: {
-        alias: {
-          '@tests/': fileURLToPath(new URL('./__tests__', import.meta.url)),
-        },
-      },
-      server: {
-        open: '/demo/src/index.html',
-        port: 4444,
-      },
-    }),
+      ],
+    },
+    include: ['@emotion/react'],
+  },
+  plugins: [react()],
+  resolve: {
+    alias: {
+      '@tests/': fileURLToPath(new URL('./__tests__', import.meta.url)),
+    },
+  },
+  server: {
+    open: '/demo/src/index.html',
+    port: 4444,
+  },
+
 });

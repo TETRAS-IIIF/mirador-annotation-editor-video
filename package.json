@@ -40,7 +40,7 @@
     "i18next": "^25.4.1",
     "json-edit-react": "^1.22.2",
     "react-color": "^2.19.3",
-    "react-i18next": "^15.4.0",
+    "react-i18next": "^15.7.4",
     "react-konva": "^19.0.10",
     "react-konva-to-svg": "^1.0.2",
     "react-quill": "npm:react-quill-new@3.6.0",
