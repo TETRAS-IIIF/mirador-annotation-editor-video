@@ -14,7 +14,7 @@ import { useTranslation } from 'react-i18next';
 
 const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
   '&:focus': { backgroundColor: theme.palette.action.focus },
-  '&:hover': { backgroundColor: theme.palette.action.hover },
+  '&:hover': { backgroundColor: theme.palette.action.hover }
 }));
 
 /**
@@ -27,7 +27,10 @@ const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
  * @constructor
  */
 function AnnotationExportDialog({
-  canvases, config, handleClose, open,
+  canvases,
+  config,
+  handleClose,
+  open
 }) {
   const [exportLinks, setExportLinks] = useState([]);
   const { t } = useTranslation();
@@ -62,8 +65,8 @@ function AnnotationExportDialog({
             canvasId: canvas.id,
             id: content.id || content['@id'],
             label,
-            url,
-          },
+            url
+          }
         ];
       };
 
@@ -81,7 +84,10 @@ function AnnotationExportDialog({
    */
   const closeDialog = () => {
     exportLinks.forEach((l) => {
-      try { URL.revokeObjectURL(l.url); } catch { /* empty */ }
+      try {
+        URL.revokeObjectURL(l.url);
+      } catch { /* empty */
+      }
     });
     setExportLinks([]);
     handleClose();
@@ -143,11 +149,11 @@ AnnotationExportDialog.propTypes = {
   canvases: PropTypes.arrayOf(PropTypes.shape({ id: PropTypes.string })).isRequired,
   config: PropTypes.shape({
     annotation: PropTypes.shape({
-      adapter: PropTypes.func,
-    }),
+      adapter: PropTypes.func
+    })
   }).isRequired,
   handleClose: PropTypes.func.isRequired,
-  open: PropTypes.bool.isRequired,
+  open: PropTypes.bool.isRequired
 };
 
 export default AnnotationExportDialog;
