@@ -1,5 +1,5 @@
 import {
-  Divider, IconButton, MenuItem, Tooltip,
+  Divider, IconButton, ListItem, Tooltip,
 } from '@mui/material';
 import React from 'react';
 import Typography from '@mui/material/Typography';
@@ -7,15 +7,30 @@ import PropTypes from 'prop-types';
 import DeleteIcon from '@mui/icons-material/DeleteForever';
 import { styled } from '@mui/material/styles';
 import MenuList from '@mui/material/MenuList';
+import MenuItem from '@mui/material/MenuItem';
 
-const Row = styled('div')({
+/**
+ * Accordion presentation of shapes
+ * @param shapes
+ * @param deleteShape
+ * @param currentShapeId
+ * @returns {Element}
+ * @constructor
+ */
+const Row = styled(ListItem)(({ theme }) => ({
   display: 'flex',
   justifyContent: 'space-between',
-  padding: 0,
-  width: '100%',
-});
+}));
 
-// eslint-disable-next-line require-jsdoc
+/**
+ *
+ * @param shapes
+ * @param deleteShape
+ * @param currentShapeId
+ * @param updateCurrentShapeInShapes
+ * @returns {JSX.Element}
+ * @constructor
+ */
 function ShapesList({
   currentShapeId,
   deleteShape,
