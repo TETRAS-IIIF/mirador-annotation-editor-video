@@ -1,5 +1,5 @@
 import {
-  Divider, IconButton, ListItem, Tooltip,
+  Divider, IconButton, MenuItem, Tooltip,
 } from '@mui/material';
 import React from 'react';
 import Typography from '@mui/material/Typography';
@@ -8,28 +8,14 @@ import DeleteIcon from '@mui/icons-material/DeleteForever';
 import { styled } from '@mui/material/styles';
 import MenuList from '@mui/material/MenuList';
 
-/**
- * Accordion presentation of shapes
- * @param shapes
- * @param deleteShape
- * @param currentShapeId
- * @returns {Element}
- * @constructor
- */
-const ListItemContent = styled(ListItem)(({ theme }) => ({
+const Row = styled('div')({
   display: 'flex',
   justifyContent: 'space-between',
-}));
+  padding: 0,
+  width: '100%',
+});
 
-/**
- *
- * @param shapes
- * @param deleteShape
- * @param currentShapeId
- * @param updateCurrentShapeInShapes
- * @returns {JSX.Element}
- * @constructor
- */
+// eslint-disable-next-line require-jsdoc
 function ShapesList({
   currentShapeId,
   deleteShape,
@@ -40,30 +26,29 @@ function ShapesList({
   return (
     <MenuList>
       {shapes.map((shape) => (
-        <div>
-          <ListItemContent sx={{ padding: 0 }}>
-            <div>
+        <React.Fragment key={shape.id}>
+          <MenuItem disableGutters>
+            <Row>
               <Typography
-                style={shape.id === currentShapeId ? { fontWeight: 'bold' } : {}}
-                onClick={() => updateCurrentShapeInShapes(shape)}
+                component="span"
                 sx={{
                   color: 'black',
                   cursor: 'pointer',
+                  fontWeight: shape.id === currentShapeId ? 'bold' : undefined,
                 }}
+                onClick={() => updateCurrentShapeInShapes(shape)}
               >
                 {t(shape.type)}
               </Typography>
-            </div>
-            <Tooltip title={t('delete')}>
-              <IconButton
-                onClick={() => deleteShape(shape.id)}
-              >
-                <DeleteIcon />
-              </IconButton>
-            </Tooltip>
-          </ListItemContent>
-          <Divider />
-        </div>
+              <Tooltip title={t('delete')}>
+                <IconButton onClick={() => deleteShape(shape.id)} edge="end" aria-label="delete">
+                  <DeleteIcon />
+                </IconButton>
+              </Tooltip>
+            </Row>
+          </MenuItem>
+          <Divider component="li" />
+        </React.Fragment>
       ))}
     </MenuList>
   );
