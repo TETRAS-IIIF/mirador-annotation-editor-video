@@ -80,7 +80,8 @@ describe('CanvasListItem', () => {
               items: [
                 {
                   id: 'anno/1',
-                  maeData: { someData: 'someValue' }
+                  maeData: { cre: 'someValue' },
+                  creator: 'someCreator'
                 } // editable
               ]
             }
