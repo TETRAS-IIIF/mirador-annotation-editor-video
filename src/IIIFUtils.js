@@ -272,7 +272,7 @@ function createV2AnnoSelector(v3selector) {
  */
 export function createV2Anno(v3anno) {
   const v2anno = {
-    '@context': 'http://iiif.io/api/presentation/2/context.json',
+    '@context': 'https://iiif.io/api/presentation/2/context.json',
     '@type': 'oa:Annotation',
     motivation: 'oa:commenting',
     on: {
