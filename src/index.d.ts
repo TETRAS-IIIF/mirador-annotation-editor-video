@@ -1,3 +1,4 @@
-// Public API typing: MAE default-exports an array of Mirador plugins.
+declare module 'mirador-annotation-editor/dist/index.css';
+
 declare const plugins: any[];
 export default plugins;
