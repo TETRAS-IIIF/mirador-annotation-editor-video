@@ -1,9 +1,10 @@
 import react from '@vitejs/plugin-react';
-import fs from 'fs/promises';
-import { fileURLToPath } from 'url';
+import fs from 'node:fs/promises';
+import { fileURLToPath } from 'node:url';
 import pkg from './package.json';
 
-const safeName = (pkg?.name ?? 'MiradorAnnotationEditor').replace(/[^a-zA-Z0-9]/g, '');
+const safeName = (pkg?.name ?? 'MiradorAnnotationEditor')
+    .replaceAll(/[^a-zA-Z0-9]/g, '');
 const peers = Object.keys(pkg?.peerDependencies ?? {});
 
 export default {
