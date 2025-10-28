@@ -51,7 +51,7 @@ function TextEditor({ text, setText }) {
     const quillConfigFromState = useSelector((state) => getConfig(state)?.annotation?.quillConfig);
 
     const { formats, modules } = useMemo(() => {
-        return quillConfigFromState && quillConfigFromState.modules && quillConfigFromState.formats
+        return quillConfigFromState?.modules && quillConfigFromState?.formats
             ? quillConfigFromState
             : DEFAULT_QUILL_CONFIG;
     }, [quillConfigFromState]);
