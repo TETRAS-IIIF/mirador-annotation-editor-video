@@ -45,7 +45,6 @@ function AnnotationForm(
       forceUpdate();
     }, 100);
   }
-  // TODO perhaps useless
 
   // Add a state to trigger redraw
   const [windowSize, setWindowSize] = useState({

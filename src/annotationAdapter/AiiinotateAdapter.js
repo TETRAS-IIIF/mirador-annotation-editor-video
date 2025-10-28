@@ -216,7 +216,7 @@ export default class AiiinotateAdapter {
     return await fetch(annotationId);
   }
 
-  /** @returns {object} an annotationPage (IIIF 3) with all annotations for the current canvas */
+  /** @returns {Promise<object>} an annotationPage (IIIF 3) with all annotations for the current canvas */
   async all() {
     const r = await fetch(this.annotationPageId);
     const annotations = await r.json();

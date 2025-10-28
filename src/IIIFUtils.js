@@ -288,7 +288,7 @@ export function createV2Anno(v3anno) {
     maeData: v3anno.maeData || {},
   };
   // copy id if it is SAS-generated
-  if (v3anno.id && v3anno.id.startsWith('http')) {
+  if (v3anno.id?.startsWith('http')) {
     v2anno['@id'] = v3anno.id;
   }
   if (Array.isArray(v3anno.body)) {
