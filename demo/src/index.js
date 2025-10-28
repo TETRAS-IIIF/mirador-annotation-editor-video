@@ -1,7 +1,6 @@
 import Mirador from 'mirador';
 import annotationPlugins from '../../src';
 import LocalStorageAdapter from '../../src/annotationAdapter/LocalStorageAdapter';
-import AiiinotateAdapter from '../../src/annotationAdapter/AiiinotateAdapter';
 import { manifestsCatalog } from './manifestsCatalog';
 import { quillConfig } from './quillConfig';
 
