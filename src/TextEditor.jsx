@@ -5,40 +5,7 @@ import 'react-quill/dist/quill.snow.css';
 import { styled } from '@mui/material/styles';
 import { useSelector } from 'react-redux';
 import { getConfig } from 'mirador';
-
-const DEFAULT_QUILL_CONFIG = {
-    // https://quilljs.com/docs/formats
-    formats: [
-        'header',
-        'bold',
-        'italic',
-        'underline',
-        'strike',
-        'blockquote',
-        'list',
-        'indent',
-        'link',
-        'image',
-        'color',
-        'background',
-    ],
-    // https://quilljs.com/docs/modules/toolbar/
-    modules: {
-        toolbar: [
-            [{ header: [1, 2, false] }],
-            ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-            [
-                { list: 'ordered' },
-                { list: 'bullet' },
-                { indent: '-1' },
-                { indent: '+1' },
-            ],
-            [{ color: [] }, { background: [] }],
-            ['link', 'image'],
-            ['clean'],
-        ],
-    },
-};
+import {DEFAULT_QUILL_CONFIG} from "./utils";
 
 const StyledReactQuill = styled(ReactQuill)(({ theme }) => ({
     '.ql-editor': {
