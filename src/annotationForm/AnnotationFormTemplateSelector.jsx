@@ -58,7 +58,6 @@ const CardContainer = styled('div')(({ theme }) => ({
     margin: theme.spacing(1.25), // 10px
 }));
 
-// MAE-styled Card that still respects host theme
 const MaeCard = styled(Card)(({ theme }) => ({
     borderRadius: theme.shape.borderRadius,
     boxShadow: theme.shadows[1],
@@ -78,7 +77,6 @@ const MaeActionArea = styled(CardActionArea)(({ theme }) => ({
     },
 }));
 
-// Title uses MAE tokens from theme.typography.formSectionTitle if present
 const MaeTitle = styled(Typography)(({ theme }) => {
     const f = (theme.typography).formSectionTitle ?? {};
     return {
@@ -96,7 +94,6 @@ const MaeTitle = styled(Typography)(({ theme }) => {
     };
 });
 
-// Description uses MAE tokens from theme.typography.subFormSectionTitle if present
 const MaeDescription = styled(Typography)(({ theme }) => {
     const f = (theme.typography).subFormSectionTitle ?? {};
     return {
