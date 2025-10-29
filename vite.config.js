@@ -23,6 +23,8 @@ export default {
         /^@mui\/material(\/.*)?$/, /^@mui\/system(\/.*)?$/,
         /^@emotion\/react(\/.*)?$/, /^@emotion\/styled(\/.*)?$/,
         /^mirador(\/.*)?$/,
+          'i18next',
+          'react-i18next',
       ],
       output: {
         assetFileNames: 'index.[ext]',
