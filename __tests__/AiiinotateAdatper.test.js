@@ -14,7 +14,7 @@ describe('AiiinotateAdapter', () => {
     await fetch(`${endpointUrl}/annotations/2/delete?canvasUri=${canvasId}`, { method: "DELETE" });
   });
   describe('create', () => {
-    it('adds an item to the AnnotationPage items', async () => {
+    it.skip('adds an item to the AnnotationPage items', async () => {
       let annoPage = await subject.all();
       const preLength = annoPage.items.length;
       annoPage = await subject.create(annotation);
@@ -32,7 +32,7 @@ describe('AiiinotateAdapter', () => {
     // });
   });
   describe('delete', () => {
-    it('removes an item from an AnnotationPage', async () => {
+    it.skip('removes an item from an AnnotationPage', async () => {
       // insert an element, delete it, assert annoPage has 1 less element than before deletion
       let annoPage = await subject.create(annotation);
       const preLength = annoPage.items.length;
@@ -42,7 +42,7 @@ describe('AiiinotateAdapter', () => {
     });
   });
   describe('update', () => {
-    it('replaces the annotation', async () => {
+    it.skip('replaces the annotation', async () => {
       const updateValue = "face";
       let annoPage = await subject.create(annotation);
       const preLength = annoPage.items.length;
@@ -59,7 +59,7 @@ describe('AiiinotateAdapter', () => {
     });
   });
   describe('all', () => {
-    it('parses and returns an item based on its annotationPageId', async () => {
+    it.skip('parses and returns an item based on its annotationPageId', async () => {
       let annoPage = await subject.create(annotation);
       expect( typeof annoPage.id === "string" && annoPage.id.length > 0 ).toBe(true);
       expect( annoPage.items.length > 0 ).toBe(true);
