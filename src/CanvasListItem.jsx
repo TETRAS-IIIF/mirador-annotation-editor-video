@@ -95,6 +95,7 @@ const CanvasListItem = forwardRef((props, ref) => {
         const { annotationid } = props;
         const annoIds = canvases.map((canvas) => {
             if (annotationsOnCanvases[canvas.id]) {
+                // returns the id of all editable annotations for all canvases in `annotationsOnCanvas`
                 return flatten(Object.entries(annotationsOnCanvases[canvas.id])
                     .map(([key, value]) => {
                         if (value.json && value.json.items) {
