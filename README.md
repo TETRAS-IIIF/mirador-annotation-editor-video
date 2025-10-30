@@ -72,7 +72,7 @@ This method requires `nvm`, `npm`.
 
 ```
 git clone git@github.com:TETRAS-IIIF/mirador-annotation-editor-video.git
-cd mirador-annotation-editor
+cd mirador-annotation-editor-video
 nvm use
 npm install
 ```
