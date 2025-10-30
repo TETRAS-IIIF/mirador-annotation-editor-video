@@ -10,6 +10,10 @@ Entries types:
 - `SECURITY` to invite users to upgrade in case of vulnerabilities.
 - `MERGE` Merge MAE
 
+## [ 1.2.4 ]
+
+- MERGE : MAE 1.1.4
+
 ## [ 1.2.3 ]
 
 - MERGE : MAE 1.1.3
@@ -20,10 +24,4 @@ Entries types:
 
 ## [ 1.1.6]
 
-### Change From MAE 1.0.88
-- ADD : Implement Multibody template 
-- ADD : Tags suggestion in annotation edition
-- FIX : Use selector to get config data
-- FIX : Clean translation function call
-- FIX : Simplify IIIF annotation generation
-- CLEAN : Remove unused code
+- MERGE : MAE 1.0.88

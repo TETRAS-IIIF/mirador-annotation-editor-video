@@ -2,7 +2,6 @@ import Mirador from 'mirador';
 import annotationPlugins from '../../src';
 import LocalStorageAdapter from '../../src/annotationAdapter/LocalStorageAdapter';
 import { manifestsCatalog } from './manifestsCatalog';
-import { quillConfig } from './quillConfig';
 
 const config = {
   annotation: {
@@ -18,7 +17,6 @@ const config = {
     }],
     debug: true,
     exportLocalStorageAnnotations: true,
-    quillConfig,
     readonly: false,
     tagsSuggestions: ['Mirador', 'Awesome', 'Viewer', 'IIIF', 'Template'],
   },

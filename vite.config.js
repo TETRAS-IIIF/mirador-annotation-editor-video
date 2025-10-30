@@ -1,72 +1,62 @@
-import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import fs from 'fs/promises';
-import { fileURLToPath } from 'url';
+import fs from 'node:fs/promises';
+import { fileURLToPath } from 'node:url';
 import pkg from './package.json';
 
-const safeName = pkg.name.replace(/[^a-zA-Z0-9]/g, '');
+const safeName = (pkg?.name ?? 'MiradorAnnotationEditor')
+    .replaceAll(/[^a-zA-Z0-9]/g, '');
+const peers = Object.keys(pkg?.peerDependencies ?? {});
 
-export default defineConfig({
+export default {
   build: {
     lib: {
+      cssFileName: 'index.css',
       entry: './src/index.js',
-      fileName: (format) => (format === 'umd'
-        ? `${pkg.name}.js`
-        : `${pkg.name}.es.js`),
-      formats: ['es', 'umd'],
+      fileName: (f) => (f === 'es' ? 'index.js' : 'index.cjs'),
+      formats: ['es', 'cjs'],
       name: safeName,
     },
     rollupOptions: {
       external: [
-        ...Object.keys(pkg.peerDependencies || {}),
-        '__tests__/*',
-        '__mocks__/*',
-        /^react(\/.*)?$/, // ensure all react subpaths stay external
-        /^react-dom(\/.*)?$/,
+        ...peers,
+        /^react(\/.*)?$/, /^react-dom(\/.*)?$/,
+        /^@mui\/material(\/.*)?$/, /^@mui\/system(\/.*)?$/,
+        /^@emotion\/react(\/.*)?$/, /^@emotion\/styled(\/.*)?$/,
+        /^mirador(\/.*)?$/,
+          'i18next',
+          'react-i18next',
       ],
       output: {
-        assetFileNames: `${pkg.name}.[ext]`,
-        exports: 'named', // silences "named + default" warning
-        globals: { // silences "guessing global" warnings
-          react: 'React',
-          'react-dom': 'ReactDOM',
-          'prop-types': 'PropTypes',
-          uuid: 'uuid',
-        },
+        assetFileNames: 'index.[ext]',
+        exports: 'auto',
+        globals: { react: 'React', 'react-dom': 'ReactDOM' },
       },
     },
     sourcemap: true,
   },
-  esbuild: {
-    exclude: [],
-    include: [/__tests__\/.*\.(js|jsx)$/, /src\/.*\.jsx?$/],
-    loader: 'jsx',
-  },
+  esbuild: { include: [/src\/.*\.jsx?$/], loader: 'jsx' },
   optimizeDeps: {
     esbuildOptions: {
-      plugins: [
-        {
-          name: 'load-js-files-as-jsx',
-          setup(build) {
-            build.onLoad({ filter: /(src|__tests__)\/.*\.js$/ }, async (args) => ({
-              contents: await fs.readFile(args.path, 'utf8'),
-              loader: 'jsx',
-            }));
-          },
+      plugins: [{
+        name: 'load-js-files-as-jsx',
+        setup(build) {
+          build.onLoad({ filter: /(src|__tests__)\/.*\.js$/ }, async (args) => ({
+            contents: await fs.readFile(args.path, 'utf8'),
+            loader: 'jsx',
+          }));
         },
-      ],
+      }],
     },
     include: ['@emotion/react'],
   },
   plugins: [react()],
   resolve: {
-    alias: {
-      '@tests/': fileURLToPath(new URL('./__tests__', import.meta.url)),
-    },
+    alias: { '@tests/': fileURLToPath(new URL('./__tests__', import.meta.url)) },
+    dedupe: [
+      'react', 'react-dom',
+      '@mui/material', '@mui/system',
+      '@emotion/react', '@emotion/styled',
+    ],
   },
-  server: {
-    open: '/demo/src/index.html',
-    port: 4444,
-  },
-
-});
+  server: { open: '/demo/src/index.html', port: 4444 },
+};
