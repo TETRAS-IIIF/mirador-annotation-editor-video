@@ -43,6 +43,8 @@ function ParentComponent({
     setSelectedShape(shape);
   };
 
+    console.log('parent render')
+    console.log("shapes",shapes)
   return (
     <Layer
       scaleX={scale}
@@ -68,7 +70,6 @@ function ParentComponent({
                 }}
                 key={shape.id}
                 displayMode={displayMode}
-                baseStrokeWidth={baseStrokeWidth}
               />
             );
           case 'text':

@@ -48,6 +48,7 @@ function AnnotationFormOverlayToolOptions({
 
   /** */
   const handleLineWeightSelect = (e) => {
+      console.log(e.currentTarget.value);
     setToolOptions({
       ...toolOptions,
       lineWeightPopoverOpen: false,

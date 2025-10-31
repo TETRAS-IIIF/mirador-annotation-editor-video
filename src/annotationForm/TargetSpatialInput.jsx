@@ -44,7 +44,7 @@ export function TargetSpatialInput({
   const [toolState, setToolState] = useState(TARGET_TOOL_STATE);
   const [viewTool, setViewTool] = useState(TARGET_VIEW);
   const [scale, setScale] = useState(playerReferences.getScale());
-
+    console.log("toolState :",toolState)
   const safeSetToolState = useMacrotaskSetter(setToolState);
   const safeSetViewTool  = useMacrotaskSetter(setViewTool);
 
