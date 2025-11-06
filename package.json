@@ -61,7 +61,7 @@
     "react-i18next": ">=13",
     "react": ">=19",
     "react-dom": ">=19",
-    "mirador": "npm:mirador-video@1.2.1",
+    "mirador": "^4.0.0",
     "@mui/material": ">=5",
     "@mui/system": ">=5",
     "@emotion/react": ">=11",
