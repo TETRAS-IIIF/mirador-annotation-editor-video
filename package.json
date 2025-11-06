@@ -6,8 +6,12 @@
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "style": "dist/index.css",
-  "files": ["dist"],
-  "sideEffects": ["dist/index.css"],
+  "files": [
+    "dist"
+  ],
+  "sideEffects": [
+    "dist/index.css"
+  ],
   "exports": {
     ".": {
       "import": "./dist/index.js",
@@ -57,17 +61,17 @@
     "use-image": "^1.1.1"
   },
   "peerDependencies": {
-    "i18next": ">=23",
-    "react-i18next": ">=13",
-    "react": ">=19",
-    "react-dom": ">=19",
-    "mirador": "^4.0.0",
-    "@mui/material": ">=5",
-    "@mui/system": ">=5",
     "@emotion/react": ">=11",
     "@emotion/styled": ">=11",
+    "@mui/material": ">=5",
+    "@mui/system": ">=5",
+    "i18next": ">=23",
     "lodash": "^4.17.11",
+    "mirador": "^4.0.0",
     "prop-types": "^15.7.2",
+    "react": ">=19",
+    "react-dom": ">=19",
+    "react-i18next": ">=13",
     "uuid": "^8.0.0"
   },
   "devDependencies": {
