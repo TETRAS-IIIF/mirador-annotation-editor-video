@@ -9,6 +9,10 @@ Entries types:
 - `FIXED` for any bug fixes.
 - `SECURITY` to invite users to upgrade in case of vulnerabilities.
 
+## [ 1.1.5 ]
+
+- FIXED : Peer version of Mirador 
+
 ## [ 1.1.4 ]
 
 - ADDED : Aiiinotate adapter
