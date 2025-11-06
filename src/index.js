@@ -4,6 +4,7 @@ import canvasAnnotationsPlugin from './plugins/canvasAnnotationsPlugin';
 import annotationCreationCompanionWindowPlugin from './plugins/annotationCreationCompanionWindow';
 import windowSideBarButtonsPlugin from './plugins/windowSideBarButtonsPlugin';
 import annotationSagaPlugin from './plugins/annotationSaga';
+import aiiinotateAdapter from './annotationAdapter/AiiinotateAdapter';
 
 export {
   miradorAnnotationPlugin, externalStorageAnnotationPlugin,
@@ -20,6 +21,7 @@ const annotationPlugins = [
   annotationCreationCompanionWindowPlugin,
   windowSideBarButtonsPlugin,
   annotationSagaPlugin,
+  aiiinotateAdapter,
 ];
 
 export default annotationPlugins;
