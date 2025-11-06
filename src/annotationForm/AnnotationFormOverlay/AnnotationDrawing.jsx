@@ -424,8 +424,6 @@ export default function AnnotationDrawing(
     }
   };
 
-  console.log('annotationDrawing render')
-
   /** */
   const handleMouseMove = (e) => {
     try {
@@ -536,8 +534,6 @@ export default function AnnotationDrawing(
     }
   };
 
-  console.log("toolState into drawing :",toolState)
-  console.log("drawingState  :",drawingState)
   /** */
   const drawKonvas = () => (
     <Stage

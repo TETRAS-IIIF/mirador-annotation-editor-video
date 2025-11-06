@@ -9,6 +9,7 @@ import { KONVA_MODE } from '../KonvaUtils';
  */
 function Rectangle({
   activeTool,
+  baseStrokeWidth,
   displayMode,
   handleDragEnd,
   handleDragStart,
@@ -19,6 +20,7 @@ function Rectangle({
 }) {
   const shapeRef = useRef();
   const trRef = useRef();
+
   useEffect(() => {
     if (trRef.current) {
       trRef.current.nodes([shapeRef.current]);
@@ -26,15 +28,6 @@ function Rectangle({
         .batchDraw();
     }
   }, [isSelected]);
-
-
-    useEffect(() => {
-        const node = shapeRef.current;
-        if (!node) return;
-        // ensure node reflects latest props even if reconcilation is skipped
-        node.setAttrs({ strokeWidth: shape.strokeWidth, stroke: shape.stroke, fill: shape.fill });
-        node.getLayer()?.batchDraw();
-    }, [shape.strokeWidth, shape.stroke, shape.fill]);
 
   /**
    * Handles the click event on the shape by invoking the provided callback function.
@@ -46,14 +39,10 @@ function Rectangle({
     onShapeClick(shape);
   };
 
-  console.log("shape strokeWidth", shape.strokeWidth);
-  console.log("shape", shape);
-  console.log("shapeRef",shapeRef)
   return (
     <>
       <Rect
-          key={`${shape.id}-${shape.strokeWidth}`}
-          dashEnabled={displayMode === KONVA_MODE.TARGET}
+        dashEnabled={displayMode === KONVA_MODE.TARGET}
         draggable={activeTool === 'cursor' || activeTool === 'edit'}
         fill={shape.fill}
         height={shape.height}
@@ -61,14 +50,14 @@ function Rectangle({
         onClick={handleClick}
         onDragEnd={handleDragEnd}
         onDragStart={handleDragStart}
-        onMouseDown={handleClick}
+        onMousedown={handleClick}
         onTransform={onTransform}
         ref={shapeRef}
         scaleX={shape.scaleX}
         scaleY={shape.scaleY}
         stroke={shape.stroke}
         strokeScaleEnabled={false}
-        strokeWidth={shape.strokeWidth}
+        strokeWidth={displayMode === KONVA_MODE.TARGET ? baseStrokeWidth : shape.strokeWidth}
         width={shape.width}
         x={shape.x || 0}
         y={shape.y || 0}
