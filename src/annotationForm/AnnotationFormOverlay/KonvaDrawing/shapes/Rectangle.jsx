@@ -27,7 +27,7 @@ function Rectangle({
       trRef.current.getLayer()
         .batchDraw();
     }
-  }, [isSelected]);
+  }, [isSelected, shape.strokeWidth]);
 
   /**
    * Handles the click event on the shape by invoking the provided callback function.
@@ -57,7 +57,7 @@ function Rectangle({
         scaleY={shape.scaleY}
         stroke={shape.stroke}
         strokeScaleEnabled={false}
-        strokeWidth={displayMode === KONVA_MODE.TARGET ? baseStrokeWidth : shape.strokeWidth}
+        strokeWidth={shape.strokeWidth}
         width={shape.width}
         x={shape.x || 0}
         y={shape.y || 0}
