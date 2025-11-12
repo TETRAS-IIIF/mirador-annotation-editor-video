@@ -27,7 +27,7 @@ function Rectangle({
       trRef.current.getLayer()
         .batchDraw();
     }
-  }, [isSelected, shape.strokeWidth]);
+  }, [isSelected]);
 
   /**
    * Handles the click event on the shape by invoking the provided callback function.
