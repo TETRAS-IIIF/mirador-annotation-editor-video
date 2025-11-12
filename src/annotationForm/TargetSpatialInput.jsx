@@ -47,7 +47,7 @@ export function TargetSpatialInput({
 
   const safeSetToolState = useMacrotaskSetter(setToolState);
   const safeSetViewTool  = useMacrotaskSetter(setViewTool);
-
+    console.log("toto")
   const updateScale = useCallback(() => {
     const nxt = playerReferences.getScale();
     setScale((prev) => (prev === nxt ? prev : nxt));
@@ -126,7 +126,7 @@ export function TargetSpatialInput({
           <AnnotationFormOverlay
             toolState={toolState}
             deleteShape={deleteShape}
-            setToolState={safeSetToolState}
+            setToolState={setToolState}
             shapes={drawingState.shapes}
             currentShape={drawingState.currentShape}
             setViewTool={safeSetViewTool}
