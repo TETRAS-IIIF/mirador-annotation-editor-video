@@ -1,13 +1,10 @@
 import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { Line, Transformer } from 'react-konva';
-import { KONVA_MODE } from '../KonvaUtils';
 
 /** FreeHand shape displaying */
 function Polygon({
   activeTool,
-  baseStrokeWidth,
-  displayMode,
   handleDragEnd,
   handleDragStart,
   isSelected,
@@ -60,7 +57,7 @@ function Polygon({
         stroke={shape.stroke}
         // This line cause SVG export error
         strokeScaleEnabled={false}
-        strokeWidth={displayMode === KONVA_MODE.TARGET ? baseStrokeWidth : shape.strokeWidth}
+        strokeWidth={shape.strokeWidth}
         x={shape.x}
         y={shape.y}
       />

@@ -48,10 +48,11 @@ function ParentComponent({
       scaleX={scale}
       scaleY={scale}
     >
-      {/* eslint-disable-next-line consistent-return */}
-      {shapes.map((shape, i) => {
+      {/* eslint-disable-next-line consistent-return,array-callback-return */}
+      {shapes.map((shape) => {
         // eslint-disable-next-line max-len
         const isSelected = selectedShapeId === shape.id && trview;
+        // eslint-disable-next-line default-case
         switch (shape.type) {
           case SHAPES_TOOL.RECTANGLE:
             return (
