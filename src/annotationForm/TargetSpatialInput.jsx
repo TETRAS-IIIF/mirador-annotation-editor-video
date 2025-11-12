@@ -1,4 +1,6 @@
-import React, { useLayoutEffect, useRef, useState, useCallback, useEffect } from 'react';
+import React, {
+  useLayoutEffect, useRef, useState, useCallback,
+} from 'react';
 import PropTypes from 'prop-types';
 import Typography from '@mui/material/Typography';
 import { Grid } from '@mui/material';
@@ -7,17 +9,6 @@ import AnnotationDrawing from './AnnotationFormOverlay/AnnotationDrawing';
 import { TARGET_TOOL_STATE, TARGET_VIEW } from './AnnotationFormUtils';
 import AnnotationFormOverlay from './AnnotationFormOverlay/AnnotationFormOverlay';
 import { KONVA_MODE } from './AnnotationFormOverlay/KonvaDrawing/KonvaUtils';
-
-// Always schedule after commit
-function useMacrotaskSetter(setState) {
-  const ref = useRef(setState);
-  useEffect(() => { ref.current = setState; }, [setState]);
-  return useCallback((update) => {
-    setTimeout(() => {
-      ref.current((prev) => (typeof update === 'function' ? update(prev) : update));
-    }, 0);
-  }, []);
-}
 
 /**
  * TargetSpatialInput - Target spatial input component
@@ -42,12 +33,9 @@ export function TargetSpatialInput({
   }));
 
   const [toolState, setToolState] = useState(TARGET_TOOL_STATE);
-  const [viewTool, setViewTool] = useState(TARGET_VIEW);
+  const [, setViewTool] = useState(TARGET_VIEW);
   const [scale, setScale] = useState(playerReferences.getScale());
 
-  const safeSetToolState = useMacrotaskSetter(setToolState);
-  const safeSetViewTool  = useMacrotaskSetter(setViewTool);
-    console.log("toto")
   const updateScale = useCallback(() => {
     const nxt = playerReferences.getScale();
     setScale((prev) => (prev === nxt ? prev : nxt));
@@ -129,7 +117,7 @@ export function TargetSpatialInput({
             setToolState={setToolState}
             shapes={drawingState.shapes}
             currentShape={drawingState.currentShape}
-            setViewTool={safeSetViewTool}
+            setViewTool={setViewTool}
             t={t}
             displayMode={KONVA_MODE.TARGET}
             updateCurrentShapeInShapes={updateCurrentShapeInShapes}
@@ -141,8 +129,10 @@ export function TargetSpatialInput({
 }
 
 TargetSpatialInput.propTypes = {
+  // eslint-disable-next-line react/forbid-prop-types
   playerReferences: PropTypes.object.isRequired,
   setTargetDrawingState: PropTypes.func.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
   targetDrawingState: PropTypes.object.isRequired,
   windowId: PropTypes.string.isRequired,
 };
