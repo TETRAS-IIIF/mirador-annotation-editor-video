@@ -63,7 +63,6 @@ function Rectangle({
         y={shape.y || 0}
       />
       <Transformer
-        rotateEnabled={displayMode !== 'target'}
         ref={trRef}
         visible={activeTool === 'edit' && isSelected}
       />
