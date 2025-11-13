@@ -9,9 +9,6 @@ import { styled } from '@mui/material/styles';
 import HMSInput from './HMSInput';
 import { MEDIA_TYPES } from './AnnotationFormUtils';
 
-const StyledSlider = styled(Slider)(({ theme }) => ({
-  color: 'rgba(1, 0, 0, 0.38)',
-}));
 
 const StyledLabelSelector = styled('p')(({ theme }) => ({
   fontSize: '15px',
@@ -120,7 +117,7 @@ playerReferences,
           <Typography variant="subFormSectionTitle">Time</Typography>
         </Grid>
         <Grid container item>
-          <StyledSlider
+          <Slider
             sx={{
               marginLeft: '5px',
               width: '90%',
@@ -131,7 +128,7 @@ playerReferences,
             valueLabelDisplay="auto"
             aria-labelledby="range-slider"
             max={Math.round(duration)}
-            color="secondary"
+            color="primary"
             windowId={windowId}
           />
         </Grid>
