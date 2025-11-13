@@ -26,7 +26,6 @@ licencing.
 
 
 
-
 ### General functionalities
 
 - Activate a panel with tools to create annotations on IIIF documents (manifests) containing images **and videos with 
@@ -65,6 +64,15 @@ You need also to use the custom version of Mirador 4.
 ```json
 "mirador" : "npm@mirador-video@^1.2.0",
 ```
+
+### Troubleshooting
+
+If you encounter issue in Note Template with React Quill editor, add `"react-quill": "npm:react-quill-new@3.6.0"` dependency in your package.json file then import theme in your main js file as below:
+```js
+import 'react-quill/dist/quill.snow.css';
+```
+
+
 
 ## Install (local)
 
