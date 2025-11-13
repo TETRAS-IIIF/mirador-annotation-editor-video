@@ -1,7 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { Circle, Transformer } from 'react-konva';
-import { KONVA_MODE } from '../KonvaUtils';
 
 /**
  * Represents a Elipse node component.
@@ -9,8 +8,6 @@ import { KONVA_MODE } from '../KonvaUtils';
  */
 function CircleNode({
   activeTool,
-  baseStrokeWidth,
-  displayMode,
   handleDragEnd,
   handleDragStart,
   isSelected,
@@ -58,7 +55,7 @@ function CircleNode({
         stroke={shape.stroke}
         // This line cause SVG export error
         strokeScaleEnabled={false}
-        strokeWidth={displayMode === KONVA_MODE.TARGET ? baseStrokeWidth : shape.strokeWidth}
+        strokeWidth={shape.strokeWidth}
         x={shape.x}
         y={shape.y}
       />
@@ -73,7 +70,9 @@ function CircleNode({
 
 CircleNode.propTypes = {
   activeTool: PropTypes.string.isRequired,
+  // eslint-disable-next-line react/no-unused-prop-types
   baseStrokeWidth: PropTypes.number.isRequired,
+  // eslint-disable-next-line react/no-unused-prop-types
   displayMode: PropTypes.string.isRequired,
   handleDragEnd: PropTypes.func.isRequired,
   handleDragStart: PropTypes.func.isRequired,
