@@ -36,16 +36,10 @@ const isRectangleShape = (shape) => shape.type === SHAPES_TOOL.RECTANGLE;
  * @returns {boolean}
  */
 const isSimpleTarget = (shapes) => {
-  console.log('shapes', shapes);
   if (shapes.length !== 1) return false;
-  console.log('shapes[0]', shapes[0]);
   const shape = shapes[0];
-  console.log('isRectangleShape(shape)', isRectangleShape(shape));
-  console.log('shape.rotation', shape.rotation);
-  console.log('hasMatchingStrokeAndFillColors(shape)', hasMatchingStrokeAndFillColors(shape));
 
-  return isRectangleShape(shape) && (!shape?.rotation || shape.rotation === 0)
-    && hasMatchingStrokeAndFillColors(shape);
+  return isRectangleShape(shape) && (!shape?.rotation || shape.rotation === 0);
 };
 
 /**
@@ -121,9 +115,6 @@ export const getIIIFTargetFromMaeData = (
 ) => {
   const maeTarget = maeData.target;
   const { templateType } = maeData;
-
-  console.log('maeTarget.drawingState.shapes');
-  console.log(maeTarget.drawingState.shapes);
 
   switch (templateType) {
     case TEMPLATE.IIIF_TYPE:
