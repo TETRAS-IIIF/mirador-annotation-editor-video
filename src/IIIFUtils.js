@@ -282,8 +282,10 @@ export function createV2Anno(v3anno) {
         v3anno.target.source?.id
         // `target` has an id
         || v3anno.target.id
-        // source is a string
-        || v3anno.target.source,
+        // `target` is an object and `target.source` is a string
+        || v3anno.target.source
+        // in prod, `target` can be a simple string with #xyhw fragment selector
+        || v3anno.target
     },
     maeData: v3anno.maeData || {},
   };
