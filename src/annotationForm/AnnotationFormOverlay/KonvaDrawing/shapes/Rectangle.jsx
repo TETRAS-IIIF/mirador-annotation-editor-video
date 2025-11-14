@@ -57,13 +57,12 @@ function Rectangle({
         scaleY={shape.scaleY}
         stroke={shape.stroke}
         strokeScaleEnabled={false}
-        strokeWidth={displayMode === KONVA_MODE.TARGET ? baseStrokeWidth : shape.strokeWidth}
+        strokeWidth={shape.strokeWidth}
         width={shape.width}
         x={shape.x || 0}
         y={shape.y || 0}
       />
       <Transformer
-        rotateEnabled={displayMode !== 'target'}
         ref={trRef}
         visible={activeTool === 'edit' && isSelected}
       />

@@ -29,7 +29,6 @@ licencing.
 
 
 
-
 ### General functionalities 
 
 - Activate a panel with tools to create annotations on IIIF documents (manifests) containing images **and videos with 
@@ -59,7 +58,7 @@ You can override existing annotation plugin with your own versions by using npm.
 
 Update your `package.json` file to include the following dependencies and devDependencies:
 ```json
-"mirador-annotations": "npm:mirador-annotation-editor@^1.1.0",
+"mirador-annotations": "npm:mirador-annotation-editor@^1.1.6",
 ```
 
 You need also to use the latest version of Mirador 4.
@@ -67,6 +66,15 @@ You need also to use the latest version of Mirador 4.
 ```json
 "mirador" : "4.0.0"
 ```
+
+### Troubleshooting
+
+If you encounter issue in Note Template with React Quill editor, add `"react-quill": "npm:react-quill-new@3.6.0"` dependency in your package.json file then import theme in your main js file as below:
+```js
+import 'react-quill/dist/quill.snow.css';
+```
+
+
 
 ## Install (local)
 

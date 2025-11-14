@@ -1,36 +1,45 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { styled } from '@mui/material/styles';
 import { useSelector } from 'react-redux';
 import { getConfig } from 'mirador';
+import { DEFAULT_QUILL_CONFIG } from './utils';
 
 const StyledReactQuill = styled(ReactQuill)(({ theme }) => ({
-  '.ql-editor': {
-    minHeight: '150px',
+  '.ql-container': {
+    maxWidth: '100%',
+    width: '100%',
   },
+  '.ql-editor': {
+    maxWidth: '100%',
+    minHeight: '150px',
+    overflowWrap: 'break-word',
+    whiteSpace: 'pre-wrap',
+    width: '100%',
+    wordBreak: 'break-word',
+  },
+  maxWidth: '100%',
+  width: '100%',
 }));
 
 /** Rich text editor for annotation body */
-function TextEditor({
-  text,
-  setText,
-}) {
-  const annotationConfig = useSelector((state) => getConfig(state)).annotation;
-  const {
-    formats,
-    modules,
-  } = annotationConfig.quillConfig;
-  /**
-   * Handle Change On ReactQuil Editor
-   * @param html
-   */
+function TextEditor({ text, setText }) {
+  const quillConfigFromState = useSelector((state) => getConfig(state)?.annotation?.quillConfig);
+
+  // eslint-disable-next-line max-len
+  const { formats, modules } = useMemo(() => (quillConfigFromState?.modules && quillConfigFromState?.formats
+    ? quillConfigFromState
+    : DEFAULT_QUILL_CONFIG), [quillConfigFromState]);
+    /**
+     * Update local text state from editor HTML.
+     * @param {string} html HTML content emitted by the editor.
+     */
   const handleChange = (html) => {
     setText(html);
   };
 
-  // Data field is needed to set bounds for the editor and avoir tooltip overflow
   return (
     <div data-text-editor="name" data-testid="textEditor">
       <StyledReactQuill

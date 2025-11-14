@@ -1,18 +1,28 @@
 {
   "name": "mirador-annotation-editor",
-  "version": "1.1.3",
-  "description": "Mirador annotation editor plugin in a React component. Mirador 4 compatible ",
-  "main": "es/index.js",
-  "module": "./dist/mirador-annotation-editor.es.js",
+  "version": "1.1.6",
+  "description": "Mirador annotation editor plugin in a React component. Mirador 4 compatible",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "style": "dist/index.css",
   "files": [
     "dist"
   ],
+  "sideEffects": [
+    "dist/index.css"
+  ],
   "exports": {
-    "./src": "./src/index.js"
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./dist/index.css": "./dist/index.css"
   },
   "scripts": {
     "prepare": "npm run build",
-    "build": "vite build --config vite.config.js",
+    "build": "vite build && npm run types:copy",
+    "types:copy": "mkdir -p dist && cp src/index.d.ts dist/index.d.ts",
     "clean": "rm -rf ./dist && rm -rf node_modules",
     "lint": "npx eslint ./",
     "prepublishOnly": "npm run build",
@@ -27,9 +37,6 @@
     "Antoine Roy <antoine.roy@tetras-libre.fr> (https://www.tetras-libre.fr)"
   ],
   "dependencies": {
-    "@emotion/react": "^11.11.3",
-    "@emotion/styled": "^11.11.0",
-    "@mui/system": "^7.x",
     "axios": "^1.6.7",
     "babel-loader": "^9.1.3",
     "brace": "^0.11.1",
@@ -37,10 +44,8 @@
     "draft-js-export-html": "^1.4.1",
     "draft-js-import-html": "^1.4.1",
     "html-loader": "^5.0.0",
-    "i18next": "^25.4.1",
     "json-edit-react": "^1.22.2",
     "react-color": "^2.19.3",
-    "react-i18next": "^15.4.0",
     "react-konva": "^19.0.10",
     "react-konva-to-svg": "^1.0.2",
     "react-quill": "npm:react-quill-new@3.6.0",
@@ -56,19 +61,26 @@
     "use-image": "^1.1.1"
   },
   "peerDependencies": {
+    "@emotion/react": ">=11",
+    "@emotion/styled": ">=11",
+    "@mui/material": ">=5",
+    "@mui/system": ">=5",
+    "i18next": ">=23",
     "lodash": "^4.17.11",
+    "mirador": "^4.0.0",
     "prop-types": "^15.7.2",
-    "react": "^19.2.0",
-    "react-dom": "^19.0.0",
+    "react": ">=19",
+    "react-dom": ">=19",
+    "react-i18next": ">=13",
     "uuid": "^8.0.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.25.9",
     "@babel/core": "^7.26.0",
-    "@babel/eslint-parser": "^7.19.1",
+    "@babel/eslint-parser": "^7.28.5",
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@babel/preset-env": "^7.26.0",
-    "@babel/preset-react": "^7.10.4",
+    "@babel/preset-react": "^7.28.5",
     "@mui/icons-material": "^7.0.0",
     "@mui/material": "^7.x",
     "@mui/utils": "^5.13.1",
@@ -85,10 +97,12 @@
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-react-app": "^7.0.0",
     "eslint-plugin-flowtype": "^8.0.3",
-    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-jest": "^26.1.1",
-    "eslint-plugin-jsx-a11y": "^6.4.1",
-    "eslint-plugin-react": "^7.20.3",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^4.6.2",
+    "eslint-plugin-vitest": "^0.5.4",
     "happy-dom": "^20.0.0",
     "jest": "^30.2.0",
     "jest-canvas-mock": "^2.2.0",
@@ -99,14 +113,7 @@
     "react": "^19.0.0",
     "react-dom": "^19.0",
     "style-loader": "^3.3.4",
-    "uuid": "^8.2.0",
-    "vite": "^6.0.0"
+    "uuid": "^8.2.0"
   },
-  "author": "",
-  "homepage": "",
-  "license": "Apache-2.0",
-  "repository": "",
-  "keywords": [
-    "react-component"
-  ]
+  "license": "Apache-2.0"
 }
