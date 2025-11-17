@@ -67,7 +67,7 @@
     "@mui/system": ">=5",
     "i18next": ">=23",
     "lodash": "^4.17.11",
-    "mirador": "^4.0.0",
+    "mirador": "npm:mirador-video@^1.2.1",
     "prop-types": "^15.7.2",
     "react": ">=19",
     "react-dom": ">=19",
