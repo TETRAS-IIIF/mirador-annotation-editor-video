@@ -1,6 +1,7 @@
 import Mirador from 'mirador';
 import annotationPlugins from '../../src';
 import LocalStorageAdapter from '../../src/annotationAdapter/LocalStorageAdapter';
+
 import { manifestsCatalog } from './manifestsCatalog';
 
 const config = {
