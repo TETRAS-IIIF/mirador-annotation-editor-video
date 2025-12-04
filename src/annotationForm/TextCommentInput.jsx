@@ -1,10 +1,10 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 import { Grid, Typography } from '@mui/material';
 import CreatableSelect from 'react-select/creatable';
-import TextEditor from '../TextEditor';
+import React from 'react';
 import { useSelector } from 'react-redux';
 import { getConfig } from 'mirador';
+import TextEditor from '../TextEditor';
 
 /**
  * TextCommentInput component
@@ -56,7 +56,7 @@ export function TextCommentInput({
           <CreatableSelect
             options={commentTemplates.map((template) => ({
               label: template.title,
-              title: template.content, // Add title attribute for tooltip
+              title: template.content,
               value: template,
             }))}
             placeholder={t('useTemplate')}
