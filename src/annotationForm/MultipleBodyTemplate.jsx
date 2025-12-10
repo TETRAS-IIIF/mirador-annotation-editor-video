@@ -142,7 +142,7 @@ export default function MultipleBodyTemplate(
   };
 
   return (
-    <Grid container direction="column" spacing={2} sx={{ border: 'solid red' }}>
+    <Grid container direction="column" spacing={2}>
       <Grid>
         <TextCommentInput
           comment={annotationState.maeData.textBody.value}
