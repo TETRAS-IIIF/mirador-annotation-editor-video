@@ -1,3 +1,6 @@
+/* Import react-quill's CSS alongside your own styles */
+@import 'react-quill/dist/quill.snow.css';
+
 /* Custom CSS when it's not possible to use REACT classic way */
 
 /* Fix ReractQuill tooltip issue */
