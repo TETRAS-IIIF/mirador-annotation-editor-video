@@ -3,7 +3,6 @@ import fs from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import pkg from './package.json';
 
-const safeName = (pkg?.name ?? 'mirador-annotation-editor').replace(/[^a-zA-Z0-9]/g, '');
 const peers = Object.keys(pkg?.peerDependencies ?? {});
 
 export default {
@@ -11,9 +10,9 @@ export default {
     lib: {
       cssFileName: 'index.css',
       entry: './src/index.js',
-      fileName: (format) => `${safeName}.${format}.js`, // Better naming
+      fileName: (format) => `mirador-annotation-editor.${format}.js`, // Better naming
       formats: ['es', 'cjs'],
-      name: safeName,
+      name: 'MiradorAnnotationEditor',
     },
     rollupOptions: {
       external: [

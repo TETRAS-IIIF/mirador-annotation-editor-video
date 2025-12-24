@@ -1,23 +1,25 @@
 {
   "name": "mirador-annotation-editor",
-  "version": "1.1.7",
+  "version": "1.2.0-alpha1",
   "description": "Mirador annotation editor plugin in a React component. Mirador 4 compatible",
-  "main": "dist/index.cjs",
-  "module": "dist/index.js",
+  "main": "dist/mirador-annotation-editor.cjs.js",
+  "module": "dist/mirador-annotation-editor.es.js",
   "types": "dist/index.d.ts",
+  "typesVersions": {
+    "*": {
+      "*": ["dist/index.d.ts"]
+    }
+  },
   "style": "dist/index.css",
-  "files": [
-    "dist"
-  ],
-  "sideEffects": [
-    "dist/index.css"
-  ],
+  "files": ["dist"],
+  "sideEffects": ["dist/index.css"],
   "exports": {
     ".": {
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
+      "import": "./dist/mirador-annotation-editor.es.js",
+      "require": "./dist/mirador-annotation-editor.cjs.js"
     },
-    "./dist/index.css": "./dist/index.css"
+    "./dist/index.css": "./dist/index.css",
+    "./package.json": "./package.json"
   },
   "scripts": {
     "prepare": "npm run build",
