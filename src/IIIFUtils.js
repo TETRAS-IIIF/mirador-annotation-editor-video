@@ -354,16 +354,6 @@ export function createV2Anno(v3anno) {
     '@type': 'oa:Annotation',
     maeData: v3anno.maeData || {},
     motivation: 'oa:commenting',
-    on: {
-      '@type': 'oa:SpecificResource',
-      full:
-      // `target` has a `source` with `id` object pointing to the proper canvas
-        v3anno.target.source?.id
-        // `target` has an id
-        || v3anno.target.id
-        // source is a string
-        || v3anno.target.source,
-    },
   };
   // copy id if it is SAS-generated
   if (v3anno.id?.startsWith('http')) {
@@ -373,6 +363,23 @@ export function createV2Anno(v3anno) {
     v2anno.resource = v3anno.body.map((b) => createV2AnnoBody(b));
   } else {
     v2anno.resource = createV2AnnoBody(v3anno.body);
+  }
+  // v3anno.target can be either a string or an object =>
+  // if it's an object, extract it.
+  if (typeof v3anno.target === "object" && !Array.isArray(v3anno.target) && v3anno.target !== null) {
+    v2anno.on = {
+      '@type': 'oa:SpecificResource',
+      full:
+        // `target` has a `source` with `id` object pointing to the proper canvas
+        v3anno.target.source?.id
+        // `target` has an id
+        || v3anno.target.id
+        // `target` is an object and `target.source` is a string
+        || v3anno.target.source
+    };
+  // if v3anno.target is a string, don't process it
+  } else {
+    v2anno.on = v3anno.target;
   }
   if (v3anno.target.selector) {
     if (Array.isArray(v3anno.target.selector)) {
