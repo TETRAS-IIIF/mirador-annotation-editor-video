@@ -14,7 +14,10 @@ export {
   windowSideBarButtonsPlugin,
 };
 
-// TODO atttention M4 merge
+export const annotationAdapters = {
+  AiiinotateAdapter,
+  LocalStorageAdapter,
+};
 
 const annotationPlugins = [
   miradorAnnotationPlugin,
@@ -23,10 +26,6 @@ const annotationPlugins = [
   annotationCreationCompanionWindowPlugin,
   windowSideBarButtonsPlugin,
   annotationSagaPlugin,
-  {
-    "AiiinotateAdapter": AiiinotateAdapter,
-    "LocalStorageAdapter": LocalStorageAdapter
-  }
 ];
 
 export default annotationPlugins;
