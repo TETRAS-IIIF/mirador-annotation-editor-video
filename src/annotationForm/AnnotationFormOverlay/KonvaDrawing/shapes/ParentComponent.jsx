@@ -177,7 +177,7 @@ function ParentComponent({
                   displayMode,
                   handleDragEnd,
                   handleDragStart,
-                  isSelected,
+                  isSelected: selectedShapeId === shape.id && activeTool !== 'image',
                   onShapeClick: handleShapeClick,
                   onTransform,
                   shape,
