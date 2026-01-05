@@ -10,14 +10,13 @@ Entries types:
 - `SECURITY` to invite users to upgrade in case of vulnerabilities.
 - `MERGE` Merge MAE
 - 
-## [ 1.2.6 ]
+## [ 1.2.6 - 1.2.10 ]
 
 - MERGE : MAE 1.2.1 (Probably a breaking change, I keep 1.2.x notation here to have coherent notation between MAE and MAEV)
 
 ## [ 1.2.5 ]
 
 - MERGE : MAE 1.1.5
-
 
 ## [ 1.2.4 ]
 
