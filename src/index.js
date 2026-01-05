@@ -6,6 +6,7 @@ import windowSideBarButtonsPlugin from './plugins/windowSideBarButtonsPlugin';
 import annotationSagaPlugin from './plugins/annotationSaga';
 import AiiinotateAdapter from './annotationAdapter/AiiinotateAdapter';
 import LocalStorageAdapter from './annotationAdapter/LocalStorageAdapter';
+import 'react-quill/dist/quill.snow.css';
 
 export {
   miradorAnnotationPlugin, externalStorageAnnotationPlugin,
@@ -13,7 +14,10 @@ export {
   windowSideBarButtonsPlugin,
 };
 
-// TODO atttention M4 merge
+export const annotationAdapters = {
+  AiiinotateAdapter,
+  LocalStorageAdapter,
+};
 
 const annotationPlugins = [
   miradorAnnotationPlugin,
@@ -22,10 +26,6 @@ const annotationPlugins = [
   annotationCreationCompanionWindowPlugin,
   windowSideBarButtonsPlugin,
   annotationSagaPlugin,
-  {
-    "AiiinotateAdapter": AiiinotateAdapter,
-    "LocalStorageAdapter": LocalStorageAdapter
-  }
 ];
 
 export default annotationPlugins;
