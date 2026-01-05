@@ -26,8 +26,8 @@ export default function TextFormSection(
       </Grid>
       <Grid container>
         <TextEditor
-          annoHtml={annoHtml}
-          updateAnnotationBody={updateAnnotationBody}
+          setText={updateAnnotationBody}
+          text={annoHtml}
         />
       </Grid>
     </Grid>
