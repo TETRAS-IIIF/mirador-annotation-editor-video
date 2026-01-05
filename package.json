@@ -1,6 +1,6 @@
 {
   "name": "mirador-annotation-editor-video",
-  "version": "1.2.10",
+  "version": "1.2.11",
   "description": "Mirador annotation editor video plugin in a React component. Mirador 4 compatible",
   "main": "dist/mirador-annotation-editor-video.cjs",
   "module": "dist/mirador-annotation-editor-video.es.js",

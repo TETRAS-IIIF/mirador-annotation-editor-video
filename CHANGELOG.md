@@ -9,6 +9,11 @@ Entries types:
 - `FIXED` for any bug fixes.
 - `SECURITY` to invite users to upgrade in case of vulnerabilities.
 - `MERGE` Merge MAE
+
+
+## [ 1.2.11 ]
+
+- FIXED : resize image in image template
 - 
 ## [ 1.2.6 - 1.2.10 ]
 
