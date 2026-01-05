@@ -1,17 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import uuid from 'draft-js/lib/uuid';
 import { Grid } from '@mui/material';
 import TextFormSection from './TextFormSection';
 import TargetFormSection from './TargetFormSection';
-import AnnotationFormFooter from './AnnotationFormFooter';
+import ManifestNetworkFormSection from './ManifestNetworkFormSection';
 import { TEMPLATE } from './AnnotationFormUtils';
+import AnnotationFormFooter from './AnnotationFormFooter';
 import { resizeKonvaStage } from './AnnotationFormOverlay/KonvaDrawing/KonvaUtils';
 
-const DEFAULT_BODY_VALUE = 'Annotation';
-
 /** Form part for edit annotation content and body */
-function TextCommentTemplate(
+function NetworkCommentTemplate(
   {
     annotation,
     closeFormCompanionWindow,
@@ -32,23 +31,36 @@ function TextCommentTemplate(
         value: '',
       },
       maeData: {
+        manifestNetwork: '',
         target: null,
-        templateType: TEMPLATE.TEXT_TYPE,
+        templateType: TEMPLATE.MANIFEST_TYPE,
       },
       motivation: 'commenting',
       target: null,
     };
   } else if (maeAnnotation.maeData.target.drawingState && typeof maeAnnotation.maeData.target.drawingState === 'string') {
-    // eslint-disable-next-line max-len
-    maeAnnotation.maeData.target.drawingState = JSON.parse(maeAnnotation.maeData.target.drawingState);
+    maeAnnotation.maeData.target.drawingState = JSON.parse(
+      maeAnnotation.maeData.target.drawingState,
+    );
   }
 
   const [annotationState, setAnnotationState] = useState(maeAnnotation);
 
+  /** Update annotationState with manifestData * */
+  const updateManifestNetwork = (manifestNetwork) => {
+    // TODO probably can be simplified
+    const newMaeData = annotationState.maeData;
+    newMaeData.manifestNetwork = manifestNetwork;
+    setAnnotationState({
+      ...annotationState,
+      maeData: newMaeData,
+    });
+  };
+
   /**
    * Update the annotation's Body
    * */
-  const updateAnnotationTextualBodyValue = (newTextValue) => {
+  const updateAnnotationTextBody = (newTextValue) => {
     const newBody = annotationState.body;
     newBody.value = newTextValue;
     setAnnotationState({
@@ -57,7 +69,7 @@ function TextCommentTemplate(
     });
   };
 
-  /** this code update annotationState with maeDate * */
+  /** Update annotationState with Target * */
   const updateTargetState = (target) => {
     const newMaeData = annotationState.maeData;
     newMaeData.target = target;
@@ -67,7 +79,19 @@ function TextCommentTemplate(
     });
   };
 
-  /** Save function * */
+  function getBaseAnnotation(id) {
+    if (!id) {
+      return null;
+    }
+    const match = id.match(
+      /((http|https|localStorage)\:\/\/[a-z0-9\/:%_+.,#?!@&=-]+)#((http|https)\:\/\/[a-z0-9\/:%_+.,#?!@&=-]+)/gi,
+    );
+
+    return match ? match[0].split('#')
+      .slice(1) : id;
+  }
+
+  /** SaveFunction for Manifest* */
   const saveFunction = () => {
     resizeKonvaStage(
       windowId,
@@ -75,36 +99,41 @@ function TextCommentTemplate(
       playerReferences.getMediaTrueHeight(),
       1 / playerReferences.getScale(),
     );
-    if (annotationState.body.value === '') {
-      annotationState.body.value = DEFAULT_BODY_VALUE;
+
+    const baseAnnotation = getBaseAnnotation(annotationState.id);
+    if (baseAnnotation) {
+      annotationState.id = `${baseAnnotation}#${annotation.maeData.manifestNetwork}`;
     }
+
     saveAnnotation(annotationState);
   };
 
-  useEffect(() => {
-
-  }, [annotationState.maeData.target]);
-
   return (
     <Grid container direction="column" spacing={2}>
-      <Grid>
-        <TextFormSection
-          annoHtml={annotationState.body.value}
-          updateAnnotationBody={updateAnnotationTextualBodyValue}
+      <Grid item>
+        <ManifestNetworkFormSection
+          manifestNetwork={annotation.maeData.manifestNetwork}
+          onChange={updateManifestNetwork}
           t={t}
         />
       </Grid>
-      <Grid>
-        <TargetFormSection
-          onChangeTarget={updateTargetState}
-          playerReferences={playerReferences}
-          spatialTarget
-          target={annotationState.maeData.target}
-          timeTarget
-          windowId={windowId}
+      <Grid item>
+        <TextFormSection
+          annoHtml={annotationState.body.value}
+          updateAnnotationBody={updateAnnotationTextBody}
+          t={t}
         />
       </Grid>
-      <Grid>
+      <TargetFormSection
+        onChangeTarget={updateTargetState}
+        playerReferences={playerReferences}
+        spatialTarget
+        t={t}
+        target={annotationState.maeData.target}
+        timeTarget
+        windowId={windowId}
+      />
+      <Grid item>
         <AnnotationFormFooter
           closeFormCompanionWindow={closeFormCompanionWindow}
           saveAnnotation={saveFunction}
@@ -116,9 +145,10 @@ function TextCommentTemplate(
   );
 }
 
-TextCommentTemplate.propTypes = {
+NetworkCommentTemplate.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   annotation: PropTypes.object.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
   closeFormCompanionWindow: PropTypes.func.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   playerReferences: PropTypes.object.isRequired,
@@ -127,4 +157,4 @@ TextCommentTemplate.propTypes = {
   windowId: PropTypes.string.isRequired,
 };
 
-export default TextCommentTemplate;
+export default NetworkCommentTemplate;

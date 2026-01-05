@@ -1,13 +1,14 @@
-# Mirador Annotation Editor - Apache edition
+# Mirador Annotation Editor Video - GPL edition
 
-[Online demos](https://tetras-iiif.github.io/mirador-annotation-editor/)
+[Online demos](https://tetras-iiif.github.io/mirador-annotation-editor-video/)
 
 ## Presentation
 
 ### Generalities
 
-`mirador-annotation-editor`(also known as "MAE") is a [Mirador 4](https://github.com/projectmirador/mirador) plugin that 
-adds annotation creation tools to the user interface. 
+`mirador-annotation-editor-video`(also known as "MAEV") is a [Mirador 4](https://github.com/projectmirador/mirador)
+plugin that
+adds annotation creation tools to the user interface. It support both image and video annotation.
 
 It is based on the original [mirador-annotations](https://github.com/ProjectMirador/mirador-annotations/) plugin with a
 lot of technical and functional modifications (including migration from PaperJS to Konvas for the drawing part).
@@ -15,21 +16,17 @@ lot of technical and functional modifications (including migration from PaperJS 
 
 #### Licence
 
-Like the original [mirador-annotations](https://github.com/ProjectMirador/mirador-annotations/) plugin, this 
-`mirador-annotation-editor` is distributed under the **Apache License Version 2.0**.
+This plugin is released under the **GPL v3** license unlike MAE and the original plugin.
 
-Beware that the extension plugin [mirador-annotation-editor-video](https://github.com/Tetras-IIIF/mirador-annotation-editor-video) 
-that supports video annotation is released under the **GPL v3** license.
-
-Please acknowledge that any modification you make must be distributed under a compatible licence and cannot be closed 
+Please acknowledge that any modification you make must be distributed under a compatible licence and cannot be closed
 source.
 
-If you need to integrate this code base in closed source pieces of software, please contact us, so we can discuss dual 
-licencing. 
+If you need to integrate this code base in closed source pieces of software, please contact us, so we can discuss dual
+licencing.
 
 
 
-### General functionalities 
+### General functionalities
 
 - Activate a panel with tools to create annotations on IIIF documents (manifests) containing images **and videos with 
 MAEV**
@@ -57,14 +54,15 @@ npm install mirador-annotation-editor
 You can override existing annotation plugin with your own versions by using npm. We support React 18 and MUI 5.
 
 Update your `package.json` file to include the following dependencies and devDependencies:
-```json
-"mirador-annotations": "npm:mirador-annotation-editor@^1.1.6",
+
+```js
+"mirador-annotations":"npm:mirador-annotation-editor-video@^1.2.2",
 ```
 
-You need also to use the latest version of Mirador 4.
+You need also to use the custom version of Mirador 4.
 
 ```json
-"mirador" : "4.0.0"
+"mirador" : "npm@mirador-video@^1.2.0",
 ```
 
 ### Troubleshooting
@@ -81,8 +79,8 @@ import 'react-quill/dist/quill.snow.css';
 This method requires `nvm`, `npm`.
 
 ```
-git clone git@github.com:TETRAS-IIIF/mirador-annotation-editor.git
-cd mirador-annotation-editor
+git clone git@github.com:TETRAS-IIIF/mirador-annotation-editor-video.git
+cd mirador-annotation-editor-video
 nvm use
 npm install
 ```
@@ -93,12 +91,6 @@ Run a demo with Mirador and the MAE plugin :
 npm start
 ```
 
-## Use MAE with video annotation support
-- If you need video annotation, you can use 
-[our fork of Mirador: mirador-video](https://github.com/Tetras-IIIF/mirador-video)
-- In addition, we have developed an extended versionto support video annotation. This plugin is called **MAEV** and is
-available in the [mirador-annotation-editor-video](https://github.com/Tetras-IIIF/mirador-annotation-editor-video)
-repository.
 
 
 ## Persisting Annotations

@@ -2,7 +2,8 @@ import React, { useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Grid, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { MEDIA_TYPES } from './AnnotationFormUtils';
+import { MEDIA_TYPES, TEMPLATE } from './AnnotationFormUtils';
+import TargetTimeInput from './TargetTimeInput';
 import { TargetSpatialInput } from './TargetSpatialInput';
 
 /**
@@ -11,6 +12,7 @@ import { TargetSpatialInput } from './TargetSpatialInput';
  * @param spatialTarget
  * @param playerReferences
  * @param target
+ * @param timeTarget
  * @param windowId
  * @returns {Element}
  * @constructor
@@ -20,6 +22,7 @@ export default function TargetFormSection({
   spatialTarget,
   playerReferences,
   target,
+  timeTarget,
   windowId,
 }) {
   const { t } = useTranslation();
@@ -40,6 +43,14 @@ export default function TargetFormSection({
       next.fullCanvaXYWH = `0,0,${playerReferences.getMediaTrueWidth()},${playerReferences.getMediaTrueHeight()}`;
     }
 
+    if (mediaType === MEDIA_TYPES.VIDEO) {
+      next.fullCanvaXYWH = `0,0,${playerReferences.getMediaTrueWidth()},${playerReferences.getMediaTrueHeight()}`;
+      next.tstart = playerReferences.getCurrentTime() || 0;
+      next.tend = playerReferences.getMediaDuration()
+        ? Math.floor(playerReferences.getMediaDuration()) : 0;
+    }
+
+    /** Handle timeTargetInput  and spatialTargetInput* */
     return next;
     // Only depends on values used to compute defaults
     // DO NOT include onChangeTarget here
@@ -57,7 +68,14 @@ export default function TargetFormSection({
     });
   };
 
-  if (!spatialTarget) return null;
+  if (playerReferences.getMediaType() === MEDIA_TYPES.IMAGE) {
+    // eslint-disable-next-line no-param-reassign
+    timeTarget = false;
+  }
+
+  if (!spatialTarget && !timeTarget) {
+    return <> </>;
+  }
 
   return (
     <Grid container direction="column" spacing={1}>
@@ -77,6 +95,20 @@ export default function TargetFormSection({
           />
         </Grid>
       )}
+      {
+        (timeTarget && playerReferences.getMediaType() !== MEDIA_TYPES.IMAGE) && (
+          <Grid container direction="column">
+            <TargetTimeInput
+              playerReferences={playerReferences}
+              tstart={defaultTarget.tstart}
+              tend={defaultTarget.tend}
+              onChange={onChangeTargetInput}
+              windowId={windowId}
+              t={t}
+            />
+          </Grid>
+        )
+}
     </Grid>
   );
 }
@@ -86,5 +118,7 @@ TargetFormSection.propTypes = {
   playerReferences: PropTypes.object.isRequired,
   spatialTarget: PropTypes.bool.isRequired,
   target: PropTypes.object, // allow undefined/null; child will hydrate once
+  // eslint-disable-next-line react/forbid-prop-types
+  timeTarget: PropTypes.bool.isRequired,
   windowId: PropTypes.string.isRequired,
 };

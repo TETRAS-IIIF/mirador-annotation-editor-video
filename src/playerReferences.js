@@ -48,6 +48,12 @@ export class WindowPlayer {
             containerWidth: this.media.current.canvas.clientWidth,
           };
           break;
+        case MEDIA_TYPES.VIDEO:
+          this.overlay = this.media.canvasOverlay;
+          break;
+        case MEDIA_TYPES.AUDIO:
+          this.audio = getVisibleCanvasAudioResources(state, { windowId });
+          break;
         default:
           console.error('Unknown media type');
           break;
@@ -76,8 +82,8 @@ export class WindowPlayer {
   isInitializedCorrectly() {
     this.isInitCorrectly = this.media
       && ((this.mediaType === MEDIA_TYPES.IMAGE && this.media.current && this.media.current.canvas)
-        || (this.mediaType === MEDIA_TYPES.VIDEO && this.media.video))
-      && (this.mediaType !== MEDIA_TYPES.UNKNOWN && this.mediaType !== MEDIA_TYPES.AUDIO);
+        || (this.mediaType === MEDIA_TYPES.VIDEO && this.media.video
+          && this.media.canvasOverlay));
 
     return this.isInitCorrectly;
   }
@@ -149,6 +155,9 @@ export class WindowPlayer {
     if (this.mediaType === MEDIA_TYPES.IMAGE) {
       return this.media.current.container;
     }
+    if (this.mediaType === MEDIA_TYPES.VIDEO) {
+      return this.media.ref.current.parentElement;
+    }
     return null;
   }
 
@@ -182,6 +191,13 @@ export class WindowPlayer {
         return actualHeightInPixels;
       }
     }
+    if (this.mediaType === MEDIA_TYPES.VIDEO) {
+      let height = this.overlay.containerHeight;
+      if (height === 0) {
+        height = this.media?.ref?.current?.clientHeight;
+      }
+      return height;
+    }
     return undefined;
   }
 
@@ -199,6 +215,14 @@ export class WindowPlayer {
         return actualWidthInPixels;
       }
     }
+    if (this.mediaType === MEDIA_TYPES.VIDEO) {
+      let width = this.overlay.containerWidth;
+      if (width === 0) {
+        width = this.media?.ref?.current?.clientWidth;
+      }
+      return width;
+    }
+
     return undefined;
   }
 
@@ -210,6 +234,10 @@ export class WindowPlayer {
     if (this.mediaType === MEDIA_TYPES.IMAGE) {
       // eslint-disable-next-line no-underscore-dangle
       return this.canvases[0].__jsonld.height;
+    }
+    if (this.mediaType === MEDIA_TYPES.VIDEO) {
+      // It's not perfect to use the canvas size and not the video size
+      return this.media.player.props.iiifVideoInfos.getHeight();
     }
     console.error('Unknown media type');
     return undefined;
@@ -223,6 +251,10 @@ export class WindowPlayer {
     if (this.mediaType === MEDIA_TYPES.IMAGE) {
       // eslint-disable-next-line no-underscore-dangle
       return this.canvases[0].__jsonld.width;
+    }
+    if (this.mediaType === MEDIA_TYPES.VIDEO) {
+      // It's not perfect to use the canvas size and not the video size
+      return this.media.player.props.iiifVideoInfos.getWidth();
     }
     return undefined;
   }
@@ -251,6 +283,10 @@ export class WindowPlayer {
       zoom = Math.round(zoom * 100) / 100;
       return zoom;
     }
+    if (this.mediaType === MEDIA_TYPES.VIDEO) {
+      return this.getDisplayedMediaWidth() / this.getMediaTrueWidth();
+      // There is problem with getZoom method. It's used as get scale
+    }
     return undefined;
   }
 
@@ -276,7 +312,74 @@ export class WindowPlayer {
         return position;
       }
     }
+    if (this.mediaType === MEDIA_TYPES.VIDEO) {
+      const position = {
+        x: 0,
+        y: 0,
+      };
+      return position;
+    }
     return undefined;
+  }
+
+  /** ***********************************************************
+   * Time stuff
+   *********************************************************** */
+
+  /**
+   * Get Current time of the media
+   * @returns {*|null}
+   */
+  getCurrentTime() {
+    if (this.mediaType !== MEDIA_TYPES.IMAGE) {
+      return this.media.props.currentTime;
+    }
+    return null;
+  }
+
+  /**
+   * Get media duration
+   * @returns {*}
+   */
+  getMediaDuration() {
+    if (this.mediaType === MEDIA_TYPES.VIDEO) {
+      // eslint-disable-next-line no-underscore-dangle
+      return this.media.props.canvas.__jsonld.duration;
+    }
+    if (this.mediaType === MEDIA_TYPES.AUDIO) {
+      if (this.audio) {
+        // eslint-disable-next-line no-underscore-dangle
+        return this.audio[0].__jsonld.duration;
+      }
+      console.error('Something is wrong about audio');
+    }
+    return 0;
+  }
+
+  /**
+   * Send setCurrentTime action to mirador
+   * @param windowId
+   * @param args
+   * @returns {*}
+   */
+  setCurrentTime(...args) {
+    if (this.mediaType === MEDIA_TYPES.VIDEO) {
+      return this.actions.setWindowCurrentTime(this.windowId, ...args);
+    }
+    return null;
+  }
+
+  /**
+   * Send setSeekToAction to mirador
+   * @param windowId
+   * @param args
+   * @returns {*}
+   */
+  setSeekTo(...args) {
+    if (this.mediaType === MEDIA_TYPES.VIDEO) {
+      return this.actions.setWindowSeekTo(this.windowId, ...args);
+    }
+    console.error('Cannot seek time for image');
   }
 
   /**

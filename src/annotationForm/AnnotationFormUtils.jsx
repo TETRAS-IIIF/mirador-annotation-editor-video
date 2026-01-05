@@ -1,14 +1,20 @@
 import TextFieldsIcon from '@mui/icons-material/TextFields';
+import ImageIcon from '@mui/icons-material/Image';
+import CategoryIcon from '@mui/icons-material/Category';
 import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 import DataObjectIcon from '@mui/icons-material/DataObject';
 import React from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { styled } from '@mui/material/styles';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import { AddLink } from '@mui/icons-material';
 import { OVERLAY_TOOL } from './AnnotationFormOverlay/KonvaDrawing/KonvaUtils';
 
 export const TEMPLATE = {
   IIIF_TYPE: 'iiif',
+  IMAGE_TYPE: 'image',
+  KONVA_TYPE: 'konva',
+  MANIFEST_TYPE: 'manifest',
   MULTIPLE_BODY_TYPE: 'multiple_body',
   TAGGING_TYPE: 'tagging',
   TEXT_TYPE: 'text',
@@ -37,7 +43,21 @@ export const TEMPLATE_TYPES = (t) => [
     icon: <TextFieldsIcon />,
     id: TEMPLATE.MULTIPLE_BODY_TYPE,
     isCompatibleWithTemplate: (mediaType) => {
+      if (mediaType === MEDIA_TYPES.VIDEO) return true;
       if (mediaType === MEDIA_TYPES.IMAGE) return true;
+      if (mediaType === MEDIA_TYPES.AUDIO) return false;
+      return false;
+    },
+    label: t('note'),
+  },
+  {
+    description: t('textual_note_with_target'),
+    icon: <TextFieldsIcon />,
+    id: TEMPLATE.TEXT_TYPE,
+    isCompatibleWithTemplate: (mediaType) => {
+      if (mediaType === MEDIA_TYPES.VIDEO) return false;
+      if (mediaType === MEDIA_TYPES.IMAGE) return false;
+      if (mediaType === MEDIA_TYPES.AUDIO) return false;
       return false;
     },
     label: t('note'),
@@ -47,17 +67,59 @@ export const TEMPLATE_TYPES = (t) => [
     icon: <LocalOfferIcon fontSize="small" />,
     id: TEMPLATE.TAGGING_TYPE,
     isCompatibleWithTemplate: (mediaType) => {
-      if (mediaType === MEDIA_TYPES.IMAGE) return true;
+      if (mediaType === MEDIA_TYPES.VIDEO) return false;
+      if (mediaType === MEDIA_TYPES.IMAGE) return false;
+      if (mediaType === MEDIA_TYPES.AUDIO) return false;
       return false;
     },
     label: t('tag'),
+  },
+  {
+    description: t('image_in_overlay_with_note'),
+    icon: <ImageIcon fontSize="small" />,
+    id: TEMPLATE.IMAGE_TYPE,
+    isCompatibleWithTemplate: (mediaType) => {
+      if (mediaType === MEDIA_TYPES.VIDEO) return true;
+      // Mirador doesn't support annotation from an image
+      if (mediaType === MEDIA_TYPES.IMAGE) return false;
+      if (mediaType === MEDIA_TYPES.AUDIO) return false;
+      return false;
+    },
+    label: t('image'),
+  },
+  {
+    description: t('drawings_and_text_in_overlay'),
+    icon: <CategoryIcon fontSize="small" />,
+    id: TEMPLATE.KONVA_TYPE,
+    isCompatibleWithTemplate: (mediaType) => {
+      if (mediaType === MEDIA_TYPES.VIDEO) return true;
+      // Mirador doesn't support annotation from an image
+      if (mediaType === MEDIA_TYPES.IMAGE) return false;
+      if (mediaType === MEDIA_TYPES.AUDIO) return false;
+      return false;
+    },
+    label: t('overlay'),
+  },
+  {
+    description: t('manifest_link_with_note'),
+    icon: <AddLink fontSize="small" />,
+    id: TEMPLATE.MANIFEST_TYPE,
+    isCompatibleWithTemplate: (mediaType) => {
+      if (mediaType === MEDIA_TYPES.VIDEO) return true;
+      if (mediaType === MEDIA_TYPES.IMAGE) return true;
+      if (mediaType === MEDIA_TYPES.AUDIO) return false;
+      return false;
+    },
+    label: t('manifest_link'),
   },
   {
     description: t('edit_iiif_json_code'),
     icon: <DataObjectIcon fontSize="small" />,
     id: TEMPLATE.IIIF_TYPE,
     isCompatibleWithTemplate: (mediaType) => {
+      if (mediaType === MEDIA_TYPES.VIDEO) return true;
       if (mediaType === MEDIA_TYPES.IMAGE) return true;
+      if (mediaType === MEDIA_TYPES.AUDIO) return true;
       return false;
     },
     label: t('expert_mode'),
@@ -98,6 +160,8 @@ export const TARGET_TOOL_STATE = {
 
 export const TARGET_VIEW = 'target';
 export const OVERLAY_VIEW = 'layer';
+export const TAG_VIEW = 'tag';
+export const MANIFEST_LINK_VIEW = 'link';
 
 /** Split a second to { hours, minutes, seconds }  */
 export function secondsToHMSarray(secs) {

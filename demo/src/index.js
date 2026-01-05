@@ -70,7 +70,7 @@ const config = {
     sideBarOpenByDefault: true,
   },
   windows: [
-    { manifestId: ' https://iiif.harvardartmuseums.org/manifests/object/299843' },
+    { manifestId: 'https://files.tetras-libre.fr/dev/Clock/manifestWithAnnotationTemplates_MAE.json' },
   ],
 };
 

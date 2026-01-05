@@ -4,12 +4,14 @@ import {
   getVisibleCanvases,
   getPresentAnnotationsOnSelectedCanvases,
   OSDReferences,
+  VideosReferences,
   removeCompanionWindow as removeCompanionWindowAction,
   receiveAnnotation as receiveAnnotationAction,
 } from 'mirador';
 
 import annotationForm from '../annotationForm/AnnotationForm';
-import { WindowPlayer } from '../playerReferences';
+import { checkMediaType, WindowPlayer } from '../playerReferences';
+import { MEDIA_TYPES } from '../annotationForm/AnnotationFormUtils';
 import translations from '../locales/locales';
 
 /** */
@@ -38,11 +40,24 @@ function mapStateToProps(state, {
   const { annotationid } = cw;
 
   // This architecture lead to recreate the playerReferences each time the component is rendered
-  const media = OSDReferences.get(windowId);
-  const playerReferences = new WindowPlayer(state, windowId, media, actions);
+  // const media = OSDReferences.get(windowId);
+  // const playerReferences = new WindowPlayer(state, windowId, media, actions);
 
   // This could be removed but it's serve the useEffect in AnnotationForm for now.
   const canvases = getVisibleCanvases(state, { windowId });
+
+  const mediaTypes = checkMediaType(state, windowId);
+
+  let playerReferences;
+
+  if (mediaTypes === MEDIA_TYPES.IMAGE) {
+    playerReferences = new WindowPlayer(state, windowId, OSDReferences.get(windowId), actions);
+  }
+  if (mediaTypes === MEDIA_TYPES.VIDEO || mediaTypes === MEDIA_TYPES.AUDIO) {
+    playerReferences = new WindowPlayer(state, windowId, VideosReferences.get(windowId), actions);
+  }
+
+  // This could be removed but it's serve the useEffect in AnnotationForm for now.
   let annotation = getPresentAnnotationsOnSelectedCanvases(state, { windowId })
     .flatMap((annoPage) => annoPage.json.items || [])
     .find((annot) => annot.id === annotationid);

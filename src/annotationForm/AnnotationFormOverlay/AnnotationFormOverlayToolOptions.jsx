@@ -142,7 +142,6 @@ function AnnotationFormOverlayToolOptions({
   const annotationConfig = useSelector((state) => getConfig(state)).annotation;
   const allowTargetShapesStyling = annotationConfig?.allowTargetShapesStyling === true;
 
-
   return (
     <div>
       {

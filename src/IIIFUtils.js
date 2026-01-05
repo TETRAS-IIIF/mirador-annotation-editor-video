@@ -1,6 +1,8 @@
 import {
   getKonvaAsDataURL,
+  getKonvaShape,
   getSvg,
+  OVERLAY_TOOL,
   SHAPES_TOOL,
 } from './annotationForm/AnnotationFormOverlay/KonvaDrawing/KonvaUtils';
 import { TARGET_TOOL_STATE, TEMPLATE } from './annotationForm/AnnotationFormUtils';
@@ -10,8 +12,15 @@ import { TARGET_TOOL_STATE, TEMPLATE } from './annotationForm/AnnotationFormUtil
  * @param maeData
  * @returns {boolean}
  */
-// eslint-disable-next-line no-unused-vars
 function isAnnotationExportableToImage(maeData) {
+  if (maeData.templateType === TEMPLATE.KONVA_TYPE) {
+    if (maeData.target.drawingState.shapes.length > 1) {
+      return true;
+    }
+    if (maeData.target.drawingState.shapes.length === 1 && maeData.target.drawingState.shapes[0].type !== 'rectangle') {
+      return true;
+    }
+  }
   return false;
 }
 
@@ -107,6 +116,13 @@ const getIIIFTargetAsFragmentSVGSelector = (maeTarget, canvasId) => {
  * @param playerScale NEEDED By MAEV
  * @returns {{selector: [{type: string, value},{type: string, value: string}], source}|*|string}
  */
+/** Get the IIIF target from the annotation state
+ * @param maeData
+ * @param canvasId
+ * @param windowId NEEDED By MAEV
+ * @param playerScale NEEDED By MAEV
+ * @returns {{selector: [{type: string, value},{type: string, value: string}], source}|*|string}
+ */
 export const getIIIFTargetFromMaeData = (
   maeData,
   canvasId,
@@ -119,12 +135,18 @@ export const getIIIFTargetFromMaeData = (
   switch (templateType) {
     case TEMPLATE.IIIF_TYPE:
       return maeTarget;
+    case TEMPLATE.KONVA_TYPE:
+      return getIIIFTargetFromKonvaType(maeData, canvasId);
+    case TEMPLATE.IMAGE_TYPE:
+      return getIIIFTargetFromImageType(maeData, canvasId, windowId, playerScale);
     case TEMPLATE.TAGGING_TYPE:
+    case TEMPLATE.MANIFEST_TYPE:
+    case TEMPLATE.MULTIPLE_BODY_TYPE:
     case TEMPLATE.TEXT_TYPE:
     case TEMPLATE.MULTIPLE_BODY_TYPE:
       // In some case the target can be simplified in a string
+      // In some case the target can be simplified in a string
       if (isSimpleTarget(maeTarget.drawingState.shapes)) {
-        console.info('Simple target detected');
         return getIIIFTargetFromRectangleShape(
           maeTarget,
           canvasId,
@@ -172,6 +194,7 @@ export const convertAnnotationStateToBeSaved = async (
 
   if (annotationStateForSaving.maeData.templateType === TEMPLATE.TAGGING_TYPE
     || annotationStateForSaving.maeData.templateType === TEMPLATE.TEXT_TYPE
+    || annotationStateForSaving.maeData.templateType === TEMPLATE.MANIFEST_TYPE
     || annotationStateForSaving.maeData.templateType === TEMPLATE.MULTIPLE_BODY_TYPE) {
     // Complex annotation
     if (annotationStateForSaving.maeData.target.drawingState.shapes.length > 0) {
@@ -195,6 +218,14 @@ export const convertAnnotationStateToBeSaved = async (
     annotationStateForSaving.type = 'Annotation';
   }
 
+  if (annotationStateForSaving.maeData.templateType === TEMPLATE.IMAGE_TYPE) {
+    if (annotationStateForSaving.maeData.target.drawingState.shapes.length === 1) {
+      // eslint-disable-next-line max-len
+      annotationStateForSaving.body.id = annotationStateForSaving.maeData.target.drawingState.shapes[0].url;
+      annotationStateForSaving.type = 'Annotation';
+    }
+  }
+
   // TODO Always relevant ?
   annotationStateForSaving.maeData.target.scale = playerReferences.getMediaTrueHeight()
     / playerReferences.getDisplayedMediaHeight() * playerReferences.getZoom();
@@ -211,6 +242,55 @@ export const convertAnnotationStateToBeSaved = async (
   );
 
   return annotationStateForSaving;
+};
+
+/**
+ * Specific to MAEV
+ */
+
+/**
+ * Get the IIIF target from a Konva annotation (Drawing template)
+ * @param maeData
+ * @param canvasId
+ * @returns {`${string}#${string}`}
+ */
+const getIIIFTargetFromKonvaType = (maeData, canvasId) => {
+  // Simplified target for Konva annotation
+  console.log('Implement target as string with Konva annotation');
+  return getIIIFTargetFullCanvas(maeData, canvasId);
+};
+
+/**
+ * Get the IIIF target from an annotation with image template
+ * @param maeData
+ * @param canvasId
+ * @param windowId
+ * @param playerScale
+ * @returns {string}
+ */
+const getIIIFTargetFromImageType = (maeData, canvasId, windowId, playerScale) => {
+  const maeTarget = maeData.target;
+
+  if (maeTarget.drawingState.shapes.length === 1) {
+    if (maeTarget.drawingState.shapes[0].type === OVERLAY_TOOL.IMAGE) {
+      const {
+        x,
+        y,
+      } = maeTarget.drawingState.shapes[0];
+      const imageShape = getKonvaShape(windowId, maeTarget.drawingState.shapes[0].id);
+      const widthImage = Math.round(
+        imageShape.attrs.image.width * imageShape.attrs.scaleX,
+      );
+      const heightImage = Math.round(
+        imageShape.attrs.image.height * imageShape.attrs.scaleY,
+      );
+      const xImage = Math.round(x);
+      const yImage = Math.round(y);
+      return `${canvasId}#${maeTarget.tend ? `xywh=${xImage},${yImage},${widthImage},${heightImage}&t=${maeTarget.tstart},${maeTarget.tend}` : `xywh=${xImage},${yImage},${widthImage},${heightImage}`}`;
+    }
+  }
+  // Default return. For example if no image is upload in the annotation
+  return getIIIFTargetFullCanvas(maeData, canvasId);
 };
 
 //* *******************************************

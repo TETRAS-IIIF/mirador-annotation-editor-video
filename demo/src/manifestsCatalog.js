@@ -1,5 +1,4 @@
 export const manifestsCatalog = [
-  // { manifestId: 'https://files.tetras-libre.fr/dev/multicanva-video.json' },
   { manifestId: 'https://files.tetras-libre.fr/dev/sun-400x400.json' },
   { manifestId: 'https://files.tetras-libre.fr/dev/test-vertical-video.json' },
   { manifestId: 'https://files.tetras-libre.fr/dev/Heterogeneous-media-on-several-canvases.json' },
@@ -9,8 +8,7 @@ export const manifestsCatalog = [
   { manifestId: 'https://iiif.harvardartmuseums.org/manifests/object/299843' },
   { manifestId: 'https://iiif.io/api/cookbook/recipe/0002-mvm-audio/manifest.json' },
   { manifestId: 'https://files.tetras-libre.fr/dev/vertical_video_with_annot.json' },
-  { manifestId: 'https://purl.stanford.edu/sn904cj3429/iiif/manifest' },
-  { manifestId: 'https://coeso.tetras-libre.fr/data/coeso-deliverable/Manual_Network_Configuration.json' },
-  { manifestId: 'https://iiif.bodleian.ox.ac.uk/iiif/manifest/e32a277e-91e2-4a6d-8ba6-cc4bad230410.json' },
-  { manifestId: 'https://resource.arvest.app/6b665140d80c98444a02f142c1a8fcb42d201940/8000x6000-Pogacar.json' },
+  { manifestId: 'https://files.tetras-libre.fr/dev/youtube.json' },
+  { manifestId: 'https://files.tetras-libre.fr/dev/peertube.json' },
+  { manifestId: 'https://files.tetras-libre.fr/dev/milansanremo25.json' },
 ];

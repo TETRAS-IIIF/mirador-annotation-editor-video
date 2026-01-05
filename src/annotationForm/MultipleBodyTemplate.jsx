@@ -108,37 +108,38 @@ export default function MultipleBodyTemplate(
     );
     saveAnnotation(annotationState);
   };
-
+  const mappedSuggestionsTags = tagsSuggestions.map((suggestion) => ({
+    label: suggestion,
+    value: suggestion,
+  }));
   /**
    * When the user selects a template, we change text comment and try to add the tag with same name
    * @param selectedTemplate
    */
   const onChangeTemplate = (selectedTemplate) => {
-    const associatedTag = mappedSuggestionsTags.find((tag) => tag.value === selectedTemplate.title);
-    if (associatedTag) {
-      if (!annotationState.maeData.tags.find((tag) => tag.value === associatedTag.value)) {
-        setAnnotationState({
-          ...annotationState,
-          maeData: {
-            ...annotationState.maeData,
-            tags: [...annotationState.maeData.tags, associatedTag],
-            textBody: {
-              ...annotationState.maeData.textBody,
-              value: selectedTemplate.value,
-            },
+    const associatedTag = mappedSuggestionsTags.find(
+      (tag) => tag.value === selectedTemplate.title,
+    );
+
+    if (associatedTag && !annotationState.maeData.tags.find(
+      (tag) => tag.value === associatedTag.value,
+    )) {
+      setAnnotationState({
+        ...annotationState,
+        maeData: {
+          ...annotationState.maeData,
+          tags: [...annotationState.maeData.tags, associatedTag],
+          textBody: {
+            ...annotationState.maeData.textBody,
+            value: selectedTemplate.content, // unified here
           },
-        });
-        return;
-      }
+        },
+      });
+      return;
     }
 
     updateAnnotationTextualBodyValue(selectedTemplate.content);
   };
-
-  const mappedSuggestionsTags = tagsSuggestions.map((suggestion) => ({
-    label: suggestion,
-    value: suggestion,
-  }));
 
   return (
     <Grid container direction="column" spacing={2}>

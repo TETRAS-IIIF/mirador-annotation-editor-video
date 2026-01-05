@@ -6,10 +6,13 @@ import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getConfig } from 'mirador';
 import TextCommentTemplate from './TextCommentTemplate';
-import './debug.css';
-import TaggingTemplate from './TaggingTemplate';
+import ImageCommentTemplate from './ImageCommentTemplate';
+import NetworkCommentTemplate from './NetworkCommentTemplate';
+import DrawingTemplate from './DrawingTemplate';
 import IIIFTemplate from './IIIFTemplate';
+import TaggingTemplate from './TaggingTemplate';
 import MultipleBodyTemplate from './MultipleBodyTemplate';
+import './debug.css';
 import { DebugInformation } from './DebugInformation';
 import { TEMPLATE } from './AnnotationFormUtils';
 
@@ -82,6 +85,43 @@ export default function AnnotationFormBody(
             />
           )
         }
+        {
+          templateType.id === TEMPLATE.IMAGE_TYPE && (
+            <ImageCommentTemplate
+              annotation={annotation}
+              closeFormCompanionWindow={closeFormCompanionWindow}
+              playerReferences={playerReferences}
+              saveAnnotation={saveAnnotation}
+              windowId={windowId}
+              t={t}
+            />
+          )
+        }
+        {
+          templateType.id === TEMPLATE.KONVA_TYPE && (
+            <DrawingTemplate
+              annotation={annotation}
+              closeFormCompanionWindow={closeFormCompanionWindow}
+              playerReferences={playerReferences}
+              saveAnnotation={saveAnnotation}
+              t={t}
+              windowId={windowId}
+            />
+          )
+        }
+        {
+          templateType.id === TEMPLATE.MANIFEST_TYPE && (
+            <NetworkCommentTemplate
+              annotation={annotation}
+              closeFormCompanionWindow={closeFormCompanionWindow}
+              playerReferences={playerReferences}
+              saveAnnotation={saveAnnotation}
+              t={t}
+              windowId={windowId}
+            />
+          )
+        }
+
       </TemplateContainer>
       {debugMode && (
         <DebugInformation

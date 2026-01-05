@@ -10,6 +10,17 @@ export function getKonvaStage(windowId) {
 }
 
 /**
+ *
+ * @param windowId
+ * @param shapeId
+ * @returns {Node}
+ */
+export function getKonvaShape(windowId, shapeId) {
+  const stage = getKonvaStage(windowId);
+  return stage.findOne(`#${shapeId}`);
+}
+
+/**
  * Resize the Konva stage and redraw it
  * @param windowId
  * @param width

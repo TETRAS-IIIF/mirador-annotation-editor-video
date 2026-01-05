@@ -96,6 +96,7 @@ export default function TaggingTemplate(
           playerReferences={playerReferences}
           spatialTarget
           target={annotationState.maeData.target}
+          timeTarget
           windowId={windowId}
         />
       </Grid>

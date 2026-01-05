@@ -3,18 +3,17 @@ import fs from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import pkg from './package.json';
 
-const safeName = (pkg?.name ?? 'MiradorAnnotationEditor')
-    .replaceAll(/[^a-zA-Z0-9]/g, '');
 const peers = Object.keys(pkg?.peerDependencies ?? {});
 
+// TODO use pkgname instead direct string
 export default {
   build: {
     lib: {
       cssFileName: 'index.css',
       entry: './src/index.js',
-      fileName: (f) => (f === 'es' ? 'index.js' : 'index.cjs'),
+      fileName: (format) => `mirador-annotation-editor-video.${format}.js`, // Better naming
       formats: ['es', 'cjs'],
-      name: safeName,
+      name: 'MiradorAnnotationEditorVideo',
     },
     rollupOptions: {
       external: [
@@ -23,13 +22,21 @@ export default {
         /^@mui\/material(\/.*)?$/, /^@mui\/system(\/.*)?$/,
         /^@emotion\/react(\/.*)?$/, /^@emotion\/styled(\/.*)?$/,
         /^mirador(\/.*)?$/,
-          'i18next',
-          'react-i18next',
+        'i18next',
+        'react-i18next',
       ],
       output: {
         assetFileNames: 'index.[ext]',
-        exports: 'auto',
-        globals: { react: 'React', 'react-dom': 'ReactDOM' },
+        exports: 'named', // Fixes the warning
+        globals: {
+          react: 'React',
+          'react-dom': 'ReactDOM',
+          '@mui/material': 'MaterialUI',
+          '@emotion/react': 'EmotionReact',
+          '@emotion/styled': 'EmotionStyled',
+          'i18next': 'i18next',
+          'react-i18next': 'reactI18next',
+        },
       },
     },
     sourcemap: true,
@@ -47,7 +54,7 @@ export default {
         },
       }],
     },
-    include: ['@emotion/react'],
+    include: ['@emotion/react', '@mui/material', 'i18next'],
   },
   plugins: [react()],
   resolve: {
