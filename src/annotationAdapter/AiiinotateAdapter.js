@@ -101,6 +101,56 @@ const successOrThrow = async (r) => {
   }
 }
 
+const makeMaeData = (anno) => {
+  try {
+    const maeData = {
+      target: {
+        drawingState: "",
+        fullCanvaXYWH: "",  // str. "x,y,w,h": XYWH pixel coords of the full canvas
+        scale: undefined,  // float. don't know what it is
+        svg: "",  // string. svg of the target
+      },
+      templateType: "",  // string. "tagging", "multiple_body"...
+      tags: [],  // string[]
+      // not used if `templateType === "tagging"`
+      textBody: {}  // expeced keys: purpose, type, value
+    };
+
+    // TODO handle multiple bodies
+    if ( anno.motivation === "tagging" || anno.motivation === "oa:tagging" ) {
+      // tags
+      maeData.templateType = "tagging";
+      maeData.tags = [ anno.body.value || anno.bodyValue || "" ]
+    } else {
+      maeData.templateType = "multiple_body";
+      maeData.textBody = {
+        purpose: "describing",
+        type: "TextualBody",
+        // "bodyValue" => the body is a simple string. otherwise, body is an object.
+        value: anno.bodyValue || anno.body.value || ""
+      }
+    }
+
+    // TODO handle multiple targets.
+    var parser = new DOMParser();
+    const targetSvg = parser.parseFromString(anno.target.value, "image/svg+xml");
+    // SEE: https://stackoverflow.com/questions/19273908/parse-svg-and-add-it-to-a-svg-element
+    console.log("SVG", targetSvg);
+
+
+  } catch (e) {
+    return {};
+  }
+
+}
+
+const handleMaeData = (anno) => {
+  if ( !anno.maeData || Object.keys(anno.maeData || {}).length > 0 ) {
+    anno.maeData = makeMaeData(anno);
+  }
+  return anno;
+}
+
 /**
  * @class
  * @type {AiiinotateAdapterType}
@@ -220,8 +270,10 @@ export default class AiiinotateAdapter {
   async all() {
     const r = await fetch(this.annotationPageId);
     const annotations = await r.json();
-    return this.iiifPresentationVersion === 2
+    const annotationPage = await this.iiifPresentationVersion === 2
       ? createAnnotationPage(annotations.resources, this.annotationPageId)
       : annotations;
+    annotationPage.items.map(handleMaeData);
+    return annotationPage;
   }
 }
