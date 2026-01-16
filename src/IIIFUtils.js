@@ -1,7 +1,10 @@
+import { v4 as uuidv4 } from "uuid";
+
 import {
   getKonvaAsDataURL,
   getSvg,
   SHAPES_TOOL,
+  OVERLAY_TOOL
 } from './annotationForm/AnnotationFormOverlay/KonvaDrawing/KonvaUtils';
 import { TARGET_TOOL_STATE, TEMPLATE } from './annotationForm/AnnotationFormUtils';
 
@@ -138,6 +141,142 @@ export const getIIIFTargetFromMaeData = (
       return getIIIFTargetFullCanvas(maeData, canvasId);
   }
 };
+
+/**
+ *
+ * @param {{ bodyValue?: string, bodyObj?: (Object|Object[]) }} body
+ * @returns {(Object|Object[])}
+ */
+const convertIIIFBodyToMae = (body) => {
+  const { bodyValue, bodyObj } = body;
+  const maeBodyTemplate = {
+    purpose: "describing",
+    type: "TextualBody",
+    value: ""
+  }
+  const convertBodyObjToMae = (_bodyObj) => {
+    const maeBody = structuredClone(maeBodyTemplate);
+    maeBody.value = _bodyObj.value || "";
+    return maeBody;
+  }
+  if ( bodyValue ) {
+    maeBodyTemplate.value = bodyValue;
+    return maeBodyTemplate;
+  } else if (bodyObj) {
+    return Array.isArray(bodyObj)
+      ? bodyObj.map(convertBodyObjToMae)
+      : convertBodyObjToMae(bodyObj)
+  };
+}
+
+export function convertIIIFAnnoToMaeData(anno) {
+  try {
+    const maeData = {
+      target: {},
+      templateType: "",  // AnnotationFormUtils.TEMPLATE
+      tags: [],  // string[]
+      // not used if `templateType === "tagging"`
+      textBody: {}  // expeced keys: purpose, type, value
+    };
+
+    if ( anno.motivation === "tagging" || anno.motivation === "oa:tagging" ) {
+      // tags
+      maeData.templateType = TEMPLATE.TAGGING_TYPE;
+      maeData.tags = [ anno.body.value || anno.bodyValue || "" ]
+    } else {
+      maeData.templateType = TEMPLATE.MULTIPLE_BODY_TYPE;
+      const bodyValue = anno.bodyValue || "";
+      maeData.textBody = convertIIIFBodyToMae({ bodyValue: bodyValue, bodyObj: anno.body })
+    }
+
+    // TODO handle multiple targets.
+    // TODO handle other body types (Choice)
+    console.log("anno.target", anno.target);
+    if ( anno.target.selector?.type === "FragmentSelector" ) {
+      const [ x, y, w, h ] = anno.target.selector.value.replace("xywh=", "").split(",");
+      const style = {
+        fill: "rgba(100,100,100, 0)",
+        stroke: "rgba(255,0, 0, 0.5)",
+        strokeWidth: 5
+      };
+      // TODO these should be dynamic
+      const [fullW, fullH, scale] = [2087, 2550, 0.8947368421052632];
+      const shapeId = uuidv4();
+      const currentShape = {
+        id: shapeId,
+        rotation: 0,
+        scaleX: 1,
+        scaleY: 1,
+        type: SHAPES_TOOL.RECTANGLE,
+        x: x,
+        y: y,
+        width: w,
+        height: h,
+        fill: style.fill,
+        stroke: style.stroke,
+        strokeWidth: style.strokeWidth
+      };
+      const xywhSvg = `
+        <svg
+          version='1.1'
+          xmlns='http://www.w3.org/2000/svg'
+          xmlns:xlink='http://www.w3.org/1999/xlink'
+          width='${fullW}' height='${fullH}'
+        >
+          <defs/>
+          <g><g>
+            <path
+              fill='${style.fill}'
+              stroke='${style.stroke}'
+              d=' M ${x} ${y} L ${x+w} ${y} L ${x+w} ${y+h} L ${x} ${x+h} L ${x} ${y} Z Z'
+              fill-opacity='0'
+              stroke-miterlimit='10'
+              stroke-width='${style.strokeWidth}' stroke-dasharray=''
+            />
+          </g></g>
+        </svg>`;
+
+      const maeTarget = {
+        drawingState: JSON.stringify({
+          currentShape: currentShape,
+          shapes: [ currentShape ],
+          isDrawing: true,
+        }),
+        svg: xywhSvg,
+        fullCanvaXYWH: `0,0,${fullW},${fullH}`,
+        scale: scale
+      }
+      maeData.target = maeTarget;
+      // example SVG for fragment 'xywh=1784.8605898123324,318.92493297587134,-1454.745308310992,358.0911528150134'
+      // `<svg version='1.1'
+      //       xmlns='http://www.w3.org/2000/svg'
+      //       xmlns:xlink='http://www.w3.org/1999/xlink'
+      //       width='2087' height='2550'
+      // >
+      //   <defs/>
+      //   <g><g>
+      //     <path
+      //       fill='rgb(100,100,100)'
+      //       stroke='rgb(255,0,0' paint-order='fill stroke markers'
+      //       d=' M 1784.8605898123324 318.92493297587134 L 330.1152815013404 318.92493297587134 L 330.1152815013404 677.0160857908847 L 1784.8605898123324 677.0160857908847 L 1784.8605898123324 318.92493297587134 Z Z'
+      //       fill-opacity='0'
+      //       stroke-miterlimit='10'
+      //       stroke-width='3' stroke-dasharray=''
+      //     />
+      //   </g></g>
+      // </svg>`
+    }
+
+    console.log("maeData", maeData);
+    anno.maeData = maeData;
+    return anno;
+
+  } catch (e) {
+    console.error("ERROR IN convertIIIFAnnoToMaeData", e);
+    return anno;
+  }
+
+}
 
 /**
  * Convert annotation state to be saved. Function change the annotationState object
