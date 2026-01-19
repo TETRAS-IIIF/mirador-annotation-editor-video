@@ -169,104 +169,126 @@ const convertIIIFBodyToMae = (body) => {
   };
 }
 
+const xywhToSvg = ({
+  x,
+  y,
+  w,
+  h,
+  fullW,
+  fullH,
+}) =>
+  `<svg
+      version='1.1'
+      xmlns='http://www.w3.org/2000/svg'
+      xmlns:xlink='http://www.w3.org/1999/xlink'
+      ${
+        fullW && fullH
+        ? "width='"+ fullW + "' height='" + fullH + "'"
+        : ""
+      }
+  >
+    <defs/>
+    <g><g>
+      <path
+        d=' M ${x} ${y} L ${x+w} ${y} L ${x+w} ${y+h} L ${x} ${x+h} L ${x} ${y} Z Z'
+        fill='${TARGET_TOOL_STATE.fillColor}'
+        stroke='${TARGET_TOOL_STATE.strokeColor}'
+        stroke-width='${TARGET_TOOL_STATE.strokeWidth}'
+        fill-opacity='0'
+        stroke-miterlimit='10'
+        stroke-dasharray=''
+      />
+    </g></g>
+  </svg>`;
+
+const svgToXywh = (svg) => {};
+
+const convertFragmentSelectorToMae = (selector) => {
+  const [ x, y, w, h ] = selector.value.replace("xywh=", "").split(",");
+  // // TODO these should be dynamic. but they don't seem necessary
+  // const [fullW, fullH, scale] = [2087, 2550, 0.8947368421052632];
+  const shapeId = uuidv4();
+  const currentShape = {
+    id: shapeId,
+    rotation: 0,
+    scaleX: 1,
+    scaleY: 1,
+    x: x,
+    y: y,
+    width: w,
+    height: h,
+    type: SHAPES_TOOL.RECTANGLE,
+    fill: TARGET_TOOL_STATE.fillColor,
+    stroke: TARGET_TOOL_STATE.strokeColor,
+    strokeWidth: TARGET_TOOL_STATE.strokeWidth
+  };
+
+  return {
+    drawingState: JSON.stringify({
+      currentShape: currentShape,
+      shapes: [ currentShape ],
+      isDrawing: true,
+    }),
+    svg: xywhToSvg({
+      x,y,w,h,
+      // fullW,
+      // fullH,
+    }),
+    // fullCanvaXYWH: `0,0,${fullW},${fullH}`,
+    // scale: scale
+  }
+}
+
+const convertSvgSelectorToMae = (selector) => {
+
+}
+
+
+// NOTE: currently, only 2 types of targets are supported:
+// - FragmentSelectors
+// - SvgSelectors
+// - an array of the 2 above (corresponding to a IIIF Presentation 2 "oa:Choice" selector containing an "oa:FragmentSelector" and "oa:SvgSelector" )
+const convertIIIFTargetToMae = (target, annotationId) => {
+  const supportedSelectorTypes = ["SvgSelector", "FragmentSelector"];
+  const selectorArray = Array.isArray(target) ? target.selector : [target.selector];
+  let maeTarget = {};
+
+  for (const selector of selectorArray ) {
+    if ( selector.type === "SvgSelector" ) {
+      return convertSvgSelectorToMae(selector);
+    } else if ( selector.type === "FragmentSelector" ) {
+      return convertFragmentSelectorToMae(selector)
+    }
+    // if at the end of the loop, no selector could be processed, log an error and return.
+    console.error(`On annotation '${annotationId}': none of the selector types in the annotation are unsupported: ${selectorArray.map(selector => selector.type)}. Supported selectors are: [${supportedSelectorTypes}].`)
+    return {}
+  }
+}
+
 export function convertIIIFAnnoToMaeData(anno) {
   try {
     const maeData = {
       target: {},
       templateType: "",  // AnnotationFormUtils.TEMPLATE
       tags: [],  // string[]
-      // not used if `templateType === "tagging"`
-      textBody: {}  // expeced keys: purpose, type, value
+      textBody: {}  // expeced keys: purpose, type, value. not used if `templateType === "tagging"`
     };
 
+    // tagging annotation
     if ( anno.motivation === "tagging" || anno.motivation === "oa:tagging" ) {
-      // tags
       maeData.templateType = TEMPLATE.TAGGING_TYPE;
       maeData.tags = [ anno.body.value || anno.bodyValue || "" ]
+    // multiple body
     } else {
       maeData.templateType = TEMPLATE.MULTIPLE_BODY_TYPE;
-      const bodyValue = anno.bodyValue || "";
-      maeData.textBody = convertIIIFBodyToMae({ bodyValue: bodyValue, bodyObj: anno.body })
+      maeData.textBody = convertIIIFBodyToMae({
+        bodyValue: anno.bodyValue || "",
+        bodyObj: anno.body || ""
+      })
     }
 
-    // TODO handle multiple targets.
-    // TODO handle other body types (Choice)
+    maeData.target = convertIIIFTargetToMae(anno.target, anno.id);
     console.log("anno.target", anno.target);
-    if ( anno.target.selector?.type === "FragmentSelector" ) {
-      const [ x, y, w, h ] = anno.target.selector.value.replace("xywh=", "").split(",");
-      const style = {
-        fill: "rgba(100,100,100, 0)",
-        stroke: "rgba(255,0, 0, 0.5)",
-        strokeWidth: 5
-      };
-      // TODO these should be dynamic
-      const [fullW, fullH, scale] = [2087, 2550, 0.8947368421052632];
-      const shapeId = uuidv4();
-      const currentShape = {
-        id: shapeId,
-        rotation: 0,
-        scaleX: 1,
-        scaleY: 1,
-        type: SHAPES_TOOL.RECTANGLE,
-        x: x,
-        y: y,
-        width: w,
-        height: h,
-        fill: style.fill,
-        stroke: style.stroke,
-        strokeWidth: style.strokeWidth
-      };
-      const xywhSvg = `
-        <svg
-          version='1.1'
-          xmlns='http://www.w3.org/2000/svg'
-          xmlns:xlink='http://www.w3.org/1999/xlink'
-          width='${fullW}' height='${fullH}'
-        >
-          <defs/>
-          <g><g>
-            <path
-              fill='${style.fill}'
-              stroke='${style.stroke}'
-              d=' M ${x} ${y} L ${x+w} ${y} L ${x+w} ${y+h} L ${x} ${x+h} L ${x} ${y} Z Z'
-              fill-opacity='0'
-              stroke-miterlimit='10'
-              stroke-width='${style.strokeWidth}' stroke-dasharray=''
-            />
-          </g></g>
-        </svg>`;
-
-      const maeTarget = {
-        drawingState: JSON.stringify({
-          currentShape: currentShape,
-          shapes: [ currentShape ],
-          isDrawing: true,
-        }),
-        svg: xywhSvg,
-        fullCanvaXYWH: `0,0,${fullW},${fullH}`,
-        scale: scale
-      }
-      maeData.target = maeTarget;
-      // example SVG for fragment 'xywh=1784.8605898123324,318.92493297587134,-1454.745308310992,358.0911528150134'
-      // `<svg version='1.1'
-      //       xmlns='http://www.w3.org/2000/svg'
-      //       xmlns:xlink='http://www.w3.org/1999/xlink'
-      //       width='2087' height='2550'
-      // >
-      //   <defs/>
-      //   <g><g>
-      //     <path
-      //       fill='rgb(100,100,100)'
-      //       stroke='rgb(255,0,0' paint-order='fill stroke markers'
-      //       d=' M 1784.8605898123324 318.92493297587134 L 330.1152815013404 318.92493297587134 L 330.1152815013404 677.0160857908847 L 1784.8605898123324 677.0160857908847 L 1784.8605898123324 318.92493297587134 Z Z'
-      //       fill-opacity='0'
-      //       stroke-miterlimit='10'
-      //       stroke-width='3' stroke-dasharray=''
-      //     />
-      //   </g></g>
-      // </svg>`
-    }
-
     console.log("maeData", maeData);
     anno.maeData = maeData;
     return anno;
