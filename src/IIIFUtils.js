@@ -229,14 +229,57 @@ const convertIIIFBodyToMae = (body) => {
   };
 }
 
-const xywhToSvg = ({
-  x,
-  y,
-  w,
-  h,
-  fullW,
-  fullH,
-}) =>
+/**
+ * quick and dirty function to compute bounding box from an SVG Document using a hidden off-screen insertion.
+ * @param {XMLDocument} svgDoc - the parsed SVG
+ * @returns {{ x: number, y: number, width: number, height: number }} in the SVG's user coordinate system.
+ */
+const svgToXywh = (svgDoc) => {
+  const parsedSvg = svgDoc.documentElement;
+
+  const container = document.createElement("div");
+  container.style.position = "absolute";
+  container.style.left = "-99999px";
+  container.style.width = "0";
+  container.style.height = "0";
+  container.style.overflow = "hidden";
+  container.style.pointerEvents = "none";
+  document.body.appendChild(container);
+
+  const svg = document.importNode(parsedSvg, true);
+  // some SVGs don't have explicit width/height/viewBox. We still want user-space coords.
+  // wrap everything into a <g> so we can call getBBox on that group.
+  const ns = "http://www.w3.org/2000/svg";
+  const wrapper = document.createElementNS(ns, "svg");
+  for (const attr of svg.attributes || []) {
+    wrapper.setAttribute(attr.name, attr.value);
+  }
+  // move children into a group so getBBox returns combined extents
+  const g = document.createElementNS(ns, "g");
+  while (svg.firstChild) g.appendChild(svg.firstChild);
+  wrapper.appendChild(g);
+  container.appendChild(wrapper);
+
+  // force layout/render so getBBox is correct (reading offsetWidth is one way)
+  container.offsetWidth;
+
+  let bbox;
+  try {
+    bbox = g.getBBox(); // SVGRect-like: { x, y, width, height }
+  } catch (err) {
+    bbox = { x: 0, y: 0, width: 0, height: 0 };
+  }
+
+  document.body.removeChild(container);
+  return bbox;
+}
+
+/**
+ * renerate a string-representation of an SVG rectangle based on XYWH coordinates
+ * @param {{ x: number, y: number, w: number, fullW: number?, fullH: number? }}
+ * @returns {string}
+ */
+const xywhToSvg = ({ x, y, w, h, fullW=undefined, fullH=undefined }) =>
   `<svg
       version='1.1'
       xmlns='http://www.w3.org/2000/svg'
@@ -261,7 +304,6 @@ const xywhToSvg = ({
     </g></g>
   </svg>`;
 
-const svgToXywh = (svg) => {};
 
 const convertFragmentSelectorToMae = (selector) => {
   const [ x, y, w, h ] = selector.value.replace("xywh=", "").split(",");
@@ -300,6 +342,11 @@ const convertFragmentSelectorToMae = (selector) => {
 }
 
 const convertSvgSelectorToMae = (selector) => {
+  console.log(">SELECTOR", selector);
+  const parser = new DOMParser();
+  const svgDoc = parser.parseFromString(selector.value, "image/svg+xml");
+  const xywh = svgToXywh(svgDoc);
+  // console.log(svg.querySelector("g>g").getBoundingClientRect());
 
 }
 
@@ -310,8 +357,7 @@ const convertSvgSelectorToMae = (selector) => {
 // - an array of the 2 above (corresponding to a IIIF Presentation 2 "oa:Choice" selector containing an "oa:FragmentSelector" and "oa:SvgSelector" )
 const convertIIIFTargetToMae = (target, annotationId) => {
   const supportedSelectorTypes = ["SvgSelector", "FragmentSelector"];
-  const selectorArray = Array.isArray(target) ? target.selector : [target.selector];
-  let maeTarget = {};
+  const selectorArray = Array.isArray(target.selector) ? target.selector : [target.selector];
 
   for (const selector of selectorArray ) {
     if ( selector.type === "SvgSelector" ) {

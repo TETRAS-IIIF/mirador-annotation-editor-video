@@ -103,7 +103,6 @@ const successOrThrow = async (r) => {
 }
 
 const handleMaeData = (anno) => {
-  console.log("anno", anno);
   // if ( !anno.maeData || Object.keys(anno.maeData || {}).length > 0 ) {
     anno = convertIIIFAnnoToMaeData(anno);
   // }
