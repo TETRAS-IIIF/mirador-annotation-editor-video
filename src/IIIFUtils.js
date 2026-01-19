@@ -143,6 +143,66 @@ export const getIIIFTargetFromMaeData = (
 };
 
 /**
+ * test annotation with oa:Choice selector containing SVG and Fagment to a xywh=200,200,300,300 rectangle.
+
+db.getCollection("annotations2").updateOne(
+  { "@id": "http://127.0.0.1:4000/data/2/iiif/annotation/e58b8c60-005c-4c41-a22f-07d49cb25ede_aa7ac44a-dede-49ed-84f6-488214c6dd64" },
+  {
+    $set: {
+      '@context': 'http://iiif.io/api/presentation/2/context.json',
+      '@type': 'oa:Annotation',
+      maeData: {},
+      motivation: [ 'oa:commenting' ],
+      '@id': 'http://127.0.0.1:4000/data/2/iiif/annotation/e58b8c60-005c-4c41-a22f-07d49cb25ede_aa7ac44a-dede-49ed-84f6-488214c6dd64',
+      resource: [
+        {
+          chars: '<p>faceeee</p>',
+          '@type': 'dctypes:Text',
+          motivation: 'describing'
+        }
+      ],
+      on: [
+        {
+          '@type': 'oa:SpecificResource',
+          full: 'https://iiif.bodleian.ox.ac.uk/iiif/canvas/e58b8c60-005c-4c41-a22f-07d49cb25ede.json',
+          selector: {
+            '@type': 'oa:Choice',
+            default: {
+              '@type': 'oa:SvgSelector',
+              value:
+                `<svg
+                    version='1.1'
+                    xmlns='http://www.w3.org/2000/svg'
+                    xmlns:xlink='http://www.w3.org/1999/xlink'
+                >
+                  <defs/>
+                  <g><g>
+                    <path
+                      d=' M 200 200 L 500 200 L 500 500 L 200 500 L 200 200 Z Z'
+                      fill='rgba(100,100,100, 0)'
+                      stroke='rgba(255,0, 0, 0.5)'
+                      stroke-width='5'
+                      fill-opacity='0'
+                      stroke-miterlimit='10'
+                      stroke-dasharray=''
+                    />
+                  </g></g>
+                </svg>`
+            },
+            item: {
+              '@type': 'oa:FragmentSelector',
+              value: 'https://iiif.bodleian.ox.ac.uk/iiif/canvas/e58b8c60-005c-4c41-a22f-07d49cb25ede.json#xywh=200,200,300,300'
+            }
+          },
+          manifestUri: 'https://iiif.bodleian.ox.ac.uk/iiif/canvas/e58b8c60-005c-4c41-a22f-07d49cb25ede.json',
+        }
+      ]
+    }
+  }
+)
+*/
+
+/**
  *
  * @param {{ bodyValue?: string, bodyObj?: (Object|Object[]) }} body
  * @returns {(Object|Object[])}
