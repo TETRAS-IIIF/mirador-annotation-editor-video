@@ -203,35 +203,58 @@ db.getCollection("annotations2").updateOne(
 */
 
 /**
+ * generate the maeData body from a IIIF annotation
+ * NOTE: only textual bodies are supported.
  *
- * @param {{ bodyValue?: string, bodyObj?: (Object|Object[]) }} body
- * @returns {(Object|Object[])}
+ * @param {object} anno
+ * @returns {Array<string, Array<string?>, object|object[]}
  */
-const convertIIIFBodyToMae = (body) => {
-  const { bodyValue, bodyObj } = body;
+const convertIIIFBodyToMae = (anno) => {
   const maeBodyTemplate = {
     purpose: "describing",
     type: "TextualBody",
     value: ""
   }
+  // convert body if it's an object
   const convertBodyObjToMae = (_bodyObj) => {
     const maeBody = structuredClone(maeBodyTemplate);
     maeBody.value = _bodyObj.value || "";
     return maeBody;
   }
+  // convert body if it's just a string
   const convertBodyValueToMae = (_bodyValue) => {
     const maeBody = structuredClone(maeBodyTemplate);
     maeBody.value = _bodyValue || "";
     return maeBody;
   }
 
-  if ( bodyValue ) {
-    return convertBodyValueToMae(bodyValue);
-  } else if (bodyObj) {
-    return Array.isArray(bodyObj)
-      ? bodyObj.map(convertBodyObjToMae)
-      : convertBodyObjToMae(bodyObj)
-  };
+  // NOTE if body is an array, textBody will be retyped to array
+  let templateType = "", tags = [], textBody = {};
+
+  // tagging annotation
+  if ( anno.motivation === "tagging" || anno.motivation === "oa:tagging" ) {
+    templateType = TEMPLATE.TAGGING_TYPE;
+    tags = [
+      Array.isArray(anno.body)
+        ? anno.body.map(b => b.value)
+        : anno.body.value
+      || anno.bodyValue
+      || ""
+    ]
+  // if it's not a tag, we consider it's a multiple body
+  } else {
+    templateType = TEMPLATE.MULTIPLE_BODY_TYPE;
+
+    if ( anno.bodyValue ) {
+      textBody = convertBodyValueToMae(anno.bodyValue);
+    } else if ( anno.body ) {
+      textBody = Array.isArray(anno.body)
+        ? anno.body.map(convertBodyObjToMae)
+        : convertBodyObjToMae(anno.body)
+    };
+  }
+
+  return [ templateType, tags, textBody ];
 }
 
 /**
@@ -427,21 +450,12 @@ export function convertIIIFAnnoToMaeData(anno) {
       textBody: {}  // expeced keys: purpose, type, value. not used if `templateType === "tagging"`
     };
 
-    // tagging annotation
-    if ( anno.motivation === "tagging" || anno.motivation === "oa:tagging" ) {
-      maeData.templateType = TEMPLATE.TAGGING_TYPE;
-      maeData.tags = [ anno.body.value || anno.bodyValue || "" ]
-    // multiple body
-    } else {
-      maeData.templateType = TEMPLATE.MULTIPLE_BODY_TYPE;
-      maeData.textBody = convertIIIFBodyToMae({
-        bodyValue: anno.bodyValue || "",
-        bodyObj: anno.body || ""
-      })
-    }
+    const [ templateType, tags, textBody ] = convertIIIFBodyToMae(anno);
+    maeData.templateType = templateType;
+    maeData.tags = tags;
+    maeData.textBody = textBody;
 
     maeData.target = convertIIIFTargetToMae(anno.target, anno.id);
-    console.log("anno.target", anno.target);
     console.log("maeData", maeData);
     anno.maeData = maeData;
     return anno;
