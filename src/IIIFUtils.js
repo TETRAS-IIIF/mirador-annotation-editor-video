@@ -180,7 +180,7 @@ db.getCollection("annotations2").updateOne(
                     <path
                       d=' M 200 200 L 500 200 L 500 500 L 200 500 L 200 200 Z Z'
                       fill='rgba(100,100,100, 0)'
-                      stroke='rgba(255,0, 0, 0.5)'
+                      stroke='rgba(255,0, 0, 1)'
                       stroke-width='5'
                       fill-opacity='0'
                       stroke-miterlimit='10'
@@ -219,9 +219,14 @@ const convertIIIFBodyToMae = (body) => {
     maeBody.value = _bodyObj.value || "";
     return maeBody;
   }
+  const convertBodyValueToMae = (_bodyValue) => {
+    const maeBody = structuredClone(maeBodyTemplate);
+    maeBody.value = _bodyValue || "";
+    return maeBody;
+  }
+
   if ( bodyValue ) {
-    maeBodyTemplate.value = bodyValue;
-    return maeBodyTemplate;
+    return convertBodyValueToMae(bodyValue);
   } else if (bodyObj) {
     return Array.isArray(bodyObj)
       ? bodyObj.map(convertBodyObjToMae)
@@ -263,19 +268,13 @@ const svgToXywh = (svgDoc) => {
   // force layout/render so getBBox is correct (reading offsetWidth is one way)
   container.offsetWidth;
 
-  let bbox;
-  try {
-    bbox = g.getBBox(); // SVGRect-like: { x, y, width, height }
-  } catch (err) {
-    bbox = { x: 0, y: 0, width: 0, height: 0 };
-  }
-
+  const bbox = g.getBBox(); // SVGRect-like: { x, y, width, height }
   document.body.removeChild(container);
   return bbox;
 }
 
 /**
- * renerate a string-representation of an SVG rectangle based on XYWH coordinates
+ * generate a string-representation of an SVG rectangle based on XYWH coordinates
  * @param {{ x: number, y: number, w: number, fullW: number?, fullH: number? }}
  * @returns {string}
  */
@@ -309,9 +308,8 @@ const convertFragmentSelectorToMae = (selector) => {
   const [ x, y, w, h ] = selector.value.replace("xywh=", "").split(",");
   // // TODO these should be dynamic. but they don't seem necessary
   // const [fullW, fullH, scale] = [2087, 2550, 0.8947368421052632];
-  const shapeId = uuidv4();
   const currentShape = {
-    id: shapeId,
+    id: uuidv4(),
     rotation: 0,
     scaleX: 1,
     scaleY: 1,
@@ -329,7 +327,7 @@ const convertFragmentSelectorToMae = (selector) => {
     drawingState: JSON.stringify({
       currentShape: currentShape,
       shapes: [ currentShape ],
-      isDrawing: true,
+      isDrawing: false,
     }),
     svg: xywhToSvg({
       x,y,w,h,
@@ -342,35 +340,84 @@ const convertFragmentSelectorToMae = (selector) => {
 }
 
 const convertSvgSelectorToMae = (selector) => {
-  console.log(">SELECTOR", selector);
   const parser = new DOMParser();
   const svgDoc = parser.parseFromString(selector.value, "image/svg+xml");
   const xywh = svgToXywh(svgDoc);
-  // console.log(svg.querySelector("g>g").getBoundingClientRect());
-
+  const fullW = svgDoc.querySelector("svg").getAttribute("width") || undefined;
+  const fullH = svgDoc.querySelector("svg").getAttribute("height") || undefined;
+  // when building the `currentShape` and `maeTarget`, we try to extract as much infoermation as possible from the SVG
+  const currentShape = {
+    id: uuidv4(),
+    rotation: 0,
+    scaleX: 1,
+    scaleY: 1,
+    x: xywh.x,
+    y: xywh.y,
+    width:  xywh.width,
+    height: xywh.height,
+    type: SHAPES_TOOL.RECTANGLE,
+    fill: svgDoc.querySelector("path[fill]")?.getAttribute("fill") || TARGET_TOOL_STATE.fillColor,
+    stroke: svgDoc.querySelector("path[stroke]")?.getAttribute("stroke") || TARGET_TOOL_STATE.strokeColor,
+    strokeWidth: svgDoc.querySelector("path[stroke-width]")?.getAttribute("stroke-width") || TARGET_TOOL_STATE.strokeWidth
+  };
+  const maeTarget = {
+    drawingState: JSON.stringify({
+      currentShape: currentShape,
+      shapes: [ currentShape ],
+      isDrawing: false,
+    }),
+    svg: selector.value
+  };
+  if ( fullW && fullH ) {
+    maeTarget.fullCanvaXYWH = `0,0,${fullW},${fullH}`;
+    // ratio of area of annotation / full canvas area
+    maeTarget.scale = (xywh.width * xywh.height) / (fullW * fullH);
+  }
+  return maeTarget;
 }
 
-
-// NOTE: currently, only 2 types of targets are supported:
-// - FragmentSelectors
-// - SvgSelectors
-// - an array of the 2 above (corresponding to a IIIF Presentation 2 "oa:Choice" selector containing an "oa:FragmentSelector" and "oa:SvgSelector" )
+/**
+ * generate `maeData.target` from an annotation's `target` field.
+ *
+ * NOTE: limitations:
+ * - currently, only 2 types of targets are supported:
+ *    - FragmentSelectors
+ *    - SvgSelectors
+ * - if there is an array of selectors, the first supported selector is used
+ * - we extract bounding boxes from SVGs, so we expect SVGs to be rectangular
+ *
+ * @param {object} target
+ * @param {string} annotationId
+ * @returns {object}
+ */
 const convertIIIFTargetToMae = (target, annotationId) => {
   const supportedSelectorTypes = ["SvgSelector", "FragmentSelector"];
   const selectorArray = Array.isArray(target.selector) ? target.selector : [target.selector];
 
-  for (const selector of selectorArray ) {
-    if ( selector.type === "SvgSelector" ) {
-      return convertSvgSelectorToMae(selector);
-    } else if ( selector.type === "FragmentSelector" ) {
-      return convertFragmentSelectorToMae(selector)
+    for (const selector of selectorArray ) {
+      // NOTE: order of selector types is important
+      // we put the try..catch in the loop to skip the error and fallback to another selector if possible
+      try {
+        if ( selector.type === "SvgSelector" ) {
+          return convertSvgSelectorToMae(selector);
+        } else if ( selector.type === "FragmentSelector" ) {
+          return convertFragmentSelectorToMae(selector)
+        }
+      } catch (err) {
+        // console.error (`Error generatig 'maeTarget' from selector type '${selector.type}': ${err.message}`);
+      }
+      // if at the end of the loop, no selector could be processed, log an error and return.
+      console.error(`On annotation '${annotationId}': none of the selector types in the annotation are unsupported: ${selectorArray.map(selector => selector.type)}. Supported selectors are: [${supportedSelectorTypes}].`)
+      return {}
     }
-    // if at the end of the loop, no selector could be processed, log an error and return.
-    console.error(`On annotation '${annotationId}': none of the selector types in the annotation are unsupported: ${selectorArray.map(selector => selector.type)}. Supported selectors are: [${supportedSelectorTypes}].`)
-    return {}
-  }
 }
 
+/**
+ * generate the maeData field for IIIF annotations that lack one (i.e., all annotations that are created outside of MAE).
+ * this allows to open them and update them as with any MAE-created annotation.
+ * @param {*} anno
+ * @returns
+ */
 export function convertIIIFAnnoToMaeData(anno) {
   try {
     const maeData = {
@@ -400,10 +447,9 @@ export function convertIIIFAnnoToMaeData(anno) {
     return anno;
 
   } catch (e) {
-    console.error("ERROR IN convertIIIFAnnoToMaeData", e);
+    console.error("Error generating ", e);
     return anno;
   }
-
 }
 
 /**
