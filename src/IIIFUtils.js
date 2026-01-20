@@ -172,29 +172,29 @@ const convertIIIFBodyToMae = (anno) => {
   let templateType = "", tags = [], textBody = {};
 
   // tagging annotation
-  if ( anno.motivation === "tagging" || anno.motivation === "oa:tagging" ) {
+  if (anno.motivation === "tagging" || anno.motivation === "oa:tagging") {
     templateType = TEMPLATE.TAGGING_TYPE;
     tags = [
       Array.isArray(anno.body)
         ? anno.body.map(b => b.value)
         : anno.body.value
-      || anno.bodyValue
-      || ""
+        || anno.bodyValue
+        || ""
     ]
-  // if it's not a tag, we consider it's a multiple body
+    // if it's not a tag, we consider it's a multiple body
   } else {
     templateType = TEMPLATE.MULTIPLE_BODY_TYPE;
 
-    if ( anno.bodyValue ) {
+    if (anno.bodyValue) {
       textBody = convertBodyValueToMae(anno.bodyValue);
-    } else if ( anno.body ) {
+    } else if (anno.body) {
       textBody = Array.isArray(anno.body)
         ? anno.body.map(convertBodyObjToMae)
         : convertBodyObjToMae(anno.body)
     };
   }
 
-  return [ templateType, tags, textBody ];
+  return [templateType, tags, textBody];
 }
 
 /**
@@ -241,21 +241,20 @@ const svgToXywh = (svgDoc) => {
  * @param {{ x: number, y: number, w: number, fullW: number?, fullH: number? }}
  * @returns {string}
  */
-const xywhToSvg = ({ x, y, w, h, fullW=undefined, fullH=undefined }) =>
+const xywhToSvg = ({ x, y, w, h, fullW = undefined, fullH = undefined }) =>
   `<svg
       version='1.1'
       xmlns='http://www.w3.org/2000/svg'
       xmlns:xlink='http://www.w3.org/1999/xlink'
-      ${
-        fullW && fullH
-        ? "width='"+ fullW + "' height='" + fullH + "'"
-        : ""
-      }
+      ${fullW && fullH
+    ? "width='" + fullW + "' height='" + fullH + "'"
+    : ""
+  }
   >
     <defs/>
     <g><g>
       <path
-        d=' M ${x} ${y} L ${x+w} ${y} L ${x+w} ${y+h} L ${x} ${x+h} L ${x} ${y} Z Z'
+        d=' M ${x} ${y} L ${x + w} ${y} L ${x + w} ${y + h} L ${x} ${x + h} L ${x} ${y} Z Z'
         fill='${TARGET_TOOL_STATE.fillColor}'
         stroke='${TARGET_TOOL_STATE.strokeColor}'
         stroke-width='${TARGET_TOOL_STATE.strokeWidth}'
@@ -268,7 +267,7 @@ const xywhToSvg = ({ x, y, w, h, fullW=undefined, fullH=undefined }) =>
 
 
 const convertFragmentSelectorToMae = (selector) => {
-  const [ x, y, w, h ] = selector.value.replace("xywh=", "").split(",");
+  const [x, y, w, h] = selector.value.replace("xywh=", "").split(",");
   // // TODO these should be dynamic. but they don't seem necessary
   // const [fullW, fullH, scale] = [2087, 2550, 0.8947368421052632];
   const currentShape = {
@@ -289,11 +288,11 @@ const convertFragmentSelectorToMae = (selector) => {
   return {
     drawingState: JSON.stringify({
       currentShape: currentShape,
-      shapes: [ currentShape ],
+      shapes: [currentShape],
       isDrawing: false,
     }),
     svg: xywhToSvg({
-      x,y,w,h,
+      x, y, w, h,
       // fullW,
       // fullH,
     }),
@@ -316,7 +315,7 @@ const convertSvgSelectorToMae = (selector) => {
     scaleY: 1,
     x: xywh.x,
     y: xywh.y,
-    width:  xywh.width,
+    width: xywh.width,
     height: xywh.height,
     type: SHAPES_TOOL.RECTANGLE,
     fill: svgDoc.querySelector("path[fill]")?.getAttribute("fill") || TARGET_TOOL_STATE.fillColor,
@@ -326,12 +325,12 @@ const convertSvgSelectorToMae = (selector) => {
   const maeTarget = {
     drawingState: JSON.stringify({
       currentShape: currentShape,
-      shapes: [ currentShape ],
+      shapes: [currentShape],
       isDrawing: false,
     }),
     svg: selector.value
   };
-  if ( fullW && fullH ) {
+  if (fullW && fullH) {
     maeTarget.fullCanvaXYWH = `0,0,${fullW},${fullH}`;
     // ratio of area of annotation / full canvas area
     maeTarget.scale = (xywh.width * xywh.height) / (fullW * fullH);
@@ -357,13 +356,13 @@ const convertIIIFTargetToMae = (target, annotationId) => {
   const supportedSelectorTypes = ["SvgSelector", "FragmentSelector"];
   const selectorArray = Array.isArray(target.selector) ? target.selector : [target.selector];
 
-  for (const selector of selectorArray ) {
+  for (const selector of selectorArray) {
     // NOTE: order of selector types is important
     // we put the try..catch in the loop to skip the error and fallback to another selector if possible
     try {
-      if ( selector.type === "SvgSelector" ) {
+      if (selector.type === "SvgSelector") {
         return convertSvgSelectorToMae(selector);
-      } else if ( selector.type === "FragmentSelector" ) {
+      } else if (selector.type === "FragmentSelector") {
         return convertFragmentSelectorToMae(selector)
       }
     } catch (err) {
@@ -383,7 +382,7 @@ const convertIIIFTargetToMae = (target, annotationId) => {
  * @returns
  */
 export function convertIIIFAnnoToMaeData(anno) {
-  if ( !anno.maeData || Object.keys(anno.maeData || {}).length === 0 ) {
+  if (!anno.maeData || Object.keys(anno.maeData || {}).length === 0) {
     try {
       const maeData = {
         target: {},
@@ -392,7 +391,7 @@ export function convertIIIFAnnoToMaeData(anno) {
         textBody: {}  // expeced keys: purpose, type, value. not used if `templateType === "tagging"`
       };
 
-      const [ templateType, tags, textBody ] = convertIIIFBodyToMae(anno);
+      const [templateType, tags, textBody] = convertIIIFBodyToMae(anno);
       maeData.templateType = templateType;
       maeData.tags = tags;
       maeData.textBody = textBody;
@@ -568,7 +567,7 @@ export function createV2Anno(v3anno) {
         // `target` is an object and `target.source` is a string
         || v3anno.target.source
     };
-  // if v3anno.target is a string, don't process it
+    // if v3anno.target is a string, don't process it
   } else {
     v2anno.on = v3anno.target;
   }
