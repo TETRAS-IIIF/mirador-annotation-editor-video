@@ -383,28 +383,31 @@ const convertIIIFTargetToMae = (target, annotationId) => {
  * @returns
  */
 export function convertIIIFAnnoToMaeData(anno) {
-  try {
-    const maeData = {
-      target: {},
-      templateType: "",  // AnnotationFormUtils.TEMPLATE
-      tags: [],  // string[]
-      textBody: {}  // expeced keys: purpose, type, value. not used if `templateType === "tagging"`
-    };
+  if ( !anno.maeData || Object.keys(anno.maeData || {}).length === 0 ) {
+    try {
+      const maeData = {
+        target: {},
+        templateType: "",  // AnnotationFormUtils.TEMPLATE
+        tags: [],  // string[]
+        textBody: {}  // expeced keys: purpose, type, value. not used if `templateType === "tagging"`
+      };
 
-    const [ templateType, tags, textBody ] = convertIIIFBodyToMae(anno);
-    maeData.templateType = templateType;
-    maeData.tags = tags;
-    maeData.textBody = textBody;
+      const [ templateType, tags, textBody ] = convertIIIFBodyToMae(anno);
+      maeData.templateType = templateType;
+      maeData.tags = tags;
+      maeData.textBody = textBody;
 
-    maeData.target = convertIIIFTargetToMae(anno.target, anno.id);
-    console.log("maeData", maeData);
-    anno.maeData = maeData;
-    return anno;
+      maeData.target = convertIIIFTargetToMae(anno.target, anno.id);
+      console.log("maeData", maeData);
+      anno.maeData = maeData;
+      return anno;
 
-  } catch (e) {
-    console.error("Error generating ", e);
-    return anno;
+    } catch (e) {
+      console.error("Error generating ", e);
+      return anno;
+    }
   }
+  return anno;
 }
 
 /**

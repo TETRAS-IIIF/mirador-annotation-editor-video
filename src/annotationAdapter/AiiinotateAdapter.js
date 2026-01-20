@@ -102,13 +102,6 @@ const successOrThrow = async (r) => {
   }
 }
 
-const handleMaeData = (anno) => {
-  if ( !anno.maeData || Object.keys(anno.maeData || {}).length === 0 ) {
-    anno = convertIIIFAnnoToMaeData(anno);
-  }
-  return anno;
-}
-
 /**
  * @class
  * @type {AiiinotateAdapterType}
@@ -231,7 +224,7 @@ export default class AiiinotateAdapter {
     const annotationPage = await this.iiifPresentationVersion === 2
       ? createAnnotationPage(annotations.resources, this.annotationPageId)
       : annotations;
-    annotationPage.items.map(handleMaeData);
+    annotationPage.items.map(convertIIIFAnnoToMaeData);
     return annotationPage;
   }
 }
