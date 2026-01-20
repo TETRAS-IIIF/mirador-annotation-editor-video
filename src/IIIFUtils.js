@@ -147,7 +147,7 @@ export const getIIIFTargetFromMaeData = (
  * NOTE: only textual bodies are supported.
  *
  * @param {object} anno
- * @returns {Array<string, Array<string?>, object|object[]}
+ * @returns {Array<string, object|object[]}
  */
 const convertIIIFBodyToMae = (anno) => {
   const maeBodyTemplate = {
@@ -169,22 +169,14 @@ const convertIIIFBodyToMae = (anno) => {
   }
 
   // NOTE if body is an array, textBody will be retyped to array
-  let templateType = "", tags = [], textBody = {};
+  let templateType = "", textBody = {};
 
-  // tagging annotation
-  if (anno.motivation === "tagging" || anno.motivation === "oa:tagging") {
+  // if it's not a tagging annotation, we consider it's a multiple body.
+  // if templateType === TEMPLATE.TAGGING_TYPE, textBody must be undefined
+  if ( anno.motivation === "tagging" || (Array.isArray(anno.motivation) && anno.motivation.includes("tagging")) ) {
     templateType = TEMPLATE.TAGGING_TYPE;
-    tags = [
-      Array.isArray(anno.body)
-        ? anno.body.map(b => b.value)
-        : anno.body.value
-        || anno.bodyValue
-        || ""
-    ]
-    // if it's not a tag, we consider it's a multiple body
   } else {
     templateType = TEMPLATE.MULTIPLE_BODY_TYPE;
-
     if (anno.bodyValue) {
       textBody = convertBodyValueToMae(anno.bodyValue);
     } else if (anno.body) {
@@ -194,7 +186,7 @@ const convertIIIFBodyToMae = (anno) => {
     };
   }
 
-  return [templateType, tags, textBody];
+  return [templateType, textBody];
 }
 
 /**
@@ -268,8 +260,6 @@ const xywhToSvg = ({ x, y, w, h, fullW = undefined, fullH = undefined }) =>
 
 const convertFragmentSelectorToMae = (selector) => {
   const [x, y, w, h] = selector.value.replace("xywh=", "").split(",");
-  // // TODO these should be dynamic. but they don't seem necessary
-  // const [fullW, fullH, scale] = [2087, 2550, 0.8947368421052632];
   const currentShape = {
     id: uuidv4(),
     rotation: 0,
@@ -291,13 +281,7 @@ const convertFragmentSelectorToMae = (selector) => {
       shapes: [currentShape],
       isDrawing: false,
     }),
-    svg: xywhToSvg({
-      x, y, w, h,
-      // fullW,
-      // fullH,
-    }),
-    // fullCanvaXYWH: `0,0,${fullW},${fullH}`,
-    // scale: scale
+    svg: xywhToSvg({ x, y, w, h })
   }
 }
 
@@ -333,7 +317,7 @@ const convertSvgSelectorToMae = (selector) => {
   if (fullW && fullH) {
     maeTarget.fullCanvaXYWH = `0,0,${fullW},${fullH}`;
     // ratio of area of annotation / full canvas area
-    maeTarget.scale = (xywh.width * xywh.height) / (fullW * fullH);
+    // maeTarget.scale = (xywh.width * xywh.height) / (fullW * fullH);
   }
   return maeTarget;
 }
@@ -366,10 +350,8 @@ const convertIIIFTargetToMae = (target, annotationId) => {
         return convertFragmentSelectorToMae(selector)
       }
     } catch (err) {
-      // console.error (`Error generatig 'maeTarget' from selector type '${selector.type}': ${err.message}`);
     }
   }
-
   // if at the end of the loop, no selector could be processed, log an error and return.
   console.error(`On annotation '${annotationId}': none of the selector types in the annotation are unsupported: ${selectorArray.map(selector => selector.type)}. Supported selectors are: [${supportedSelectorTypes}].`)
   return {}
@@ -386,23 +368,21 @@ export function convertIIIFAnnoToMaeData(anno) {
     try {
       const maeData = {
         target: {},
-        templateType: "",  // AnnotationFormUtils.TEMPLATE
-        tags: [],  // string[]
-        textBody: {}  // expeced keys: purpose, type, value. not used if `templateType === "tagging"`
+        templateType: "",
+        tags: [],
+        textBody: {}
       };
 
-      const [templateType, tags, textBody] = convertIIIFBodyToMae(anno);
+      const [templateType, textBody] = convertIIIFBodyToMae(anno);
       maeData.templateType = templateType;
-      maeData.tags = tags;
       maeData.textBody = textBody;
 
       maeData.target = convertIIIFTargetToMae(anno.target, anno.id);
-      console.log("maeData", maeData);
       anno.maeData = maeData;
       return anno;
 
     } catch (e) {
-      console.error("Error generating ", e);
+      console.error("Error generating maeData from annotation", e);
       return anno;
     }
   }
