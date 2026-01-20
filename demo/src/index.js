@@ -1,14 +1,12 @@
 import Mirador from 'mirador';
 import annotationPlugins from '../../src';
 import LocalStorageAdapter from '../../src/annotationAdapter/LocalStorageAdapter';
-import AiiinotateAdapter from '../../src/annotationAdapter/AiiinotateAdapter';
 
 import { manifestsCatalog } from './manifestsCatalog';
 
 const config = {
   annotation: {
-    // adapter: (canvasId) => new LocalStorageAdapter(`localStorage://?canvasId=${canvasId}`, 'Anonymous User'),
-    adapter: (canvasId) => new AiiinotateAdapter("http://127.0.0.1:4000", 2, canvasId, "anonymous"),
+    adapter: (canvasId) => new LocalStorageAdapter(`localStorage://?canvasId=${canvasId}`, 'Anonymous User'),
     allowTargetShapesStyling: true,
     commentTemplates: [{
       content: '<h4>Comment</h4><p>Comment content</p>',
@@ -72,8 +70,8 @@ const config = {
     sideBarOpenByDefault: true,
   },
   windows: [
-    { manifestId: '    https://iiif.bodleian.ox.ac.uk/iiif/manifest/e32a277e-91e2-4a6d-8ba6-cc4bad230410.json' },
-  ],
+    { manifestId: 'https://iiif.harvardartmuseums.org/manifests/object/299843' }
+  ]
 };
 
 Mirador.viewer(config, [...annotationPlugins]);
