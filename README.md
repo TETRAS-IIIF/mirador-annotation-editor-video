@@ -145,8 +145,13 @@ The contributors of this software are :
   - David Rouquet
   - Anthony Geourjon
   - Antoine Roy
+- Leipzig University
+  - Gerd Muller
+  - fstoe
+- École nationale des ponts et chaussées (enpc.fr)
+   - paulhectork
 
 #### Property
 
 The base of this software (up to V1) is the property of [SATT Ouest Valorisation](https://www.ouest-valorisation.fr/)
-that funded its development under the French public contract AO-MA2023-0004-DV5189.
+that funded its development under the French public contract AO-MA2023-0004-DV5189. After that, developmement has been almost fully supported by Tétras Libre with external contributions.
