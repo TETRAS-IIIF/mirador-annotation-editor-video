@@ -138,10 +138,7 @@ export default class AiiinotateAdapter {
    * @returns {string} the ID of the current annotationPage
    */
   get annotationPageId() {
-    const uriBase = `${this.endpointUrlAnnotations}/search?uri=${this.canvasId}`;
-    return this.iiifPresentationVersion === 2
-      ? `${uriBase}&asAnnotationList=true`
-      : uriBase;
+    return `${this.endpointUrlAnnotations}/search?canvasUri=${this.canvasId}`;
   }
 
   /**
@@ -219,11 +216,19 @@ export default class AiiinotateAdapter {
 
   /** @returns {Promise<object>} an annotationPage (IIIF 3) with all annotations for the current canvas */
   async all() {
-    const r = await fetch(this.annotationPageId);
-    const annotations = await r.json();
+    let annotationArray = [];
+    let nextPage = this.annotationPageId;
+    let r;
+    let rBody;  // annotationList / annotationPage.
+    while ( nextPage && nextPage.length ) {
+      r = await fetch(this.annotationPageId);
+      rBody = await r.json();
+      annotationArray = [ ...annotationArray, ...rBody.resources ];
+      nextPage = rBody.next;
+    }
     const annotationPage = await this.iiifPresentationVersion === 2
-      ? createAnnotationPage(annotations.resources, this.annotationPageId)
-      : annotations;
+      ? createAnnotationPage(annotationArray, this.annotationPageId)
+      : annotationArray;
     annotationPage.items.map(convertIIIFAnnoToMaeData);
     return annotationPage;
   }
