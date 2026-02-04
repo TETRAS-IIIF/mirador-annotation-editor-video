@@ -52,6 +52,7 @@ export const en = {
   metadata: 'Metadata',
   new_annotation: 'New annotation',
   no_annotation: 'No annotations stored yet.',
+  no_content: 'No content',
   note: 'Note',
   object_list: 'Object list',
   onlyOneImageAllowed: 'Only one image is allowed',

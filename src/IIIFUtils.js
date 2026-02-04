@@ -435,3 +435,22 @@ export function createAnnotationPage(v2annos, annotationPageId) {
   }
   return v2annos;
 }
+
+/**
+ * Checks if a value is empty or contains only whitespace/HTML tags
+ * @param {string} value - The string value to check
+ * @returns {boolean} True if the value is empty, undefined, or contains only HTML tags/whitespace
+ * @example
+ * isEmptyValue('') // true
+ * isEmptyValue('<p></p>') // true
+ * isEmptyValue('<p><br></p>') // true
+ * isEmptyValue('<p>  </p>') // true
+ * isEmptyValue('<p>Hello</p>') // false
+ */
+export const isEmptyValue = (value) => {
+  if (!value) return true;
+  const trimmed = value.trim();
+  if (trimmed === '') return true;
+  const withoutTags = trimmed.replace(/<[^>]*>/g, '').trim();
+  return withoutTags === '';
+};

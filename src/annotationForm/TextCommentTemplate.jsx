@@ -8,7 +8,11 @@ import AnnotationFormFooter from './AnnotationFormFooter';
 import { TEMPLATE } from './AnnotationFormUtils';
 import { resizeKonvaStage } from './AnnotationFormOverlay/KonvaDrawing/KonvaUtils';
 
-const DEFAULT_BODY_VALUE = 'Annotation';
+const DEFAULT_BODY_VALUE = {
+  id: uuid(),
+  type: 'TextualBody',
+  value: `No content, ${Date.now()}`,
+};
 
 /** Form part for edit annotation content and body */
 function TextCommentTemplate(
@@ -75,7 +79,7 @@ function TextCommentTemplate(
       playerReferences.getMediaTrueHeight(),
       1 / playerReferences.getScale(),
     );
-    if (annotationState.body.value === '') {
+    if (annotationState.body.value === undefined) {
       annotationState.body.value = DEFAULT_BODY_VALUE;
     }
     saveAnnotation(annotationState);

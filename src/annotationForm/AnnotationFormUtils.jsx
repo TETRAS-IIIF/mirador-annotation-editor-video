@@ -172,6 +172,7 @@ export async function saveAnnotationInStorageAdapter(
       if (annotation?.maeData?.manifestNetwork) {
         // Ugly tricks to solve manifest template annotation issue on creation
         // For more see NetworkCommentTemplate:saveFunction
+        // eslint-disable-next-line no-param-reassign
         annotation.id = `${annotation.id}#${annotation.maeData.manifestNetwork}`;
       }
       console.log('Annotation to create', annotation);
@@ -180,21 +181,21 @@ export async function saveAnnotationInStorageAdapter(
           receiveAnnotation(canvasId, storageAdapter.annotationPageId, annoPage);
         });
     }
+    // eslint-disable-next-line brace-style
   }
   // We are in IIIF template mode, so we just save the annotation as is
-  else {
-    if (annotation.id) {
-      storageAdapter.update(annotation)
-        .then((annoPage) => {
-          receiveAnnotation(canvasId, storageAdapter.annotationPageId, annoPage);
-        });
-    } else {
-      annotation.id = `${canvasId}/annotation/${uuidv4()}`;
-      storageAdapter.create(annotation)
-        .then((annoPage) => {
-          receiveAnnotation(canvasId, storageAdapter.annotationPageId, annoPage);
-        });
-    }
+  else if (annotation.id) {
+    storageAdapter.update(annotation)
+      .then((annoPage) => {
+        receiveAnnotation(canvasId, storageAdapter.annotationPageId, annoPage);
+      });
+  } else {
+    // eslint-disable-next-line no-param-reassign
+    annotation.id = `${canvasId}/annotation/${uuidv4()}`;
+    storageAdapter.create(annotation)
+      .then((annoPage) => {
+        receiveAnnotation(canvasId, storageAdapter.annotationPageId, annoPage);
+      });
   }
 }
 

@@ -2,14 +2,12 @@ import React, { useEffect, useReducer, useState } from 'react';
 import { ConnectedCompanionWindow } from 'mirador';
 import PropTypes from 'prop-types';
 import { Grid } from '@mui/material';
-import { useTranslation, withTranslation } from 'react-i18next';
-import Typography from '@mui/material/Typography';
-import i18n from 'i18next';
+import { useTranslation } from 'react-i18next';
+import { isEmptyValue, convertAnnotationStateToBeSaved } from '../IIIFUtils';
 import AnnotationFormTemplateSelector from './AnnotationFormTemplateSelector';
 import { getTemplateType, saveAnnotationInStorageAdapter, TEMPLATE } from './AnnotationFormUtils';
 import AnnotationFormHeader from './AnnotationFormHeader';
 import AnnotationFormBody from './AnnotationFormBody';
-import { convertAnnotationStateToBeSaved } from '../IIIFUtils';
 import '../custom.css';
 import UnsupportedMedia from './UnsupportedMedia';
 
@@ -37,6 +35,12 @@ function AnnotationForm(
   const [retryCount, setRetryCount] = useState(0);
 
   const [, forceUpdate] = useReducer((x) => x + 1, 0);
+
+  /**
+   * Generates the default body value for empty annotations
+   * @returns {string} HTML string with translated "No content" message and current timestamp
+   */
+  const getDefaultBodyValue = () => `<p><em>${t('no_content')}, ${new Date().toLocaleString()}</em></p>`;
 
   if (!playerReferences.isInitializedCorrectly() && retryCount < 10) {
     console.log('AnnotationForm.js: retryCount', retryCount);
@@ -67,6 +71,7 @@ function AnnotationForm(
   useEffect(() => {
     setTemplateType(null);
     setMediaType(playerReferences.getMediaType());
+    // eslint-disable-next-line react/prop-types
   }, [canvases[0].index]);
 
   // Listen to window resize event
@@ -112,21 +117,42 @@ function AnnotationForm(
 
   /**
    * Save the annotation
-   * @param annotationState
+   * @param {Object} annotationState - The annotation state to save
+   * @returns {Promise} Promise that resolves when all annotations are saved
    */
   const saveAnnotation = (annotationState) => {
+    const annotationProps = annotationState;
+    const defaultBodyValue = getDefaultBodyValue();
+
+    if (annotationProps.body && annotationProps.body.length > 0) {
+      if (isEmptyValue(annotationProps.body[0].value)) {
+        annotationProps.body[0].value = defaultBodyValue;
+      }
+    } else {
+      annotationProps.body = [{
+        purpose: 'describing',
+        type: 'TextualBody',
+        value: defaultBodyValue,
+      }];
+    }
+    if (annotationProps.maeData?.textBody) {
+      if (isEmptyValue(annotationProps.maeData.textBody.value)) {
+        annotationProps.maeData.textBody.value = defaultBodyValue;
+      }
+    }
+
     const promises = playerReferences.getCanvases()
       .map(async (canvas) => {
         let annotationStateToBeSaved;
-        if (annotationState?.maeData && annotationState.maeData.templateType) {
+        if (annotationProps?.maeData && annotationProps.maeData.templateType) {
           annotationStateToBeSaved = await convertAnnotationStateToBeSaved(
-            annotationState,
+            annotationProps,
             canvas,
             windowId,
             playerReferences,
           );
         } else {
-          annotationStateToBeSaved = annotationState;
+          annotationStateToBeSaved = annotationProps;
         }
         const storageAdapter = config.annotation.adapter(canvas.id);
         return saveAnnotationInStorageAdapter(
@@ -137,12 +163,11 @@ function AnnotationForm(
         );
       });
 
-    Promise.all(promises)
+    return Promise.all(promises)
       .then(() => {
         closeFormCompanionWindow();
       });
   };
-
   return (
     <ConnectedCompanionWindow
       title={annotation.id ? t('edit_annotation') : t('new_annotation')}
@@ -209,7 +234,7 @@ AnnotationForm.propTypes = {
       adapter: PropTypes.func,
       debug: PropTypes.bool,
       defaults: PropTypes.objectOf(
-        PropTypes.oneOfType([PropTypes.bool, PropTypes.func, PropTypes.number, PropTypes.string])
+        PropTypes.oneOfType([PropTypes.bool, PropTypes.func, PropTypes.number, PropTypes.string]),
       ),
     }),
     language: PropTypes.string,
