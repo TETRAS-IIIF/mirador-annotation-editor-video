@@ -122,24 +122,6 @@ function AnnotationForm(
    */
   const saveAnnotation = (annotationState) => {
     const annotationProps = annotationState;
-    const defaultBodyValue = getDefaultBodyValue();
-
-    if (annotationProps.body && annotationProps.body.length > 0) {
-      if (isEmptyValue(annotationProps.body[0].value)) {
-        annotationProps.body[0].value = defaultBodyValue;
-      }
-    } else {
-      annotationProps.body = [{
-        purpose: 'describing',
-        type: 'TextualBody',
-        value: defaultBodyValue,
-      }];
-    }
-    if (annotationProps.maeData?.textBody) {
-      if (isEmptyValue(annotationProps.maeData.textBody.value)) {
-        annotationProps.maeData.textBody.value = defaultBodyValue;
-      }
-    }
 
     const promises = playerReferences.getCanvases()
       .map(async (canvas) => {

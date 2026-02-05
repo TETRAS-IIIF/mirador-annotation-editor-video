@@ -140,6 +140,44 @@ export const getIIIFTargetFromMaeData = (
 };
 
 /**
+ * Checks if a value is empty or contains only whitespace/HTML tags
+ * @param {string} value - The string value to check
+ * @returns {boolean} True if the value is empty, undefined, or contains only HTML tags/whitespace
+ * @example
+ * isEmptyValue('') // true
+ * isEmptyValue('<p></p>') // true
+ * isEmptyValue('<p><br></p>') // true
+ * isEmptyValue('<p>  </p>') // true
+ * isEmptyValue('<p>Hello</p>') // false
+ */
+export const isEmptyValue = (value) => {
+  if (!value) return true;
+  const trimmed = value.trim();
+  if (trimmed === '') return true;
+  const withoutTags = trimmed.replace(/<[^>]*>/g, '').trim();
+  return withoutTags === '';
+};
+
+/**
+ * Generates a default HTML body for empty annotations.
+ *
+ * The body contains an emphasized "No content" message
+ * along with the current local timestamp.
+ *
+ * @returns {string} HTML string used as a fallback annotation body
+ */
+const getDefaultHtmlBodyValue = () => `<p><em>No content, ${new Date().toLocaleString()}</em></p>`;
+
+/**
+ * Generates a default HTML body for empty annotations.
+ *
+ * The body contains an emphasized "No content" message
+ * along with the current local timestamp.
+ *
+ * @returns {string} HTML string used as a fallback annotation body
+ */
+const getDefaultTagValue = () => `No content, ${new Date().toLocaleString()}`;
+/**
  * Convert annotation state to be saved. Function change the annotationState object
  * @param annotationState
  * @param canvas
@@ -154,12 +192,43 @@ export const convertAnnotationStateToBeSaved = async (
   playerReferences,
 ) => {
   const annotationStateForSaving = annotationState;
+  const htmlDefault = getDefaultHtmlBodyValue();
+  const tagDefault = getDefaultTagValue();
 
-  if (annotationState.maeData.templateType === TEMPLATE.IIIF_TYPE) {
-    return annotationState;
+  if (annotationStateForSaving.maeData?.templateType === TEMPLATE.TAGGING_TYPE) {
+    if (
+      annotationStateForSaving.body?.type === 'Image'
+        && isEmptyValue(annotationStateForSaving.body.value)
+    ) {
+      annotationStateForSaving.body.value = tagDefault;
+    }
+
+    return annotationStateForSaving;
   }
 
-  // TODO I dont know why this code is here? To clean the object ?
+  if (
+    annotationStateForSaving.body
+      && !Array.isArray(annotationStateForSaving.body)
+      && annotationStateForSaving.body.type === 'TextualBody'
+      && isEmptyValue(annotationStateForSaving.body.value)
+  ) {
+    annotationStateForSaving.body.value = htmlDefault;
+  }
+
+  if (
+    Array.isArray(annotationStateForSaving.body)
+      && annotationStateForSaving.body[0]?.type === 'TextualBody'
+      && isEmptyValue(annotationStateForSaving.body[0].value)
+  ) {
+    annotationStateForSaving.body[0].value = htmlDefault;
+  }
+
+  if (
+    annotationStateForSaving.maeData?.textBody
+      && isEmptyValue(annotationStateForSaving.maeData.textBody.value)
+  ) {
+    annotationStateForSaving.maeData.textBody.value = htmlDefault;
+  }
   annotationStateForSaving.maeData.target = {
     drawingState: annotationStateForSaving.maeData.target.drawingState,
     fullCanvaXYWH: annotationStateForSaving.maeData.target.fullCanvaXYWH,
@@ -168,25 +237,26 @@ export const convertAnnotationStateToBeSaved = async (
     tstart: annotationStateForSaving.maeData.target.tstart,
   };
 
-  console.info('Annotation state target', annotationState.maeData.target);
-
-  if (annotationStateForSaving.maeData.templateType === TEMPLATE.TAGGING_TYPE
-    || annotationStateForSaving.maeData.templateType === TEMPLATE.TEXT_TYPE
-    || annotationStateForSaving.maeData.templateType === TEMPLATE.MULTIPLE_BODY_TYPE) {
-    // Complex annotation
+  if (
+    annotationStateForSaving.maeData.templateType === TEMPLATE.TAGGING_TYPE
+      || annotationStateForSaving.maeData.templateType === TEMPLATE.TEXT_TYPE
+      || annotationStateForSaving.maeData.templateType === TEMPLATE.MULTIPLE_BODY_TYPE
+  ) {
     if (annotationStateForSaving.maeData.target.drawingState.shapes.length > 0) {
       annotationStateForSaving.maeData.target.svg = await getSvg(windowId);
     }
   }
 
   if (annotationStateForSaving.maeData.templateType === TEMPLATE.MULTIPLE_BODY_TYPE) {
-    annotationStateForSaving.body = [annotationState.maeData.textBody];
-    annotationStateForSaving.body.push(...annotationState.maeData.tags.map((tag) => ({
-      id: tag.value,
-      purpose: 'tagging',
-      type: 'TextualBody',
-      value: tag.value,
-    })));
+    annotationStateForSaving.body = [
+      annotationStateForSaving.maeData.textBody,
+      ...annotationStateForSaving.maeData.tags.map((tag) => ({
+        id: tag.value,
+        purpose: 'tagging',
+        type: 'TextualBody',
+        value: tag.value,
+      })),
+    ];
   }
 
   if (isAnnotationExportableToImage(annotationStateForSaving.maeData)) {
@@ -195,9 +265,9 @@ export const convertAnnotationStateToBeSaved = async (
     annotationStateForSaving.type = 'Annotation';
   }
 
-  // TODO Always relevant ?
   annotationStateForSaving.maeData.target.scale = playerReferences.getMediaTrueHeight()
-    / playerReferences.getDisplayedMediaHeight() * playerReferences.getZoom();
+      / playerReferences.getDisplayedMediaHeight()
+      * playerReferences.getZoom();
 
   annotationStateForSaving.target = getIIIFTargetFromMaeData(
     annotationStateForSaving.maeData,
@@ -286,7 +356,7 @@ export function createV2Anno(v3anno) {
   }
   // v3anno.target can be either a string or an object =>
   // if it's an object, extract it.
-  if (typeof v3anno.target === "object" && !Array.isArray(v3anno.target) && v3anno.target !== null) {
+  if (typeof v3anno.target === 'object' && !Array.isArray(v3anno.target) && v3anno.target !== null) {
     v2anno.on = {
       '@type': 'oa:SpecificResource',
       full:
@@ -295,7 +365,7 @@ export function createV2Anno(v3anno) {
         // `target` has an id
         || v3anno.target.id
         // `target` is an object and `target.source` is a string
-        || v3anno.target.source
+        || v3anno.target.source,
     };
   // if v3anno.target is a string, don't process it
   } else {
@@ -435,22 +505,3 @@ export function createAnnotationPage(v2annos, annotationPageId) {
   }
   return v2annos;
 }
-
-/**
- * Checks if a value is empty or contains only whitespace/HTML tags
- * @param {string} value - The string value to check
- * @returns {boolean} True if the value is empty, undefined, or contains only HTML tags/whitespace
- * @example
- * isEmptyValue('') // true
- * isEmptyValue('<p></p>') // true
- * isEmptyValue('<p><br></p>') // true
- * isEmptyValue('<p>  </p>') // true
- * isEmptyValue('<p>Hello</p>') // false
- */
-export const isEmptyValue = (value) => {
-  if (!value) return true;
-  const trimmed = value.trim();
-  if (trimmed === '') return true;
-  const withoutTags = trimmed.replace(/<[^>]*>/g, '').trim();
-  return withoutTags === '';
-};
