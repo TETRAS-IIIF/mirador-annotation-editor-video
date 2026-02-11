@@ -70,8 +70,8 @@ const config = {
     sideBarOpenByDefault: true,
   },
   windows: [
-    { manifestId: ' https://iiif.harvardartmuseums.org/manifests/object/299843' },
-  ],
+    { manifestId: 'https://iiif.harvardartmuseums.org/manifests/object/299843' }
+  ]
 };
 
 Mirador.viewer(config, [...annotationPlugins]);
