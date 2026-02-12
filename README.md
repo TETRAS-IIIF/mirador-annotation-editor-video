@@ -1,6 +1,6 @@
 # Mirador Annotation Editor - Apache edition
 
-[Online demos](https://tetras-iiif.github.io/mirador-annotation-editor/)
+[Online demos](https://tetras-iiif.github.io/mirador-annotation-editor/), [Roadmap](https://github.com/TETRAS-IIIF/.github/blob/main/profile/ROADMAP.md)
 
 ## Presentation
 
