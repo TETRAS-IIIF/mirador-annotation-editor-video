@@ -244,6 +244,27 @@ export default function AnnotationDrawing(
     });
   };
 
+  /**
+   * Determines the cursor style based on the active tool.
+   * @param {string} activeTool - The currently active tool.
+   * @returns {string} The cursor CSS value.
+   */
+  const getCursorStyle = (activeTool) => {
+    const crosshairTools = [
+      SHAPES_TOOL.RECTANGLE,
+      SHAPES_TOOL.CIRCLE,
+      SHAPES_TOOL.ELLIPSE,
+      SHAPES_TOOL.POLYGON,
+      SHAPES_TOOL.ARROW,
+      SHAPES_TOOL.FREEHAND,
+    ];
+
+    if (crosshairTools.includes(activeTool)) {
+      return 'crosshair';
+    }
+    return 'default';
+  };
+
   /** */
   const handleMouseDown = (e) => {
     try {
@@ -540,6 +561,7 @@ export default function AnnotationDrawing(
       width={playerReferences.getDisplayedMediaWidth()}
       height={playerReferences.getDisplayedMediaHeight()}
       style={{
+        cursor: getCursorStyle(toolState.activeTool),
         height: 'auto',
         left: playerReferences.getImagePosition().x,
         objectFit: 'contain',
