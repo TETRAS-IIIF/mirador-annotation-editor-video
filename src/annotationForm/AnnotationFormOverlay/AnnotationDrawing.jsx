@@ -552,6 +552,20 @@ export default function AnnotationDrawing(
         ...drawingState,
         isDrawing: false,
       });
+
+      // Auto-switch to Edit mode for rectangle, circle, and ellipse
+      const autoSwitchTools = [
+        SHAPES_TOOL.RECTANGLE,
+        SHAPES_TOOL.CIRCLE,
+        SHAPES_TOOL.ELLIPSE,
+      ];
+
+      if (autoSwitchTools.includes(toolState.activeTool)) {
+        setToolState({
+          ...toolState,
+          activeTool: OVERLAY_TOOL.EDIT,
+        });
+      }
     }
   };
 
