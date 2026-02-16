@@ -96,7 +96,7 @@ npm start
 ## Use MAE with video annotation support
 - If you need video annotation, you can use 
 [our fork of Mirador: mirador-video](https://github.com/Tetras-IIIF/mirador-video)
-- In addition, we have developed an extended versionto support video annotation. This plugin is called **MAEV** and is
+- In addition, we have developed an extended version to support video annotation. This plugin is called **MAEV** and is
 available in the [mirador-annotation-editor-video](https://github.com/Tetras-IIIF/mirador-annotation-editor-video)
 repository.
 
@@ -154,4 +154,4 @@ The contributors of this software are :
 #### Property
 
 The base of this software (up to V1) is the property of [SATT Ouest Valorisation](https://www.ouest-valorisation.fr/)
-that funded its development under the French public contract AO-MA2023-0004-DV5189. After that, developmement has been almost fully supported by Tétras Libre with external contributions.
+that funded its development under the French public contract AO-MA2023-0004-DV5189. After that, development has been almost fully supported by Tétras Libre with external contributions.
