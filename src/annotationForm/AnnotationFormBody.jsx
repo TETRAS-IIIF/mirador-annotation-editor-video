@@ -12,6 +12,7 @@ import IIIFTemplate from './IIIFTemplate';
 import MultipleBodyTemplate from './MultipleBodyTemplate';
 import { DebugInformation } from './DebugInformation';
 import { TEMPLATE } from './AnnotationFormUtils';
+import AITemplate from './AITemplate';
 
 /**
  * This function contain the logic for loading annotation and render proper template type
@@ -73,6 +74,18 @@ export default function AnnotationFormBody(
         {
           templateType.id === TEMPLATE.IIIF_TYPE && (
             <IIIFTemplate
+              annotation={annotation}
+              canvases={canvases}
+              closeFormCompanionWindow={closeFormCompanionWindow}
+              playerReferences={playerReferences}
+              saveAnnotation={saveAnnotation}
+              t={t}
+            />
+          )
+        }
+        {
+          templateType.id === TEMPLATE.AI && (
+            <AITemplate
               annotation={annotation}
               canvases={canvases}
               closeFormCompanionWindow={closeFormCompanionWindow}

@@ -9,7 +9,7 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { OVERLAY_TOOL } from './AnnotationFormOverlay/KonvaDrawing/KonvaUtils';
 
 export const TEMPLATE = {
-  IA: 'ia',
+  AI: 'ai',
   IIIF_TYPE: 'iiif',
   MULTIPLE_BODY_TYPE: 'multiple_body',
   TAGGING_TYPE: 'tagging',
@@ -61,7 +61,7 @@ export const TEMPLATE_TYPES = (t) => [
   {
     description: t('ai_comment'),
     icon: <AutoAwesomeIcon fontSize="small" />,
-    id: TEMPLATE.IA,
+    id: TEMPLATE.AI,
     isCompatibleWithTemplate: (mediaType) => {
       if (mediaType === MEDIA_TYPES.IMAGE) return true;
       return false;

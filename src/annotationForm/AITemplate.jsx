@@ -1,0 +1,288 @@
+import React, { useState, useRef, useEffect } from 'react';
+import PropTypes from 'prop-types';
+import {
+  Paper,
+  Box,
+  TextField,
+  IconButton,
+  Typography,
+  Avatar,
+  Divider,
+  CircularProgress,
+} from '@mui/material';
+import SendIcon from '@mui/icons-material/Send';
+import SmartToyOutlinedIcon from '@mui/icons-material/SmartToyOutlined';
+import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
+import AnnotationFormFooter from './AnnotationFormFooter';
+/**
+ * @typedef {Object} ChatMessage
+ * @property {string} id
+ * @property {'user' | 'assistant' | 'system'} role
+ * @property {string} content
+ */
+/**
+ * AITemplate Component
+ *
+ * Renders an AI-assisted chat interface for creating or refining IIIF annotations.
+ * It displays a conversation history between the user and an assistant, handling
+ * real-time input and displaying JSON-formatted responses.
+ *
+ * @param {object} props - The component props
+ * @param {object} props.annotation
+ * - The initial annotation object (contains body, target, motivation, etc.).
+ * @param {Array<object>} props.canvases
+ * - An array of IIIF Canvas objects associated with the current view.
+ * @param {Function} props.closeFormCompanionWindow
+ * - Callback function to close the companion window.
+ * @param {Function} props.saveAnnotation - Callback function to save changes to the annotation.
+ *                                          Signature: (annotationData, target) => void.
+ * @param {Function} props.t - Internationalization translation function.
+ *
+ * @returns {JSX.Element} The rendered chat interface and form footer.
+ */
+export default function AITemplate({
+  annotation,
+  canvases,
+  closeFormCompanionWindow,
+  saveAnnotation,
+  t,
+}) {
+  const [annotationState] = useState(annotation);
+  const [input, setInput] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const messagesEndRef = useRef(null);
+
+  /** @type {[ChatMessage[], Function]} */
+  const [conversation, setConversation] = useState([
+    {
+      content: 'What is a IIIF manifest?',
+      id: Date.now().toString(),
+      role: 'user',
+    },
+    {
+      content: 'A IIIF manifest is a JSON-LD document that describes a digital object...',
+      id: Date.now().toString(),
+      role: 'assistant',
+    },
+    {
+      content: 'Can you give me an example?',
+      id: Date.now().toString(),
+      role: 'user',
+    },
+    {
+      content: `Here's a simple example of a IIIF manifest:
+{
+  "@context": "http://iiif.io/api/presentation/3/context.json",
+  "id": "https://example.org/iiif/book1/manifest",
+  "type": "Manifest"
+}
+
+This is a IIIF Presentation API 3.0 manifest.`,
+      id: Date.now().toString(),
+      role: 'assistant',
+    },
+  ]);
+
+  // Scroll to bottom when conversation updates
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [conversation]);
+  /**
+   * Handles the submission of a user message.
+   *
+   * This function performs the following actions:
+   * 1. Validates the input to prevent sending empty messages.
+   * 2. Optimistically updates the `conversation` state to show the user's message immediately.
+   * 3. Clears the `input` field and sets `isLoading` to true.
+   * 4. Initiates the API request (currently simulated with setTimeout).
+   *
+   * @returns {void}
+   */
+  const handleSend = () => {
+    if (!input.trim()) return;
+
+    const newMsg = {
+      content: input,
+      id: Date.now().toString(),
+      role: 'user',
+    };
+
+    setConversation((prev) => [...prev, newMsg]);
+    setInput('');
+    setIsLoading(true);
+
+    setTimeout(() => {
+      setIsLoading(false);
+      const aiResponse = {
+        content: 'I have received your message.',
+        id: (Date.now() + 1).toString(),
+        role: 'assistant',
+      };
+      setConversation((prev) => [...prev, aiResponse]);
+    }, 1000);
+  };
+
+  return (
+    <>
+      <Paper
+        elevation={0}
+        sx={{
+          bgcolor: 'background.paper',
+          border: '1px solid',
+          borderColor: 'divider',
+          borderRadius: 2,
+          display: 'flex',
+          flexDirection: 'column',
+          height: '700px',
+          mb: 2,
+          overflow: 'hidden',
+        }}
+      >
+        <Box sx={{
+          alignItems: 'center',
+          bgcolor: 'primary.main',
+          boxShadow: 1,
+          color: 'primary.contrastText',
+          display: 'flex',
+          gap: 1.5,
+          p: 2,
+        }}
+        >
+          <SmartToyOutlinedIcon />
+          <Typography variant="subtitle1" fontWeight="600">
+            AI Assistant
+          </Typography>
+        </Box>
+
+        <Box sx={{
+          bgcolor: '#f8f9fa',
+          display: 'flex',
+          flexDirection: 'column',
+          flexGrow: 1,
+          gap: 2,
+          overflowY: 'auto',
+          p: 2,
+        }}
+        >
+          {conversation.map((msg) => {
+            const isAi = msg.role === 'assistant';
+
+            return (
+              <Box
+                key={msg.id}
+                sx={{
+                  alignItems: 'flex-end',
+                  alignSelf: isAi ? 'flex-start' : 'flex-end',
+                  display: 'flex',
+                  flexDirection: isAi ? 'row' : 'row-reverse',
+                  gap: 1,
+                  maxWidth: '100%',
+                }}
+              >
+                <Avatar
+                  sx={{
+                    bgcolor: isAi ? 'secondary.main' : 'primary.dark',
+                    fontSize: '1rem',
+                    height: 32,
+                    width: 32,
+                  }}
+                >
+                  {isAi ? <SmartToyOutlinedIcon fontSize="inherit" /> : <PersonOutlineIcon fontSize="inherit" />}
+                </Avatar>
+
+                <Paper
+                  elevation={isAi ? 1 : 0}
+                  sx={{
+                    bgcolor: isAi ? 'white' : 'primary.main',
+                    border: isAi ? '1px solid #e0e0e0' : 'none',
+                    borderRadius: isAi
+                      ? '18px 18px 18px 4px'
+                      : '18px 18px 4px 18px',
+                    color: isAi ? 'text.primary' : 'primary.contrastText',
+                    p: 1.5,
+                  }}
+                >
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      fontFamily: isAi && msg.content.includes('{') ? 'monospace' : 'inherit',
+                      whiteSpace: 'pre-wrap',
+                      wordBreak: 'break-word',
+                    }}
+                  >
+                    {msg.content}
+                  </Typography>
+                </Paper>
+              </Box>
+            );
+          })}
+
+          {isLoading && (
+            <Box sx={{
+              alignItems: 'center',
+              display: 'flex',
+              gap: 1,
+              ml: 1,
+              mt: 1,
+            }}
+            >
+              <CircularProgress size={16} />
+              <Typography variant="caption" color="text.secondary">Generating...</Typography>
+            </Box>
+          )}
+
+          <div ref={messagesEndRef} />
+        </Box>
+
+        <Divider />
+
+        <Box sx={{ bgcolor: 'background.paper', p: 2 }}>
+          <TextField
+            fullWidth
+            placeholder="Type a message..."
+            variant="outlined"
+            size="small"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                handleSend();
+              }
+            }}
+            slotProps={{
+              input: {
+                endAdornment: (
+                  <IconButton
+                    color="primary"
+                    onClick={handleSend}
+                    disabled={!input.trim()}
+                  >
+                    <SendIcon />
+                  </IconButton>
+                ),
+                sx: { borderRadius: 6, pr: 0.5 },
+              },
+            }}
+          />
+        </Box>
+      </Paper>
+
+      <AnnotationFormFooter
+        closeFormCompanionWindow={closeFormCompanionWindow}
+        saveAnnotation={() => saveAnnotation(annotationState.newData, annotation.target)}
+        t={t}
+        annotationState={annotationState}
+      />
+    </>
+  );
+}
+
+AITemplate.propTypes = {
+  // eslint-disable-next-line react/forbid-prop-types
+  annotation: PropTypes.object.isRequired,
+  canvases: PropTypes.arrayOf(PropTypes.object).isRequired,
+  closeFormCompanionWindow: PropTypes.func.isRequired,
+  saveAnnotation: PropTypes.func.isRequired,
+  t: PropTypes.func.isRequired,
+};
