@@ -1,6 +1,7 @@
 import TextFieldsIcon from '@mui/icons-material/TextFields';
 import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 import DataObjectIcon from '@mui/icons-material/DataObject';
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import React from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { styled } from '@mui/material/styles';
@@ -8,6 +9,7 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { OVERLAY_TOOL } from './AnnotationFormOverlay/KonvaDrawing/KonvaUtils';
 
 export const TEMPLATE = {
+  IA: 'ia',
   IIIF_TYPE: 'iiif',
   MULTIPLE_BODY_TYPE: 'multiple_body',
   TAGGING_TYPE: 'tagging',
@@ -21,12 +23,6 @@ export const MEDIA_TYPES = {
   UNKNOWN: 'Unknown',
   VIDEO: 'Video',
 };
-
-/** Return template type * */
-export const getTemplateType = (t, templateType) => TEMPLATE_TYPES(t)
-  .find(
-    (type) => type.id === templateType,
-  );
 
 /**
  * List of the template types supported
@@ -62,6 +58,16 @@ export const TEMPLATE_TYPES = (t) => [
     },
     label: t('expert_mode'),
   },
+  {
+    description: t('ai_comment'),
+    icon: <AutoAwesomeIcon fontSize="small" />,
+    id: TEMPLATE.IA,
+    isCompatibleWithTemplate: (mediaType) => {
+      if (mediaType === MEDIA_TYPES.IMAGE) return true;
+      return false;
+    },
+    label: t('ai'),
+  },
 ];
 export const DEFAULT_TOOL_STATE = {
   activeTool: OVERLAY_TOOL.SHAPE,
@@ -82,6 +88,12 @@ export const IMAGE_TOOL_STATE = {
   strokeColor: 'rgba(20,82,168,1)',
   strokeWidth: 2,
 };
+
+/** Return template type * */
+export const getTemplateType = (t, templateType) => TEMPLATE_TYPES(t)
+  .find(
+    (type) => type.id === templateType,
+  );
 
 /**
  * Specific Tool state for the target SVG
@@ -182,19 +194,17 @@ export async function saveAnnotationInStorageAdapter(
     }
   }
   // We are in IIIF template mode, so we just save the annotation as is
-  else {
-    if (annotation.id) {
-      storageAdapter.update(annotation)
-        .then((annoPage) => {
-          receiveAnnotation(canvasId, storageAdapter.annotationPageId, annoPage);
-        });
-    } else {
-      annotation.id = `${canvasId}/annotation/${uuidv4()}`;
-      storageAdapter.create(annotation)
-        .then((annoPage) => {
-          receiveAnnotation(canvasId, storageAdapter.annotationPageId, annoPage);
-        });
-    }
+  else if (annotation.id) {
+    storageAdapter.update(annotation)
+      .then((annoPage) => {
+        receiveAnnotation(canvasId, storageAdapter.annotationPageId, annoPage);
+      });
+  } else {
+    annotation.id = `${canvasId}/annotation/${uuidv4()}`;
+    storageAdapter.create(annotation)
+      .then((annoPage) => {
+        receiveAnnotation(canvasId, storageAdapter.annotationPageId, annoPage);
+      });
   }
 }
 
