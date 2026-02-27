@@ -27,6 +27,9 @@ const config = {
   catalog: manifestsCatalog,
   id: 'demo',
   language: 'en',
+  llm: {
+    endpoint: 'http://localhost:8000/chat',
+  },
   themes: {
     dark: {
       typography: {

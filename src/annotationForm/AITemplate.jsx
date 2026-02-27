@@ -1,4 +1,6 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, {
+  useState, useRef, useEffect, useMemo,
+} from 'react';
 import PropTypes from 'prop-types';
 import {
   Paper,
@@ -13,7 +15,10 @@ import {
 import SendIcon from '@mui/icons-material/Send';
 import SmartToyOutlinedIcon from '@mui/icons-material/SmartToyOutlined';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
+import { useSelector } from 'react-redux';
 import AnnotationFormFooter from './AnnotationFormFooter';
+import LLMServiceAdapter from '../annotationAdapter/LLMServiceAdapter';
+import LLMApiService from '../annotationAdapter/LLMApiService';
 /**
  * @typedef {Object} ChatMessage
  * @property {string} id
@@ -47,41 +52,48 @@ export default function AITemplate({
   saveAnnotation,
   t,
 }) {
+  const config = useSelector((state) => state.config);
   const [annotationState] = useState(annotation);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef(null);
+  const [conversationId, setConversationId] = useState(null);
+  const [conversation, setConversation] = useState([]);
 
-  /** @type {[ChatMessage[], Function]} */
-  const [conversation, setConversation] = useState([
-    {
-      content: 'What is a IIIF manifest?',
-      id: Date.now().toString(),
-      role: 'user',
-    },
-    {
-      content: 'A IIIF manifest is a JSON-LD document that describes a digital object...',
-      id: Date.now().toString(),
-      role: 'assistant',
-    },
-    {
-      content: 'Can you give me an example?',
-      id: Date.now().toString(),
-      role: 'user',
-    },
-    {
-      content: `Here's a simple example of a IIIF manifest:
-{
-  "@context": "http://iiif.io/api/presentation/3/context.json",
-  "id": "https://example.org/iiif/book1/manifest",
-  "type": "Manifest"
-}
+  const conversationService = useMemo(
+    () => new LLMServiceAdapter(),
+    [],
+  );
 
-This is a IIIF Presentation API 3.0 manifest.`,
-      id: Date.now().toString(),
-      role: 'assistant',
-    },
-  ]);
+  const llmApi = useMemo(
+    () => new LLMApiService(config.llm.endpoint),
+    [config.llm.endpoint],
+  );
+
+  useEffect(() => {
+    if (!canvases?.length) return;
+
+    const canvasId = canvases[0].id;
+    const storageKey = `canvas-${canvasId}`;
+
+    const conv = conversationService.getConversation(storageKey);
+
+    if (!conv) {
+      conversationService.data[storageKey] = {
+        activeLeafId: null,
+        id: storageKey,
+        messages: {},
+        rootMessageId: null,
+      };
+      // eslint-disable-next-line no-underscore-dangle
+      conversationService._save();
+    }
+
+    setConversationId(storageKey);
+
+    const branch = conversationService.getActiveBranch(storageKey) || [];
+    setConversation(branch);
+  }, [canvases]);
 
   // Scroll to bottom when conversation updates
   useEffect(() => {
@@ -98,28 +110,49 @@ This is a IIIF Presentation API 3.0 manifest.`,
    *
    * @returns {void}
    */
-  const handleSend = () => {
-    if (!input.trim()) return;
+  const handleSend = async () => {
+    if (!input.trim() || !conversationId) return;
 
-    const newMsg = {
-      content: input,
-      id: Date.now().toString(),
-      role: 'user',
-    };
-
-    setConversation((prev) => [...prev, newMsg]);
-    setInput('');
     setIsLoading(true);
 
-    setTimeout(() => {
-      setIsLoading(false);
-      const aiResponse = {
-        content: 'I have received your message.',
-        id: (Date.now() + 1).toString(),
-        role: 'assistant',
-      };
-      setConversation((prev) => [...prev, aiResponse]);
-    }, 1000);
+    const conv = conversationService.getConversation(conversationId);
+    const parentId = conv?.activeLeafId || null;
+
+    const userMessageId = conversationService.addMessage(
+      conversationId,
+      'user',
+      input,
+      parentId,
+    );
+
+    const updatedBranch = conversationService.getActiveBranch(conversationId);
+    setConversation(updatedBranch);
+    setInput('');
+
+    try {
+      const formatted = updatedBranch.map((m) => ({
+        content: m.content,
+        role: m.role,
+      }));
+
+      const reply = await llmApi.callLLM(formatted);
+
+      const assistantMessage = reply.conversation[reply.conversation.length - 1].content;
+
+      conversationService.addMessage(
+        conversationId,
+        'assistant',
+        assistantMessage,
+        userMessageId,
+      );
+
+      const finalBranch = conversationService.getActiveBranch(conversationId);
+      setConversation(finalBranch);
+    } catch (err) {
+      console.error(err);
+    }
+
+    setIsLoading(false);
   };
 
   return (
