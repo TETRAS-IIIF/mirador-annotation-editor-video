@@ -18,6 +18,7 @@ import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import { useSelector } from 'react-redux';
 import AnnotationFormFooter from './AnnotationFormFooter';
 import LLMServiceAdapter from '../annotationAdapter/LLMServiceAdapter';
+// eslint-disable-next-line import/no-named-as-default
 import LLMApiService from '../annotationAdapter/LLMApiService';
 /**
  * @typedef {Object} ChatMessage
@@ -49,6 +50,7 @@ export default function AITemplate({
   annotation,
   canvases,
   closeFormCompanionWindow,
+  playerReferences,
   saveAnnotation,
   t,
 }) {
@@ -59,6 +61,7 @@ export default function AITemplate({
   const messagesEndRef = useRef(null);
   const [conversationId, setConversationId] = useState(null);
   const [conversation, setConversation] = useState([]);
+  const windows = useSelector((state) => state.windows);
 
   const conversationService = useMemo(
     () => new LLMServiceAdapter(),
@@ -130,12 +133,18 @@ export default function AITemplate({
     setInput('');
 
     try {
-      const formatted = updatedBranch.map((m) => ({
+      const formattedConversation = updatedBranch.map((m) => ({
         content: m.content,
         role: m.role,
       }));
 
-      const reply = await llmApi.callLLM(formatted);
+      const windowId = Object.keys(windows)[0];
+      const manifestUrl = windows[windowId]?.manifestId;
+      const activeCanvases = playerReferences.getCanvases?.() || [];
+      if (!activeCanvases.length) return;
+
+      const canvasId = activeCanvases[0].index;
+      const reply = await llmApi.callLLM(formattedConversation, manifestUrl, canvasId);
 
       const assistantMessage = reply.conversation[reply.conversation.length - 1].content;
 
@@ -314,8 +323,12 @@ export default function AITemplate({
 AITemplate.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   annotation: PropTypes.object.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
   canvases: PropTypes.arrayOf(PropTypes.object).isRequired,
   closeFormCompanionWindow: PropTypes.func.isRequired,
+  playerReferences: PropTypes.shape({
+    getCanvases: PropTypes.func,
+  }).isRequired,
   saveAnnotation: PropTypes.func.isRequired,
   t: PropTypes.func.isRequired,
 };

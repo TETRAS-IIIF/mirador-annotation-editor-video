@@ -4,11 +4,15 @@ export default class LLMApiService {
     this.endpoint = endpoint;
   }
 
-  async callLLM(messages) {
-    console.log('messages', messages);
+  async callLLM(messages, manifestUrl, canvasIndex) {
+    console.log("messages",messages)
+    console.log("manifestUrl",manifestUrl)
+    console.log("canvasIndex",canvasIndex)
     const res = await fetch(`${this.endpoint}`, {
       body: JSON.stringify({
+        canvas_index: canvasIndex,
         conversation: messages,
+        manifest_url: manifestUrl,
       }),
       headers: { 'Content-Type': 'application/json' },
       method: 'POST',
@@ -19,7 +23,6 @@ export default class LLMApiService {
     }
 
     const data = await res.json();
-    console.log('data', data);
     return data;
   }
 }
