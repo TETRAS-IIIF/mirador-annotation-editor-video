@@ -24,10 +24,24 @@ MAEV**
 - Annotation metadata (based on Dublin Core)
 - Annotation with another manifest --> network of IIIF documents
 
-TODO TOC
-
-### Technical aspects 
-
+<!-- TOC -->
+* [Mirador Annotation Editor Video - GPL edition](#mirador-annotation-editor-video---gpl-edition)
+  * [Presentation](#presentation)
+    * [Generalities](#generalities)
+    * [General functionalities](#general-functionalities)
+  * [Install / integrate](#install--integrate-)
+    * [NPM package](#npm-package)
+    * [Use in existing npm project with previous plugins](#use-in-existing-npm-project-with-previous-plugins)
+    * [Install (local)](#install-local)
+  * [Usage](#usage)
+    * [Persisting Annotations](#persisting-annotations)
+    * [Configuration](#configuration-)
+  * [Technical aspects from the original plugin](#technical-aspects-from-the-original-plugin)
+  * [Contribute](#contribute)
+    * [Contributor](#contributor)
+    * [License](#license)
+      * [Property](#property)
+<!-- TOC -->
 
 ## Install / integrate 
 
@@ -135,7 +149,6 @@ The contributors of this software are :
   - fstoe
 - École nationale des ponts et chaussées (enpc.fr)
    - paulhectork
-   - 
 
 ### License
 
@@ -151,4 +164,5 @@ licencing.
 
 The base of this software (up to V1) is the property of [SATT Ouest Valorisation](https://www.ouest-valorisation.fr/)
 that funded its development under the French public contract AO-MA2023-0004-DV5189.
+
 After that, development has been almost fully supported by Tétras Libre with external contributions.
