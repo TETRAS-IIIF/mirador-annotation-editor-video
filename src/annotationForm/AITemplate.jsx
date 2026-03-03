@@ -16,10 +16,13 @@ import SendIcon from '@mui/icons-material/Send';
 import SmartToyOutlinedIcon from '@mui/icons-material/SmartToyOutlined';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import { useSelector } from 'react-redux';
+import { receiveAnnotation } from 'mirador';
+import { v4 as uuidv4 } from 'uuid';
 import AnnotationFormFooter from './AnnotationFormFooter';
 import LLMServiceAdapter from '../annotationAdapter/LLMServiceAdapter';
 // eslint-disable-next-line import/no-named-as-default
 import LLMApiService from '../annotationAdapter/LLMApiService';
+import { saveAnnotationInStorageAdapter, TEMPLATE } from './AnnotationFormUtils';
 /**
  * @typedef {Object} ChatMessage
  * @property {string} id
@@ -62,7 +65,7 @@ export default function AITemplate({
   const [conversationId, setConversationId] = useState(null);
   const [conversation, setConversation] = useState([]);
   const windows = useSelector((state) => state.windows);
-
+  const windowId = Object.keys(windows)[0];
   const conversationService = useMemo(
     () => new LLMServiceAdapter(),
     [],
@@ -102,6 +105,52 @@ export default function AITemplate({
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [conversation]);
+
+  const saveAISegments = (segments) => {
+    if (!segments?.length) return Promise.resolve();
+    console.log("segments",segments);
+
+    const activeCanvases = playerReferences.getCanvases?.() || [];
+    console.log("activeCanvases",activeCanvases)
+    if (!activeCanvases.length) return Promise.resolve();
+
+    const canvas = activeCanvases[0];
+
+    const storageAdapter = config.annotation.adapter(canvas.id);
+    console.log("storageAdapter",storageAdapter)
+    return segments.reduce((promiseChain, segment) => promiseChain.then(async () => {
+      const [x, y, w, h] = segment.pixel_region
+        .split(',')
+        .map(Number);
+
+      const target = {
+        source: canvas.id,
+        selector: {
+          type: 'FragmentSelector',
+          conformsTo: 'http://www.w3.org/TR/media-frags/',
+          value: `xywh=${x},${y},${w},${h}`,
+        },
+      };
+
+      const annotationToSave = {
+        id: `${canvas.id}/annotation/${uuidv4()}`,
+        type: 'Annotation',
+        body: {
+          type: 'TextualBody',
+          value: segment.caption,
+        },
+        motivation: 'commenting',
+        target,
+      };
+
+      return saveAnnotationInStorageAdapter(
+        canvas.id,
+        storageAdapter,
+        receiveAnnotation,
+        annotationToSave,
+      );
+    }), Promise.resolve());
+  };
   /**
    * Handles the submission of a user message.
    *
@@ -138,22 +187,26 @@ export default function AITemplate({
         role: m.role,
       }));
 
-      const windowId = Object.keys(windows)[0];
       const manifestUrl = windows[windowId]?.manifestId;
       const activeCanvases = playerReferences.getCanvases?.() || [];
       if (!activeCanvases.length) return;
 
       const canvasId = activeCanvases[0].index;
       const reply = await llmApi.callLLM(formattedConversation, manifestUrl, canvasId);
+      if (reply.tool_output?.length) {
+        await saveAISegments(reply.tool_output);
+      }
+      let assistantMessage;
+      if (reply.conversation && reply.conversation[reply.conversation.length - 1]) {
+        assistantMessage = reply.conversation[reply.conversation.length - 1].content;
 
-      const assistantMessage = reply.conversation[reply.conversation.length - 1].content;
-
-      conversationService.addMessage(
-        conversationId,
-        'assistant',
-        assistantMessage,
-        userMessageId,
-      );
+        conversationService.addMessage(
+          conversationId,
+          'assistant',
+          assistantMessage,
+          userMessageId,
+        );
+      }
 
       const finalBranch = conversationService.getActiveBranch(conversationId);
       setConversation(finalBranch);

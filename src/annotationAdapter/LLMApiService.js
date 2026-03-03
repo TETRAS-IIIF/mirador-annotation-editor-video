@@ -23,6 +23,7 @@ export default class LLMApiService {
     }
 
     const data = await res.json();
+    console.log("llm api response",data)
     return data;
   }
 }
