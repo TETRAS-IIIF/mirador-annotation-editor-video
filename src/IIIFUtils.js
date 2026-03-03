@@ -6,7 +6,6 @@ import {
   getSvg,
   OVERLAY_TOOL,
   SHAPES_TOOL,
-  OVERLAY_TOOL
 } from './annotationForm/AnnotationFormOverlay/KonvaDrawing/KonvaUtils';
 import { TARGET_TOOL_STATE, TEMPLATE } from './annotationForm/AnnotationFormUtils';
 
