@@ -1,6 +1,7 @@
 # Mirador Annotation Editor Video - GPL edition
 
 [Online demos](https://tetras-iiif.github.io/mirador-annotation-editor-video/)
+- [Roadmap](https://github.com/TETRAS-IIIF/.github/blob/main/profile/ROADMAP.md)
 
 ## Presentation
 
@@ -12,19 +13,6 @@ adds annotation creation tools to the user interface. It support both image and 
 
 It is based on the original [mirador-annotations](https://github.com/ProjectMirador/mirador-annotations/) plugin with a
 lot of technical and functional modifications (including migration from PaperJS to Konvas for the drawing part).
-### Copyrights
-
-#### Licence
-
-This plugin is released under the **GPL v3** license unlike MAE and the original plugin.
-
-Please acknowledge that any modification you make must be distributed under a compatible licence and cannot be closed
-source.
-
-If you need to integrate this code base in closed source pieces of software, please contact us, so we can discuss dual
-licencing.
-
-
 
 ### General functionalities
 
@@ -34,47 +22,43 @@ MAEV**
 - Overlay annotations (geometric forms, free hand drawing, text and images)
 - Textual/semantic annotations and tags
 - Annotation metadata (based on Dublin Core)
-- Annotation with another manifest -> network of IIIF documents
+- Annotation with another manifest --> network of IIIF documents
+
+TODO TOC
 
 ### Technical aspects 
 
-- Update to Material UI 7 and React 19 to follow latest Mirador upgrades (We support official M4 releases),
-- The [paperjs](http://paperjs.org/ ) library has been replaced with [Konvas](https://konvajs.org) 
-- Major refactoring since the original `[mirador-annotations](https://github.com/ProjectMirador/mirador-annotations/) 
-plugins`
 
-## Use in npm projects
+## Install / integrate 
+
+### NPM package
 
 ```bash
-npm install mirador-annotation-editor
+npm install mirador-annotation-editor-video
 ```
 
-## Use in existing npm project with previous plugins
+### Use in existing npm project with previous plugins
 
 You can override existing annotation plugin with your own versions by using npm. We support React 18 and MUI 5.
 
 Update your `package.json` file to include the following dependencies and devDependencies:
 
 ```js
-"mirador-annotations":"npm:mirador-annotation-editor-video@^1.2.2",
+"mirador-annotations":"npm:mirador-annotation-editor-video@^1.2.12",
 ```
 
 You need also to use the custom version of Mirador 4.
 
 ```json
-"mirador" : "npm@mirador-video@^1.2.0",
+"mirador" : "npm@mirador-video@^1.2.12",
 ```
 
-### Troubleshooting
+[Mirador 4 integration example](https://github.com/ProjectMirador/mirador-integration)
 
-If you encounter issue in Note Template with React Quill editor, add `"react-quill": "npm:react-quill-new@3.6.0"` dependency in your package.json file then import theme in your main js file as below:
-```js
-import 'react-quill/dist/quill.snow.css';
-```
+MAE and MAEV share the same build and integration system.
 
 
-
-## Install (local)
+### Install (local)
 
 This method requires `nvm`, `npm`.
 
@@ -91,15 +75,15 @@ Run a demo with Mirador and the MAE plugin :
 npm start
 ```
 
+## Usage
 
-
-## Persisting Annotations
+### Persisting Annotations
 Persisting annotations requires implementing a IIIF annotation server. Several 
 [examples of annotation servers](https://github.com/IIIF/awesome-iiif#annotation-servers) are available on iiif-awesome.
 
 We provide a full Mirador workspace with persistance at https://app.mirador-multi-user.com.
 
-## Configuration 
+### Configuration 
 
 See `demo/src/index.js` for a full configuration sample.
 
@@ -122,6 +106,15 @@ See `demo/src/index.js` for a full configuration sample.
 };
 ```
 
+## Technical aspects from the original plugin
+
+- Mirador 4 support (through your custom Mirador Video)
+- Update to Material UI 7 and React 19 to follow latest Mirador upgrades
+- The [paperjs](http://paperjs.org/ ) library has been replaced with [Konvas](https://konvajs.org)
+- Use `template` to facilitate the creation of annotations with pre-filled content and tags
+- Use of `quill` as rich text editor for annotation content
+- Mirador Multi User (MMU) support for real time annotation sharing and collaboration (see https://mirador-multi-user.com/)
+- New adapter system to facilitate the implementation of annotation persistence and sharing ([Aiiinotation server](https://github.com/Aikon-platform/aiiinotate) )
 
 ## Contribute
 
@@ -129,7 +122,7 @@ Our plugin follow the Mirador guidelines. Development, design, and maintenance i
 feedback and discussion.
 To suggest features, report bugs, and clarify usage, please submit a GitHub issue.
 
-#### Contributor
+### Contributor
 
 The contributors of this software are :
 
@@ -137,8 +130,25 @@ The contributors of this software are :
   - David Rouquet
   - Anthony Geourjon
   - Antoine Roy
+- Leipzig University
+  - Gerd Muller
+  - fstoe
+- École nationale des ponts et chaussées (enpc.fr)
+   - paulhectork
+   - 
+
+### License
+
+This plugin is released under the **GPL v3** license unlike MAE and the original plugin.
+
+Please acknowledge that any modification you make must be distributed under a compatible license and cannot be closed
+source.
+
+If you need to integrate this code base in closed source pieces of software, please contact us, so we can discuss dual
+licencing.
 
 #### Property
 
 The base of this software (up to V1) is the property of [SATT Ouest Valorisation](https://www.ouest-valorisation.fr/)
 that funded its development under the French public contract AO-MA2023-0004-DV5189.
+After that, development has been almost fully supported by Tétras Libre with external contributions.

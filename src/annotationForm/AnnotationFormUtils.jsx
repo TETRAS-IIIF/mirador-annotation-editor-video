@@ -245,6 +245,21 @@ export async function saveAnnotationInStorageAdapter(
         });
     }
   }
+  // We are in IIIF template mode, so we just save the annotation as is
+  else {
+    if (annotation.id) {
+      storageAdapter.update(annotation)
+        .then((annoPage) => {
+          receiveAnnotation(canvasId, storageAdapter.annotationPageId, annoPage);
+        });
+    } else {
+      annotation.id = `${canvasId}/annotation/${uuidv4()}`;
+      storageAdapter.create(annotation)
+        .then((annoPage) => {
+          receiveAnnotation(canvasId, storageAdapter.annotationPageId, annoPage);
+        });
+    }
+  }
 }
 
 export const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({

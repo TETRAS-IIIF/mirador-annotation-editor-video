@@ -1,9 +1,12 @@
+import { v4 as uuidv4 } from "uuid";
+
 import {
   getKonvaAsDataURL,
   getKonvaShape,
   getSvg,
   OVERLAY_TOOL,
   SHAPES_TOOL,
+  OVERLAY_TOOL
 } from './annotationForm/AnnotationFormOverlay/KonvaDrawing/KonvaUtils';
 import { TARGET_TOOL_STATE, TEMPLATE } from './annotationForm/AnnotationFormUtils';
 
@@ -160,6 +163,253 @@ export const getIIIFTargetFromMaeData = (
       return getIIIFTargetFullCanvas(maeData, canvasId);
   }
 };
+
+/**
+ * generate the maeData body from a IIIF annotation
+ * NOTE: only textual bodies are supported.
+ *
+ * @param {object} anno
+ * @returns {Array<string, object|object[]}
+ */
+const convertIIIFBodyToMae = (anno) => {
+  const maeBodyTemplate = {
+    purpose: "describing",
+    type: "TextualBody",
+    value: ""
+  }
+  // convert body if it's an object
+  const convertBodyObjToMae = (_bodyObj) => {
+    const maeBody = structuredClone(maeBodyTemplate);
+    maeBody.value = _bodyObj.value || "";
+    return maeBody;
+  }
+  // convert body if it's just a string
+  const convertBodyValueToMae = (_bodyValue) => {
+    const maeBody = structuredClone(maeBodyTemplate);
+    maeBody.value = _bodyValue || "";
+    return maeBody;
+  }
+
+  // NOTE if body is an array, textBody will be retyped to array
+  let templateType = "", textBody = {};
+
+  // if it's not a tagging annotation, we consider it's a multiple body.
+  // if templateType === TEMPLATE.TAGGING_TYPE, textBody must be undefined
+  if ( anno.motivation === "tagging" || (Array.isArray(anno.motivation) && anno.motivation.includes("tagging")) ) {
+    templateType = TEMPLATE.TAGGING_TYPE;
+  } else {
+    templateType = TEMPLATE.MULTIPLE_BODY_TYPE;
+    if (anno.bodyValue) {
+      textBody = convertBodyValueToMae(anno.bodyValue);
+    } else if (anno.body) {
+      textBody = Array.isArray(anno.body)
+        ? anno.body.map(convertBodyObjToMae)
+        : convertBodyObjToMae(anno.body)
+    };
+  }
+
+  return [templateType, textBody];
+}
+
+/**
+ * quick and dirty function to compute bounding box from an SVG Document using a hidden off-screen insertion.
+ * @param {XMLDocument} svgDoc - the parsed SVG
+ * @returns {{ x: number, y: number, width: number, height: number }} in the SVG's user coordinate system.
+ */
+const svgToXywh = (svgDoc) => {
+  const parsedSvg = svgDoc.documentElement;
+
+  const container = document.createElement("div");
+  container.style.position = "absolute";
+  container.style.left = "-99999px";
+  container.style.width = "0";
+  container.style.height = "0";
+  container.style.overflow = "hidden";
+  container.style.pointerEvents = "none";
+  document.body.appendChild(container);
+
+  const svg = document.importNode(parsedSvg, true);
+  // some SVGs don't have explicit width/height/viewBox. We still want user-space coords.
+  // wrap everything into a <g> so we can call getBBox on that group.
+  const ns = "http://www.w3.org/2000/svg";
+  const wrapper = document.createElementNS(ns, "svg");
+  for (const attr of svg.attributes || []) {
+    wrapper.setAttribute(attr.name, attr.value);
+  }
+  // move children into a group so getBBox returns combined extents
+  const g = document.createElementNS(ns, "g");
+  while (svg.firstChild) g.appendChild(svg.firstChild);
+  wrapper.appendChild(g);
+  container.appendChild(wrapper);
+
+  // force layout/render so getBBox is correct (reading offsetWidth is one way)
+  container.offsetWidth;
+
+  const bbox = g.getBBox(); // SVGRect-like: { x, y, width, height }
+  document.body.removeChild(container);
+  return bbox;
+}
+
+/**
+ * generate a string-representation of an SVG rectangle based on XYWH coordinates
+ * @param {{ x: number, y: number, w: number, fullW: number?, fullH: number? }}
+ * @returns {string}
+ */
+const xywhToSvg = ({ x, y, w, h, fullW = undefined, fullH = undefined }) =>
+  `<svg
+      version='1.1'
+      xmlns='http://www.w3.org/2000/svg'
+      xmlns:xlink='http://www.w3.org/1999/xlink'
+      ${fullW && fullH
+    ? "width='" + fullW + "' height='" + fullH + "'"
+    : ""
+  }
+  >
+    <defs/>
+    <g><g>
+      <path
+        d=' M ${x} ${y} L ${x + w} ${y} L ${x + w} ${y + h} L ${x} ${x + h} L ${x} ${y} Z Z'
+        fill='${TARGET_TOOL_STATE.fillColor}'
+        stroke='${TARGET_TOOL_STATE.strokeColor}'
+        stroke-width='${TARGET_TOOL_STATE.strokeWidth}'
+        fill-opacity='0'
+        stroke-miterlimit='10'
+        stroke-dasharray=''
+      />
+    </g></g>
+  </svg>`;
+
+
+const convertFragmentSelectorToMae = (selector) => {
+  const [x, y, w, h] = selector.value.replace("xywh=", "").split(",");
+  const currentShape = {
+    id: uuidv4(),
+    rotation: 0,
+    scaleX: 1,
+    scaleY: 1,
+    x: x,
+    y: y,
+    width: w,
+    height: h,
+    type: SHAPES_TOOL.RECTANGLE,
+    fill: TARGET_TOOL_STATE.fillColor,
+    stroke: TARGET_TOOL_STATE.strokeColor,
+    strokeWidth: TARGET_TOOL_STATE.strokeWidth
+  };
+
+  return {
+    drawingState: JSON.stringify({
+      currentShape: currentShape,
+      shapes: [currentShape],
+      isDrawing: false,
+    }),
+    svg: xywhToSvg({ x, y, w, h })
+  }
+}
+
+const convertSvgSelectorToMae = (selector) => {
+  const parser = new DOMParser();
+  const svgDoc = parser.parseFromString(selector.value, "image/svg+xml");
+  const xywh = svgToXywh(svgDoc);
+  const fullW = svgDoc.querySelector("svg").getAttribute("width") || undefined;
+  const fullH = svgDoc.querySelector("svg").getAttribute("height") || undefined;
+  // when building the `currentShape` and `maeTarget`, we try to extract as much infoermation as possible from the SVG
+  const currentShape = {
+    id: uuidv4(),
+    rotation: 0,
+    scaleX: 1,
+    scaleY: 1,
+    x: xywh.x,
+    y: xywh.y,
+    width: xywh.width,
+    height: xywh.height,
+    type: SHAPES_TOOL.RECTANGLE,
+    fill: svgDoc.querySelector("path[fill]")?.getAttribute("fill") || TARGET_TOOL_STATE.fillColor,
+    stroke: svgDoc.querySelector("path[stroke]")?.getAttribute("stroke") || TARGET_TOOL_STATE.strokeColor,
+    strokeWidth: svgDoc.querySelector("path[stroke-width]")?.getAttribute("stroke-width") || TARGET_TOOL_STATE.strokeWidth
+  };
+  const maeTarget = {
+    drawingState: JSON.stringify({
+      currentShape: currentShape,
+      shapes: [currentShape],
+      isDrawing: false,
+    }),
+    svg: selector.value
+  };
+  if (fullW && fullH) {
+    maeTarget.fullCanvaXYWH = `0,0,${fullW},${fullH}`;
+    // ratio of area of annotation / full canvas area
+    // maeTarget.scale = (xywh.width * xywh.height) / (fullW * fullH);
+  }
+  return maeTarget;
+}
+
+/**
+ * generate `maeData.target` from an annotation's `target` field.
+ *
+ * NOTE: limitations:
+ * - currently, only 2 types of targets are supported:
+ *    - FragmentSelectors
+ *    - SvgSelectors
+ * - if there is an array of selectors, the first supported selector is used
+ * - we extract bounding boxes from SVGs, so we expect SVGs to be rectangular
+ *
+ * @param {object} target
+ * @param {string} annotationId
+ * @returns {object}
+ */
+const convertIIIFTargetToMae = (target, annotationId) => {
+  const supportedSelectorTypes = ["SvgSelector", "FragmentSelector"];
+  const selectorArray = Array.isArray(target.selector) ? target.selector : [target.selector];
+
+  for (const selector of selectorArray) {
+    // NOTE: order of selector types is important
+    // we put the try..catch in the loop to skip the error and fallback to another selector if possible
+    try {
+      if (selector.type === "SvgSelector") {
+        return convertSvgSelectorToMae(selector);
+      } else if (selector.type === "FragmentSelector") {
+        return convertFragmentSelectorToMae(selector)
+      }
+    } catch (err) {
+    }
+  }
+  // if at the end of the loop, no selector could be processed, log an error and return.
+  console.error(`On annotation '${annotationId}': none of the selector types in the annotation are unsupported: ${selectorArray.map(selector => selector.type)}. Supported selectors are: [${supportedSelectorTypes}].`)
+  return {}
+}
+
+/**
+ * generate the maeData field for IIIF annotations that lack one (i.e., all annotations that are created outside of MAE).
+ * this allows to open them and update them as with any MAE-created annotation.
+ * @param {*} anno
+ * @returns
+ */
+export function convertIIIFAnnoToMaeData(anno) {
+  if (!anno.maeData || Object.keys(anno.maeData || {}).length === 0) {
+    try {
+      const maeData = {
+        target: {},
+        templateType: "",
+        tags: [],
+        textBody: {}
+      };
+
+      const [templateType, textBody] = convertIIIFBodyToMae(anno);
+      maeData.templateType = templateType;
+      maeData.textBody = textBody;
+
+      maeData.target = convertIIIFTargetToMae(anno.target, anno.id);
+      anno.maeData = maeData;
+      return anno;
+
+    } catch (e) {
+      console.error("Error generating maeData from annotation", e);
+      return anno;
+    }
+  }
+  return anno;
+}
 
 /**
  * Convert annotation state to be saved. Function change the annotationState object
@@ -377,7 +627,7 @@ export function createV2Anno(v3anno) {
         // `target` is an object and `target.source` is a string
         || v3anno.target.source
     };
-  // if v3anno.target is a string, don't process it
+    // if v3anno.target is a string, don't process it
   } else {
     v2anno.on = v3anno.target;
   }
