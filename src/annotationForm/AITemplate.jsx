@@ -106,50 +106,66 @@ export default function AITemplate({
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [conversation]);
 
-  const saveAISegments = (segments) => {
-    if (!segments?.length) return Promise.resolve();
-    console.log("segments",segments);
+  const createMaeAnnotation = (canvasId, segment) => {
+    const [x, y, w, h] = segment.pixel_region
+      .split(',')
+      .map(Number);
 
-    const activeCanvases = playerReferences.getCanvases?.() || [];
-    console.log("activeCanvases",activeCanvases)
-    if (!activeCanvases.length) return Promise.resolve();
+    const drawingState = {
+      id: uuidv4(),
+      tool: 'rectangle',
+      x,
+      y,
+      width: w,
+      height: h,
+    };
 
-    const canvas = activeCanvases[0];
+    return {
+      type: 'Annotation',
+      motivation: 'commenting',
 
-    const storageAdapter = config.annotation.adapter(canvas.id);
-    console.log("storageAdapter",storageAdapter)
-    return segments.reduce((promiseChain, segment) => promiseChain.then(async () => {
-      const [x, y, w, h] = segment.pixel_region
-        .split(',')
-        .map(Number);
+      body: {
+        type: 'TextualBody',
+        value: segment.caption,
+      },
 
-      const target = {
-        source: canvas.id,
+      target: {
+        source: canvasId,
         selector: {
           type: 'FragmentSelector',
           conformsTo: 'http://www.w3.org/TR/media-frags/',
           value: `xywh=${x},${y},${w},${h}`,
         },
-      };
+      },
 
-      const annotationToSave = {
-        id: `${canvas.id}/annotation/${uuidv4()}`,
-        type: 'Annotation',
-        body: {
-          type: 'TextualBody',
-          value: segment.caption,
+      maeData: {
+        templateType: TEMPLATE.TAGGING_TYPE,
+        target: {
+          drawingState,
         },
-        motivation: 'commenting',
-        target,
-      };
+      },
+    };
+  };
 
-      return saveAnnotationInStorageAdapter(
-        canvas.id,
-        storageAdapter,
-        receiveAnnotation,
-        annotationToSave,
-      );
-    }), Promise.resolve());
+  const saveAISegments = (segments) => {
+    const activeCanvases = playerReferences.getCanvases?.() || [];
+    if (!activeCanvases.length) return Promise.resolve();
+
+    const canvas = activeCanvases[0];
+    const storageAdapter = config.annotation.adapter(canvas.id);
+
+    return segments.reduce((chain, segment) => (
+      chain.then(() => {
+        const maeAnnotation = createMaeAnnotation(canvas.id, segment);
+
+        return saveAnnotationInStorageAdapter(
+          canvas.id,
+          storageAdapter,
+          receiveAnnotation,
+          maeAnnotation,
+        );
+      })
+    ), Promise.resolve());
   };
   /**
    * Handles the submission of a user message.
