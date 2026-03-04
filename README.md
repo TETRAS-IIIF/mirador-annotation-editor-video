@@ -10,7 +10,7 @@
 `mirador-annotation-editor-video`(also known as "MAEV") is a [Mirador 4](https://github.com/projectmirador/mirador)
 plugin that adds annotation creation tools to the user interface. It support both image and video annotation.
 
-It's based on [Mirador Annotation Editor](https://github.com/TETRAS-IIIF/mirador-annotation-editor) (Himself based on the original [mirador-annotation](https://github.com/ProjectMirador/mirador-annotations/). We add create/update annotation on video support and other template. 
+It's based on [Mirador Annotation Editor](https://github.com/TETRAS-IIIF/mirador-annotation-editor) (itself based on the original [mirador-annotation](https://github.com/ProjectMirador/mirador-annotations/). We mainly add create/update annotation on video support on this version. 
 
 This plugin is intended to be run with our [mirador video](https://github.com/TETRAS-IIIF/mirador-video/). 
 If you want to run classic Mirador 4, see our other plugin [Mirador Annotation Editor](https://github.com/TETRAS-IIIF/mirador-annotation-editor)
