@@ -106,19 +106,17 @@ export default function AITemplate({
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [conversation]);
 
-  const createMaeAnnotation = (canvasId, segment) => {
-    const [x, y, w, h] = segment.pixel_region
+  const createMaeAnnotation = (canvasId, annotation) => {
+    const selectorValue = annotation?.target?.selector?.value || '';
+
+    const match = selectorValue.match(/xywh=(.*)/);
+    if (!match) return null;
+
+    const [x, y, w, h] = match[1]
       .split(',')
       .map(Number);
 
-    const drawingState = {
-      id: uuidv4(),
-      tool: 'rectangle',
-      x,
-      y,
-      width: w,
-      height: h,
-    };
+    const caption = annotation?.body?.value || '';
 
     return {
       type: 'Annotation',
@@ -126,7 +124,7 @@ export default function AITemplate({
 
       body: {
         type: 'TextualBody',
-        value: segment.caption,
+        value: caption,
       },
 
       target: {
@@ -141,7 +139,14 @@ export default function AITemplate({
       maeData: {
         templateType: TEMPLATE.TAGGING_TYPE,
         target: {
-          drawingState,
+          drawingState: {
+            id: uuidv4(),
+            tool: 'rectangle',
+            x,
+            y,
+            width: w,
+            height: h,
+          },
         },
       },
     };
@@ -209,9 +214,10 @@ export default function AITemplate({
 
       const canvasId = activeCanvases[0].index;
       const reply = await llmApi.callLLM(formattedConversation, manifestUrl, canvasId);
-      if (reply.tool_output?.length) {
-        await saveAISegments(reply.tool_output);
+      if (reply.tool_output?.type === 'AnnotationPage' && reply.tool_output?.items?.length) {
+        await saveAISegments(reply.tool_output.items);
       }
+
       let assistantMessage;
       if (reply.conversation && reply.conversation[reply.conversation.length - 1]) {
         assistantMessage = reply.conversation[reply.conversation.length - 1].content;
