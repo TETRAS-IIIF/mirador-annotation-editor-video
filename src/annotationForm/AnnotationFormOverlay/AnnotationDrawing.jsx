@@ -165,6 +165,7 @@ export default function AnnotationDrawing(
   const onShapeClick = async (shp) => {
     // return if we are not in edit or cursor mode
     if (toolState.activeTool !== 'edit' && toolState.activeTool !== 'cursor' && toolState.activeTool !== 'delete') {
+      console.log("En deors d'une shape click");
       return;
     }
     const shape = drawingState.shapes.find((s) => s.id === shp.id);
@@ -438,6 +439,25 @@ export default function AnnotationDrawing(
           break;
         default:
           // Handle other cases if any
+          console.log("Defaut cas");
+          if(drawingState.currentShape){
+
+            const stage = e.target.getStage();
+            const clickedOnEmpty = e.target === stage;
+            if (clickedOnEmpty) {
+              const currentShapeType = drawingState.currentShape.type;
+              console.log("currentShapeType", currentShapeType);
+              setDrawingState({
+                ...drawingState,
+                currentShape: null,
+              });
+              setToolState({
+                ...toolState,
+                activeTool: currentShapeType,
+              });
+            }
+          }
+
           break;
       }
     } catch (error) {
