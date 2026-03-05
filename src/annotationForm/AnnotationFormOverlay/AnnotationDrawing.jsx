@@ -104,6 +104,27 @@ export default function AnnotationDrawing(
     }
   }, [drawingState.currentShape]);
 
+  // eslint-disable-next-line consistent-return
+  useLayoutEffect(() => {
+    if (drawingState.shapes.find((s) => s.id === drawingState.currentShape?.id)) {
+      window.addEventListener('keydown', handleKeyPress);
+
+      // Set here all the properties of the current shape for the tool options
+      setColorToolFromCurrentShape(
+        {
+          fillColor: drawingState.currentShape.fill,
+          strokeColor: drawingState.currentShape.stroke,
+          strokeWidth: drawingState.currentShape.strokeWidth,
+          text: drawingState.currentShape.text,
+        },
+      );
+
+      return () => {
+        window.removeEventListener('keydown', handleKeyPress);
+      };
+    }
+  }, [drawingState.currentShape]);
+
   /** */
   const handleKeyPress = (e) => {
     e.stopPropagation();
@@ -165,7 +186,7 @@ export default function AnnotationDrawing(
   const onShapeClick = async (shp) => {
     // return if we are not in edit or cursor mode
     if (toolState.activeTool !== 'edit' && toolState.activeTool !== 'cursor' && toolState.activeTool !== 'delete') {
-      console.log("En deors d'une shape click");
+      console.log('En dehors d\'une shape click');
       return;
     }
     const shape = drawingState.shapes.find((s) => s.id === shp.id);
@@ -439,24 +460,7 @@ export default function AnnotationDrawing(
           break;
         default:
           // Handle other cases if any
-          console.log("Defaut cas");
-          if(drawingState.currentShape){
 
-            const stage = e.target.getStage();
-            const clickedOnEmpty = e.target === stage;
-            if (clickedOnEmpty) {
-              const currentShapeType = drawingState.currentShape.type;
-              console.log("currentShapeType", currentShapeType);
-              setDrawingState({
-                ...drawingState,
-                currentShape: null,
-              });
-              setToolState({
-                ...toolState,
-                activeTool: currentShapeType,
-              });
-            }
-          }
 
           break;
       }
@@ -566,7 +570,32 @@ export default function AnnotationDrawing(
   };
 
   /** Stop drawing */
-  const handleMouseUp = () => {
+  const handleMouseUp = (e) => {
+    // TODO Remove after rewiewing
+
+    console.debug('handleMouseUp');
+    console.debug(drawingState);
+    console.debug(toolState);
+
+    if (drawingState.currentShape) {
+      const stage = e.target.getStage();
+      const clickedOnEmpty = e.target === stage;
+      if (clickedOnEmpty) {
+        const currentShapeType = drawingState.currentShape.type;
+        console.log('currentShapeType', currentShapeType);
+        console.debug(toolState);
+        // Use functional updates to avoid stale closures and ensure both updates are applied
+        setToolState((prev) => ({
+          ...prev,
+          activeTool: currentShapeType,
+        }));
+        /* setDrawingState((prev) => ({
+          ...prev,
+          currentShape: null,
+        })); */
+      }
+    }
+
     if (toolState.activeTool !== SHAPES_TOOL.POLYGON) {
       setDrawingState({
         ...drawingState,
