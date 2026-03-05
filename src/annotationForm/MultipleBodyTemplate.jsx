@@ -6,7 +6,10 @@ import { getConfig } from 'mirador';
 import AnnotationFormFooter from './AnnotationFormFooter';
 import { TEMPLATE } from './AnnotationFormUtils';
 import TargetFormSection from './TargetFormSection';
-import { resizeKonvaStage } from './AnnotationFormOverlay/KonvaDrawing/KonvaUtils';
+import {
+  parseDrawingState,
+  resizeKonvaStage
+} from './AnnotationFormOverlay/KonvaDrawing/KonvaUtils';
 import { MultiTagsInput } from './MultiTagsInput';
 import { TextCommentInput } from './TextCommentInput';
 
@@ -44,16 +47,8 @@ export default function MultipleBodyTemplate(
       target: null,
     };
   } else {
-    if (maeAnnotation.maeData.target.drawingState && typeof maeAnnotation.maeData.target.drawingState === 'string') {
-      maeAnnotation.maeData.target.drawingState = JSON.parse(
-        maeAnnotation.maeData.target.drawingState,
-      );
-      console.debug("Parsed drawingState:", maeAnnotation.maeData.target.drawingState);
-      maeAnnotation.maeData.target.drawingState = {
-        ...maeAnnotation.maeData.target.drawingState,
-        currentShape: null,
-      }
-    }
+    // eslint-disable-next-line max-len
+    maeAnnotation.maeData.target.drawingState = parseDrawingState(maeAnnotation.maeData.target.drawingState);
 
     // We support only one textual body
     maeAnnotation.maeData.textBody = maeAnnotation.body.find((body) => body.purpose === 'describing');
