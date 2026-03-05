@@ -9,6 +9,11 @@ Entries types:
 - `FIXED` for any bug fixes.
 - `SECURITY` to invite users to upgrade in case of vulnerabilities.
 
+## [ 1.2.2]
+
+- CHANGED : UX improvement when drawing shape
+- ADDED : maeData generation when annotation come form external source (ex : aiiinotate server)
+
 ## [ 1.2.1 ]
 
 - FIX Correct the way to export module **Breaking change**. 
