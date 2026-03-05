@@ -1,6 +1,6 @@
-FROM node:16
+FROM node:24
 
-EXPOSE 3000
+EXPOSE 4444
 
 VOLUME /app
 
