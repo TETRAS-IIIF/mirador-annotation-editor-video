@@ -571,7 +571,7 @@ export default function AnnotationDrawing(
 
   /** Stop drawing */
   const handleMouseUp = (e) => {
-    // TODO Remove after rewiewing
+    // TODO Remove after rewiew
 
     console.debug('handleMouseUp');
     console.debug(drawingState);
@@ -580,19 +580,14 @@ export default function AnnotationDrawing(
     if (drawingState.currentShape) {
       const stage = e.target.getStage();
       const clickedOnEmpty = e.target === stage;
+      // I click on stage, not on a shape
       if (clickedOnEmpty) {
         const currentShapeType = drawingState.currentShape.type;
         console.log('currentShapeType', currentShapeType);
-        console.debug(toolState);
-        // Use functional updates to avoid stale closures and ensure both updates are applied
         setToolState((prev) => ({
           ...prev,
           activeTool: currentShapeType,
         }));
-        /* setDrawingState((prev) => ({
-          ...prev,
-          currentShape: null,
-        })); */
       }
     }
 
