@@ -15,14 +15,15 @@ import {
 import SendIcon from '@mui/icons-material/Send';
 import SmartToyOutlinedIcon from '@mui/icons-material/SmartToyOutlined';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { receiveAnnotation } from 'mirador';
 import { v4 as uuidv4 } from 'uuid';
 import AnnotationFormFooter from './AnnotationFormFooter';
 import LLMServiceAdapter from '../annotationAdapter/LLMServiceAdapter';
 // eslint-disable-next-line import/no-named-as-default
 import LLMApiService from '../annotationAdapter/LLMApiService';
-import { saveAnnotationInStorageAdapter, TEMPLATE } from './AnnotationFormUtils';
+import { TEMPLATE } from './AnnotationFormUtils';
+
 /**
  * @typedef {Object} ChatMessage
  * @property {string} id
@@ -57,6 +58,7 @@ export default function AITemplate({
   saveAnnotation,
   t,
 }) {
+  const dispatch = useDispatch();
   const config = useSelector((state) => state.config);
   const [annotationState] = useState(annotation);
   const [input, setInput] = useState('');
@@ -107,26 +109,25 @@ export default function AITemplate({
   }, [conversation]);
 
   const createMaeAnnotation = (canvasId, annotation) => {
-    const selectorValue = annotation?.target?.selector?.value || '';
+    const selectorValue = annotation?.target?.selector?.value;
+    if (!selectorValue) return null;
 
-    const match = selectorValue.match(/xywh=(.*)/);
+    const match = selectorValue.match(/xywh=([\d\.,]+)/);
     if (!match) return null;
 
-    const [x, y, w, h] = match[1]
-      .split(',')
-      .map(Number);
+    const [x, y, w, h] = match[1].split(',').map(Number);
 
-    const caption = annotation?.body?.value || '';
+    const aiMotivation = annotation.motivation || 'describing';
+
+    const renderMotivation = ['commenting', 'tagging', 'describing'].includes(aiMotivation)
+        ? aiMotivation
+        : 'commenting';
 
     return {
+      ...annotation,
+      id: uuidv4(),
       type: 'Annotation',
-      motivation: 'commenting',
-
-      body: {
-        type: 'TextualBody',
-        value: caption,
-      },
-
+      motivation: renderMotivation,
       target: {
         source: canvasId,
         selector: {
@@ -135,9 +136,9 @@ export default function AITemplate({
           value: `xywh=${x},${y},${w},${h}`,
         },
       },
-
       maeData: {
-        templateType: TEMPLATE.TAGGING_TYPE,
+        templateType: aiMotivation === 'tagging' ? TEMPLATE.TAGGING_TYPE : TEMPLATE.AI_TYPE,
+        aiMotivation,
         target: {
           drawingState: {
             id: uuidv4(),
@@ -152,26 +153,49 @@ export default function AITemplate({
     };
   };
 
-  const saveAISegments = (segments) => {
-    const activeCanvases = playerReferences.getCanvases?.() || [];
-    if (!activeCanvases.length) return Promise.resolve();
+  const saveAISegments = async (segments) => {
+    // Use canvases[0] from props as the source of truth for the ID
+    const canvas = canvases[0];
+    if (!canvas) return;
 
-    const canvas = activeCanvases[0];
     const storageAdapter = config.annotation.adapter(canvas.id);
 
-    return segments.reduce((chain, segment) => (
-      chain.then(() => {
-        const maeAnnotation = createMaeAnnotation(canvas.id, segment);
+    for (const segment of segments) {
+      const maeAnnotation = createMaeAnnotation(canvas.id, segment);
+      if (!maeAnnotation) continue;
 
-        return saveAnnotationInStorageAdapter(
-          canvas.id,
-          storageAdapter,
-          receiveAnnotation,
-          maeAnnotation,
-        );
-      })
-    ), Promise.resolve());
+      try {
+        // 1. Persist to your storage adapter
+        const annoPage = await storageAdapter.create(maeAnnotation);
+
+        if (annoPage) {
+          // 2. Dispatch to Mirador Core
+          // This tells the CanvasWorld to re-draw the annotations for this canvas
+          dispatch(
+              receiveAnnotation(
+                  canvas.id,
+                  storageAdapter.annotationPageId,
+                  annoPage // Ensure this contains the new item
+              )
+          );
+
+          // 3. Dispatch to MAE Editor State
+          // MAE uses a specific slice to track "active" annotations
+          const savedAnnotation = annoPage.items.find(i => i.id === maeAnnotation.id)
+              || annoPage.items[annoPage.items.length - 1];
+
+          dispatch({
+            type: 'ADD_ANNOTATION', // MAE specific action
+            windowId,
+            annotation: savedAnnotation,
+          });
+        }
+      } catch (err) {
+        console.error('AI Save Error:', err);
+      }
+    }
   };
+
   /**
    * Handles the submission of a user message.
    *
@@ -214,6 +238,7 @@ export default function AITemplate({
 
       const canvasId = activeCanvases[0].index;
       const reply = await llmApi.callLLM(formattedConversation, manifestUrl, canvasId);
+      console.log("reply", reply)
       if (reply.tool_output?.type === 'AnnotationPage' && reply.tool_output?.items?.length) {
         await saveAISegments(reply.tool_output.items);
       }
