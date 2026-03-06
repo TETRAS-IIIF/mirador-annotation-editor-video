@@ -29,7 +29,6 @@ export default class LocalStorageAdapter {
 
     annotationPage.items.push(annotation);
     localStorage.setItem(this.annotationPageId, JSON.stringify(annotationPage));
-    console.log('CREATE ANNOTATION', annotationPage);
     return annotationPage;
   }
 
