@@ -28,6 +28,7 @@ export default function AnnotationDrawing(
   const width = playerReferences.getMediaTrueWidth();
 
   const [isDrawing, setIsDrawing] = useState(false);
+  const [isResizing, setIsResizing] = useState(false);
 
   // This useEffect is necessary to update the scale when the window is resized. If not drawing
   // stage is not aligned with the image.
@@ -82,6 +83,27 @@ export default function AnnotationDrawing(
       updateCurrentShapeInShapes(drawingState.currentShape);
     }
   }, [toolState]);
+
+  // eslint-disable-next-line consistent-return
+  useLayoutEffect(() => {
+    if (drawingState.shapes.find((s) => s.id === drawingState.currentShape?.id)) {
+      window.addEventListener('keydown', handleKeyPress);
+
+      // Set here all the properties of the current shape for the tool options
+      setColorToolFromCurrentShape(
+        {
+          fillColor: drawingState.currentShape.fill,
+          strokeColor: drawingState.currentShape.stroke,
+          strokeWidth: drawingState.currentShape.strokeWidth,
+          text: drawingState.currentShape.text,
+        },
+      );
+
+      return () => {
+        window.removeEventListener('keydown', handleKeyPress);
+      };
+    }
+  }, [drawingState.currentShape]);
 
   // eslint-disable-next-line consistent-return
   useLayoutEffect(() => {
@@ -165,6 +187,7 @@ export default function AnnotationDrawing(
   const onShapeClick = async (shp) => {
     // return if we are not in edit or cursor mode
     if (toolState.activeTool !== 'edit' && toolState.activeTool !== 'cursor' && toolState.activeTool !== 'delete') {
+      console.log('En dehors d\'une shape click');
       return;
     }
     const shape = drawingState.shapes.find((s) => s.id === shp.id);
@@ -201,6 +224,11 @@ export default function AnnotationDrawing(
    * @param {Object} evt - The event object containing the target shape's modified attributes.
    */
   const onTransform = (evt) => {
+
+    console.log('onTransform');
+
+
+
     const modifiedShape = evt.target.attrs;
 
     const shape = drawingState.shapes.find((s) => s.id === modifiedShape.id);
@@ -211,6 +239,10 @@ export default function AnnotationDrawing(
       shape.height = modifiedShape.image.height * modifiedShape.scaleY;
     }
     updateCurrentShapeInShapes(shape);
+
+    if(!isResizing){
+      setIsResizing(true);
+    }
   };
 
   /**
@@ -438,6 +470,8 @@ export default function AnnotationDrawing(
           break;
         default:
           // Handle other cases if any
+
+
           break;
       }
     } catch (error) {
@@ -546,7 +580,29 @@ export default function AnnotationDrawing(
   };
 
   /** Stop drawing */
-  const handleMouseUp = () => {
+  const handleMouseUp = (e) => {
+    // TODO Remove after rewiew
+
+    console.debug('handleMouseUp');
+    console.debug(drawingState);
+    console.debug(toolState);
+
+
+
+    if (drawingState.currentShape && !isResizing) {
+      const stage = e.target.getStage();
+      const clickedOnEmpty = e.target === stage;
+      // I click on stage, not on a shape
+      if (clickedOnEmpty) {
+        const currentShapeType = drawingState.currentShape.type;
+        console.log('currentShapeType', currentShapeType);
+        setToolState((prev) => ({
+          ...prev,
+          activeTool: currentShapeType,
+        }));
+      }
+    }
+
     if (toolState.activeTool !== SHAPES_TOOL.POLYGON) {
       setDrawingState({
         ...drawingState,
@@ -567,6 +623,8 @@ export default function AnnotationDrawing(
         });
       }
     }
+
+    setIsResizing(false);
   };
 
   /** */
