@@ -48,6 +48,11 @@ export default function MultipleBodyTemplate(
       maeAnnotation.maeData.target.drawingState = JSON.parse(
         maeAnnotation.maeData.target.drawingState,
       );
+      console.debug("Parsed drawingState:", maeAnnotation.maeData.target.drawingState);
+      maeAnnotation.maeData.target.drawingState = {
+        ...maeAnnotation.maeData.target.drawingState,
+        currentShape: null,
+      }
     }
 
     // We support only one textual body

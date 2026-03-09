@@ -8,7 +8,10 @@ Entries types:
 - `REMOVED` for now removed features.
 - `FIXED` for any bug fixes.
 - `SECURITY` to invite users to upgrade in case of vulnerabilities.
-- `MERGE` Merge MAE
+
+## [ 1.2.13]
+
+- MERGE : MAE 1.2.3
 
 ## [ 1.2.12 ]
 

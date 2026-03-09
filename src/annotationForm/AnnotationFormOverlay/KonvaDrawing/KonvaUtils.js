@@ -21,6 +21,24 @@ export function getKonvaShape(windowId, shapeId) {
 }
 
 /**
+ *
+ * @param jSONDrawingState
+ * @returns {null}
+ */
+export function parseDrawingState(jSONDrawingState) {
+  let drawingState = null;
+  if (jSONDrawingState && typeof jSONDrawingState === 'string') {
+    drawingState = JSON.parse(jSONDrawingState);
+    console.debug('Parsed drawingState:', drawingState);
+    drawingState = {
+      ...drawingState,
+      currentShape: null,
+    };
+  }
+  return drawingState;
+}
+
+/**
  * Resize the Konva stage and redraw it
  * @param windowId
  * @param width

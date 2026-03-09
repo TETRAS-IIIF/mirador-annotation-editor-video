@@ -10,6 +10,8 @@ import { resizeKonvaStage } from './AnnotationFormOverlay/KonvaDrawing/KonvaUtil
 
 const DEFAULT_BODY_VALUE = 'Annotation';
 
+// This template is only keep for backward compatibility, it will be removed in the future
+// Use MultipleBodyTemplate instead and set the templateType to TEMPLATE.MULTIPLE_BODY_TYPE
 /** Form part for edit annotation content and body */
 function TextCommentTemplate(
   {
@@ -75,7 +77,7 @@ function TextCommentTemplate(
       playerReferences.getMediaTrueHeight(),
       1 / playerReferences.getScale(),
     );
-    if (annotationState.body.value === '') {
+    if (annotationState.body.value === undefined) {
       annotationState.body.value = DEFAULT_BODY_VALUE;
     }
     saveAnnotation(annotationState);

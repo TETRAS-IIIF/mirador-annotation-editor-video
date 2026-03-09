@@ -2,6 +2,10 @@
   "name": "mirador-annotation-editor-video",
   "version": "1.2.12",
   "description": "Mirador annotation editor video plugin in a React component. Mirador 4 compatible",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TETRAS-IIIF/mirador-annotation-editor-video/"
+  },
   "main": "dist/mirador-annotation-editor-video.cjs",
   "module": "dist/mirador-annotation-editor-video.es.js",
   "types": "dist/index.d.ts",
@@ -15,8 +19,8 @@
   "sideEffects": ["dist/index.css"],
   "exports": {
     ".": {
-      "import": "./dist/mirador-annotation-editor-video.es.js",
-      "require": "./dist/mirador-annotation-editor-video.cjs.js"
+      "import": "./dist/mirador-annotation-editor.es.js",
+      "require": "./dist/mirador-annotation-editor.cjs.js"
     },
     "./dist/index.css": "./dist/index.css",
     "./package.json": "./package.json"
@@ -36,7 +40,13 @@
   "contributors": [
     "Anthony Geourjon <anthony.geourjon@tetras-libre.fr> (https://www.tetras-libre.fr)",
     "David Rouquet <david.rouquet@tetras-libre.fr> (https://www.tetras-libre.fr)",
-    "Antoine Roy <antoine.roy@tetras-libre.fr> (https://www.tetras-libre.fr)"
+    "Antoine Roy <antoine.roy@tetras-libre.fr> (https://www.tetras-libre.fr)",
+    "azop <azop@azopcorp.com>",
+    "Fabian Stoehr <stoehr@ub.uni-leipzig.de>",
+    "Lutz Helm <helm@ub.uni-leipzig.de>",
+    "paulhectork <paul.kervegan@hotmail.fr>",
+    "Ségolène Albouy <44207487+Segolene-Albouy@users.noreply.github.com>",
+    "David Flood <69060117+d-flood@users.noreply.github.com>"
   ],
   "dependencies": {
     "axios": "^1.6.7",
