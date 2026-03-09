@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import AnnotationDrawing from './AnnotationFormOverlay/AnnotationDrawing';
 import { TARGET_TOOL_STATE, TARGET_VIEW } from './AnnotationFormUtils';
 import AnnotationFormOverlay from './AnnotationFormOverlay/AnnotationFormOverlay';
-import { KONVA_MODE } from './AnnotationFormOverlay/KonvaDrawing/KonvaUtils';
+import { KONVA_MODE, OVERLAY_TOOL } from './AnnotationFormOverlay/KonvaDrawing/KonvaUtils';
 
 /**
  * TargetSpatialInput - Target spatial input component
@@ -32,7 +32,12 @@ export function TargetSpatialInput({
     ...targetDrawingState,
   }));
 
-  const [toolState, setToolState] = useState(TARGET_TOOL_STATE);
+  const hasExistingShapes = Array.isArray(targetDrawingState?.shapes)
+    && targetDrawingState.shapes.length > 0;
+
+  const [toolState, setToolState] = useState(hasExistingShapes
+    ? TARGET_TOOL_STATE
+    : { ...TARGET_TOOL_STATE, activeTool: OVERLAY_TOOL.SHAPE });
   const [, setViewTool] = useState(TARGET_VIEW);
   const [scale, setScale] = useState(playerReferences.getScale());
 
