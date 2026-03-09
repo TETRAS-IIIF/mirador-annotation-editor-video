@@ -8,15 +8,11 @@ import AnnotationFormFooter from './AnnotationFormFooter';
 import { TEMPLATE } from './AnnotationFormUtils';
 import { resizeKonvaStage } from './AnnotationFormOverlay/KonvaDrawing/KonvaUtils';
 
-const DEFAULT_BODY_VALUE = {
-  id: uuid(),
-  type: 'TextualBody',
-  value: `No content, ${Date.now()}`,
-};
+const DEFAULT_BODY_VALUE = 'Annotation';
 
-/** Form part for edit annotation content and body */
 // This template is only keep for backward compatibility, it will be removed in the future
 // Use MultipleBodyTemplate instead and set the templateType to TEMPLATE.MULTIPLE_BODY_TYPE
+/** Form part for edit annotation content and body */
 function TextCommentTemplate(
   {
     annotation,
