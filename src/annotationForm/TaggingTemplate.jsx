@@ -5,10 +5,7 @@ import PropTypes from 'prop-types';
 import AnnotationFormFooter from './AnnotationFormFooter';
 import { TEMPLATE } from './AnnotationFormUtils';
 import TargetFormSection from './TargetFormSection';
-import {
-  parseDrawingState,
-  resizeKonvaStage
-} from './AnnotationFormOverlay/KonvaDrawing/KonvaUtils';
+import { resizeKonvaStage } from './AnnotationFormOverlay/KonvaDrawing/KonvaUtils';
 
 /** Tagging Template* */
 export default function TaggingTemplate(
@@ -37,9 +34,10 @@ export default function TaggingTemplate(
       motivation: 'tagging',
       target: null,
     };
-  } else {
-    // eslint-disable-next-line max-len
-    maeAnnotation.maeData.target.drawingState = parseDrawingState(maeAnnotation.maeData.target.drawingState);
+  } else if (maeAnnotation.maeData.target.drawingState && typeof maeAnnotation.maeData.target.drawingState === 'string') {
+    maeAnnotation.maeData.target.drawingState = JSON.parse(
+      maeAnnotation.maeData.target.drawingState,
+    );
   }
 
   const [annotationState, setAnnotationState] = useState(maeAnnotation);
