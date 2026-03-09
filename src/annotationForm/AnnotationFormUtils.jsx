@@ -87,7 +87,7 @@ export const IMAGE_TOOL_STATE = {
  * Specific Tool state for the target SVG
  */
 export const TARGET_TOOL_STATE = {
-  activeTool: OVERLAY_TOOL.SHAPE,
+  activeTool: OVERLAY_TOOL.EDIT,
   closedMode: 'closed',
   fillColor: 'rgba(100,100,100, 0)',
   image: { id: null },
