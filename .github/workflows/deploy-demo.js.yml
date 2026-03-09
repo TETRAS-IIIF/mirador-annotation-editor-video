@@ -42,6 +42,18 @@ jobs:
           ref: main
           path: main_src
 
+      # --- canvas deps (miss native system librabries)---
+      - name: Install dependencies for canvas
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libcairo2-dev \
+            libjpeg-dev \
+            libpango1.0-dev \
+            libgif-dev \
+            librsvg2-dev \
+            build-essential
+
       # --- node setup ---
       - name: Setup Node
         uses: actions/setup-node@v4
