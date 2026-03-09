@@ -411,9 +411,9 @@ export const isEmptyValue = (value) => {
 
 /**
  * Get default value for the annotation body when the body is empty. The default value is a string with the current date and time.
- * @returns {`No content, ${string}`}
+ * @returns {`${string}`}
  */
-const getDefaultValue = () => `No content, ${new Date().toLocaleString()}`;
+const getDefaultValue = () => `${new Date().toLocaleString()}`;
 /**
  * Convert annotation state to be saved. Function change the annotationState object
  * @param annotationState

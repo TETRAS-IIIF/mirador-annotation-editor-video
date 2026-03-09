@@ -52,7 +52,6 @@ export const fr = {
   metadata: 'Métadonnées',
   new_annotation: 'Nouvelle annotation',
   no_annotation: 'Aucune annotation enregistrée pour le moment.',
-  no_content: 'Aucun contenu',
   note: 'Note',
   object_list: 'Liste des objets',
   onlyOneImageAllowed: 'Une seule image par annotation',
