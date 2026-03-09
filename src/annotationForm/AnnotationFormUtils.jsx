@@ -207,4 +207,25 @@ export const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => 
   },
   border: 'none',
   margin: theme.spacing(0.5),
+  // Style individual ToggleButtons inside this group
+  '& .MuiToggleButton-root': {
+    borderRadius: theme.shape.borderRadius,
+    color: theme.palette.text.primary,
+    transition: 'transform 120ms ease, box-shadow 120ms ease, background-color 120ms ease',
+    // subtle hover lift for all buttons
+    '&:hover': {
+      transform: 'translateY(-1px)',
+      boxShadow: theme.shadows[1],
+    },
+  },
+  // Emphasize the selected button
+  '& .MuiToggleButton-root.Mui-selected': {
+    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.primary.contrastText,
+    boxShadow: theme.shadows[3],
+    transform: 'scale(1.03)',
+    '&:hover': {
+      backgroundColor: theme.palette.primary.dark,
+    },
+  },
 }));
