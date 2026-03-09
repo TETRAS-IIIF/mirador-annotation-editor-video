@@ -15,6 +15,8 @@ const DEFAULT_BODY_VALUE = {
 };
 
 /** Form part for edit annotation content and body */
+// This template is only keep for backward compatibility, it will be removed in the future
+// Use MultipleBodyTemplate instead and set the templateType to TEMPLATE.MULTIPLE_BODY_TYPE
 function TextCommentTemplate(
   {
     annotation,
