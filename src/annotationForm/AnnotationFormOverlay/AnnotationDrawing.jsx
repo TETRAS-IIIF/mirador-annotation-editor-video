@@ -28,6 +28,7 @@ export default function AnnotationDrawing(
   const width = playerReferences.getMediaTrueWidth();
 
   const [isDrawing, setIsDrawing] = useState(false);
+  const [isResizing, setIsResizing] = useState(false);
 
   // This useEffect is necessary to update the scale when the window is resized. If not drawing
   // stage is not aligned with the image.
@@ -223,6 +224,11 @@ export default function AnnotationDrawing(
    * @param {Object} evt - The event object containing the target shape's modified attributes.
    */
   const onTransform = (evt) => {
+
+    console.log('onTransform');
+
+
+
     const modifiedShape = evt.target.attrs;
 
     const shape = drawingState.shapes.find((s) => s.id === modifiedShape.id);
@@ -233,6 +239,10 @@ export default function AnnotationDrawing(
       shape.height = modifiedShape.image.height * modifiedShape.scaleY;
     }
     updateCurrentShapeInShapes(shape);
+
+    if(!isResizing){
+      setIsResizing(true);
+    }
   };
 
   /**
@@ -577,7 +587,9 @@ export default function AnnotationDrawing(
     console.debug(drawingState);
     console.debug(toolState);
 
-    if (drawingState.currentShape) {
+
+
+    if (drawingState.currentShape && !isResizing) {
       const stage = e.target.getStage();
       const clickedOnEmpty = e.target === stage;
       // I click on stage, not on a shape
@@ -611,6 +623,8 @@ export default function AnnotationDrawing(
         });
       }
     }
+
+    setIsResizing(false);
   };
 
   /** */
