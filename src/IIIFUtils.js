@@ -4,7 +4,7 @@ import {
   getKonvaAsDataURL,
   getSvg,
   SHAPES_TOOL,
-  OVERLAY_TOOL,
+  OVERLAY_TOOL
 } from './annotationForm/AnnotationFormOverlay/KonvaDrawing/KonvaUtils';
 import { TARGET_TOOL_STATE, TEMPLATE } from './annotationForm/AnnotationFormUtils';
 
@@ -410,24 +410,10 @@ export const isEmptyValue = (value) => {
 };
 
 /**
- * Generates a default HTML body for empty annotations.
- *
- * The body contains an emphasized "No content" message
- * along with the current local timestamp.
- *
- * @returns {string} HTML string used as a fallback annotation body
+ * Get default value for the annotation body when the body is empty. The default value is a string with the current date and time.
+ * @returns {`No content, ${string}`}
  */
-const getDefaultHtmlBodyValue = () => `<p><em>No content, ${new Date().toLocaleString()}</em></p>`;
-
-/**
- * Generates a default HTML body for empty annotations.
- *
- * The body contains an emphasized "No content" message
- * along with the current local timestamp.
- *
- * @returns {string} HTML string used as a fallback annotation body
- */
-const getDefaultTagValue = () => `No content, ${new Date().toLocaleString()}`;
+const getDefaultValue = () => `No content, ${new Date().toLocaleString()}`;
 /**
  * Convert annotation state to be saved. Function change the annotationState object
  * @param annotationState
@@ -443,43 +429,30 @@ export const convertAnnotationStateToBeSaved = async (
   playerReferences,
 ) => {
   const annotationStateForSaving = annotationState;
-  const htmlDefault = getDefaultHtmlBodyValue();
-  const tagDefault = getDefaultTagValue();
 
-  if (annotationStateForSaving.maeData?.templateType === TEMPLATE.TAGGING_TYPE) {
-    if (
-      annotationStateForSaving.body?.type === 'Image'
-        && isEmptyValue(annotationStateForSaving.body.value)
-    ) {
-      annotationStateForSaving.body.value = tagDefault;
-    }
-
-    return annotationStateForSaving;
+  if (annotationState.maeData.templateType === TEMPLATE.IIIF_TYPE) {
+    return annotationState;
   }
 
+  // Duplicated code, not ideal but it will be erase by isolation template refactoring.
+  // All template will integrate their specific logic to convert annotationState to be saved in
+  // their own way, so we will not need this big function anymore.
   if (
     annotationStateForSaving.body
       && !Array.isArray(annotationStateForSaving.body)
-      && annotationStateForSaving.body.type === 'TextualBody'
       && isEmptyValue(annotationStateForSaving.body.value)
   ) {
-    annotationStateForSaving.body.value = htmlDefault;
-  }
-
-  if (
-    Array.isArray(annotationStateForSaving.body)
-      && annotationStateForSaving.body[0]?.type === 'TextualBody'
-      && isEmptyValue(annotationStateForSaving.body[0].value)
-  ) {
-    annotationStateForSaving.body[0].value = htmlDefault;
+    annotationStateForSaving.body.value = getDefaultValue();
   }
 
   if (
     annotationStateForSaving.maeData?.textBody
       && isEmptyValue(annotationStateForSaving.maeData.textBody.value)
   ) {
-    annotationStateForSaving.maeData.textBody.value = htmlDefault;
+    annotationStateForSaving.maeData.textBody.value = getDefaultValue();
   }
+
+  // TODO I dont know why this code is here? To clean the object ?
   annotationStateForSaving.maeData.target = {
     drawingState: annotationStateForSaving.maeData.target.drawingState,
     fullCanvaXYWH: annotationStateForSaving.maeData.target.fullCanvaXYWH,
@@ -488,26 +461,25 @@ export const convertAnnotationStateToBeSaved = async (
     tstart: annotationStateForSaving.maeData.target.tstart,
   };
 
-  if (
-    annotationStateForSaving.maeData.templateType === TEMPLATE.TAGGING_TYPE
-      || annotationStateForSaving.maeData.templateType === TEMPLATE.TEXT_TYPE
-      || annotationStateForSaving.maeData.templateType === TEMPLATE.MULTIPLE_BODY_TYPE
-  ) {
+  console.info('Annotation state target', annotationState.maeData.target);
+
+  if (annotationStateForSaving.maeData.templateType === TEMPLATE.TAGGING_TYPE
+    || annotationStateForSaving.maeData.templateType === TEMPLATE.TEXT_TYPE
+    || annotationStateForSaving.maeData.templateType === TEMPLATE.MULTIPLE_BODY_TYPE) {
+    // Complex annotation
     if (annotationStateForSaving.maeData.target.drawingState.shapes.length > 0) {
       annotationStateForSaving.maeData.target.svg = await getSvg(windowId);
     }
   }
 
   if (annotationStateForSaving.maeData.templateType === TEMPLATE.MULTIPLE_BODY_TYPE) {
-    annotationStateForSaving.body = [
-      annotationStateForSaving.maeData.textBody,
-      ...annotationStateForSaving.maeData.tags.map((tag) => ({
-        id: tag.value,
-        purpose: 'tagging',
-        type: 'TextualBody',
-        value: tag.value,
-      })),
-    ];
+    annotationStateForSaving.body = [annotationState.maeData.textBody];
+    annotationStateForSaving.body.push(...annotationState.maeData.tags.map((tag) => ({
+      id: tag.value,
+      purpose: 'tagging',
+      type: 'TextualBody',
+      value: tag.value,
+    })));
   }
 
   if (isAnnotationExportableToImage(annotationStateForSaving.maeData)) {
@@ -516,8 +488,9 @@ export const convertAnnotationStateToBeSaved = async (
     annotationStateForSaving.type = 'Annotation';
   }
 
+  // TODO Always relevant ?
   annotationStateForSaving.maeData.target.scale = playerReferences.getMediaTrueHeight()
-        / playerReferences.getDisplayedMediaHeight() * playerReferences.getZoom();
+    / playerReferences.getDisplayedMediaHeight() * playerReferences.getZoom();
 
   annotationStateForSaving.target = getIIIFTargetFromMaeData(
     annotationStateForSaving.maeData,

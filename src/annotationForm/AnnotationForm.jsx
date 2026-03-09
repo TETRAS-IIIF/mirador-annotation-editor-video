@@ -36,12 +36,6 @@ function AnnotationForm(
 
   const [, forceUpdate] = useReducer((x) => x + 1, 0);
 
-  /**
-   * Generates the default body value for empty annotations
-   * @returns {string} HTML string with translated "No content" message and current timestamp
-   */
-  const getDefaultBodyValue = () => `<p><em>${t('no_content')}, ${new Date().toLocaleString()}</em></p>`;
-
   if (!playerReferences.isInitializedCorrectly() && retryCount < 10) {
     console.log('AnnotationForm.js: retryCount', retryCount);
     setTimeout(() => {
