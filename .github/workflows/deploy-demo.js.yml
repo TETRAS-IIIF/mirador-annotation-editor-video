@@ -67,7 +67,9 @@ jobs:
       # -------- stable build --------
       - name: Install (stable)
         working-directory: demo_src
-        run: npm ci
+        run: | 
+          node -v 
+          npm ci
 
       - name: Build (stable)
         working-directory: demo_src
