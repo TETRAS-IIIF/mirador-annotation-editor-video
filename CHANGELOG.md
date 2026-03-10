@@ -9,7 +9,7 @@ Entries types:
 - `FIXED` for any bug fixes.
 - `SECURITY` to invite users to upgrade in case of vulnerabilities.
 
-## [ 1.2.13]
+## [ 1.2.14]
 
 - MERGE : MAE 1.2.3
 
