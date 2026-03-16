@@ -17,12 +17,10 @@ import SmartToyOutlinedIcon from '@mui/icons-material/SmartToyOutlined';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import { useSelector, useDispatch } from 'react-redux';
 import { receiveAnnotation } from 'mirador';
-import { v4 as uuidv4 } from 'uuid';
 import AnnotationFormFooter from './AnnotationFormFooter';
 import LLMServiceAdapter from '../annotationAdapter/LLMServiceAdapter';
 // eslint-disable-next-line import/no-named-as-default
 import LLMApiService from '../annotationAdapter/LLMApiService';
-import { TEMPLATE } from './AnnotationFormUtils';
 
 /**
  * @typedef {Object} ChatMessage
@@ -109,51 +107,6 @@ export default function AITemplate({
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [conversation]);
 
-  // const createMaeAnnotation = (canvasId, annotation) => {
-  //   const selectorValue = annotation?.target?.selector?.value;
-  //   if (!selectorValue) return null;
-  //
-  //   const match = selectorValue.match(/xywh=([\d\.,]+)/);
-  //   if (!match) return null;
-  //
-  //   const [x, y, w, h] = match[1].split(',').map(Number);
-  //
-  //   const aiMotivation = annotation.motivation || 'describing';
-  //
-  //   const renderMotivation = ['commenting', 'tagging', 'describing'].includes(aiMotivation)
-  //       ? aiMotivation
-  //       : 'commenting';
-  //
-  //   return {
-  //     ...annotation,
-  //     id: uuidv4(),
-  //     type: 'Annotation',
-  //     motivation: renderMotivation,
-  //     target: {
-  //       source: canvasId,
-  //       selector: {
-  //         type: 'FragmentSelector',
-  //         conformsTo: 'http://www.w3.org/TR/media-frags/',
-  //         value: `xywh=${x},${y},${w},${h}`,
-  //       },
-  //     },
-  //     maeData: {
-  //       templateType: aiMotivation === 'tagging' ? TEMPLATE.TAGGING_TYPE : TEMPLATE.AI_TYPE,
-  //       aiMotivation,
-  //       target: {
-  //         drawingState: {
-  //           id: uuidv4(),
-  //           tool: 'rectangle',
-  //           x,
-  //           y,
-  //           width: w,
-  //           height: h,
-  //         },
-  //       },
-  //     },
-  //   };
-  // };
-
   const saveAISegments = async (segments) => {
     const activeCanvases = playerReferences.getCanvases?.() || [];
     if (!activeCanvases.length) return;
@@ -169,7 +122,7 @@ export default function AITemplate({
           ...segment,
           target: {
             ...segment.target,
-            source: canvas.id, // ✅ only thing we enforce
+            source: canvas.id,
           },
         };
 
