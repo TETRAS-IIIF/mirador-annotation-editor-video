@@ -11,10 +11,14 @@ import {
   Avatar,
   Divider,
   CircularProgress,
+  Chip,
+  Stack,
 } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import SmartToyOutlinedIcon from '@mui/icons-material/SmartToyOutlined';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
+import TranslateIcon from '@mui/icons-material/Translate';
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import { useSelector, useDispatch } from 'react-redux';
 import { receiveAnnotation } from 'mirador';
 import AnnotationFormFooter from './AnnotationFormFooter';
@@ -22,67 +26,34 @@ import LLMServiceAdapter from '../annotationAdapter/LLMServiceAdapter';
 // eslint-disable-next-line import/no-named-as-default
 import LLMApiService from '../annotationAdapter/LLMApiService';
 
-/**
- * @typedef {Object} ChatMessage
- * @property {string} id
- * @property {'user' | 'assistant' | 'system'} role
- * @property {string} content
- */
-/**
- * AITemplate Component
- *
- * Renders an AI-assisted chat interface for creating or refining IIIF annotations.
- * It displays a conversation history between the user and an assistant, handling
- * real-time input and displaying JSON-formatted responses.
- *
- * @param {object} props - The component props
- * @param {object} props.annotation
- * - The initial annotation object (contains body, target, motivation, etc.).
- * @param {Array<object>} props.canvases
- * - An array of IIIF Canvas objects associated with the current view.
- * @param {Function} props.closeFormCompanionWindow
- * - Callback function to close the companion window.
- * @param {Function} props.saveAnnotation - Callback function to save changes to the annotation.
- *                                          Signature: (annotationData, target) => void.
- * @param {Function} props.t - Internationalization translation function.
- *
- * @returns {JSX.Element} The rendered chat interface and form footer.
- */
 export default function AITemplate({
-  annotation,
-  canvases,
-  closeFormCompanionWindow,
-  playerReferences,
-  saveAnnotation,
-  t,
-}) {
+                                     annotation,
+                                     canvases,
+                                     closeFormCompanionWindow,
+                                     playerReferences,
+                                     saveAnnotation,
+                                     t,
+                                   }) {
   const dispatch = useDispatch();
   const config = useSelector((state) => state.config);
+  const windows = useSelector((state) => state.windows);
   const [annotationState] = useState(annotation);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef(null);
   const [conversationId, setConversationId] = useState(null);
   const [conversation, setConversation] = useState([]);
-  const windows = useSelector((state) => state.windows);
+
   const windowId = Object.keys(windows)[0];
-  const conversationService = useMemo(
-    () => new LLMServiceAdapter(),
-    [],
-  );
+  const manifestUrl = windows[windowId]?.manifestId;
 
-
-  const llmApi = useMemo(
-    () => new LLMApiService(config.llm.endpoint),
-    [config.llm.endpoint],
-  );
+  const conversationService = useMemo(() => new LLMServiceAdapter(), []);
+  const llmApi = useMemo(() => new LLMApiService(config.llm.endpoint), [config.llm.endpoint]);
 
   useEffect(() => {
     if (!canvases?.length) return;
-
     const canvasId = canvases[0].id;
     const storageKey = `canvas-${canvasId}`;
-
     const conv = conversationService.getConversation(storageKey);
 
     if (!conv) {
@@ -92,50 +63,32 @@ export default function AITemplate({
         messages: {},
         rootMessageId: null,
       };
-      // eslint-disable-next-line no-underscore-dangle
       conversationService._save();
     }
-
     setConversationId(storageKey);
-
     const branch = conversationService.getActiveBranch(storageKey) || [];
     setConversation(branch);
   }, [canvases]);
 
-  // Scroll to bottom when conversation updates
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [conversation]);
+  }, [conversation, isLoading]);
 
   const saveAISegments = async (segments) => {
     const activeCanvases = playerReferences.getCanvases?.() || [];
     if (!activeCanvases.length) return;
     const canvas = activeCanvases[0];
 
-    if (!canvas || !segments) return;
-
     const storageAdapter = config.annotation.adapter(canvas.id);
-    console.log(canvases[0].width, canvases[0].height)
     for (const segment of segments) {
       try {
         const annotationToSave = {
           ...segment,
-          target: {
-            ...segment.target,
-            source: canvas.id,
-          },
+          target: { ...segment.target, source: canvas.id },
         };
-
         const annoPage = await storageAdapter.create(annotationToSave);
-
         if (annoPage) {
-          dispatch(
-            receiveAnnotation(
-              canvas.id,
-              storageAdapter.annotationPageId,
-              annoPage,
-            ),
-          );
+          dispatch(receiveAnnotation(canvas.id, storageAdapter.annotationPageId, annoPage));
         }
       } catch (err) {
         console.error('AI Save Error:', err);
@@ -144,29 +97,94 @@ export default function AITemplate({
   };
 
   /**
-   * Handles the submission of a user message.
-   *
-   * This function performs the following actions:
-   * 1. Validates the input to prevent sending empty messages.
-   * 2. Optimistically updates the `conversation` state to show the user's message immediately.
-   * 3. Clears the `input` field and sets `isLoading` to true.
-   * 4. Initiates the API request (currently simulated with setTimeout).
-   *
-   * @returns {void}
+   * Action: Translate logic calling FastAPI
    */
-  const handleSend = async () => {
-    if (!input.trim() || !conversationId) return;
+  const handleTranslate = async () => {
+    const activeCanvases = playerReferences.getCanvases?.() || [];
+    if (!activeCanvases.length || !manifestUrl) return;
+
+    const canvasId = activeCanvases[0].id;
+    const canvasIndex = activeCanvases[0].index;
 
     setIsLoading(true);
+    try {
+      const response = await fetch(`${config.llm.endpoint}iiif/translate-manifest`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          manifest_url: manifestUrl,
+          canvas_index: canvasIndex,
+          target_lang: 'English',
+          target_iso: 'en',
+        }),
+      });
 
+      const updatedManifest = await response.json();
+      const newAnnos = updatedManifest.items[canvasIndex]?.annotations || [];
+
+      newAnnos.forEach((annoPage) => {
+        dispatch(receiveAnnotation(canvasId, annoPage.id, annoPage));
+      });
+
+      conversationService.addMessage(conversationId, 'assistant', '✅ Translation complete. Annotations added to viewer.', null);
+      setConversation(conversationService.getActiveBranch(conversationId));
+    } catch (err) {
+      console.error('Translation error', err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  /**
+   * Action: Describe logic calling FastAPI
+   */
+  const handleDescribe = async () => {
+    const activeCanvases = playerReferences.getCanvases?.() || [];
+    if (!activeCanvases.length || !manifestUrl) return;
+
+    const canvasId = activeCanvases[0].id;
+    const canvasIndex = activeCanvases[0].index;
+
+    setIsLoading(true);
+    try {
+      const response = await fetch(`${config.llm.endpoint}iiif/describe-manifest`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          manifest_url: manifestUrl,
+          canvas_index: canvasIndex,
+        }),
+      });
+
+      const updatedManifest = await response.json();
+      const newAnnos = updatedManifest.items[canvasIndex]?.annotations || [];
+
+      newAnnos.forEach((annoPage) => {
+        dispatch(receiveAnnotation(canvasId, annoPage.id, annoPage));
+      });
+
+      conversationService.addMessage(conversationId, 'assistant', '✨ Visual description generated and attached.', null);
+      setConversation(conversationService.getActiveBranch(conversationId));
+    } catch (err) {
+      console.error('Description error', err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSend = async (forcedInput = null) => {
+    const textToSend = forcedInput || input;
+    if (!textToSend.trim() || !conversationId) return;
+
+    setIsLoading(true);
     const conv = conversationService.getConversation(conversationId);
     const parentId = conv?.activeLeafId || null;
 
     const userMessageId = conversationService.addMessage(
-      conversationId,
-      'user',
-      input,
-      parentId,
+        conversationId,
+        'user',
+        textToSend,
+        parentId,
     );
 
     const updatedBranch = conversationService.getActiveBranch(conversationId);
@@ -179,27 +197,19 @@ export default function AITemplate({
         role: m.role,
       }));
 
-      const manifestUrl = windows[windowId]?.manifestId;
       const activeCanvases = playerReferences.getCanvases?.() || [];
       if (!activeCanvases.length) return;
 
-      const canvasId = activeCanvases[0].index;
-      const reply = await llmApi.callLLM(formattedConversation, manifestUrl, canvasId);
-      console.log('reply', reply);
+      const canvasIndex = activeCanvases[0].index;
+      const reply = await llmApi.callLLM(formattedConversation, manifestUrl, canvasIndex);
+
       if (reply.tool_output?.type === 'AnnotationPage' && reply.tool_output?.items?.length) {
         await saveAISegments(reply.tool_output.items);
       }
 
-      let assistantMessage;
       if (reply.conversation && reply.conversation[reply.conversation.length - 1]) {
-        assistantMessage = reply.conversation[reply.conversation.length - 1].content;
-
-        conversationService.addMessage(
-          conversationId,
-          'assistant',
-          assistantMessage,
-          userMessageId,
-        );
+        const assistantMessage = reply.conversation[reply.conversation.length - 1].content;
+        conversationService.addMessage(conversationId, 'assistant', assistantMessage, userMessageId);
       }
 
       const finalBranch = conversationService.getActiveBranch(conversationId);
@@ -207,170 +217,148 @@ export default function AITemplate({
     } catch (err) {
       console.error(err);
     }
-
     setIsLoading(false);
   };
 
   return (
-    <>
-      <Paper
-        elevation={0}
-        sx={{
-          bgcolor: 'background.paper',
-          border: '1px solid',
-          borderColor: 'divider',
-          borderRadius: 2,
-          display: 'flex',
-          flexDirection: 'column',
-          height: '700px',
-          mb: 2,
-          overflow: 'hidden',
-        }}
-      >
-        <Box sx={{
-          alignItems: 'center',
-          bgcolor: 'primary.main',
-          boxShadow: 1,
-          color: 'primary.contrastText',
-          display: 'flex',
-          gap: 1.5,
-          p: 2,
-        }}
-        >
-          <SmartToyOutlinedIcon />
-          <Typography variant="subtitle1" fontWeight="600">
-            AI Assistant
-          </Typography>
-        </Box>
-
-        <Box sx={{
-          bgcolor: '#f8f9fa',
-          display: 'flex',
-          flexDirection: 'column',
-          flexGrow: 1,
-          gap: 2,
-          overflowY: 'auto',
-          p: 2,
-        }}
-        >
-          {conversation.map((msg) => {
-            const isAi = msg.role === 'assistant';
-
-            return (
-              <Box
-                key={msg.id}
-                sx={{
-                  alignItems: 'flex-end',
-                  alignSelf: isAi ? 'flex-start' : 'flex-end',
-                  display: 'flex',
-                  flexDirection: isAi ? 'row' : 'row-reverse',
-                  gap: 1,
-                  maxWidth: '100%',
-                }}
-              >
-                <Avatar
-                  sx={{
-                    bgcolor: isAi ? 'secondary.main' : 'primary.dark',
-                    fontSize: '1rem',
-                    height: 32,
-                    width: 32,
-                  }}
-                >
-                  {isAi ? <SmartToyOutlinedIcon fontSize="inherit" /> : <PersonOutlineIcon fontSize="inherit" />}
-                </Avatar>
-
-                <Paper
-                  elevation={isAi ? 1 : 0}
-                  sx={{
-                    bgcolor: isAi ? 'white' : 'primary.main',
-                    border: isAi ? '1px solid #e0e0e0' : 'none',
-                    borderRadius: isAi
-                      ? '18px 18px 18px 4px'
-                      : '18px 18px 4px 18px',
-                    color: isAi ? 'text.primary' : 'primary.contrastText',
-                    p: 1.5,
-                  }}
-                >
-                  <Typography
-                    variant="body2"
-                    sx={{
-                      fontFamily: isAi && msg.content.includes('{') ? 'monospace' : 'inherit',
-                      whiteSpace: 'pre-wrap',
-                      wordBreak: 'break-word',
-                    }}
-                  >
-                    {msg.content}
-                  </Typography>
-                </Paper>
-              </Box>
-            );
-          })}
-
-          {isLoading && (
-            <Box sx={{
-              alignItems: 'center',
+      <>
+        <Paper
+            elevation={0}
+            sx={{
+              bgcolor: 'background.paper',
+              border: '1px solid',
+              borderColor: 'divider',
+              borderRadius: 2,
               display: 'flex',
-              gap: 1,
-              ml: 1,
-              mt: 1,
+              flexDirection: 'column',
+              height: '700px',
+              mb: 2,
+              overflow: 'hidden',
             }}
-            >
-              <CircularProgress size={16} />
-              <Typography variant="caption" color="text.secondary">Generating...</Typography>
-            </Box>
-          )}
+        >
+          {/* Header */}
+          <Box sx={{
+            alignItems: 'center', bgcolor: 'primary.main', color: 'primary.contrastText', display: 'flex', gap: 1.5, p: 2,
+          }}
+          >
+            <SmartToyOutlinedIcon />
+            <Typography variant="subtitle1" fontWeight="600">AI Assistant</Typography>
+          </Box>
 
-          <div ref={messagesEndRef} />
-        </Box>
-
-        <Divider />
-
-        <Box sx={{ bgcolor: 'background.paper', p: 2 }}>
-          <TextField
-            fullWidth
-            placeholder="Type a message..."
-            variant="outlined"
-            size="small"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                handleSend();
-              }
-            }}
-            slotProps={{
-              input: {
-                endAdornment: (
-                  <IconButton
-                    color="primary"
-                    onClick={handleSend}
-                    disabled={!input.trim()}
+          {/* Chat History */}
+          <Box sx={{
+            bgcolor: '#f8f9fa', display: 'flex', flexDirection: 'column', flexGrow: 1, gap: 2, overflowY: 'auto', p: 2,
+          }}
+          >
+            {conversation.map((msg) => {
+              const isAi = msg.role === 'assistant';
+              return (
+                  <Box
+                      key={msg.id}
+                      sx={{
+                        alignItems: 'flex-end', alignSelf: isAi ? 'flex-start' : 'flex-end', display: 'flex', flexDirection: isAi ? 'row' : 'row-reverse', gap: 1, maxWidth: '100%',
+                      }}
                   >
-                    <SendIcon />
-                  </IconButton>
-                ),
-                sx: { borderRadius: 6, pr: 0.5 },
-              },
-            }}
-          />
-        </Box>
-      </Paper>
+                    <Avatar sx={{
+                      bgcolor: isAi ? 'secondary.main' : 'primary.dark', fontSize: '1rem', height: 32, width: 32,
+                    }}
+                    >
+                      {isAi ? <SmartToyOutlinedIcon fontSize="inherit" /> : <PersonOutlineIcon fontSize="inherit" />}
+                    </Avatar>
+                    <Paper
+                        elevation={isAi ? 1 : 0}
+                        sx={{
+                          bgcolor: isAi ? 'white' : 'primary.main', borderRadius: isAi ? '18px 18px 18px 4px' : '18px 18px 4px 18px', color: isAi ? 'text.primary' : 'primary.contrastText', p: 1.5,
+                        }}
+                    >
+                      <Typography variant="body2" sx={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>
+                        {msg.content}
+                      </Typography>
+                    </Paper>
+                  </Box>
+              );
+            })}
+            {isLoading && (
+                <Box sx={{
+                  alignItems: 'center', display: 'flex', gap: 1, ml: 1, mt: 1,
+                }}
+                >
+                  <CircularProgress size={16} />
+                  <Typography variant="caption" color="text.secondary">Generating...</Typography>
+                </Box>
+            )}
+            <div ref={messagesEndRef} />
+          </Box>
 
-      <AnnotationFormFooter
-        closeFormCompanionWindow={closeFormCompanionWindow}
-        saveAnnotation={() => saveAnnotation(annotationState.newData, annotation.target)}
-        t={t}
-        annotationState={annotationState}
-      />
-    </>
+          <Divider />
+
+          {/* --- QUICK ACTION SUGGESTIONS --- */}
+          <Box sx={{ px: 2, pt: 1.5 }}>
+            <Stack direction="row" spacing={1}>
+              <Chip
+                  icon={<TranslateIcon fontSize="small" />}
+                  label="Translate this"
+                  onClick={handleTranslate}
+                  disabled={isLoading}
+                  clickable
+                  size="small"
+                  variant="outlined"
+                  color="primary"
+              />
+              <Chip
+                  icon={<AutoAwesomeIcon fontSize="small" />}
+                  label="Describe this"
+                  onClick={handleDescribe}
+                  disabled={isLoading}
+                  clickable
+                  size="small"
+                  variant="outlined"
+                  color="primary"
+              />
+            </Stack>
+          </Box>
+
+          {/* Input Field */}
+          <Box sx={{ bgcolor: 'background.paper', p: 2 }}>
+            <TextField
+                fullWidth
+                placeholder="Type a message..."
+                variant="outlined"
+                size="small"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    handleSend();
+                  }
+                }}
+                slotProps={{
+                  input: {
+                    endAdornment: (
+                        <IconButton color="primary" onClick={() => handleSend()} disabled={!input.trim() || isLoading}>
+                          <SendIcon />
+                        </IconButton>
+                    ),
+                    sx: { borderRadius: 6, pr: 0.5 },
+                  },
+                }}
+            />
+          </Box>
+        </Paper>
+
+        <AnnotationFormFooter
+            closeFormCompanionWindow={closeFormCompanionWindow}
+            saveAnnotation={() => saveAnnotation(annotationState.newData, annotation.target)}
+            t={t}
+            annotationState={annotationState}
+        />
+      </>
   );
 }
 
 AITemplate.propTypes = {
-  // eslint-disable-next-line react/forbid-prop-types
   annotation: PropTypes.object.isRequired,
-  // eslint-disable-next-line react/forbid-prop-types
   canvases: PropTypes.arrayOf(PropTypes.object).isRequired,
   closeFormCompanionWindow: PropTypes.func.isRequired,
   playerReferences: PropTypes.shape({
