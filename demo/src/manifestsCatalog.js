@@ -1,5 +1,6 @@
 export const manifestsCatalog = [
   // { manifestId: 'https://files.tetras-libre.fr/dev/multicanva-video.json' },
+  { manifestId: 'https://collections.library.yale.edu/manifests/12081066' },
   { manifestId: 'https://files.tetras-libre.fr/dev/sun-400x400.json' },
   { manifestId: 'https://files.tetras-libre.fr/dev/test-vertical-video.json' },
   { manifestId: 'https://files.tetras-libre.fr/dev/Heterogeneous-media-on-several-canvases.json' },

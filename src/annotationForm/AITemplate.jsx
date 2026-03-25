@@ -27,13 +27,13 @@ import LLMServiceAdapter from '../annotationAdapter/LLMServiceAdapter';
 import LLMApiService from '../annotationAdapter/LLMApiService';
 
 export default function AITemplate({
-                                     annotation,
-                                     canvases,
-                                     closeFormCompanionWindow,
-                                     playerReferences,
-                                     saveAnnotation,
-                                     t,
-                                   }) {
+  annotation,
+  canvases,
+  closeFormCompanionWindow,
+  playerReferences,
+  saveAnnotation,
+  t,
+}) {
   const dispatch = useDispatch();
   const config = useSelector((state) => state.config);
   const windows = useSelector((state) => state.windows);
@@ -157,6 +157,7 @@ export default function AITemplate({
       });
 
       const updatedManifest = await response.json();
+
       const newAnnos = updatedManifest.items[canvasIndex]?.annotations || [];
 
       newAnnos.forEach((annoPage) => {
@@ -181,10 +182,10 @@ export default function AITemplate({
     const parentId = conv?.activeLeafId || null;
 
     const userMessageId = conversationService.addMessage(
-        conversationId,
-        'user',
-        textToSend,
-        parentId,
+      conversationId,
+      'user',
+      textToSend,
+      parentId,
     );
 
     const updatedBranch = conversationService.getActiveBranch(conversationId);
@@ -220,140 +221,190 @@ export default function AITemplate({
     setIsLoading(false);
   };
 
-  return (
-      <>
-        <Paper
-            elevation={0}
-            sx={{
-              bgcolor: 'background.paper',
-              border: '1px solid',
-              borderColor: 'divider',
-              borderRadius: 2,
-              display: 'flex',
-              flexDirection: 'column',
-              height: '700px',
-              mb: 2,
-              overflow: 'hidden',
-            }}
-        >
-          {/* Header */}
-          <Box sx={{
-            alignItems: 'center', bgcolor: 'primary.main', color: 'primary.contrastText', display: 'flex', gap: 1.5, p: 2,
-          }}
-          >
-            <SmartToyOutlinedIcon />
-            <Typography variant="subtitle1" fontWeight="600">AI Assistant</Typography>
-          </Box>
+  /**
+   * Action: Annotate (describe + segments)
+   */
+  const handleAnnotate = async () => {
+    const activeCanvases = playerReferences.getCanvases?.() || [];
+    if (!activeCanvases.length || !manifestUrl) return;
 
-          {/* Chat History */}
-          <Box sx={{
-            bgcolor: '#f8f9fa', display: 'flex', flexDirection: 'column', flexGrow: 1, gap: 2, overflowY: 'auto', p: 2,
-          }}
-          >
-            {conversation.map((msg) => {
-              const isAi = msg.role === 'assistant';
-              return (
-                  <Box
-                      key={msg.id}
-                      sx={{
-                        alignItems: 'flex-end', alignSelf: isAi ? 'flex-start' : 'flex-end', display: 'flex', flexDirection: isAi ? 'row' : 'row-reverse', gap: 1, maxWidth: '100%',
-                      }}
-                  >
-                    <Avatar sx={{
-                      bgcolor: isAi ? 'secondary.main' : 'primary.dark', fontSize: '1rem', height: 32, width: 32,
-                    }}
-                    >
-                      {isAi ? <SmartToyOutlinedIcon fontSize="inherit" /> : <PersonOutlineIcon fontSize="inherit" />}
-                    </Avatar>
-                    <Paper
-                        elevation={isAi ? 1 : 0}
-                        sx={{
-                          bgcolor: isAi ? 'white' : 'primary.main', borderRadius: isAi ? '18px 18px 18px 4px' : '18px 18px 4px 18px', color: isAi ? 'text.primary' : 'primary.contrastText', p: 1.5,
-                        }}
-                    >
-                      <Typography variant="body2" sx={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>
-                        {msg.content}
-                      </Typography>
-                    </Paper>
-                  </Box>
-              );
-            })}
-            {isLoading && (
-                <Box sx={{
-                  alignItems: 'center', display: 'flex', gap: 1, ml: 1, mt: 1,
+    const canvasId = activeCanvases[0].id;
+    const canvasIndex = activeCanvases[0].index;
+
+    setIsLoading(true);
+    try {
+      const response = await fetch(`${config.llm.endpoint}iiif/annotate-manifest`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          manifest_url: manifestUrl,
+          canvas_index: canvasIndex,
+        }),
+      });
+
+      const updatedManifest = await response.json();
+
+      const newAnnos = updatedManifest.items[canvasIndex]?.annotations || [];
+
+      newAnnos.forEach((annoPage) => {
+        dispatch(receiveAnnotation(canvasId, annoPage.id, annoPage));
+      });
+
+      conversationService.addMessage(
+        conversationId,
+        'assistant',
+        '🧠 Full annotation complete (description + regions added).',
+        null,
+      );
+
+      setConversation(conversationService.getActiveBranch(conversationId));
+    } catch (err) {
+      console.error('Annotate error', err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <>
+      <Paper
+        elevation={0}
+        sx={{
+          bgcolor: 'background.paper',
+          border: '1px solid',
+          borderColor: 'divider',
+          borderRadius: 2,
+          display: 'flex',
+          flexDirection: 'column',
+          height: '700px',
+          mb: 2,
+          overflow: 'hidden',
+        }}
+      >
+        <Box sx={{
+          alignItems: 'center', bgcolor: 'primary.main', color: 'primary.contrastText', display: 'flex', gap: 1.5, p: 2,
+        }}
+        >
+          <SmartToyOutlinedIcon />
+          <Typography variant="subtitle1" fontWeight="600">AI Assistant</Typography>
+        </Box>
+
+        <Box sx={{
+          bgcolor: '#f8f9fa', display: 'flex', flexDirection: 'column', flexGrow: 1, gap: 2, overflowY: 'auto', p: 2,
+        }}
+        >
+          {conversation.map((msg) => {
+            const isAi = msg.role === 'assistant';
+            return (
+              <Box
+                key={msg.id}
+                sx={{
+                  alignItems: 'flex-end', alignSelf: isAi ? 'flex-start' : 'flex-end', display: 'flex', flexDirection: isAi ? 'row' : 'row-reverse', gap: 1, maxWidth: '100%',
+                }}
+              >
+                <Avatar sx={{
+                  bgcolor: isAi ? 'secondary.main' : 'primary.dark', fontSize: '1rem', height: 32, width: 32,
                 }}
                 >
-                  <CircularProgress size={16} />
-                  <Typography variant="caption" color="text.secondary">Generating...</Typography>
-                </Box>
-            )}
-            <div ref={messagesEndRef} />
-          </Box>
+                  {isAi ? <SmartToyOutlinedIcon fontSize="inherit" /> : <PersonOutlineIcon fontSize="inherit" />}
+                </Avatar>
+                <Paper
+                  elevation={isAi ? 1 : 0}
+                  sx={{
+                    bgcolor: isAi ? 'white' : 'primary.main', borderRadius: isAi ? '18px 18px 18px 4px' : '18px 18px 4px 18px', color: isAi ? 'text.primary' : 'primary.contrastText', p: 1.5,
+                  }}
+                >
+                  <Typography variant="body2" sx={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>
+                    {msg.content}
+                  </Typography>
+                </Paper>
+              </Box>
+            );
+          })}
+          {isLoading && (
+            <Box sx={{
+              alignItems: 'center', display: 'flex', gap: 1, ml: 1, mt: 1,
+            }}
+            >
+              <CircularProgress size={16} />
+              <Typography variant="caption" color="text.secondary">Generating...</Typography>
+            </Box>
+          )}
+          <div ref={messagesEndRef} />
+        </Box>
 
-          <Divider />
+        <Divider />
 
-          {/* --- QUICK ACTION SUGGESTIONS --- */}
-          <Box sx={{ px: 2, pt: 1.5 }}>
-            <Stack direction="row" spacing={1}>
-              <Chip
-                  icon={<TranslateIcon fontSize="small" />}
-                  label="Translate this"
-                  onClick={handleTranslate}
-                  disabled={isLoading}
-                  clickable
-                  size="small"
-                  variant="outlined"
-                  color="primary"
-              />
-              <Chip
-                  icon={<AutoAwesomeIcon fontSize="small" />}
-                  label="Describe this"
-                  onClick={handleDescribe}
-                  disabled={isLoading}
-                  clickable
-                  size="small"
-                  variant="outlined"
-                  color="primary"
-              />
-            </Stack>
-          </Box>
-
-          {/* Input Field */}
-          <Box sx={{ bgcolor: 'background.paper', p: 2 }}>
-            <TextField
-                fullWidth
-                placeholder="Type a message..."
-                variant="outlined"
-                size="small"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    handleSend();
-                  }
-                }}
-                slotProps={{
-                  input: {
-                    endAdornment: (
-                        <IconButton color="primary" onClick={() => handleSend()} disabled={!input.trim() || isLoading}>
-                          <SendIcon />
-                        </IconButton>
-                    ),
-                    sx: { borderRadius: 6, pr: 0.5 },
-                  },
-                }}
+        <Box sx={{ px: 2, pt: 1.5 }}>
+          <Stack direction="row" spacing={1}>
+            <Chip
+              icon={<TranslateIcon fontSize="small" />}
+              label="Translate this"
+              onClick={handleTranslate}
+              disabled={isLoading}
+              clickable
+              size="small"
+              variant="outlined"
+              color="primary"
             />
-          </Box>
-        </Paper>
+            <Chip
+              icon={<AutoAwesomeIcon fontSize="small" />}
+              label="Describe this"
+              onClick={handleDescribe}
+              disabled={isLoading}
+              clickable
+              size="small"
+              variant="outlined"
+              color="primary"
+            />
+            <Chip
+              icon={<AutoAwesomeIcon fontSize="small" />}
+              label="Annotate this"
+              onClick={handleAnnotate}
+              disabled={isLoading}
+              clickable
+              size="small"
+              variant="outlined"
+              color="secondary"
+            />
+          </Stack>
+        </Box>
 
-        <AnnotationFormFooter
-            closeFormCompanionWindow={closeFormCompanionWindow}
-            saveAnnotation={() => saveAnnotation(annotationState.newData, annotation.target)}
-            t={t}
-            annotationState={annotationState}
-        />
-      </>
+        <Box sx={{ bgcolor: 'background.paper', p: 2 }}>
+          <TextField
+            fullWidth
+            placeholder="Type a message..."
+            variant="outlined"
+            size="small"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                handleSend();
+              }
+            }}
+            slotProps={{
+              input: {
+                endAdornment: (
+                  <IconButton color="primary" onClick={() => handleSend()} disabled={!input.trim() || isLoading}>
+                    <SendIcon />
+                  </IconButton>
+                ),
+                sx: { borderRadius: 6, pr: 0.5 },
+              },
+            }}
+          />
+        </Box>
+      </Paper>
+
+      <AnnotationFormFooter
+        closeFormCompanionWindow={closeFormCompanionWindow}
+        saveAnnotation={() => saveAnnotation(annotationState.newData, annotation.target)}
+        t={t}
+        annotationState={annotationState}
+      />
+    </>
   );
 }
 
