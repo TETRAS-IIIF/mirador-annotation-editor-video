@@ -8,7 +8,8 @@ export default class LLMApiService {
     console.log("messages",messages)
     console.log("manifestUrl",manifestUrl)
     console.log("canvasIndex",canvasIndex)
-    const res = await fetch(`${this.endpoint}`, {
+    console.log("this.endpoint",this.endpoint);
+    const res = await fetch(`${this.endpoint}chat`, {
       body: JSON.stringify({
         canvas_index: canvasIndex,
         conversation: messages,

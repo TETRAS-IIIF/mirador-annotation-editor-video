@@ -74,6 +74,19 @@ export default function AITemplate({
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [conversation, isLoading]);
 
+  const pushErrorMessage = () => {
+    if (!conversationId) return;
+
+    conversationService.addMessage(
+      conversationId,
+      'assistant',
+      'Oops — something went wrong on our side. Please try again in a moment.',
+      null,
+    );
+
+    setConversation(conversationService.getActiveBranch(conversationId));
+  };
+
   const saveAISegments = async (segments) => {
     const activeCanvases = playerReferences.getCanvases?.() || [];
     if (!activeCanvases.length) return;
@@ -130,6 +143,7 @@ export default function AITemplate({
       setConversation(conversationService.getActiveBranch(conversationId));
     } catch (err) {
       console.error('Translation error', err);
+      pushErrorMessage();
     } finally {
       setIsLoading(false);
     }
@@ -168,6 +182,7 @@ export default function AITemplate({
       setConversation(conversationService.getActiveBranch(conversationId));
     } catch (err) {
       console.error('Description error', err);
+      pushErrorMessage();
     } finally {
       setIsLoading(false);
     }
@@ -203,7 +218,7 @@ export default function AITemplate({
 
       const canvasIndex = activeCanvases[0].index;
       const reply = await llmApi.callLLM(formattedConversation, manifestUrl, canvasIndex);
-
+      console.log("reply",reply);
       if (reply.tool_output?.type === 'AnnotationPage' && reply.tool_output?.items?.length) {
         await saveAISegments(reply.tool_output.items);
       }
@@ -217,6 +232,7 @@ export default function AITemplate({
       setConversation(finalBranch);
     } catch (err) {
       console.error(err);
+      pushErrorMessage();
     }
     setIsLoading(false);
   };
@@ -260,6 +276,52 @@ export default function AITemplate({
       setConversation(conversationService.getActiveBranch(conversationId));
     } catch (err) {
       console.error('Annotate error', err);
+      pushErrorMessage();
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleTranscribe = async () => {
+    const activeCanvases = playerReferences.getCanvases?.() || [];
+    if (!activeCanvases.length || !manifestUrl) return;
+
+    const canvasId = activeCanvases[0].id;
+    const canvasIndex = activeCanvases[0].index;
+
+    setIsLoading(true);
+
+    try {
+      const res = await fetch(`${config.llm.endpoint}iiif/transcribe`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          manifest_url: 'manifestUrl',
+          canvas_index: canvasIndex,
+        }),
+      });
+
+      const updatedManifest = await res.json();
+
+      const newAnnos = updatedManifest.items?.[canvasIndex]?.annotations || [];
+
+      newAnnos.forEach((annoPage) => {
+        dispatch(receiveAnnotation(canvasId, annoPage.id, annoPage));
+      });
+
+      conversationService.addMessage(
+        conversationId,
+        'assistant',
+        '📝 Transcription added to canvas.',
+        null,
+      );
+
+      setConversation(conversationService.getActiveBranch(conversationId));
+    } catch (err) {
+      console.error('Transcribe error:', err);
+      pushErrorMessage();
     } finally {
       setIsLoading(false);
     }
@@ -341,6 +403,16 @@ export default function AITemplate({
               icon={<TranslateIcon fontSize="small" />}
               label="Translate this"
               onClick={handleTranslate}
+              disabled={isLoading}
+              clickable
+              size="small"
+              variant="outlined"
+              color="primary"
+            />
+            <Chip
+              icon={<AutoAwesomeIcon fontSize="small" />}
+              label="Transcribe this"
+              onClick={handleTranscribe}
               disabled={isLoading}
               clickable
               size="small"
