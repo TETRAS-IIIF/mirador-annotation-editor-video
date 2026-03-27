@@ -1,8 +1,10 @@
-import { Box, Avatar, CircularProgress, Paper, Typography } from '@mui/material';
+import {
+  Box, Avatar, CircularProgress, Paper, Typography,
+} from '@mui/material';
 import React from 'react';
 import SmartToyOutlinedIcon from '@mui/icons-material/SmartToyOutlined';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
-
+import PropTypes from 'prop-types';
 /**
  *
  * @param props
@@ -90,9 +92,11 @@ function AIConversation({
 }
 
 AIConversation.propTypes = {
+  // eslint-disable-next-line react/forbid-prop-types
   conversation: PropTypes.array.isRequired,
   isLoading: PropTypes.bool.isRequired,
-  messagesEndRef: PropTypes.string.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  messagesEndRef: PropTypes.object.isRequired,
 };
 
 export default AIConversation;

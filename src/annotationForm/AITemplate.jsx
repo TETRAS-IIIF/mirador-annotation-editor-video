@@ -5,12 +5,9 @@ import PropTypes from 'prop-types';
 import {
   Paper,
   Box,
-  TextField,
-  IconButton,
   Typography,
   Divider,
 } from '@mui/material';
-import SendIcon from '@mui/icons-material/Send';
 import SmartToyOutlinedIcon from '@mui/icons-material/SmartToyOutlined';
 import { useSelector, useDispatch } from 'react-redux';
 import { receiveAnnotation } from 'mirador';
@@ -20,6 +17,7 @@ import LLMServiceAdapter from '../annotationAdapter/LLMServiceAdapter';
 import LLMApiService from '../annotationAdapter/LLMApiService';
 import UtilsChipTools from './UtilsChipTools';
 import AIConversation from './AIConversation';
+import { AITextInput } from './AITextInput';
 
 export default function AITemplate({
   annotation,
@@ -33,7 +31,7 @@ export default function AITemplate({
   const config = useSelector((state) => state.config);
   const windows = useSelector((state) => state.windows);
   const [annotationState] = useState(annotation);
-  const [input, setInput] = useState('');
+
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef(null);
   const [conversationId, setConversationId] = useState(null);
@@ -105,7 +103,7 @@ export default function AITemplate({
   };
 
   const handleSend = async (forcedInput = null) => {
-    const textToSend = forcedInput || input;
+    const textToSend = forcedInput;
     if (!textToSend.trim() || !conversationId) return;
 
     setIsLoading(true);
@@ -196,32 +194,8 @@ export default function AITemplate({
           pushErrorMessage={pushErrorMessage}
         />
 
-        <Box sx={{ bgcolor: 'background.paper', p: 2 }}>
-          <TextField
-            fullWidth
-            placeholder="Type a message..."
-            variant="outlined"
-            size="small"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                handleSend();
-              }
-            }}
-            slotProps={{
-              input: {
-                endAdornment: (
-                  <IconButton color="primary" onClick={() => handleSend()} disabled={!input.trim() || isLoading}>
-                    <SendIcon />
-                  </IconButton>
-                ),
-                sx: { borderRadius: 6, pr: 0.5 },
-              },
-            }}
-          />
-        </Box>
+        <AITextInput handleSend={handleSend} isLoading={isLoading} />
+
       </Paper>
 
       <AnnotationFormFooter
