@@ -11,20 +11,17 @@ import {
   Avatar,
   Divider,
   CircularProgress,
-  Chip,
-  Stack,
 } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import SmartToyOutlinedIcon from '@mui/icons-material/SmartToyOutlined';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
-import TranslateIcon from '@mui/icons-material/Translate';
-import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import { useSelector, useDispatch } from 'react-redux';
 import { receiveAnnotation } from 'mirador';
 import AnnotationFormFooter from './AnnotationFormFooter';
 import LLMServiceAdapter from '../annotationAdapter/LLMServiceAdapter';
 // eslint-disable-next-line import/no-named-as-default
 import LLMApiService from '../annotationAdapter/LLMApiService';
+import UtilsChipTools from './UtilsChipTools';
 
 export default function AITemplate({
   annotation,
@@ -109,84 +106,6 @@ export default function AITemplate({
     }
   };
 
-  /**
-   * Action: Translate logic calling FastAPI
-   */
-  const handleTranslate = async () => {
-    const activeCanvases = playerReferences.getCanvases?.() || [];
-    if (!activeCanvases.length || !manifestUrl) return;
-
-    const canvasId = activeCanvases[0].id;
-    const canvasIndex = activeCanvases[0].index;
-
-    setIsLoading(true);
-    try {
-      const response = await fetch(`${config.llm.endpoint}iiif/translate-manifest`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          manifest_url: manifestUrl,
-          canvas_index: canvasIndex,
-          target_lang: 'English',
-          target_iso: 'en',
-        }),
-      });
-
-      const updatedManifest = await response.json();
-      const newAnnos = updatedManifest.items[canvasIndex]?.annotations || [];
-
-      newAnnos.forEach((annoPage) => {
-        dispatch(receiveAnnotation(canvasId, annoPage.id, annoPage));
-      });
-
-      conversationService.addMessage(conversationId, 'assistant', '✅ Translation complete. Annotations added to viewer.', null);
-      setConversation(conversationService.getActiveBranch(conversationId));
-    } catch (err) {
-      console.error('Translation error', err);
-      pushErrorMessage();
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  /**
-   * Action: Describe logic calling FastAPI
-   */
-  const handleDescribe = async () => {
-    const activeCanvases = playerReferences.getCanvases?.() || [];
-    if (!activeCanvases.length || !manifestUrl) return;
-
-    const canvasId = activeCanvases[0].id;
-    const canvasIndex = activeCanvases[0].index;
-
-    setIsLoading(true);
-    try {
-      const response = await fetch(`${config.llm.endpoint}iiif/describe-manifest`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          manifest_url: manifestUrl,
-          canvas_index: canvasIndex,
-        }),
-      });
-
-      const updatedManifest = await response.json();
-
-      const newAnnos = updatedManifest.items[canvasIndex]?.annotations || [];
-
-      newAnnos.forEach((annoPage) => {
-        dispatch(receiveAnnotation(canvasId, annoPage.id, annoPage));
-      });
-
-      conversationService.addMessage(conversationId, 'assistant', '✨ Visual description generated and attached.', null);
-      setConversation(conversationService.getActiveBranch(conversationId));
-    } catch (err) {
-      console.error('Description error', err);
-      pushErrorMessage();
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const handleSend = async (forcedInput = null) => {
     const textToSend = forcedInput || input;
@@ -235,96 +154,6 @@ export default function AITemplate({
       pushErrorMessage();
     }
     setIsLoading(false);
-  };
-
-  /**
-   * Action: Annotate (describe + segments)
-   */
-  const handleAnnotate = async () => {
-    const activeCanvases = playerReferences.getCanvases?.() || [];
-    if (!activeCanvases.length || !manifestUrl) return;
-
-    const canvasId = activeCanvases[0].id;
-    const canvasIndex = activeCanvases[0].index;
-
-    setIsLoading(true);
-    try {
-      const response = await fetch(`${config.llm.endpoint}iiif/annotate-manifest`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          manifest_url: manifestUrl,
-          canvas_index: canvasIndex,
-        }),
-      });
-
-      const updatedManifest = await response.json();
-
-      const newAnnos = updatedManifest.items[canvasIndex]?.annotations || [];
-
-      newAnnos.forEach((annoPage) => {
-        dispatch(receiveAnnotation(canvasId, annoPage.id, annoPage));
-      });
-
-      conversationService.addMessage(
-        conversationId,
-        'assistant',
-        '🧠 Full annotation complete (description + regions added).',
-        null,
-      );
-
-      setConversation(conversationService.getActiveBranch(conversationId));
-    } catch (err) {
-      console.error('Annotate error', err);
-      pushErrorMessage();
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleTranscribe = async () => {
-    const activeCanvases = playerReferences.getCanvases?.() || [];
-    if (!activeCanvases.length || !manifestUrl) return;
-
-    const canvasId = activeCanvases[0].id;
-    const canvasIndex = activeCanvases[0].index;
-
-    setIsLoading(true);
-
-    try {
-      const res = await fetch(`${config.llm.endpoint}iiif/transcribe`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          manifest_url: 'manifestUrl',
-          canvas_index: canvasIndex,
-        }),
-      });
-
-      const updatedManifest = await res.json();
-
-      const newAnnos = updatedManifest.items?.[canvasIndex]?.annotations || [];
-
-      newAnnos.forEach((annoPage) => {
-        dispatch(receiveAnnotation(canvasId, annoPage.id, annoPage));
-      });
-
-      conversationService.addMessage(
-        conversationId,
-        'assistant',
-        '📝 Transcription added to canvas.',
-        null,
-      );
-
-      setConversation(conversationService.getActiveBranch(conversationId));
-    } catch (err) {
-      console.error('Transcribe error:', err);
-      pushErrorMessage();
-    } finally {
-      setIsLoading(false);
-    }
   };
 
   return (
@@ -397,50 +226,17 @@ export default function AITemplate({
 
         <Divider />
 
-        <Box sx={{ px: 2, pt: 1.5 }}>
-          <Stack direction="row" spacing={1}>
-            <Chip
-              icon={<TranslateIcon fontSize="small" />}
-              label="Translate this"
-              onClick={handleTranslate}
-              disabled={isLoading}
-              clickable
-              size="small"
-              variant="outlined"
-              color="primary"
-            />
-            <Chip
-              icon={<AutoAwesomeIcon fontSize="small" />}
-              label="Transcribe this"
-              onClick={handleTranscribe}
-              disabled={isLoading}
-              clickable
-              size="small"
-              variant="outlined"
-              color="primary"
-            />
-            <Chip
-              icon={<AutoAwesomeIcon fontSize="small" />}
-              label="Describe this"
-              onClick={handleDescribe}
-              disabled={isLoading}
-              clickable
-              size="small"
-              variant="outlined"
-              color="primary"
-            />
-            <Chip
-              icon={<AutoAwesomeIcon fontSize="small" />}
-              label="Annotate this"
-              onClick={handleAnnotate}
-              disabled={isLoading}
-              clickable
-              size="small"
-              variant="outlined"
-              color="secondary"
-            />
-          </Stack>
-        </Box>
+        <UtilsChipTools
+          endpoint={config.llm.endpoint}
+          manifestUrl={manifestUrl}
+          playerReferences={playerReferences}
+          conversationId={conversationId}
+          conversationService={conversationService}
+          isLoading={isLoading}
+          setIsLoading={setIsLoading}
+          setConversation={setConversation}
+          pushErrorMessage={pushErrorMessage}
+        />
 
         <Box sx={{ bgcolor: 'background.paper', p: 2 }}>
           <TextField
