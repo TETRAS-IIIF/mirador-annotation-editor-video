@@ -8,13 +8,10 @@ import {
   TextField,
   IconButton,
   Typography,
-  Avatar,
   Divider,
-  CircularProgress,
 } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import SmartToyOutlinedIcon from '@mui/icons-material/SmartToyOutlined';
-import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import { useSelector, useDispatch } from 'react-redux';
 import { receiveAnnotation } from 'mirador';
 import AnnotationFormFooter from './AnnotationFormFooter';
@@ -22,6 +19,7 @@ import LLMServiceAdapter from '../annotationAdapter/LLMServiceAdapter';
 // eslint-disable-next-line import/no-named-as-default
 import LLMApiService from '../annotationAdapter/LLMApiService';
 import UtilsChipTools from './UtilsChipTools';
+import AIConversation from './AIConversation';
 
 export default function AITemplate({
   annotation,
@@ -106,7 +104,6 @@ export default function AITemplate({
     }
   };
 
-
   const handleSend = async (forcedInput = null) => {
     const textToSend = forcedInput || input;
     if (!textToSend.trim() || !conversationId) return;
@@ -137,7 +134,7 @@ export default function AITemplate({
 
       const canvasIndex = activeCanvases[0].index;
       const reply = await llmApi.callLLM(formattedConversation, manifestUrl, canvasIndex);
-      console.log("reply",reply);
+      console.log('reply', reply);
       if (reply.tool_output?.type === 'AnnotationPage' && reply.tool_output?.items?.length) {
         await saveAISegments(reply.tool_output.items);
       }
@@ -180,49 +177,11 @@ export default function AITemplate({
           <Typography variant="subtitle1" fontWeight="600">AI Assistant</Typography>
         </Box>
 
-        <Box sx={{
-          bgcolor: '#f8f9fa', display: 'flex', flexDirection: 'column', flexGrow: 1, gap: 2, overflowY: 'auto', p: 2,
-        }}
-        >
-          {conversation.map((msg) => {
-            const isAi = msg.role === 'assistant';
-            return (
-              <Box
-                key={msg.id}
-                sx={{
-                  alignItems: 'flex-end', alignSelf: isAi ? 'flex-start' : 'flex-end', display: 'flex', flexDirection: isAi ? 'row' : 'row-reverse', gap: 1, maxWidth: '100%',
-                }}
-              >
-                <Avatar sx={{
-                  bgcolor: isAi ? 'secondary.main' : 'primary.dark', fontSize: '1rem', height: 32, width: 32,
-                }}
-                >
-                  {isAi ? <SmartToyOutlinedIcon fontSize="inherit" /> : <PersonOutlineIcon fontSize="inherit" />}
-                </Avatar>
-                <Paper
-                  elevation={isAi ? 1 : 0}
-                  sx={{
-                    bgcolor: isAi ? 'white' : 'primary.main', borderRadius: isAi ? '18px 18px 18px 4px' : '18px 18px 4px 18px', color: isAi ? 'text.primary' : 'primary.contrastText', p: 1.5,
-                  }}
-                >
-                  <Typography variant="body2" sx={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>
-                    {msg.content}
-                  </Typography>
-                </Paper>
-              </Box>
-            );
-          })}
-          {isLoading && (
-            <Box sx={{
-              alignItems: 'center', display: 'flex', gap: 1, ml: 1, mt: 1,
-            }}
-            >
-              <CircularProgress size={16} />
-              <Typography variant="caption" color="text.secondary">Generating...</Typography>
-            </Box>
-          )}
-          <div ref={messagesEndRef} />
-        </Box>
+        <AIConversation
+          isLoading={isLoading}
+          messagesEndRef={messagesEndRef}
+          conversation={conversation}
+        />
 
         <Divider />
 
