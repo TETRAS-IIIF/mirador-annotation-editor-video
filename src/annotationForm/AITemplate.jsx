@@ -227,7 +227,6 @@ export default function AITemplate({
         <Divider />
 
         <UtilsChipTools
-          endpoint={config.llm.endpoint}
           manifestUrl={manifestUrl}
           playerReferences={playerReferences}
           conversationId={conversationId}

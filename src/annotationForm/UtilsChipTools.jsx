@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Box, Stack } from '@mui/material';
+import { useSelector } from 'react-redux';
 import TranslateChip from './TranslateChip';
 import TranscribeChip from './TranscribeChip';
 import DescribeChip from './DescribeChip';
@@ -8,7 +9,6 @@ import AnnotateChip from './AnnotateChip';
 
 /** Toolbar grouping the four AI action chips (Translate, Transcribe, Describe, Annotate). */
 export default function UtilsChipTools({
-  endpoint,
   manifestUrl,
   playerReferences,
   conversationId,
@@ -18,6 +18,8 @@ export default function UtilsChipTools({
   setConversation,
   pushErrorMessage,
 }) {
+  const { endpoint } = useSelector((state) => state.config).llm;
+
   return (
     <Box sx={{ pt: 1.5, px: 2 }}>
       <Stack direction="row" spacing={1}>
@@ -76,7 +78,6 @@ UtilsChipTools.propTypes = {
     addMessage: PropTypes.func.isRequired,
     getActiveBranch: PropTypes.func.isRequired,
   }).isRequired,
-  endpoint: PropTypes.string.isRequired,
   isLoading: PropTypes.bool.isRequired,
   manifestUrl: PropTypes.string,
   playerReferences: PropTypes.shape({
