@@ -16,7 +16,7 @@ const config = {
       content: '<h4>Comment2</h4><p>Comment content</p>',
       title: 'Template 2',
     }],
-    debug: true,
+    debug: false,
     exportLocalStorageAnnotations: true,
     readonly: false,
     tagsSuggestions: ['Mirador', 'Awesome', 'Viewer', 'IIIF', 'Template'],
