@@ -62,6 +62,14 @@ export default function MultipleBodyTemplate(
         label: tag.value,
         value: tag.value,
       }));
+    // if the textBody was removed by the above block, add an empty body. otherwise, there will be errors.
+    if ( maeAnnotation.maeData.textBody === undefined ) {
+      maeAnnotation.maeData.textBody = {
+        purpose: "describing",
+        type: "TextualBody",
+        value: ""
+      }
+    }
   }
 
   const [annotationState, setAnnotationState] = useState(maeAnnotation);
