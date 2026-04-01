@@ -11,12 +11,18 @@
   "types": "dist/index.d.ts",
   "typesVersions": {
     "*": {
-      "*": ["dist/index.d.ts"]
+      "*": [
+        "dist/index.d.ts"
+      ]
     }
   },
   "style": "dist/index.css",
-  "files": ["dist"],
-  "sideEffects": ["dist/index.css"],
+  "files": [
+    "dist"
+  ],
+  "sideEffects": [
+    "dist/index.css"
+  ],
   "exports": {
     ".": {
       "import": "./dist/mirador-annotation-editor.es.js",
