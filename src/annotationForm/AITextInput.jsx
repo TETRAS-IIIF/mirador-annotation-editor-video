@@ -28,7 +28,7 @@ export function AITextInput({
     <Box sx={{ bgcolor: 'background.paper', p: 2 }}>
       <TextField
         fullWidth
-        placeholder="Type a message..."
+        placeholder="[Beta] Type a message..."
         variant="outlined"
         size="small"
         value={input}

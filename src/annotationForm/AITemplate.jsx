@@ -56,6 +56,7 @@ export default function AITemplate({
         messages: {},
         rootMessageId: null,
       };
+      // eslint-disable-next-line no-underscore-dangle
       conversationService._save();
     }
     setConversationId(storageKey);
@@ -67,6 +68,10 @@ export default function AITemplate({
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [conversation, isLoading]);
 
+  /**
+   * Pushes a generic error message to the conversation in case of API failure
+   * and refreshes the conversation state to trigger a re-render with the new message.
+   */
   const pushErrorMessage = () => {
     if (!conversationId) return;
 
@@ -80,6 +85,13 @@ export default function AITemplate({
     setConversation(conversationService.getActiveBranch(conversationId));
   };
 
+  /**
+   * Saves AI-generated segments as annotations on the current canvas. It retrieves the active
+   * canvas,uses the configured annotation adapter to save each segment,
+   * and dispatches the new annotations to the Redux store.
+   * @param segments
+   * @returns {Promise<void>}
+   */
   const saveAISegments = async (segments) => {
     const activeCanvases = playerReferences.getCanvases?.() || [];
     if (!activeCanvases.length) return;
@@ -102,8 +114,13 @@ export default function AITemplate({
     }
   };
 
-  const handleSend = async (forcedInput = null) => {
-    const textToSend = forcedInput;
+  /**
+   *
+   * @param input
+   * @returns {Promise<void>}
+   */
+  const handleSend = async (input = null) => {
+    const textToSend = input;
     if (!textToSend.trim() || !conversationId) return;
 
     setIsLoading(true);
@@ -119,7 +136,6 @@ export default function AITemplate({
 
     const updatedBranch = conversationService.getActiveBranch(conversationId);
     setConversation(updatedBranch);
-    setInput('');
 
     try {
       const formattedConversation = updatedBranch.map((m) => ({
@@ -209,7 +225,10 @@ export default function AITemplate({
 }
 
 AITemplate.propTypes = {
+
+  // eslint-disable-next-line react/forbid-prop-types
   annotation: PropTypes.object.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
   canvases: PropTypes.arrayOf(PropTypes.object).isRequired,
   closeFormCompanionWindow: PropTypes.func.isRequired,
   playerReferences: PropTypes.shape({
