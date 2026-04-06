@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Chip } from '@mui/material';
 import TranslateIcon from '@mui/icons-material/Translate';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { translate } from '../UtilsLLMAPI';
 
 /** Chip that triggers translation of annotations on the current canvas. */
@@ -17,8 +17,6 @@ export default function TranslateChip({
   setConversation,
   pushErrorMessage,
 }) {
-  const dispatch = useDispatch();
-
   const storageAdapter = useSelector((state) => state.config.annotation.adapter);
 
   /** Calls the FastAPI translate-manifest endpoint and dispatches resulting annotations. */
@@ -41,7 +39,6 @@ export default function TranslateChip({
       () => {
         pushErrorMessage();
       },
-      dispatch,
     );
   };
 

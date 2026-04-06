@@ -15,10 +15,9 @@ const IA_MAE_DATA = {
  *
  * @param annotationPages
  * @param canvasId
- * @param dispatch
  * @param storageAdapter
  */
-function saveIAAnnotation(annotationPages, canvasId, dispatch, storageAdapter) {
+function saveIAAnnotation(annotationPages, canvasId, storageAdapter) {
   const promises = annotationPages.map(function (annoPage) {
     annoPage.items.map((anno) => {
       const annoToSaved = {
@@ -45,17 +44,15 @@ function saveIAAnnotation(annotationPages, canvasId, dispatch, storageAdapter) {
  * @param storageAdapter
  * @param successCallBack
  * @param errorCallBack
- * @param dispatch
  * @returns {Promise<void>}
  */
-export const translate = async function (
+export async function translate(
   manifestUrl,
   canvas,
   endpoint,
   storageAdapter,
   successCallBack,
   errorCallBack,
-  dispatch,
 ) {
   try {
     const response = await fetch(`${endpoint}iiif/translate-manifest`, {
@@ -72,7 +69,7 @@ export const translate = async function (
     const updatedManifest = await response.json();
     const newAnnos = updatedManifest.items[canvas.index]?.annotations || [];
 
-    saveIAAnnotation(newAnnos, canvas.id, dispatch, storageAdapter(canvas.id));
+    saveIAAnnotation(newAnnos, canvas.id, storageAdapter(canvas.id));
   } catch (err) {
     console.error('Translation error', err);
     errorCallBack(err);
