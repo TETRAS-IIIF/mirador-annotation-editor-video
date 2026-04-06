@@ -4,8 +4,9 @@ import { Box, Stack } from '@mui/material';
 import { useSelector } from 'react-redux';
 import TranslateChip from './TranslateChip';
 import TranscribeChip from './TranscribeChip';
-import DescribeChip from './DescribeChip';
+import DescribeChip from '../../DescribeChip';
 import AnnotateChip from './AnnotateChip';
+import CleanStorageChip from './CleanStorageChip';
 
 /** Toolbar grouping the four AI action chips (Translate, Transcribe, Describe, Annotate). */
 export default function UtilsChipTools({
@@ -22,7 +23,12 @@ export default function UtilsChipTools({
 
   return (
     <Box sx={{ pt: 1.5, px: 2 }}>
-      <Stack direction="row" spacing={1}>
+      <Stack
+        direction="row"
+        spacing={1}
+        useFlexGap
+        sx={{ flexWrap: 'wrap' }}
+      >
         <TranslateChip
           conversationId={conversationId}
           conversationService={conversationService}
@@ -67,6 +73,7 @@ export default function UtilsChipTools({
           setConversation={setConversation}
           setIsLoading={setIsLoading}
         />
+        <CleanStorageChip />
       </Stack>
     </Box>
   );

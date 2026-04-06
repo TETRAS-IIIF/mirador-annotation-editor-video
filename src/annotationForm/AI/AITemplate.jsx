@@ -11,14 +11,27 @@ import {
 import SmartToyOutlinedIcon from '@mui/icons-material/SmartToyOutlined';
 import { useSelector, useDispatch } from 'react-redux';
 import { receiveAnnotation } from 'mirador';
-import AnnotationFormFooter from './AnnotationFormFooter';
-import LLMServiceAdapter from '../annotationAdapter/LLMServiceAdapter';
+import AnnotationFormFooter from '../AnnotationFormFooter';
+import LLMServiceAdapter from '../../annotationAdapter/LLMServiceAdapter';
 // eslint-disable-next-line import/no-named-as-default
-import LLMApiService from '../annotationAdapter/LLMApiService';
-import UtilsChipTools from './UtilsChipTools';
+import LLMApiService from '../../annotationAdapter/LLMApiService';
+import UtilsChipTools from './Chip/UtilsChipTools';
 import AIConversation from './AIConversation';
 import { AITextInput } from './AITextInput';
 
+/**
+ * AITemplate component provides an interface for AI-assisted annotation creation. It manages the conversation state,
+ * handles user input, communicates with the LLM API, and saves AI-generated annotations to the current canvas.
+ * @param param0
+ * @param param0.annotation
+ * @param param0.canvases
+ * @param param0.closeFormCompanionWindow
+ * @param param0.playerReferences
+ * @param param0.saveAnnotation
+ * @param param0.t
+ * @returns {React.JSX.Element}
+ * @constructor
+ */
 export default function AITemplate({
   annotation,
   canvases,
