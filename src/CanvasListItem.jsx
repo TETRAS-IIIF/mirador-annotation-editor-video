@@ -92,7 +92,6 @@ const CanvasListItem = forwardRef((props, ref) => {
       annotationsOnCanvases,
       canvases,
     } = context;
-    console.log(annotationsOnCanvases);
     const { annotationid } = props;
     const annoIds = canvases.map((canvas) => {
       if (annotationsOnCanvases[canvas.id]) {
@@ -137,7 +136,7 @@ const CanvasListItem = forwardRef((props, ref) => {
               zIndex: theme.zIndex.modal + 1,
             }}
           >
-            {context.config?.debug && (
+            {context.config?.annotation.debug && (
             <Tooltip title={t('debugAnnotation')}>
               <span>
                 <ToggleButton
