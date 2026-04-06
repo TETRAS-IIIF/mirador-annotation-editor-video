@@ -1,5 +1,5 @@
 import { receiveAnnotation } from 'mirador';
-import { TEMPLATE } from '../AnnotationFormUtils';
+import { saveAnnotationInStorageAdapter, TEMPLATE } from '../AnnotationFormUtils';
 
 const IA_TAGGING_BODY = {
   motivation: 'tagging',
@@ -16,8 +16,9 @@ const IA_MAE_DATA = {
  * @param annos
  * @param canvasId
  * @param dispatch
+ * @param storageAdapter
  */
-function saveIAAnnotation(annos, canvasId, dispatch) {
+function saveIAAnnotation(annos, canvasId, dispatch, storageAdapter) {
   const taggedAnnos = annos.map((annoPage) => ({
     ...annoPage,
     creationDate: new Date().toISOString(),
@@ -25,15 +26,22 @@ function saveIAAnnotation(annos, canvasId, dispatch) {
     items: annoPage.items.map((anno) => ({
       ...anno,
       body: Array.isArray(anno.body) ? [...anno.body, IA_TAGGING_BODY] : [anno.body, IA_TAGGING_BODY],
+      id: null,
       maeData: IA_MAE_DATA,
     })),
   }));
 
   console.log(taggedAnnos);
 
-  taggedAnnos.forEach((annoPage) => {
-    dispatch(receiveAnnotation(canvasId, annoPage.id, annoPage));
-  });
+  const promises = taggedAnnos.map(
+    (annoPage) =>
+      saveAnnotationInStorageAdapter(canvasId, storageAdapter, receiveAnnotation, annoPage)
+  );
+
+  Promise.all(promises)
+    .then(() => {
+      console.log('Storage done');
+    });
 }
 
 /**
@@ -41,6 +49,7 @@ function saveIAAnnotation(annos, canvasId, dispatch) {
  * @param manifestUrl
  * @param canvas
  * @param endpoint
+ * @param storageAdapter
  * @param successCallBack
  * @param errorCallBack
  * @param dispatch
@@ -50,6 +59,7 @@ export const translate = async function (
   manifestUrl,
   canvas,
   endpoint,
+  storageAdapter,
   successCallBack,
   errorCallBack,
   dispatch,
@@ -69,7 +79,7 @@ export const translate = async function (
     const updatedManifest = await response.json();
     const newAnnos = updatedManifest.items[canvas.index]?.annotations || [];
 
-    saveIAAnnotation(newAnnos, canvas.id, dispatch);
+    saveIAAnnotation(newAnnos, canvas.id, dispatch, storageAdapter);
   } catch (err) {
     console.error('Translation error', err);
     errorCallBack(err);

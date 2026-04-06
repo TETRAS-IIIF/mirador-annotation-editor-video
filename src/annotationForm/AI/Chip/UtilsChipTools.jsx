@@ -73,7 +73,9 @@ export default function UtilsChipTools({
           setConversation={setConversation}
           setIsLoading={setIsLoading}
         />
-        <CleanStorageChip />
+        <CleanStorageChip
+          setConversation={setConversation}
+        />
       </Stack>
     </Box>
   );

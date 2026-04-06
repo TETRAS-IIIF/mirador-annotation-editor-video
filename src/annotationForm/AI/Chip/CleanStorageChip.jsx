@@ -1,15 +1,19 @@
 import React from 'react';
 import { Chip } from '@mui/material';
 import { DeleteOutline } from '@mui/icons-material';
+import PropTypes from 'prop-types';
 
 /** Chip that triggers translation of annotations on the current canvas. */
-export default function CleanStorageChip() {
-
+export default function CleanStorageChip({
+  setConversation,
+}) {
   /**
    * Clean local storage
    */
   const cleanStorage = () => {
     localStorage.removeItem('mirador_llm_conversations');
+    setConversation([]);
+    console.log('Clean storage removed');
   };
 
   return (
@@ -25,3 +29,7 @@ export default function CleanStorageChip() {
     />
   );
 }
+
+CleanStorageChip.propTypes = {
+  setConversation: PropTypes.func.isRequired,
+};
