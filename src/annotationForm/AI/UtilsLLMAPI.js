@@ -17,13 +17,17 @@ const IA_MAE_DATA = {
  * @param dispatch
  */
 function saveIAAnnotation(annos, canvasId, dispatch) {
-  annos.forEach((annoPage) => {
-    annoPage.items.push(IA_TAGGING_BODY);
-    // eslint-disable-next-line no-param-reassign
-    annoPage.maeData = IA_MAE_DATA;
-  });
+  const taggedAnnos = annos.map((annoPage) => ({
+    ...annoPage,
+    creationDate: new Date().toISOString(),
+    creator: 'AI Assistant',
+    items: [...annoPage.items, IA_TAGGING_BODY],
+    maeData: IA_MAE_DATA,
+  }));
 
-  annos.forEach((annoPage) => {
+  console.log(taggedAnnos);
+
+  taggedAnnos.forEach((annoPage) => {
     dispatch(receiveAnnotation(canvasId, annoPage.id, annoPage));
   });
 }
