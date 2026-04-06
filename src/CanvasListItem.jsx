@@ -92,6 +92,7 @@ const CanvasListItem = forwardRef((props, ref) => {
       annotationsOnCanvases,
       canvases,
     } = context;
+    console.log(annotationsOnCanvases);
     const { annotationid } = props;
     const annoIds = canvases.map((canvas) => {
       if (annotationsOnCanvases[canvas.id]) {

@@ -1,4 +1,5 @@
 import { receiveAnnotation } from 'mirador';
+import { TEMPLATE } from '../AnnotationFormUtils';
 
 const IA_TAGGING_BODY = {
   motivation: 'tagging',
@@ -7,7 +8,7 @@ const IA_TAGGING_BODY = {
 };
 
 const IA_MAE_DATA = {
-  templateType: 'multiple_body',
+  templateType: TEMPLATE.IIIF_TYPE,
 };
 
 /**
@@ -21,8 +22,11 @@ function saveIAAnnotation(annos, canvasId, dispatch) {
     ...annoPage,
     creationDate: new Date().toISOString(),
     creator: 'AI Assistant',
-    items: [...annoPage.items, IA_TAGGING_BODY],
-    maeData: IA_MAE_DATA,
+    items: annoPage.items.map((anno) => ({
+      ...anno,
+      body: Array.isArray(anno.body) ? [...anno.body, IA_TAGGING_BODY] : [anno.body, IA_TAGGING_BODY],
+      maeData: IA_MAE_DATA,
+    })),
   }));
 
   console.log(taggedAnnos);
