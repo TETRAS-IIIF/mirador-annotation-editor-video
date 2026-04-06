@@ -12,15 +12,23 @@ const IA_MAE_DATA = {
 };
 
 /**
+ * Save AI-generated annotations to the storage adapter and dispatch them
+ * to the Redux store so the UI refreshes.
  *
  * @param annotationPages
  * @param canvasId
  * @param storageAdapter
+ * @param dispatch
+ * @returns {Promise<void>}
  */
-function saveIAAnnotation(annotationPages, canvasId, storageAdapter) {
-  annotationPages.map((annoPage) => {
-    const promises = annoPage.items.map((anno) => {
-      const annoToSaved = {
+function saveIAAnnotation(annotationPages, canvasId, storageAdapter, dispatch) {
+  const allAnnotations = annotationPages.flatMap((annoPage) => annoPage.items || []);
+  const dispatchReceiveAnnotation = (targetId, annoId, annotation) => dispatch(
+    receiveAnnotation(targetId, annoId, annotation),
+  );
+  return allAnnotations.reduce(
+    (chain, anno) => chain.then(() => {
+      const annoToSave = {
         ...anno,
         body: Array.isArray(anno.body)
           ? [...anno.body, IA_TAGGING_BODY]
@@ -31,14 +39,12 @@ function saveIAAnnotation(annotationPages, canvasId, storageAdapter) {
       return saveAnnotationInStorageAdapter(
         canvasId,
         storageAdapter,
-        receiveAnnotation,
-        annoToSaved,
+        dispatchReceiveAnnotation,
+        annoToSave,
       );
-    });
-    Promise.all(promises).then(() => {
-      console.log('Storage done');
-    });
-  });
+    }),
+    Promise.resolve(),
+  );
 }
 
 /**
@@ -47,6 +53,7 @@ function saveIAAnnotation(annotationPages, canvasId, storageAdapter) {
  * @param canvas
  * @param endpoint
  * @param storageAdapter
+ * @param dispatch
  * @param successCallBack
  * @param errorCallBack
  * @returns {Promise<void>}
@@ -56,6 +63,7 @@ export async function translate(
   canvas,
   endpoint,
   storageAdapter,
+  dispatch,
   successCallBack,
   errorCallBack,
 ) {
@@ -74,11 +82,10 @@ export async function translate(
     const updatedManifest = await response.json();
     const newAnnos = updatedManifest.items[canvas.index]?.annotations || [];
 
-    saveIAAnnotation(newAnnos, canvas.id, storageAdapter(canvas.id));
+    await saveIAAnnotation(newAnnos, canvas.id, storageAdapter(canvas.id), dispatch);
+    successCallBack();
   } catch (err) {
     console.error('Translation error', err);
     errorCallBack(err);
-  } finally {
-    successCallBack();
   }
 }
