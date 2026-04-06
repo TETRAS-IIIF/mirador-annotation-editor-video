@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Chip } from '@mui/material';
 import TranslateIcon from '@mui/icons-material/Translate';
 import { useDispatch } from 'react-redux';
-import { receiveAnnotation } from 'mirador';
+import { translate } from '../UtilsLLMAPI';
 
 /** Chip that triggers translation of annotations on the current canvas. */
 export default function TranslateChip({
@@ -24,37 +24,22 @@ export default function TranslateChip({
     const activeCanvases = playerReferences.getCanvases?.() || [];
     if (!activeCanvases.length || !manifestUrl) return;
 
-    const canvasId = activeCanvases[0].id;
-    const canvasIndex = activeCanvases[0].index;
-
     setIsLoading(true);
-    try {
-      const response = await fetch(`${endpoint}iiif/translate-manifest`, {
-        body: JSON.stringify({
-          canvas_index: canvasIndex,
-          manifest_url: manifestUrl,
-          target_iso: 'en',
-          target_lang: 'English',
-        }),
-        headers: { 'Content-Type': 'application/json' },
-        method: 'POST',
-      });
 
-      const updatedManifest = await response.json();
-      const newAnnos = updatedManifest.items[canvasIndex]?.annotations || [];
-
-      newAnnos.forEach((annoPage) => {
-        dispatch(receiveAnnotation(canvasId, annoPage.id, annoPage));
-      });
-
-      conversationService.addMessage(conversationId, 'assistant', '✅ Translation complete. Annotations added to viewer.', null);
-      setConversation(conversationService.getActiveBranch(conversationId));
-    } catch (err) {
-      console.error('Translation error', err);
-      pushErrorMessage();
-    } finally {
-      setIsLoading(false);
-    }
+    await translate(
+      manifestUrl,
+      activeCanvases[0],
+      endpoint,
+      () => {
+        conversationService.addMessage(conversationId, 'assistant', '✅ Translation complete. Annotations added to viewer.', null);
+        setConversation(conversationService.getActiveBranch(conversationId));
+        setIsLoading(false);
+      },
+      () => {
+        pushErrorMessage();
+      },
+      dispatch,
+    );
   };
 
   return (
@@ -92,4 +77,3 @@ TranslateChip.defaultProps = {
   conversationId: null,
   manifestUrl: null,
 };
-

@@ -116,6 +116,7 @@ export default function AITemplate({
         const annotationToSave = {
           ...segment,
           target: { ...segment.target, source: canvas.id },
+
         };
         const annoPage = await storageAdapter.create(annotationToSave);
         if (annoPage) {

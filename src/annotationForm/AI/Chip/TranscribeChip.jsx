@@ -19,6 +19,8 @@ export default function TranscribeChip({
 }) {
   const dispatch = useDispatch();
 
+
+
   const handleTranscribe = async () => {
     const activeCanvases = playerReferences.getCanvases?.() || [];
     if (!activeCanvases.length || !manifestUrl) return;
@@ -39,6 +41,8 @@ export default function TranscribeChip({
 
       const updatedManifest = await res.json();
       const newAnnos = updatedManifest.items?.[canvasIndex]?.annotations || [];
+
+
 
       newAnnos.forEach((annoPage) => {
         dispatch(receiveAnnotation(canvasId, annoPage.id, annoPage));

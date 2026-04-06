@@ -1,0 +1,71 @@
+import { receiveAnnotation } from 'mirador';
+
+const IA_TAGGING_BODY = {
+  motivation: 'tagging',
+  purpose: 'tagging',
+  value: 'IA Generated',
+};
+
+const IA_MAE_DATA = {
+  templateType: 'multiple_body',
+};
+
+/**
+ *
+ * @param annos
+ * @param canvasId
+ * @param dispatch
+ */
+function saveIAAnnotation(annos, canvasId, dispatch) {
+  annos.forEach((annoPage) => {
+    annoPage.items.push(IA_TAGGING_BODY);
+    // eslint-disable-next-line no-param-reassign
+    annoPage.maeData = IA_MAE_DATA;
+  });
+
+  annos.forEach((annoPage) => {
+    dispatch(receiveAnnotation(canvasId, annoPage.id, annoPage));
+  });
+}
+
+/**
+ *
+ * @param manifestUrl
+ * @param canvas
+ * @param endpoint
+ * @param successCallBack
+ * @param errorCallBack
+ * @param dispatch
+ * @returns {Promise<void>}
+ */
+export const translate = async function (
+  manifestUrl,
+  canvas,
+  endpoint,
+  successCallBack,
+  errorCallBack,
+  dispatch,
+) {
+  try {
+    const response = await fetch(`${endpoint}iiif/translate-manifest`, {
+      body: JSON.stringify({
+        canvas_index: canvas.index,
+        manifest_url: manifestUrl,
+        target_iso: 'en',
+        target_lang: 'English',
+      }),
+      headers: { 'Content-Type': 'application/json' },
+      method: 'POST',
+    });
+
+    const updatedManifest = await response.json();
+    const newAnnos = updatedManifest.items[canvas.index]?.annotations || [];
+
+    saveIAAnnotation(newAnnos, canvas.id, dispatch);
+  } catch (err) {
+    console.error('Translation error', err);
+    errorCallBack(err);
+  } finally {
+    successCallBack();
+  }
+};

@@ -19,7 +19,7 @@ export default function UtilsChipTools({
   setConversation,
   pushErrorMessage,
 }) {
-  const { endpoint } = useSelector((state) => state.config).llm;
+  const endpoint = useSelector((state) => state.config?.llm?.endpoint);
 
   return (
     <Box sx={{ pt: 1.5, px: 2 }}>
