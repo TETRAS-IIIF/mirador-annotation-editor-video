@@ -1,7 +1,8 @@
+  export const ANONYMOUS_USER = 'Anonymous';
 /** */
 export default class LocalStorageAdapter {
   /** */
-  constructor(annotationPageId, user) {
+    constructor(annotationPageId, user) {
     this.annotationPageId = annotationPageId;
     if (user) {
       this.user = user;
@@ -70,4 +71,3 @@ export default class LocalStorageAdapter {
   }
 }
 
-export const ANONYMOUS_USER = 'Anonymous';

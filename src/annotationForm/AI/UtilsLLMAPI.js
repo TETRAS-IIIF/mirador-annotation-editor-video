@@ -13,35 +13,28 @@ const IA_MAE_DATA = {
 
 /**
  *
- * @param annos
+ * @param annotationPages
  * @param canvasId
  * @param dispatch
  * @param storageAdapter
  */
-function saveIAAnnotation(annos, canvasId, dispatch, storageAdapter) {
-  const taggedAnnos = annos.map((annoPage) => ({
-    ...annoPage,
-    creationDate: new Date().toISOString(),
-    creator: 'AI Assistant',
-    items: annoPage.items.map((anno) => ({
-      ...anno,
-      body: Array.isArray(anno.body) ? [...anno.body, IA_TAGGING_BODY] : [anno.body, IA_TAGGING_BODY],
-      id: null,
-      maeData: IA_MAE_DATA,
-    })),
-  }));
-
-  console.log(taggedAnnos);
-
-  const promises = taggedAnnos.map(
-    (annoPage) =>
-      saveAnnotationInStorageAdapter(canvasId, storageAdapter, receiveAnnotation, annoPage)
-  );
-
-  Promise.all(promises)
-    .then(() => {
-      console.log('Storage done');
+function saveIAAnnotation(annotationPages, canvasId, dispatch, storageAdapter) {
+  const promises = annotationPages.map(function (annoPage) {
+    annoPage.items.map((anno) => {
+      const annoToSaved = {
+        ...anno,
+        id: null,
+        body: Array.isArray(anno.body) ? [...anno.body, IA_TAGGING_BODY] : [anno.body, IA_TAGGING_BODY],
+        maeData: IA_MAE_DATA,
+      };
+      console.log('annos to save', annoToSaved);
+      return saveAnnotationInStorageAdapter(canvasId, storageAdapter, receiveAnnotation, annoToSaved);
     });
+  });
+
+  Promise.all(promises).then(() => {
+    console.log('Storage done');
+  });
 }
 
 /**
@@ -79,7 +72,7 @@ export const translate = async function (
     const updatedManifest = await response.json();
     const newAnnos = updatedManifest.items[canvas.index]?.annotations || [];
 
-    saveIAAnnotation(newAnnos, canvas.id, dispatch, storageAdapter);
+    saveIAAnnotation(newAnnos, canvas.id, dispatch, storageAdapter(canvas.id));
   } catch (err) {
     console.error('Translation error', err);
     errorCallBack(err);
