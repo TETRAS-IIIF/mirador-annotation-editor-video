@@ -18,8 +18,8 @@ const IA_MAE_DATA = {
  * @param storageAdapter
  */
 function saveIAAnnotation(annotationPages, canvasId, storageAdapter) {
-  const promises = annotationPages.map((annoPage) => {
-    annoPage.items.map((anno) => {
+  annotationPages.map((annoPage) => {
+    const promises = annoPage.items.map((anno) => {
       const annoToSaved = {
         ...anno,
         body: Array.isArray(anno.body)
@@ -28,7 +28,6 @@ function saveIAAnnotation(annotationPages, canvasId, storageAdapter) {
         id: null,
         maeData: IA_MAE_DATA,
       };
-      console.log('annos to save', annoToSaved);
       return saveAnnotationInStorageAdapter(
         canvasId,
         storageAdapter,
@@ -36,10 +35,9 @@ function saveIAAnnotation(annotationPages, canvasId, storageAdapter) {
         annoToSaved,
       );
     });
-  });
-
-  Promise.all(promises).then(() => {
-    console.log('Storage done');
+    Promise.all(promises).then(() => {
+      console.log('Storage done');
+    });
   });
 }
 
