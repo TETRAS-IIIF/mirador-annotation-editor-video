@@ -18,16 +18,23 @@ const IA_MAE_DATA = {
  * @param storageAdapter
  */
 function saveIAAnnotation(annotationPages, canvasId, storageAdapter) {
-  const promises = annotationPages.map(function (annoPage) {
+  const promises = annotationPages.map((annoPage) => {
     annoPage.items.map((anno) => {
       const annoToSaved = {
         ...anno,
+        body: Array.isArray(anno.body)
+          ? [...anno.body, IA_TAGGING_BODY]
+          : [anno.body, IA_TAGGING_BODY],
         id: null,
-        body: Array.isArray(anno.body) ? [...anno.body, IA_TAGGING_BODY] : [anno.body, IA_TAGGING_BODY],
         maeData: IA_MAE_DATA,
       };
       console.log('annos to save', annoToSaved);
-      return saveAnnotationInStorageAdapter(canvasId, storageAdapter, receiveAnnotation, annoToSaved);
+      return saveAnnotationInStorageAdapter(
+        canvasId,
+        storageAdapter,
+        receiveAnnotation,
+        annoToSaved,
+      );
     });
   });
 
@@ -76,4 +83,4 @@ export async function translate(
   } finally {
     successCallBack();
   }
-};
+}
