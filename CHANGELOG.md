@@ -9,9 +9,10 @@ Entries types:
 - `FIXED` for any bug fixes.
 - `SECURITY` to invite users to upgrade in case of vulnerabilities.
 
-## [ 1.2.14]
+## [ 1.2.15]
 
 - MERGE : MAE 1.2.3
+- FIXED : exports in package.json
 
 ## [ 1.2.12 ]
 
