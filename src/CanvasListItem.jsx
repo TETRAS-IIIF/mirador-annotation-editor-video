@@ -136,7 +136,7 @@ const CanvasListItem = forwardRef((props, ref) => {
               zIndex: theme.zIndex.modal + 1,
             }}
           >
-            {context.config?.debug && (
+            {context.config?.annotation.debug && (
             <Tooltip title={t('debugAnnotation')}>
               <span>
                 <ToggleButton
