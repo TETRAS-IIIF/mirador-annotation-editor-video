@@ -65,7 +65,7 @@ const getIIIFTargetFullCanvas = (maeData, canvasId) => {
  */
 const getIIIFTargetFromRectangleShape = (maeTarget, canvasId, shape) => {
   console.info('Implement target as string with one shape (rectangle)');
-  const {
+  let {
     x,
     y,
     width,
@@ -73,6 +73,19 @@ const getIIIFTargetFromRectangleShape = (maeTarget, canvasId, shape) => {
     scaleX,
     scaleY,
   } = shape;
+
+  // if `width` or `height` may be negative if the annotation was not created by dragging from the top left.
+  // convert to ensure that x and y always describe the top-left corner of an annotation and that
+  // `width` and `height` are positive.
+  // (can be useful to use xywh in Cantaloupe, for example).
+  if ( width < 0 ) {
+    width = -width;
+    x = x-width;
+  }
+  if ( height < 0 ) {
+    height = -height;
+    y = y-height;
+  }
 
   // Image have not tstart and tend
   // We use scaleX and scaleY to have the real size of the shape, if it has been resized
@@ -400,7 +413,6 @@ export function convertIIIFAnnoToMaeData(anno) {
 
       maeData.target = convertIIIFTargetToMae(anno.target, anno.id);
       anno.maeData = maeData;
-      console.log("!!!anno", anno);
       return anno;
     } catch (e) {
       console.error('Error generating maeData from annotation', e);
