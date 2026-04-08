@@ -1,6 +1,6 @@
 {
   "name": "mirador-annotation-editor-video",
-  "version": "1.2.14",
+  "version": "1.2.15",
   "description": "Mirador annotation editor video plugin in a React component. Mirador 4 compatible",
   "repository": {
     "type": "git",
@@ -11,12 +11,18 @@
   "types": "dist/index.d.ts",
   "typesVersions": {
     "*": {
-      "*": ["dist/index.d.ts"]
+      "*": [
+        "dist/index.d.ts"
+      ]
     }
   },
   "style": "dist/index.css",
-  "files": ["dist"],
-  "sideEffects": ["dist/index.css"],
+  "files": [
+    "dist"
+  ],
+  "sideEffects": [
+    "dist/index.css"
+  ],
   "exports": {
     ".": {
       "import": "./dist/mirador-annotation-editor.es.js",
@@ -127,5 +133,8 @@
     "style-loader": "^3.3.4",
     "uuid": "^8.2.0"
   },
-  "license": "Apache-2.0"
+  "license": "Apache-2.0",
+  "overrides": {
+    "immutable": "4.3.8"
+  }
 }

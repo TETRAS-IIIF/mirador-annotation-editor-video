@@ -229,7 +229,8 @@ export default class AiiinotateAdapter {
     const annotationPage = await this.iiifPresentationVersion === 2
       ? createAnnotationPage(annotationArray, this.annotationPageId)
       : annotationArray;
-    annotationPage.items.map(convertIIIFAnnoToMaeData);
+
+    annotationPage.items = annotationPage.items.map(convertIIIFAnnoToMaeData);
     return annotationPage;
   }
 }

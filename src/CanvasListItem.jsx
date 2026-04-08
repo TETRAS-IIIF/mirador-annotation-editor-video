@@ -67,11 +67,11 @@ const CanvasListItem = forwardRef((props, ref) => {
         });
     });
   };
-    /**
-     * Handles editing of an annotation.
-     * @function handleEdit
-     * @returns {void}
-     */
+  /**
+   * Handles editing of an annotation.
+   * @function handleEdit
+   * @returns {void}
+   */
   const handleEdit = () => {
     const {
       addCompanionWindow,
@@ -136,7 +136,7 @@ const CanvasListItem = forwardRef((props, ref) => {
               zIndex: theme.zIndex.modal + 1,
             }}
           >
-            {context.config?.debug && (
+            {context.config?.annotation.debug && (
             <Tooltip title={t('debugAnnotation')}>
               <span>
                 <ToggleButton

@@ -24,7 +24,7 @@ const mapDispatchToProps = (dispatch, {
   ),
   receiveAnnotation: (targetId, annoId, annotation) => dispatch(
     receiveAnnotationAction(targetId, annoId, annotation),
-  ),
+  )
 });
 
 /** */
