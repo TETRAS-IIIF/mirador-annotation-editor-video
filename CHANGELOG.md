@@ -9,6 +9,11 @@ Entries types:
 - `FIXED` for any bug fixes.
 - `SECURITY` to invite users to upgrade in case of vulnerabilities.
 
+## [ 1.2.16]
+
+- MERGE : MAE 1.2.4
+- SECURITY update npm deps
+
 ## [ 1.2.15]
 
 - MERGE : MAE 1.2.3
