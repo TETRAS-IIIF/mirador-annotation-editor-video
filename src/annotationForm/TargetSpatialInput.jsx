@@ -5,8 +5,11 @@ import PropTypes from 'prop-types';
 import Typography from '@mui/material/Typography';
 import { Grid } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { getConfig } from 'mirador';
 import AnnotationDrawing from './AnnotationFormOverlay/AnnotationDrawing';
 import { TARGET_TOOL_STATE, TARGET_VIEW } from './AnnotationFormUtils';
+import { getContextParams } from '../contextParams';
 import AnnotationFormOverlay from './AnnotationFormOverlay/AnnotationFormOverlay';
 import { KONVA_MODE, OVERLAY_TOOL } from './AnnotationFormOverlay/KonvaDrawing/KonvaUtils';
 
@@ -24,13 +27,20 @@ export function TargetSpatialInput({
   windowId,
 }) {
   const { t } = useTranslation();
+  const config = useSelector((state) => getConfig(state));
+  const { editMode: isEditMode } = getContextParams(config);
 
-  const [drawingState, setDrawingState] = useState(() => ({
-    currentShape: null,
-    isDrawing: false,
-    shapes: Array.isArray(targetDrawingState?.shapes) ? targetDrawingState.shapes : [],
-    ...targetDrawingState,
-  }));
+  const [drawingState, setDrawingState] = useState(() => {
+    const shapes = Array.isArray(targetDrawingState?.shapes) ? targetDrawingState.shapes : [];
+    return {
+      currentShape: null,
+      isDrawing: false,
+      shapes,
+      ...targetDrawingState,
+      // In editMode, auto-select the first shape for immediate resize
+      ...(isEditMode && shapes.length > 0 ? { currentShape: shapes[0] } : {}),
+    };
+  });
 
   const hasExistingShapes = Array.isArray(targetDrawingState?.shapes)
     && targetDrawingState.shapes.length > 0;

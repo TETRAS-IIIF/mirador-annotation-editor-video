@@ -161,13 +161,14 @@ MiradorAnnotation.propTypes = {
   windowViewType: PropTypes.string.isRequired,
 };
 
-// TODO use selector in main componenent
+// TODO use selector in main component
 /**
  * this function map the state to the annotationPlugin's props
  * */
 function mapStateToProps(state, { targetProps: { windowId } }) {
   // Annotation edit companion window ou annotation creation companion window is the same thing
   const annotationCreationCompanionWindows = getCompanionWindowsForContent(state, { content: 'annotationCreation', windowId });
+  // TODO variable name is confusing: canOpenEditCompanionWindow? isCompanionWindowOpenable?
   let annotationEditCompanionWindowIsOpened = true;
   if (Object.keys(annotationCreationCompanionWindows).length !== 0) {
     annotationEditCompanionWindowIsOpened = false;
