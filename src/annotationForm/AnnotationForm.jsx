@@ -3,9 +3,12 @@ import { ConnectedCompanionWindow } from 'mirador';
 import PropTypes from 'prop-types';
 import { Grid } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { isEmptyValue, convertAnnotationStateToBeSaved } from '../IIIFUtils';
+import { convertAnnotationStateToBeSaved } from '../IIIFUtils';
 import AnnotationFormTemplateSelector from './AnnotationFormTemplateSelector';
-import { getTemplateType, saveAnnotationInStorageAdapter, TEMPLATE } from './AnnotationFormUtils';
+import {
+  getTemplateType, saveAnnotationInStorageAdapter, TEMPLATE, DEFAULT_FORM_MAP,
+} from './AnnotationFormUtils';
+import { getContextParams } from '../contextParams';
 import AnnotationFormHeader from './AnnotationFormHeader';
 import AnnotationFormBody from './AnnotationFormBody';
 import '../custom.css';
@@ -58,6 +61,12 @@ function AnnotationForm(
       } else {
         // Annotation has been created with other IIIF annotation editor
         setTemplateType(getTemplateType(t, TEMPLATE.IIIF_TYPE));
+      }
+    } else {
+      // New: use defaultForm if configured, otherwise show selector
+      const { defaultForm } = getContextParams(config);
+      if (defaultForm && DEFAULT_FORM_MAP[defaultForm]) {
+        setTemplateType(getTemplateType(t, DEFAULT_FORM_MAP[defaultForm]));
       }
     }
   }
