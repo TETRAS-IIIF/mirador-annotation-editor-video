@@ -135,7 +135,7 @@ export default function AnnotationDrawing(
         updateCurrentShapeInShapes(newCurrentShape);
       }
     }
-  }, [drawingState.shapes.length]);
+  }, [drawingState]);
 
   useEffect(() => {
     // Perform an action when fillColor, strokeColor, or strokeWidth change

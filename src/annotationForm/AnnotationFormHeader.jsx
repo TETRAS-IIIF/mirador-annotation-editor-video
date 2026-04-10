@@ -33,7 +33,7 @@ export default function AnnotationFormHeader(
       <Grid>
         {annotation.id == null
           && (
-            <MiradorMenuButton aria-label="back" TooltipProps="back">
+            <MiradorMenuButton aria-label="back" TooltipProps={{ title: 'back' }}>
               <ChevronLeftIcon onClick={goBackToTemplateSelection} />
             </MiradorMenuButton>
           )}

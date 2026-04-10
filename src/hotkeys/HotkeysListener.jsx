@@ -8,7 +8,7 @@ const IGNORED_TAGS = new Set(['INPUT', 'TEXTAREA', 'SELECT']);
 /** Check if target is editable */
 const isEditableTarget = (el) => IGNORED_TAGS.has(el?.tagName) || el?.isContentEditable;
 
-let listenerActive = false;
+let activeHandler = null;
 
 /**
  * Registers a global keydown listener
@@ -19,15 +19,14 @@ export default function HotkeysListener() {
   const store = useStore();
 
   useEffect(() => {
-    if (listenerActive) {
-      return undefined;
+    // Remove any stale listener left from a previous mount
+    if (activeHandler) {
+      document.removeEventListener('keydown', activeHandler);
+      activeHandler = null;
     }
-    listenerActive = true;
 
     /** Handler for keydown events */
     const handler = (e) => {
-      // console.log(e.key);
-
       if (isEditableTarget(e.target)) return;
       const match = HOTKEYS.find((h) => h.keys.includes(e.key));
       if (!match) return;
@@ -48,10 +47,13 @@ export default function HotkeysListener() {
       });
     };
 
+    activeHandler = handler;
     document.addEventListener('keydown', handler);
     return () => {
       document.removeEventListener('keydown', handler);
-      listenerActive = false;
+      if (activeHandler === handler) {
+        activeHandler = null;
+      }
     };
   }, [store]);
 
