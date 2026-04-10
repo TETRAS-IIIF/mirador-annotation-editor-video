@@ -2,8 +2,9 @@ import {
   Button, Divider, Grid, Tooltip,
 } from '@mui/material';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import WhoAndWhenFormSection, { SECTION_MODE } from './WhoAndWhenFormSection';
+import { MAE_SAVE_EVENT } from '../hotkeys/hotkeysEvents';
 
 /** Annotation form footer, save or cancel the edition/creation of an annotation */
 function AnnotationFormFooter({
@@ -12,9 +13,16 @@ function AnnotationFormFooter({
   saveAnnotation,
   t,
 }) {
-  /**
-   * Validate form and save annotation
-   */
+  // Ref to not re-register on every render
+  const saveRef = useRef(saveAnnotation);
+  saveRef.current = saveAnnotation;
+
+  useEffect(() => {
+    /** When MAE_SAVE_EVENT triggers, validate form and save annotation */
+    const handleSave = () => saveRef.current();
+    document.addEventListener(MAE_SAVE_EVENT, handleSave);
+    return () => document.removeEventListener(MAE_SAVE_EVENT, handleSave);
+  }, []);
 
   return (
     <>

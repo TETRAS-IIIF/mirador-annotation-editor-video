@@ -1,5 +1,5 @@
 import React, {
-  useLayoutEffect, useRef, useState, useCallback,
+  useEffect, useLayoutEffect, useRef, useState, useCallback,
 } from 'react';
 import PropTypes from 'prop-types';
 import Typography from '@mui/material/Typography';
@@ -12,6 +12,7 @@ import { TARGET_TOOL_STATE, TARGET_VIEW } from './AnnotationFormUtils';
 import { getContextParams } from '../contextParams';
 import AnnotationFormOverlay from './AnnotationFormOverlay/AnnotationFormOverlay';
 import { KONVA_MODE, OVERLAY_TOOL } from './AnnotationFormOverlay/KonvaDrawing/KonvaUtils';
+import { MAE_DELETE_SHAPE_EVENT, MAE_ANNOTATION_EMPTY_EVENT } from '../hotkeys/hotkeysEvents';
 
 /**
  * TargetSpatialInput - Target spatial input component
@@ -77,6 +78,34 @@ export function TargetSpatialInput({
       if (filtered.length === prev.shapes.length) return prev;
       return { ...prev, currentShape: null, shapes: filtered };
     });
+  }, []);
+
+  const drawingStateRef = useRef(drawingState);
+  drawingStateRef.current = drawingState;
+
+  useEffect(() => {
+    /** Action to delete shape when selected */
+    const handleDeleteShape = () => {
+      const { currentShape, shapes } = drawingStateRef.current;
+
+      if (currentShape) {
+        // Delete the selected shape
+        const remaining = shapes.filter((s) => s.id !== currentShape.id);
+        setDrawingState((prev) => ({ ...prev, currentShape: null, shapes: remaining }));
+
+        if (remaining.length === 0) {
+          // No shapes left: notify AnnotationForm to clean up
+          document.dispatchEvent(new CustomEvent(MAE_ANNOTATION_EMPTY_EVENT));
+        }
+      } else {
+        // No shapes at all: just signal empty
+        document.dispatchEvent(new CustomEvent(MAE_ANNOTATION_EMPTY_EVENT));
+      }
+    };
+
+    // Listen for MAE_DELETE_SHAPE_EVENT triggered by hotkey
+    document.addEventListener(MAE_DELETE_SHAPE_EVENT, handleDeleteShape);
+    return () => document.removeEventListener(MAE_DELETE_SHAPE_EVENT, handleDeleteShape);
   }, []);
 
   // Synchronize currentShape with both drawingState.currentShape and

@@ -88,6 +88,10 @@ function AnnotationFormOverlay({
         updateCurrentShapeInShapes(null);
       } else {
         setToolState((s) => (s.activeTool === tool ? s : { ...s, activeTool: tool }));
+        // Deselect shape when switching to drawing tool
+        if (tool !== OVERLAY_TOOL.EDIT) {
+          updateCurrentShapeInShapes(null);
+        }
       }
     },
     [displayMode, setToolState, updateCurrentShapeInShapes],
