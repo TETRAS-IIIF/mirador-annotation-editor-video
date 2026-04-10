@@ -1,4 +1,5 @@
 import {
+  addCompanionWindow,
   deselectAnnotation,
   getCompanionWindowsForContent,
   getSelectedAnnotationId,
@@ -65,6 +66,15 @@ function saveSelectedAnnotation({ state, windowId }) {
   document.dispatchEvent(new CustomEvent(MAE_SAVE_EVENT));
 }
 
+/** Create a new annotation by opening companion window */
+function createAnnotation({ state, dispatch, windowId }) {
+  const companionWindows = getAnnotationCompanionWindows(state, windowId);
+  // Only create if no annotation companion window is already open
+  if (companionWindows.length > 0) return;
+
+  dispatch(addCompanionWindow(windowId, { content: 'annotationCreation', position: 'right' }));
+}
+
 /** Escape handler: unselect anno / close companion window */
 function escapeAction({ state, dispatch, windowId }) {
   const annotationId = getSelectedAnnotationId(state, { windowId });
@@ -108,6 +118,11 @@ const HOTKEYS = [
     description: 'Deselect annotation / close companion window',
     handler: escapeAction,
     keys: ['Escape'],
+  },
+  {
+    description: 'Create a new annotation',
+    handler: createAnnotation,
+    keys: ['a'],
   },
 ];
 

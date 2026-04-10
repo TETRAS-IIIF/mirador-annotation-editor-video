@@ -8,18 +8,21 @@ const IGNORED_TAGS = new Set(['INPUT', 'TEXTAREA', 'SELECT']);
 /** Check if target is editable */
 const isEditableTarget = (el) => IGNORED_TAGS.has(el?.tagName) || el?.isContentEditable;
 
+// Track the active handler so we can always clean up correctly,
+// even if React unmounts/remounts due to error boundaries.
 let activeHandler = null;
 
 /**
- * Registers a global keydown listener
+ * Registers a global keydown listener.
  * Uses the Redux store directly so the listener reads current state
- * without React re-renders
+ * without React re-renders.
  */
 export default function HotkeysListener() {
   const store = useStore();
 
   useEffect(() => {
     // Remove any stale listener left from a previous mount
+    // (e.g. after an error boundary re-creation)
     if (activeHandler) {
       document.removeEventListener('keydown', activeHandler);
       activeHandler = null;
