@@ -13,6 +13,8 @@ import { useMemo } from 'react';
 
 // Available parameters: extend this object to add new context parameters
 const PARAM_DEFINITIONS = {
+  defaultForm: { default: null, type: 'string' },
+  defaultTags: { default: [], type: 'array' },
   editMode: { default: false, type: 'boolean' },
 };
 
