@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Chip } from '@mui/material';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
-import { useDispatch } from 'react-redux';
-import { receiveAnnotation } from 'mirador';
+import {useDispatch, useSelector} from 'react-redux';
+import { transcribe } from '../UtilsLLMAPI';
 
 /** Chip that triggers transcription of the current canvas. */
 export default function TranscribeChip({
@@ -18,44 +18,37 @@ export default function TranscribeChip({
   pushErrorMessage,
 }) {
   const dispatch = useDispatch();
-
-
+  const storageAdapter = useSelector((state) => state.config.annotation.adapter);
 
   const handleTranscribe = async () => {
     const activeCanvases = playerReferences.getCanvases?.() || [];
     if (!activeCanvases.length || !manifestUrl) return;
 
-    const canvasId = activeCanvases[0].id;
-    const canvasIndex = activeCanvases[0].index;
+    const canvas = activeCanvases[0];
 
     setIsLoading(true);
-    try {
-      const res = await fetch(`${endpoint}iiif/transcribe`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          manifest_url: manifestUrl,
-          canvas_index: canvasIndex,
-        }),
-      });
-
-      const updatedManifest = await res.json();
-      const newAnnos = updatedManifest.items?.[canvasIndex]?.annotations || [];
-
-
-
-      newAnnos.forEach((annoPage) => {
-        dispatch(receiveAnnotation(canvasId, annoPage.id, annoPage));
-      });
-
-      conversationService.addMessage(conversationId, 'assistant', '📝 Transcription added to canvas.', null);
-      setConversation(conversationService.getActiveBranch(conversationId));
-    } catch (err) {
-      console.error('Transcribe error:', err);
-      pushErrorMessage();
-    } finally {
-      setIsLoading(false);
-    }
+    await transcribe(
+      manifestUrl,
+      canvas,
+      endpoint,
+      storageAdapter,
+      dispatch,
+      () => {
+        conversationService.addMessage(
+          conversationId,
+          'assistant',
+          '📝 Transcription added to canvas.',
+          null,
+        );
+        setConversation(conversationService.getActiveBranch(conversationId));
+        setIsLoading(false);
+      },
+      (err) => {
+        console.error('Transcribe error:', err);
+        pushErrorMessage();
+        setIsLoading(false);
+      },
+    );
   };
 
   return (
@@ -87,6 +80,7 @@ TranscribeChip.propTypes = {
   pushErrorMessage: PropTypes.func.isRequired,
   setConversation: PropTypes.func.isRequired,
   setIsLoading: PropTypes.func.isRequired,
+  storageAdapter: PropTypes.func.isRequired,
 };
 
 TranscribeChip.defaultProps = {
