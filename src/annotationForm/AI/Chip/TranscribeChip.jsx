@@ -80,7 +80,6 @@ TranscribeChip.propTypes = {
   pushErrorMessage: PropTypes.func.isRequired,
   setConversation: PropTypes.func.isRequired,
   setIsLoading: PropTypes.func.isRequired,
-  storageAdapter: PropTypes.func.isRequired,
 };
 
 TranscribeChip.defaultProps = {

@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Chip } from '@mui/material';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
-import { useDispatch } from 'react-redux';
-import { receiveAnnotation } from 'mirador';
+import { useDispatch, useSelector } from 'react-redux';
+import { annotate } from '../UtilsLLMAPI';
 
 /** Chip that triggers full annotation (description + regions) on the current canvas. */
 export default function AnnotateChip({
@@ -18,45 +18,37 @@ export default function AnnotateChip({
   pushErrorMessage,
 }) {
   const dispatch = useDispatch();
+  const storageAdapter = useSelector((state) => state.config.annotation.adapter);
 
   const handleAnnotate = async () => {
     const activeCanvases = playerReferences.getCanvases?.() || [];
     if (!activeCanvases.length || !manifestUrl) return;
 
-    const canvasId = activeCanvases[0].id;
-    const canvasIndex = activeCanvases[0].index;
+    const canvas = activeCanvases[0];
 
     setIsLoading(true);
-    try {
-      const response = await fetch(`${endpoint}iiif/annotate-manifest`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          manifest_url: manifestUrl,
-          canvas_index: canvasIndex,
-        }),
-      });
-
-      const updatedManifest = await response.json();
-      const newAnnos = updatedManifest.items[canvasIndex]?.annotations || [];
-
-      newAnnos.forEach((annoPage) => {
-        dispatch(receiveAnnotation(canvasId, annoPage.id, annoPage));
-      });
-
-      conversationService.addMessage(
-        conversationId,
-        'assistant',
-        '🧠 Full annotation complete (description + regions added).',
-        null,
-      );
-      setConversation(conversationService.getActiveBranch(conversationId));
-    } catch (err) {
-      console.error('Annotate error', err);
-      pushErrorMessage();
-    } finally {
-      setIsLoading(false);
-    }
+    await annotate(
+      manifestUrl,
+      canvas,
+      endpoint,
+      storageAdapter,
+      dispatch,
+      () => {
+        conversationService.addMessage(
+          conversationId,
+          'assistant',
+          '🧠 Full annotation complete (description + regions added).',
+          null,
+        );
+        setConversation(conversationService.getActiveBranch(conversationId));
+        setIsLoading(false);
+      },
+      (err) => {
+        console.error('Annotate error:', err);
+        pushErrorMessage();
+        setIsLoading(false);
+      },
+    );
   };
 
   return (
