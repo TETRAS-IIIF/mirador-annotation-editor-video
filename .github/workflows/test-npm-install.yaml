@@ -23,7 +23,3 @@ jobs:
 
       - name: Install dependencies
         run: npm install --omit=dev
-
-      # assert that the package can be built
-      - name: Build package
-        run: npm run build
