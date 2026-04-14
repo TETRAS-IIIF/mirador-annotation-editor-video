@@ -24,7 +24,7 @@ jobs:
         run: npm init -y
 
       - name: Test npm install
-        run: npm install mirador-annotation-editor@latest
+        run: npm install mirador-annotation-editor@1.2.4
 
       - name: Verify package installed
         run: node -e "require('mirador-annotation-editor'); console.log('Package loaded successfully!')"
