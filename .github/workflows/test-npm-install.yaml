@@ -1,0 +1,28 @@
+# test that the NPM package can be installed properly
+name: Test NPM Install
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch: # allows manual triggering
+
+jobs:
+  test-install:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Create empty project
+        run: npm init -y
+
+      - name: Test npm install
+        run: npm install mirador-annotation-editor
+
+      - name: Verify package installed
+        run: node -e "require('mirador-annotation-editor'); console.log('Package loaded successfully!')"
