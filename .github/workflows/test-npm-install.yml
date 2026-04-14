@@ -21,8 +21,16 @@ jobs:
         with:
           node-version: '23'
 
-      # Pack the PR as an installable artifact, but don't run scripts (prepare/build)
-      - name: Pack plugin tarball (no scripts)
+      # Install dev dependencies so that build tools (vite, etc.) are available
+      - name: Install dev dependencies
+        run: npm ci --ignore-scripts
+
+      # Build the dist so the tarball contains the compiled output
+      - name: Build plugin
+        run: npm run build
+
+      # Pack the PR as an installable artifact (build already done, skip prepare)
+      - name: Pack plugin tarball
         run: |
           set -euxo pipefail
           npm pack --ignore-scripts
