@@ -26,5 +26,9 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Verify package installed
-        run: node -e "import 'mirador-annotation-editor'; console.log('Package loaded successfully!')"
+      - name: Build package
+        run: npm run build
+
+      # node -e defaults to cjs => test cjs import
+      - name: Verify package can be imported
+        run: node -e "require('mirador-annotation-editor'); console.log('Package loaded successfully!')"
