@@ -15,7 +15,6 @@ import AnnotationFormHeader from './AnnotationFormHeader';
 import AnnotationFormBody from './AnnotationFormBody';
 import '../custom.css';
 import UnsupportedMedia from './UnsupportedMedia';
-import { MAE_ANNOTATION_EMPTY_EVENT } from '../hotkeys/hotkeysEvents';
 
 /**
  * Component for submitting a form to create or edit an annotation.
@@ -66,7 +65,7 @@ function AnnotationForm(
         setTemplateType(getTemplateType(t, TEMPLATE.IIIF_TYPE));
       }
     } else {
-      // New: use defaultForm if configured, otherwise show selector
+      // Use defaultForm if configured, otherwise show selector
       const { defaultForm } = getContextParams(config);
       if (defaultForm && DEFAULT_FORM_MAP[defaultForm]) {
         setTemplateType(getTemplateType(t, DEFAULT_FORM_MAP[defaultForm]));
@@ -124,28 +123,28 @@ function AnnotationForm(
   const annotationRef = useRef(annotation);
   annotationRef.current = annotation;
 
-  useEffect(() => {
-    /** Action when all annotation shapes have been deleted */
-    const handleAnnotationEmpty = () => {
-      const anno = annotationRef.current;
-
-      if (anno?.id) {
-        // Existing annotation: delete from storage
-        canvases.forEach((canvas) => {
-          const storageAdapter = config.annotation.adapter(canvas.id);
-          storageAdapter.delete(anno.id).then((annoPage) => {
-            receiveAnnotation(canvas.id, storageAdapter.annotationPageId, annoPage);
-          });
-        });
-      }
-
-      closeFormCompanionWindow();
-    };
-
-    // Listen for MAE_ANNOTATION_EMPTY_EVENT
-    document.addEventListener(MAE_ANNOTATION_EMPTY_EVENT, handleAnnotationEmpty);
-    return () => document.removeEventListener(MAE_ANNOTATION_EMPTY_EVENT, handleAnnotationEmpty);
-  }, [canvases, config, receiveAnnotation, closeFormCompanionWindow]);
+  // useEffect(() => {
+  //   /** Action when all annotation shapes have been deleted */
+  //   const handleAnnotationEmpty = () => {
+  //     const anno = annotationRef.current;
+  //
+  //     if (anno?.id) {
+  //       // Existing annotation: delete from storage
+  //       canvases.forEach((canvas) => {
+  //         const storageAdapter = config.annotation.adapter(canvas.id);
+  //         storageAdapter.delete(anno.id).then((annoPage) => {
+  //           receiveAnnotation(canvas.id, storageAdapter.annotationPageId, annoPage);
+  //         });
+  //       });
+  //     }
+  //
+  //     closeFormCompanionWindow();
+  //   };
+  //
+  //   // Listen for MAE_ANNOTATION_EMPTY_EVENT
+  //   document.addEventListener(MAE_ANNOTATION_EMPTY_EVENT, handleAnnotationEmpty);
+  //   return () => document.removeEventListener(MAE_ANNOTATION_EMPTY_EVENT, handleAnnotationEmpty);
+  // }, [canvases, config, receiveAnnotation, closeFormCompanionWindow]);
 
   /**
    * Save the annotation

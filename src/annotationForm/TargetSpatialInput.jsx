@@ -12,7 +12,7 @@ import { TARGET_TOOL_STATE, TARGET_VIEW } from './AnnotationFormUtils';
 import { getContextParams } from '../contextParams';
 import AnnotationFormOverlay from './AnnotationFormOverlay/AnnotationFormOverlay';
 import { KONVA_MODE, OVERLAY_TOOL } from './AnnotationFormOverlay/KonvaDrawing/KonvaUtils';
-import { MAE_DELETE_SHAPE_EVENT, MAE_ANNOTATION_EMPTY_EVENT } from '../hotkeys/hotkeysEvents';
+import { MAE_DELETE_SHAPE_EVENT } from '../hotkeys/hotkeysEvents';
 
 /**
  * TargetSpatialInput - Target spatial input component
@@ -93,13 +93,13 @@ export function TargetSpatialInput({
         const remaining = shapes.filter((s) => s.id !== currentShape.id);
         setDrawingState((prev) => ({ ...prev, currentShape: null, shapes: remaining }));
 
-        if (remaining.length === 0) {
-          // No shapes left: notify AnnotationForm to clean up
-          document.dispatchEvent(new CustomEvent(MAE_ANNOTATION_EMPTY_EVENT));
-        }
+        // if (remaining.length === 0) {
+        //   // No shapes left: notify AnnotationForm to clean up
+        //   document.dispatchEvent(new CustomEvent(MAE_ANNOTATION_EMPTY_EVENT));
+        // }
       } else {
-        // No shapes at all: just signal empty
-        document.dispatchEvent(new CustomEvent(MAE_ANNOTATION_EMPTY_EVENT));
+        // // No shapes at all: just signal empty
+        // document.dispatchEvent(new CustomEvent(MAE_ANNOTATION_EMPTY_EVENT));
       }
     };
 
