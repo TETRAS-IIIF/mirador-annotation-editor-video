@@ -22,5 +22,4 @@ jobs:
           node-version: '23'
 
       - name: Install dependencies
-
         run: npm install --omit=dev
