@@ -3,9 +3,9 @@ name: Test NPM Install
 
 on:
   push:
-    branches: [main]
+    branches: [main, aiiinotate]
   pull_request:
-    branches: [main]
+    branches: [main, aiiinotate]
   workflow_dispatch: # allows manual triggering
 
 jobs:
