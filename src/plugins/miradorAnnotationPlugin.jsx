@@ -18,6 +18,7 @@ import SingleCanvasDialog from '../SingleCanvasDialog';
 import AnnotationExportDialog from '../AnnotationExportDialog';
 import LocalStorageAdapter from '../annotationAdapter/LocalStorageAdapter';
 import translations from '../locales/locales';
+import HotkeyTooltip from "../hotkeys/HotkeyTooltip";
 
 const StyledDiv = styled('div')(() => ({
   display: 'flex',
@@ -85,7 +86,7 @@ function MiradorAnnotation(
       <TargetComponent {...targetProps} />
       {
         config?.annotation?.readonly === true ? null : (
-          <Tooltip title={t('create_annotation')}>
+          <Tooltip title={<HotkeyTooltip label={t('create_annotation')} action="create" />}>
             <span>
               <MiradorMenuButton
                 aria-label={t('create_annotation')}
@@ -161,13 +162,14 @@ MiradorAnnotation.propTypes = {
   windowViewType: PropTypes.string.isRequired,
 };
 
-// TODO use selector in main componenent
+// TODO use selector in main component
 /**
  * this function map the state to the annotationPlugin's props
  * */
 function mapStateToProps(state, { targetProps: { windowId } }) {
   // Annotation edit companion window ou annotation creation companion window is the same thing
   const annotationCreationCompanionWindows = getCompanionWindowsForContent(state, { content: 'annotationCreation', windowId });
+  // TODO variable name is confusing: canOpenEditCompanionWindow? isCompanionWindowOpenable?
   let annotationEditCompanionWindowIsOpened = true;
   if (Object.keys(annotationCreationCompanionWindows).length !== 0) {
     annotationEditCompanionWindowIsOpened = false;

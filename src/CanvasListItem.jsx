@@ -14,6 +14,7 @@ import { useTranslation, withTranslation } from 'react-i18next';
 import InfoIcon from '@mui/icons-material/Info';
 import AnnotationActionsContext from './AnnotationActionsContext';
 import WhoAndWhenFormSection, { TOOLTIP_MODE } from './annotationForm/WhoAndWhenFormSection';
+import HotkeyTooltip from "./hotkeys/HotkeyTooltip";
 
 // TODO missing TRAD
 const CanvasListItem = forwardRef((props, ref) => {
@@ -188,7 +189,7 @@ const CanvasListItem = forwardRef((props, ref) => {
                 </span>
               </Tooltip>,
 
-              <Tooltip title={t('deleteAnnotation')} key="delete">
+              <Tooltip title={<HotkeyTooltip label={t('deleteAnnotation')} action="delete" />} key="delete">
                 <span>
                   <ToggleButton
                     aria-label="Delete"

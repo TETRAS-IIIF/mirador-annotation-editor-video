@@ -14,6 +14,13 @@ export const TEMPLATE = {
   TEXT_TYPE: 'text',
 };
 
+/** Maps defaultForm context param values to TEMPLATE */
+export const DEFAULT_FORM_MAP = {
+  expert: TEMPLATE.IIIF_TYPE,
+  note: TEMPLATE.MULTIPLE_BODY_TYPE,
+  tag: TEMPLATE.TAGGING_TYPE,
+};
+
 // TODO Move in MediaUtils
 export const MEDIA_TYPES = {
   AUDIO: 'Audio',
