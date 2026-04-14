@@ -3,9 +3,11 @@ name: Test NPM Install
 
 on:
   push:
-    branches: [main, aiiinotate]
+    branches:
+      - "**"
   pull_request:
-    branches: [main, aiiinotate]
+    branches:
+      - "**"
   workflow_dispatch: # allows manual triggering
 
 jobs:
@@ -22,7 +24,7 @@ jobs:
         run: npm init -y
 
       - name: Test npm install
-        run: npm install mirador-annotation-editor
+        run: npm install mirador-annotation-editor@latest
 
       - name: Verify package installed
         run: node -e "require('mirador-annotation-editor'); console.log('Package loaded successfully!')"
