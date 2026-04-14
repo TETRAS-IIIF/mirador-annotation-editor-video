@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useStore } from 'react-redux';
 import { getFocusedWindowId, getConfig } from 'mirador';
-import HOTKEYS from './hotkeysDefinitions';
+import HOTKEY_ACTIONS from './hotkeysDefinitions';
 
 /** Elements where keystrokes should NOT trigger hotkeys */
 const IGNORED_TAGS = new Set(['INPUT', 'TEXTAREA', 'SELECT']);
@@ -31,7 +31,7 @@ export default function HotkeysListener() {
     /** Handler for keydown events */
     const handler = (e) => {
       if (isEditableTarget(e.target)) return;
-      const match = HOTKEYS.find((h) => h.keys.includes(e.key));
+      const match = Object.values(HOTKEY_ACTIONS).find((h) => h.keys.includes(e.key));
       if (!match) return;
 
       const state = store.getState();

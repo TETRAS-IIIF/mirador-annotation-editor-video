@@ -16,6 +16,7 @@ import {
   TARGET_VIEW,
 } from '../AnnotationFormUtils';
 import { isShapesTool, KONVA_MODE, OVERLAY_TOOL } from './KonvaDrawing/KonvaUtils';
+import HotkeyTooltip from "../../hotkeys/HotkeyTooltip";
 
 // eslint-disable-next-line no-empty-pattern
 const OverlayIconAndTitleContainer = styled(Grid)(({  }) => ({
@@ -158,7 +159,7 @@ function AnnotationFormOverlay({
               <CursorIcon />
             </ToggleButton>
           </Tooltip>
-          <Tooltip title={t('delete')}>
+          <Tooltip title={<HotkeyTooltip label={t('delete')} action="delete" />}>
             <ToggleButton
               value={OVERLAY_TOOL.DELETE}
               aria-label={t('select_cursor')}

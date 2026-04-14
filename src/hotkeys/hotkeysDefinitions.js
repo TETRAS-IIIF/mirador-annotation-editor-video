@@ -103,27 +103,27 @@ function escapeAction({ state, dispatch, windowId }) {
  *       ctx.config        Mirador config object
  * }
  */
-const HOTKEYS = [
-  {
-    description: 'Delete selected shape or annotation',
-    handler: deleteSelectedShape,
-    keys: ['Delete', 'Backspace'],
-  },
-  {
-    description: 'Save current annotation',
-    handler: saveSelectedAnnotation,
-    keys: ['Enter'],
-  },
-  {
-    description: 'Deselect annotation / close companion window',
-    handler: escapeAction,
-    keys: ['Escape'],
-  },
-  {
+const HOTKEY_ACTIONS = {
+  create: {
     description: 'Create a new annotation',
     handler: createAnnotation,
     keys: ['a'],
   },
-];
+  delete: {
+    description: 'Delete selected shape or annotation',
+    handler: deleteSelectedShape,
+    keys: ['Delete', 'Backspace'],
+  },
+  escape: {
+    description: 'Deselect annotation / close companion window',
+    handler: escapeAction,
+    keys: ['Escape'],
+  },
+  save: {
+    description: 'Save current annotation',
+    handler: saveSelectedAnnotation,
+    keys: ['Enter'],
+  },
+};
 
-export default HOTKEYS;
+export default HOTKEY_ACTIONS;

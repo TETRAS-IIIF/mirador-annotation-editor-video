@@ -9,6 +9,7 @@ import Typography from '@mui/material/Typography';
 import PropTypes from 'prop-types';
 import { Tooltip } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import HotkeyTooltip from "./hotkeys/HotkeyTooltip";
 
 /**
  * Dialog to enforce single view for annotation creation / editing
@@ -51,7 +52,7 @@ function SingleCanvasDialog({ handleClose, open, switchToSingleCanvasView }) {
       </DialogContent>
 
       <DialogActions>
-        <Tooltip title={t('cancel')}>
+        <Tooltip title={<HotkeyTooltip label={t('cancel')} action="escape" />}>
           <Button onClick={handleClose}>{t('cancel')}</Button>
         </Tooltip>
         <Tooltip title={t('switch_view')}>

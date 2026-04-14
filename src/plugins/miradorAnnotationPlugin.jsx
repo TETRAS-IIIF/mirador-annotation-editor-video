@@ -18,6 +18,7 @@ import SingleCanvasDialog from '../SingleCanvasDialog';
 import AnnotationExportDialog from '../AnnotationExportDialog';
 import LocalStorageAdapter from '../annotationAdapter/LocalStorageAdapter';
 import translations from '../locales/locales';
+import HotkeyTooltip from "../hotkeys/HotkeyTooltip";
 
 const StyledDiv = styled('div')(() => ({
   display: 'flex',
@@ -85,7 +86,7 @@ function MiradorAnnotation(
       <TargetComponent {...targetProps} />
       {
         config?.annotation?.readonly === true ? null : (
-          <Tooltip title={t('create_annotation')}>
+          <Tooltip title={<HotkeyTooltip label={t('create_annotation')} action="create" />}>
             <span>
               <MiradorMenuButton
                 aria-label={t('create_annotation')}
