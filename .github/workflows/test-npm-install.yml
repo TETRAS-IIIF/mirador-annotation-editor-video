@@ -1,0 +1,39 @@
+# test that the NPM package can be installed properly (dependency resolution only)
+name: Test NPM Install
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch: # allows manual triggering
+
+jobs:
+  test-install-with-mirador-latest:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '23'
+
+      # Pack the PR as an installable artifact, but don't run scripts (prepare/build)
+      - name: Pack plugin tarball (no scripts)
+        run: |
+          set -euxo pipefail
+          npm pack --ignore-scripts
+          ls -la *.tgz
+
+      # Simulate a real consumer install: mirador@latest + this plugin tgz
+      # Also disable scripts so we only test npm's dependency tree resolution.
+      - name: Consumer install test (resolution only)
+        run: |
+          set -euxo pipefail
+          mkdir -p /tmp/consumer
+          cd /tmp/consumer
+          npm init -y
+          npm i --ignore-scripts mirador@latest $GITHUB_WORKSPACE/mirador-annotation-editor-*.tgz
