@@ -15,16 +15,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      - name: Create empty project
-        run: npm init -y
-
-      - name: Test npm install
-        run: npm install mirador-annotation-editor@1.2.4
+      - name: Install dependencies
+        run: npm install
 
       - name: Verify package installed
         run: node -e "require('mirador-annotation-editor'); console.log('Package loaded successfully!')"
