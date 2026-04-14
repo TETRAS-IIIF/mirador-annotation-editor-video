@@ -82,7 +82,7 @@
     "@emotion/react": ">=11",
     "@emotion/styled": ">=11",
     "@mui/material": ">=5",
-    "@mui/system": ">=5",
+    "@mui/system": "^7.x",
     "i18next": ">=23",
     "lodash": "^4.17.23",
     "mirador": "^4.0.0",
