@@ -29,7 +29,6 @@ export default function AnnotationFormBody(
   },
 ) {
   const { t } = useTranslation();
-
   const debugMode = useSelector((state) => getConfig(state)).annotation.debug ?? false;
   return (
     <Grid container direction="column">
@@ -74,18 +73,6 @@ export default function AnnotationFormBody(
         {
           templateType.id === TEMPLATE.IIIF_TYPE && (
             <IIIFTemplate
-              annotation={annotation}
-              canvases={canvases}
-              closeFormCompanionWindow={closeFormCompanionWindow}
-              playerReferences={playerReferences}
-              saveAnnotation={saveAnnotation}
-              t={t}
-            />
-          )
-        }
-        {
-          templateType.id === TEMPLATE.AI && (
-            <AITemplate
               annotation={annotation}
               canvases={canvases}
               closeFormCompanionWindow={closeFormCompanionWindow}

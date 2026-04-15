@@ -58,16 +58,6 @@ export const TEMPLATE_TYPES = (t) => [
     },
     label: t('expert_mode'),
   },
-  {
-    description: t('ai_comment'),
-    icon: <AutoAwesomeIcon fontSize="small" />,
-    id: TEMPLATE.AI,
-    isCompatibleWithTemplate: (mediaType) => {
-      if (mediaType === MEDIA_TYPES.IMAGE) return true;
-      return false;
-    },
-    label: t('ai'),
-  },
 ];
 export const DEFAULT_TOOL_STATE = {
   activeTool: OVERLAY_TOOL.SHAPE,

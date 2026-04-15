@@ -2,50 +2,38 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Chip } from '@mui/material';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
-import {useDispatch, useSelector} from 'react-redux';
-import { transcribe } from '../UtilsLLMAPI';
+import { useDispatch, useSelector } from 'react-redux';
+import { processTargetAction, transcribe } from '../UtilsLLMAPI';
 
 /** Chip that triggers transcription of the current canvas. */
 export default function TranscribeChip({
   endpoint,
   manifestUrl,
   playerReferences,
-  conversationId,
-  conversationService,
-  isLoading,
   setIsLoading,
-  setConversation,
-  pushErrorMessage,
+  isLoading,
+  target,
 }) {
   const dispatch = useDispatch();
   const storageAdapter = useSelector((state) => state.config.annotation.adapter);
-
   const handleTranscribe = async () => {
     const activeCanvases = playerReferences.getCanvases?.() || [];
     if (!activeCanvases.length || !manifestUrl) return;
 
-    const canvas = activeCanvases[0];
-
     setIsLoading(true);
-    await transcribe(
+    await processTargetAction(
       manifestUrl,
-      canvas,
+      activeCanvases[0],
+      target,
+      'transcribe',
       endpoint,
       storageAdapter,
       dispatch,
       () => {
-        conversationService.addMessage(
-          conversationId,
-          'assistant',
-          '📝 Transcription added to canvas.',
-          null,
-        );
-        setConversation(conversationService.getActiveBranch(conversationId));
         setIsLoading(false);
       },
       (err) => {
-        console.error('Transcribe error:', err);
-        pushErrorMessage();
+        console.error('Translation failed:', err);
         setIsLoading(false);
       },
     );
@@ -66,23 +54,17 @@ export default function TranscribeChip({
 }
 
 TranscribeChip.propTypes = {
-  conversationId: PropTypes.string,
-  conversationService: PropTypes.shape({
-    addMessage: PropTypes.func.isRequired,
-    getActiveBranch: PropTypes.func.isRequired,
-  }).isRequired,
   endpoint: PropTypes.string.isRequired,
   isLoading: PropTypes.bool.isRequired,
   manifestUrl: PropTypes.string,
   playerReferences: PropTypes.shape({
     getCanvases: PropTypes.func,
   }).isRequired,
-  pushErrorMessage: PropTypes.func.isRequired,
-  setConversation: PropTypes.func.isRequired,
   setIsLoading: PropTypes.func.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  target: PropTypes.object,
 };
 
 TranscribeChip.defaultProps = {
-  conversationId: null,
   manifestUrl: null,
 };

@@ -3,43 +3,41 @@ import PropTypes from 'prop-types';
 import { Chip } from '@mui/material';
 import TranslateIcon from '@mui/icons-material/Translate';
 import { useSelector, useDispatch } from 'react-redux';
-import { translate } from '../UtilsLLMAPI';
+import { processTargetAction } from '../UtilsLLMAPI';
 
-/** Chip that triggers translation of annotations on the current canvas. */
+/** Chip that triggers translation of a targeted region on the current canvas. */
 export default function TranslateChip({
   endpoint,
   manifestUrl,
   playerReferences,
-  conversationId,
-  conversationService,
+  target,
   isLoading,
   setIsLoading,
-  setConversation,
-  pushErrorMessage,
 }) {
   const storageAdapter = useSelector((state) => state.config.annotation.adapter);
   const dispatch = useDispatch();
-
-  /** Calls the FastAPI translate-manifest endpoint and dispatches resulting annotations. */
+  console.log('target', target);
+  /** Calls the FastAPI target-action endpoint and dispatches resulting annotations. */
   const handleTranslate = async () => {
     const activeCanvases = playerReferences.getCanvases?.() || [];
-    if (!activeCanvases.length || !manifestUrl) return;
+    if (!activeCanvases.length || !manifestUrl || !target) return;
 
     setIsLoading(true);
 
-    await translate(
+    await processTargetAction(
       manifestUrl,
       activeCanvases[0],
+      target,
+      'translate',
       endpoint,
       storageAdapter,
       dispatch,
       () => {
-        conversationService.addMessage(conversationId, 'assistant', '✅ Translation complete. Annotations added to viewer.', null);
-        setConversation(conversationService.getActiveBranch(conversationId));
         setIsLoading(false);
       },
-      () => {
-        pushErrorMessage();
+      (err) => {
+        console.error('Translation failed:', err);
+        setIsLoading(false);
       },
     );
   };
@@ -49,7 +47,7 @@ export default function TranslateChip({
       icon={<TranslateIcon fontSize="small" />}
       label="Translate this"
       onClick={handleTranslate}
-      disabled={isLoading}
+      disabled={isLoading || !target}
       clickable
       size="small"
       variant="outlined"
@@ -59,23 +57,18 @@ export default function TranslateChip({
 }
 
 TranslateChip.propTypes = {
-  conversationId: PropTypes.string,
-  conversationService: PropTypes.shape({
-    addMessage: PropTypes.func.isRequired,
-    getActiveBranch: PropTypes.func.isRequired,
-  }).isRequired,
   endpoint: PropTypes.string.isRequired,
   isLoading: PropTypes.bool.isRequired,
   manifestUrl: PropTypes.string,
   playerReferences: PropTypes.shape({
     getCanvases: PropTypes.func,
   }).isRequired,
-  pushErrorMessage: PropTypes.func.isRequired,
-  setConversation: PropTypes.func.isRequired,
   setIsLoading: PropTypes.func.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  target: PropTypes.object,
 };
 
 TranslateChip.defaultProps = {
-  conversationId: null,
   manifestUrl: null,
+  target: null,
 };

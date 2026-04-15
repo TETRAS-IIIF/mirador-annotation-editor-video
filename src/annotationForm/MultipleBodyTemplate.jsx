@@ -9,6 +9,7 @@ import TargetFormSection from './TargetFormSection';
 import { resizeKonvaStage } from './AnnotationFormOverlay/KonvaDrawing/KonvaUtils';
 import { MultiTagsInput } from './MultiTagsInput';
 import { TextCommentInput } from './TextCommentInput';
+import UtilsChipTools from './AI/Chip/UtilsChipTools';
 
 /** Tagging Template* */
 export default function MultipleBodyTemplate(
@@ -21,8 +22,11 @@ export default function MultipleBodyTemplate(
     windowId,
   },
 ) {
+  const windows = useSelector((state) => state.windows);
   const annotationConfig = useSelector((state) => getConfig(state)).annotation;
   const tagsSuggestions = annotationConfig.tagsSuggestions ?? [];
+  const manifestUrl = windows[windowId]?.manifestId;
+  const [isLoading, setIsLoading] = useState(false);
 
   let maeAnnotation = annotation;
 
@@ -169,6 +173,16 @@ export default function MultipleBodyTemplate(
           timeTarget
           windowId={windowId}
         />
+      </Grid>
+      <Grid>
+        <UtilsChipTools
+          manifestUrl={manifestUrl}
+          playerReferences={playerReferences}
+          isLoading={isLoading}
+          setIsLoading={setIsLoading}
+          target={annotationState.maeData.target}
+        />
+
       </Grid>
       <Grid>
         <AnnotationFormFooter

@@ -2,56 +2,42 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Chip } from '@mui/material';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
-import { useDispatch } from 'react-redux';
-import { receiveAnnotation } from 'mirador';
+import { useSelector, useDispatch } from 'react-redux';
+import { processTargetAction } from './AI/UtilsLLMAPI';
 
-/** Chip that triggers visual description of the current canvas. */
+/** Chip that triggers visual description of a targeted region on the current canvas. */
 export default function DescribeChip({
   endpoint,
   manifestUrl,
   playerReferences,
-  conversationId,
-  conversationService,
+  target,
   isLoading,
   setIsLoading,
-  setConversation,
-  pushErrorMessage,
 }) {
+  const storageAdapter = useSelector((state) => state.config.annotation.adapter);
   const dispatch = useDispatch();
 
   const handleDescribe = async () => {
     const activeCanvases = playerReferences.getCanvases?.() || [];
-    if (!activeCanvases.length || !manifestUrl) return;
-
-    const canvasId = activeCanvases[0].id;
-    const canvasIndex = activeCanvases[0].index;
+    if (!activeCanvases.length || !manifestUrl || !target) return;
 
     setIsLoading(true);
-    try {
-      const response = await fetch(`${endpoint}iiif/describe-manifest`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          manifest_url: manifestUrl,
-          canvas_index: canvasIndex,
-        }),
-      });
-
-      const updatedManifest = await response.json();
-      const newAnnos = updatedManifest.items[canvasIndex]?.annotations || [];
-
-      newAnnos.forEach((annoPage) => {
-        dispatch(receiveAnnotation(canvasId, annoPage.id, annoPage));
-      });
-
-      conversationService.addMessage(conversationId, 'assistant', '✨ Visual description generated and attached.', null);
-      setConversation(conversationService.getActiveBranch(conversationId));
-    } catch (err) {
-      console.error('Description error', err);
-      pushErrorMessage();
-    } finally {
-      setIsLoading(false);
-    }
+    await processTargetAction(
+      manifestUrl,
+      activeCanvases[0],
+      target,
+      'describe',
+      endpoint,
+      storageAdapter,
+      dispatch,
+      () => {
+        setIsLoading(false);
+      },
+      (err) => {
+        console.error('Translation failed:', err);
+        setIsLoading(false);
+      },
+    );
   };
 
   return (
@@ -59,7 +45,7 @@ export default function DescribeChip({
       icon={<AutoAwesomeIcon fontSize="small" />}
       label="Describe this"
       onClick={handleDescribe}
-      disabled={isLoading}
+      disabled={isLoading || !target}
       clickable
       size="small"
       variant="outlined"
@@ -69,23 +55,17 @@ export default function DescribeChip({
 }
 
 DescribeChip.propTypes = {
-  conversationId: PropTypes.string,
-  conversationService: PropTypes.shape({
-    addMessage: PropTypes.func.isRequired,
-    getActiveBranch: PropTypes.func.isRequired,
-  }).isRequired,
   endpoint: PropTypes.string.isRequired,
   isLoading: PropTypes.bool.isRequired,
   manifestUrl: PropTypes.string,
   playerReferences: PropTypes.shape({
     getCanvases: PropTypes.func,
   }).isRequired,
-  pushErrorMessage: PropTypes.func.isRequired,
-  setConversation: PropTypes.func.isRequired,
   setIsLoading: PropTypes.func.isRequired,
+  target: PropTypes.object,
 };
 
 DescribeChip.defaultProps = {
-  conversationId: null,
   manifestUrl: null,
+  target: null,
 };

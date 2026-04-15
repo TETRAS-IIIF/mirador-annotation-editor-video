@@ -10,12 +10,8 @@ export default function AnnotateChip({
   endpoint,
   manifestUrl,
   playerReferences,
-  conversationId,
-  conversationService,
   isLoading,
   setIsLoading,
-  setConversation,
-  pushErrorMessage,
 }) {
   const dispatch = useDispatch();
   const storageAdapter = useSelector((state) => state.config.annotation.adapter);
@@ -34,18 +30,10 @@ export default function AnnotateChip({
       storageAdapter,
       dispatch,
       () => {
-        conversationService.addMessage(
-          conversationId,
-          'assistant',
-          '🧠 Full annotation complete (description + regions added).',
-          null,
-        );
-        setConversation(conversationService.getActiveBranch(conversationId));
         setIsLoading(false);
       },
       (err) => {
         console.error('Annotate error:', err);
-        pushErrorMessage();
         setIsLoading(false);
       },
     );
@@ -66,23 +54,16 @@ export default function AnnotateChip({
 }
 
 AnnotateChip.propTypes = {
-  conversationId: PropTypes.string,
-  conversationService: PropTypes.shape({
-    addMessage: PropTypes.func.isRequired,
-    getActiveBranch: PropTypes.func.isRequired,
-  }).isRequired,
+
   endpoint: PropTypes.string.isRequired,
   isLoading: PropTypes.bool.isRequired,
   manifestUrl: PropTypes.string,
   playerReferences: PropTypes.shape({
     getCanvases: PropTypes.func,
   }).isRequired,
-  pushErrorMessage: PropTypes.func.isRequired,
-  setConversation: PropTypes.func.isRequired,
   setIsLoading: PropTypes.func.isRequired,
 };
 
 AnnotateChip.defaultProps = {
-  conversationId: null,
   manifestUrl: null,
 };
