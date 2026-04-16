@@ -1,6 +1,6 @@
 {
   "name": "mirador-annotation-editor-video",
-  "version": "1.2.16",
+  "version": "1.2.17",
   "description": "Mirador annotation editor video plugin in a React component. Mirador 4 compatible",
   "repository": {
     "type": "git",
@@ -85,7 +85,7 @@
     "@mui/system": "^7.x",
     "i18next": ">=23",
     "lodash": "^4.17.23",
-    "mirador": "npm:mirador-video@^1.2.12",
+    "mirador": "npm:mirador-video@^1.2.13",
     "prop-types": "^15.7.2",
     "react": ">=19",
     "react-dom": ">=19",
