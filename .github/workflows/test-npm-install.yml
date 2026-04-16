@@ -44,4 +44,4 @@ jobs:
           mkdir -p /tmp/consumer
           cd /tmp/consumer
           npm init -y
-          npm i --ignore-scripts mirador@latest $GITHUB_WORKSPACE/mirador-annotation-editor-*.tgz
+          npm i --ignore-scripts mirador-video@latest $GITHUB_WORKSPACE/mirador-annotation-editor-*.tgz
