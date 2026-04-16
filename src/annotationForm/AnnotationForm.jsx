@@ -1,11 +1,16 @@
-import React, { useEffect, useReducer, useState } from 'react';
+import React, {
+  useCallback, useEffect, useReducer, useRef, useState,
+} from 'react';
 import { ConnectedCompanionWindow } from 'mirador';
 import PropTypes from 'prop-types';
 import { Grid } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { isEmptyValue, convertAnnotationStateToBeSaved } from '../IIIFUtils';
+import { convertAnnotationStateToBeSaved } from '../IIIFUtils';
 import AnnotationFormTemplateSelector from './AnnotationFormTemplateSelector';
-import { getTemplateType, saveAnnotationInStorageAdapter, TEMPLATE } from './AnnotationFormUtils';
+import {
+  getTemplateType, saveAnnotationInStorageAdapter, TEMPLATE, DEFAULT_FORM_MAP,
+} from './AnnotationFormUtils';
+import { getContextParams } from '../contextParams';
 import AnnotationFormHeader from './AnnotationFormHeader';
 import AnnotationFormBody from './AnnotationFormBody';
 import '../custom.css';
@@ -31,7 +36,7 @@ function AnnotationForm(
   // eslint-disable-next-line no-underscore-dangle
   const [mediaType, setMediaType] = useState(playerReferences.getMediaType());
 
-  // TDOO perhaps useless
+  // TODO perhaps useless
   const [retryCount, setRetryCount] = useState(0);
 
   const [, forceUpdate] = useReducer((x) => x + 1, 0);
@@ -58,6 +63,12 @@ function AnnotationForm(
       } else {
         // Annotation has been created with other IIIF annotation editor
         setTemplateType(getTemplateType(t, TEMPLATE.IIIF_TYPE));
+      }
+    } else {
+      // Use defaultForm if configured, otherwise show selector
+      const { defaultForm } = getContextParams(config);
+      if (defaultForm && DEFAULT_FORM_MAP[defaultForm]) {
+        setTemplateType(getTemplateType(t, DEFAULT_FORM_MAP[defaultForm]));
       }
     }
   }
@@ -102,12 +113,38 @@ function AnnotationForm(
    *
    * @returns {void}
    */
-  const closeFormCompanionWindow = () => {
+  const closeFormCompanionWindow = useCallback(() => {
     closeCompanionWindow('annotationCreation', {
       id,
       position: 'right',
     });
-  };
+  }, [closeCompanionWindow, id]);
+
+  const annotationRef = useRef(annotation);
+  annotationRef.current = annotation;
+
+  // useEffect(() => {
+  //   /** Action when all annotation shapes have been deleted */
+  //   const handleAnnotationEmpty = () => {
+  //     const anno = annotationRef.current;
+  //
+  //     if (anno?.id) {
+  //       // Existing annotation: delete from storage
+  //       canvases.forEach((canvas) => {
+  //         const storageAdapter = config.annotation.adapter(canvas.id);
+  //         storageAdapter.delete(anno.id).then((annoPage) => {
+  //           receiveAnnotation(canvas.id, storageAdapter.annotationPageId, annoPage);
+  //         });
+  //       });
+  //     }
+  //
+  //     closeFormCompanionWindow();
+  //   };
+  //
+  //   // Listen for MAE_ANNOTATION_EMPTY_EVENT
+  //   document.addEventListener(MAE_ANNOTATION_EMPTY_EVENT, handleAnnotationEmpty);
+  //   return () => document.removeEventListener(MAE_ANNOTATION_EMPTY_EVENT, handleAnnotationEmpty);
+  // }, [canvases, config, receiveAnnotation, closeFormCompanionWindow]);
 
   /**
    * Save the annotation

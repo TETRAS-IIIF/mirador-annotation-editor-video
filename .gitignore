@@ -10,3 +10,4 @@ npm-debug.log*
 .*.sw?
 /dist
 out
+.DS_Store

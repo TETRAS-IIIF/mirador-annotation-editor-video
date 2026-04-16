@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { Stage } from 'react-konva';
 import { v4 as uuidv4 } from 'uuid';
 import ParentComponent from './KonvaDrawing/shapes/ParentComponent';
-import { OVERLAY_TOOL, SHAPES_TOOL } from './KonvaDrawing/KonvaUtils';
+import { KONVA_MODE, OVERLAY_TOOL, SHAPES_TOOL } from './KonvaDrawing/KonvaUtils';
 
 /** All the stuff to draw on the canvas */
 export default function AnnotationDrawing(
@@ -25,16 +25,27 @@ export default function AnnotationDrawing(
     windowId,
   },
 ) {
-  const width = playerReferences.getMediaTrueWidth();
+  // const width = playerReferences.getMediaTrueWidth();
 
   const [isDrawing, setIsDrawing] = useState(false);
   const [isResizing, setIsResizing] = useState(false);
 
-  // This useEffect is necessary to update the scale when the window is resized. If not drawing
-  // stage is not aligned with the image.
   useEffect(() => {
-    updateScale(playerReferences.getZoom());
-  }, [{ width }]);
+    const viewer = playerReferences.media?.current;
+    if (viewer && typeof viewer.addHandler === 'function') {
+      /** Update scale on viewer animation and resize events */
+      const onViewportChange = () => updateScale();
+      viewer.addHandler('animation', onViewportChange);
+      viewer.addHandler('resize', onViewportChange);
+      updateScale();
+      return () => {
+        viewer.removeHandler('animation', onViewportChange);
+        viewer.removeHandler('resize', onViewportChange);
+      };
+    }
+    updateScale();
+    return undefined;
+  }, [playerReferences, updateScale]);
 
   useEffect(() => {
     if (toolState.imageEvent?.id && !drawingState.currentShape) {
@@ -57,74 +68,6 @@ export default function AnnotationDrawing(
     }
     setIsDrawing(false);
   }, [toolState]);
-
-  useEffect(() => {
-    if (!isDrawing) {
-      const newCurrentShape = drawingState[drawingState.shapes.length - 1];
-      // get the latest shape in the list
-      if (newCurrentShape) {
-        updateCurrentShapeInShapes(newCurrentShape);
-      }
-    }
-  }, [drawingState]);
-
-  useEffect(() => {
-    // Perform an action when fillColor, strokeColor, or strokeWidth change
-    // update current shape
-    if (drawingState.currentShape) {
-      // eslint-disable-next-line no-param-reassign
-      drawingState.currentShape.fill = toolState.fillColor;
-      // eslint-disable-next-line no-param-reassign
-      drawingState.currentShape.stroke = toolState.strokeColor;
-      // eslint-disable-next-line no-param-reassign
-      drawingState.currentShape.strokeWidth = toolState.strokeWidth;
-      // eslint-disable-next-line no-param-reassign
-      drawingState.currentShape.text = toolState.text;
-      updateCurrentShapeInShapes(drawingState.currentShape);
-    }
-  }, [toolState]);
-
-  // eslint-disable-next-line consistent-return
-  useLayoutEffect(() => {
-    if (drawingState.shapes.find((s) => s.id === drawingState.currentShape?.id)) {
-      window.addEventListener('keydown', handleKeyPress);
-
-      // Set here all the properties of the current shape for the tool options
-      setColorToolFromCurrentShape(
-        {
-          fillColor: drawingState.currentShape.fill,
-          strokeColor: drawingState.currentShape.stroke,
-          strokeWidth: drawingState.currentShape.strokeWidth,
-          text: drawingState.currentShape.text,
-        },
-      );
-
-      return () => {
-        window.removeEventListener('keydown', handleKeyPress);
-      };
-    }
-  }, [drawingState.currentShape]);
-
-  // eslint-disable-next-line consistent-return
-  useLayoutEffect(() => {
-    if (drawingState.shapes.find((s) => s.id === drawingState.currentShape?.id)) {
-      window.addEventListener('keydown', handleKeyPress);
-
-      // Set here all the properties of the current shape for the tool options
-      setColorToolFromCurrentShape(
-        {
-          fillColor: drawingState.currentShape.fill,
-          strokeColor: drawingState.currentShape.stroke,
-          strokeWidth: drawingState.currentShape.strokeWidth,
-          text: drawingState.currentShape.text,
-        },
-      );
-
-      return () => {
-        window.removeEventListener('keydown', handleKeyPress);
-      };
-    }
-  }, [drawingState.currentShape]);
 
   /** */
   const handleKeyPress = (e) => {
@@ -176,12 +119,60 @@ export default function AnnotationDrawing(
       setDrawingState((prevState) => ({
         ...prevState,
         currentShape: newCurrentShape,
-        shapes: prevState.shapes.map((shape) => (shape.id === newCurrentShape.id
-          ? { ...shape, ...newCurrentShape }
-          : shape)),
+        shapes: prevState.shapes.map((shape) => (
+          shape.id === newCurrentShape.id
+            ? { ...shape, ...newCurrentShape }
+            : shape)),
       }));
     }
   };
+
+  useEffect(() => {
+    if (!isDrawing) {
+      const newCurrentShape = drawingState[drawingState.shapes.length - 1];
+      // get the latest shape in the list
+      if (newCurrentShape) {
+        updateCurrentShapeInShapes(newCurrentShape);
+      }
+    }
+  }, [drawingState]);
+
+  useEffect(() => {
+    // Perform an action when fillColor, strokeColor, or strokeWidth change
+    // update current shape
+    if (drawingState.currentShape && displayMode !== KONVA_MODE.TARGET) {
+      // eslint-disable-next-line no-param-reassign
+      drawingState.currentShape.fill = toolState.fillColor;
+      // eslint-disable-next-line no-param-reassign
+      drawingState.currentShape.stroke = toolState.strokeColor;
+      // eslint-disable-next-line no-param-reassign
+      drawingState.currentShape.strokeWidth = toolState.strokeWidth;
+      // eslint-disable-next-line no-param-reassign
+      drawingState.currentShape.text = toolState.text;
+      updateCurrentShapeInShapes(drawingState.currentShape);
+    }
+  }, [toolState]);
+
+  // eslint-disable-next-line consistent-return
+  useLayoutEffect(() => {
+    if (drawingState.shapes.find((s) => s.id === drawingState.currentShape?.id)) {
+      window.addEventListener('keydown', handleKeyPress);
+
+      // Set here all the properties of the current shape for the tool options
+      setColorToolFromCurrentShape(
+        {
+          fillColor: drawingState.currentShape.fill,
+          strokeColor: drawingState.currentShape.stroke,
+          strokeWidth: drawingState.currentShape.strokeWidth,
+          text: drawingState.currentShape.text,
+        },
+      );
+
+      return () => {
+        window.removeEventListener('keydown', handleKeyPress);
+      };
+    }
+  }, [drawingState.currentShape]);
 
   /** */
   const onShapeClick = async (shp) => {
@@ -224,10 +215,7 @@ export default function AnnotationDrawing(
    * @param {Object} evt - The event object containing the target shape's modified attributes.
    */
   const onTransform = (evt) => {
-
     console.log('onTransform');
-
-
 
     const modifiedShape = evt.target.attrs;
 
@@ -240,7 +228,7 @@ export default function AnnotationDrawing(
     }
     updateCurrentShapeInShapes(shape);
 
-    if(!isResizing){
+    if (!isResizing) {
       setIsResizing(true);
     }
   };

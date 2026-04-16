@@ -8,6 +8,7 @@ import { TEMPLATE } from './AnnotationFormUtils';
 import TargetFormSection from './TargetFormSection';
 import { resizeKonvaStage } from './AnnotationFormOverlay/KonvaDrawing/KonvaUtils';
 import { MultiTagsInput } from './MultiTagsInput';
+import { getContextParams } from '../contextParams';
 import { TextCommentInput } from './TextCommentInput';
 
 /** Tagging Template* */
@@ -21,17 +22,21 @@ export default function MultipleBodyTemplate(
     windowId,
   },
 ) {
-  const annotationConfig = useSelector((state) => getConfig(state)).annotation;
+  const config = useSelector((state) => getConfig(state));
+  const annotationConfig = config.annotation;
   const tagsSuggestions = annotationConfig.tagsSuggestions ?? [];
 
   let maeAnnotation = annotation;
 
   if (!maeAnnotation.id) {
+    const { defaultTags } = getContextParams(config);
+    const initialTags = defaultTags.map((tag) => ({ label: tag, value: tag }));
+
     // If the annotation does not have maeData, the annotation was not created with mae
     maeAnnotation = {
       body: [],
       maeData: {
-        tags: [],
+        tags: initialTags,
         target: null,
         templateType: TEMPLATE.MULTIPLE_BODY_TYPE,
         textBody: {

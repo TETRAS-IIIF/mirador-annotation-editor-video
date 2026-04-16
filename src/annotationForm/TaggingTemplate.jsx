@@ -2,10 +2,13 @@ import React, { useState } from 'react';
 import { Grid, TextField } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
+import { getConfig } from 'mirador';
 import AnnotationFormFooter from './AnnotationFormFooter';
 import { TEMPLATE } from './AnnotationFormUtils';
 import TargetFormSection from './TargetFormSection';
 import { resizeKonvaStage } from './AnnotationFormOverlay/KonvaDrawing/KonvaUtils';
+import { getContextParams } from '../contextParams';
 
 /** Tagging Template* */
 export default function TaggingTemplate(
@@ -18,14 +21,18 @@ export default function TaggingTemplate(
     windowId,
   },
 ) {
+  const config = useSelector((state) => getConfig(state));
   let maeAnnotation = annotation;
 
   if (!maeAnnotation.id) {
+    const { defaultTags } = getContextParams(config);
+    const initialValue = defaultTags.length > 0 ? defaultTags[0] : '';
+
     // If the annotation does not have maeData, the annotation was not created with mae
     maeAnnotation = {
       body: {
         type: 'Image',
-        value: '',
+        value: initialValue,
       },
       maeData: {
         target: null,

@@ -74,7 +74,7 @@ const getIIIFTargetFullCanvas = (maeData, canvasId) => {
  */
 const getIIIFTargetFromRectangleShape = (maeTarget, canvasId, shape) => {
   console.info('Implement target as string with one shape (rectangle)');
-  const {
+  let {
     x,
     y,
     width,
@@ -82,6 +82,19 @@ const getIIIFTargetFromRectangleShape = (maeTarget, canvasId, shape) => {
     scaleX,
     scaleY,
   } = shape;
+
+  // if `width` or `height` may be negative if the annotation was not created by dragging from the top left.
+  // convert to ensure that x and y always describe the top-left corner of an annotation and that
+  // `width` and `height` are positive.
+  // (can be useful to use xywh in Cantaloupe, for example).
+  if ( width < 0 ) {
+    width = -width;
+    x = x-width;
+  }
+  if ( height < 0 ) {
+    height = -height;
+    y = y-height;
+  }
 
   // Image have not tstart and tend
   // We use scaleX and scaleY to have the real size of the shape, if it has been resized
@@ -252,19 +265,35 @@ const svgToXywh = (svgDoc) => {
 
 /**
  * generate a string-representation of an SVG rectangle based on XYWH coordinates
- * @param {{ x: number, y: number, w: number, fullW: number?, fullH: number? }}
+ * @param {{ x: number|string, y: number|string, w: number|string, fullW: number|string|undefined, fullH: number|string|undefined }}
  * @returns {string}
  */
 const xywhToSvg = ({
   x, y, w, h, fullW = undefined, fullH = undefined,
-}) => `<svg
+}) => {
+  // retype just in case
+  x = parseFloat(x);
+  y = parseFloat(y);
+  w = parseFloat(w);
+  h = parseFloat(h);
+  if (fullH) {
+    fullH = parseFloat(fullH);
+  } else if (fullW) {
+    fullW = parseFloat(fullW);
+  }
+  const svgWh =
+    fullW && fullH
+      ? `width='${fullW}' height='${fullH}'`
+      : '';
+  if ( [x,y,w,h].some(val => typeof val !== "number") ) {
+    throw new Error(`xywhToSvg: x,y,w,h must be floats (got x=${x}, y=${y}, w=${w}, h=${h})`)
+  }
+
+  return `<svg
       version='1.1'
       xmlns='http://www.w3.org/2000/svg'
       xmlns:xlink='http://www.w3.org/1999/xlink'
-      ${fullW && fullH
-    ? `width='${fullW}' height='${fullH}'`
-    : ''
-}
+      ${svgWh}
   >
     <defs/>
     <g><g>
@@ -278,17 +307,19 @@ const xywhToSvg = ({
         stroke-dasharray=''
       />
     </g></g>
-  </svg>`;
+  </svg>`
+};
 
 const convertFragmentSelectorToMae = (selector) => {
-  const [x, y, w, h] = selector.value.replace('xywh=', '').split(',');
+  // NOTE: parseFloat is VERY important. without it, when modifying annotation, it will be displayed VERY weirdly.
+  const [x, y, w, h] = selector.value.replace('xywh=', '').split(',').map(parseFloat);
   const currentShape = {
     id: uuidv4(),
     rotation: 0,
     scaleX: 1,
     scaleY: 1,
-    x,
-    y,
+    x: x,
+    y: y,
     width: w,
     height: h,
     type: SHAPES_TOOL.RECTANGLE,
@@ -374,6 +405,7 @@ const convertIIIFTargetToMae = (target, annotationId) => {
         return convertFragmentSelectorToMae(selector);
       }
     } catch (err) {
+      console.error(`Error generating maeData from selector ${selector.type}, attempting to fallback to other selector`, err);
     }
   }
   // if at the end of the loop, no selector could be processed, log an error and return.

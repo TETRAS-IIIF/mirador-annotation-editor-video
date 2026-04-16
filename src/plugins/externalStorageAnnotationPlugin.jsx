@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import HotkeysListener from '../hotkeys/HotkeysListener';
 
-// TODO attantion merge
+// TODO attention merge
 
 /** Functional component version of ExternalStorageAnnotation */
 function ExternalStorageAnnotation({
@@ -10,10 +11,13 @@ function ExternalStorageAnnotation({
   targetProps,
 }) {
   return (
-    <TargetComponent
-      {...targetProps} // eslint-disable-line react/jsx-props-no-spreading
-      PluginComponents={PluginComponents}
-    />
+    <>
+      <HotkeysListener />
+      <TargetComponent
+        {...targetProps} // eslint-disable-line react/jsx-props-no-spreading
+        PluginComponents={PluginComponents}
+      />
+    </>
   );
 }
 
