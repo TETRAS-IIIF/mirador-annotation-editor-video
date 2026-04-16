@@ -1,7 +1,7 @@
 import { receiveAnnotation } from 'mirador';
 import { saveAnnotationInStorageAdapter, TEMPLATE } from '../AnnotationFormUtils';
 
-const IA_TAGGING_BODY = {
+export const IA_TAGGING_BODY = {
   motivation: 'tagging',
   purpose: 'tagging',
   value: 'IA Generated',
@@ -149,30 +149,26 @@ export async function annotate(
 }
 
 /**
- * Perform an AI action (describe, transcribe, translate) on a targeted region
- * and save the resulting annotation.
+ * Perform an AI action (describe, transcribe, translate) on a targeted region.
+ * Returns the generated annotation to the callback to update the UI (does NOT save).
  *
  * @param {string} manifestUrl - URL of the IIIF manifest
  * @param {object} canvas - The current canvas object
  * @param {object} targetData - The drawn shape coordinates
  * @param {string} action - The action to perform: 'describe', 'transcribe', or 'translate'
  * @param {string} endpoint - The backend API endpoint base URL
- * @param {Function|any} storageAdapter - Function to get the storage adapter for the canvas
- * @param {Function|any} dispatch - Redux/State dispatch function
- * @param {Function|any} successCallBack - Called on success
- * @param {Function|any} errorCallBack - Called on error
+ * @param {Function} successCallBack - Called on success with the generated annotation
+ * @param {Function} errorCallBack - Called on error
  * @returns {Promise<void>}
  */
 export async function processTargetAction(
-  manifestUrl,
-  canvas,
-  targetData,
-  action,
-  endpoint,
-  storageAdapter,
-  dispatch,
-  successCallBack,
-  errorCallBack,
+    manifestUrl,
+    canvas,
+    targetData,
+    action,
+    endpoint,
+    successCallBack,
+    errorCallBack,
 ) {
   try {
     const response = await fetch(`${endpoint}iiif/target-action`, {
@@ -180,7 +176,7 @@ export async function processTargetAction(
         action,
         canvas_index: canvas.index,
         manifest_url: manifestUrl,
-        target_data: targetData,
+        target_data: targetData, // { x, y, w, h } etc.
       }),
       headers: { 'Content-Type': 'application/json' },
       method: 'POST',
@@ -190,31 +186,14 @@ export async function processTargetAction(
       throw new Error(`Network response was not ok: ${response.statusText}`);
     }
 
-    // The backend returns a single IIIF Web Annotation object for the targeted region
+    // The backend returns the IIIF Web Annotation object
     const newAnnotation = await response.json();
 
-    // Wrap the single annotation inside an AnnotationPage structure
-    // to match the format saveIAAnnotations likely expects (array of AnnotationPages)
-    const newAnnos = [
-      {
-        id: `${canvas.id}/page/target-${Date.now()}`,
-        items: [newAnnotation],
-        type: 'AnnotationPage',
-      },
-    ];
-
-    // Save to your storage adapter
-    await saveIAAnnotations(
-      newAnnos,
-      canvas.id,
-      storageAdapter(canvas.id),
-      dispatch,
-      `IA ${action.charAt(0).toUpperCase() + action.slice(1)}`,
-    );
-
-    successCallBack();
+    // Just pass the generated annotation back to the UI!
+    successCallBack(newAnnotation);
   } catch (err) {
     console.error(`Targeted ${action} error:`, err);
     errorCallBack(err);
   }
 }
+

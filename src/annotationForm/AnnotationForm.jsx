@@ -113,10 +113,12 @@ function AnnotationForm(
    * @param annotationState
    */
   const saveAnnotation = (annotationState) => {
+    console.log('save annotation', annotationState);
     const promises = playerReferences.getCanvases()
       .map(async (canvas) => {
         let annotationStateToBeSaved;
         if (annotationState?.maeData && annotationState.maeData.templateType) {
+          console.log('before convert')
           annotationStateToBeSaved = await convertAnnotationStateToBeSaved(
             annotationState,
             canvas,
@@ -127,6 +129,7 @@ function AnnotationForm(
           annotationStateToBeSaved = annotationState;
         }
         const storageAdapter = config.annotation.adapter(canvas.id);
+        console.log('annotation to be saved', annotationStateToBeSaved);
         return saveAnnotationInStorageAdapter(
           canvas.id,
           storageAdapter,

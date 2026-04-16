@@ -69,41 +69,44 @@ export default function MultipleBodyTemplate(
    * Update the annotation's Body
    * */
   const updateAnnotationTextualBodyValue = (newTextValue) => {
-    setAnnotationState({
-      ...annotationState,
+    setAnnotationState((prevState) => ({
+      ...prevState,
       maeData: {
-        ...annotationState.maeData,
+        ...prevState.maeData,
         textBody: {
-          ...annotationState.maeData.textBody,
+          ...prevState.maeData.textBody,
           value: newTextValue,
         },
       },
-    });
+    }));
   };
 
   /** Update annotation with Tag Value * */
   const setTags = (newTags) => {
-    setAnnotationState({
-      ...annotationState,
+    setAnnotationState((prevState) => ({
+      ...prevState,
       maeData: {
-        ...annotationState.maeData,
+        ...prevState.maeData,
         tags: newTags,
       },
-    });
+    }));
   };
 
   /** Update Target State * */
   const updateTargetState = (target) => {
-    const newMaeData = annotationState.maeData;
-    newMaeData.target = target;
-    setAnnotationState({
-      ...annotationState,
-      maeData: newMaeData,
-    });
+    setAnnotationState((prevState) => ({
+      ...prevState,
+      maeData: {
+        ...prevState.maeData,
+        target,
+      },
+    }));
   };
+
 
   /** Save function * */
   const saveFunction = async () => {
+    console.log("annotationState in multipleBodyTemplate",annotationState);
     resizeKonvaStage(
       windowId,
       playerReferences.getMediaTrueWidth(),
@@ -176,11 +179,13 @@ export default function MultipleBodyTemplate(
       </Grid>
       <Grid>
         <UtilsChipTools
+          annotationState={annotationState}
           manifestUrl={manifestUrl}
           playerReferences={playerReferences}
           isLoading={isLoading}
           setIsLoading={setIsLoading}
           target={annotationState.maeData.target}
+          setAnnotationState={setAnnotationState}
         />
 
       </Grid>

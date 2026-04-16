@@ -153,7 +153,10 @@ export async function saveAnnotationInStorageAdapter(
   receiveAnnotation,
   annotation,
 ) {
+  console.log("annotation?.maeData",annotation?.maeData);
+  console.log("annotation",annotation);
   if (annotation?.maeData) {
+    console.log('annotation.id', annotation.id)
     if (annotation.id) {
       // eslint-disable-next-line no-param-reassign
       annotation.lastSavedDate = getCurrentDateLocaleString();
@@ -165,6 +168,7 @@ export async function saveAnnotationInStorageAdapter(
           receiveAnnotation(canvasId, storageAdapter.annotationPageId, annoPage);
         });
     } else {
+      console.log('else block')
       // eslint-disable-next-line no-param-reassign
       annotation.id = `${canvasId}/annotation/${uuidv4()}`;
       // eslint-disable-next-line no-param-reassign
@@ -196,6 +200,7 @@ export async function saveAnnotationInStorageAdapter(
         receiveAnnotation(canvasId, storageAdapter.annotationPageId, annoPage);
       });
   }
+  return annotation;
 }
 
 export const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({

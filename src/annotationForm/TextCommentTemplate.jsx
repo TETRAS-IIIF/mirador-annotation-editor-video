@@ -68,6 +68,7 @@ function TextCommentTemplate(
 
   /** Save function * */
   const saveFunction = () => {
+    console.log("annotationState in textCommentTemplate",annotationState);
     resizeKonvaStage(
       windowId,
       playerReferences.getMediaTrueWidth(),

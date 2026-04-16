@@ -16,7 +16,6 @@ export default function TranslateChip({
 }) {
   const storageAdapter = useSelector((state) => state.config.annotation.adapter);
   const dispatch = useDispatch();
-  console.log('target', target);
   /** Calls the FastAPI target-action endpoint and dispatches resulting annotations. */
   const handleTranslate = async () => {
     const activeCanvases = playerReferences.getCanvases?.() || [];
