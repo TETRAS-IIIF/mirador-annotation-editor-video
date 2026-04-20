@@ -284,6 +284,7 @@ jobs:
             const vEl=document.getElementById(id+'-version');
             const dEl=document.getElementById(id+'-date');
             const sEl=document.getElementById(id+'-sha');
+            const mEl=document.getElementById(id+'-msg');
             try{
               const r=await fetch(prefix+'/meta.json',{cache:'no-store'});
               if(!r.ok) throw 0;
@@ -312,10 +313,14 @@ jobs:
               // Commit short + link
               const short=(j.commit||'').slice(0,7);
               sEl.innerHTML='Commit: <a href="'+j.commit_url+'" target="_blank" rel="noopener noreferrer"><code>'+short+'</code></a>';
+
+              // Commit message
+              if(mEl) mEl.textContent='Last commit: '+(j.commit_message||'n/a');
             } catch {
               vEl.textContent='Version: unavailable';
               dEl.textContent='Last change: unavailable';
               sEl.textContent='Commit: unavailable';
+              if(mEl) mEl.textContent='Last commit: unavailable';
             }
           }
           loadMeta('./stable','stable');
