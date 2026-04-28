@@ -12,7 +12,6 @@ import IIIFTemplate from './IIIFTemplate';
 import MultipleBodyTemplate from './MultipleBodyTemplate';
 import { DebugInformation } from './DebugInformation';
 import { TEMPLATE } from './AnnotationFormUtils';
-import AITemplate from './AI/AITemplate';
 
 /**
  * This function contain the logic for loading annotation and render proper template type
