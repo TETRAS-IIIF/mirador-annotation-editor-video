@@ -30,6 +30,12 @@ const IA_MAE_DATA = {
  */
 function saveIAAnnotations(annotationPages, canvasId, storageAdapter, dispatch, taggingBody) {
   const allAnnotations = annotationPages.flatMap((annoPage) => annoPage.items || []);
+  /**
+   * Dispatches a `receiveAnnotation` action to the Redux store.
+   * @param {string} targetId - The canvas or target ID the annotation belongs to.
+   * @param {string} annoId - The unique identifier of the annotation.
+   * @param {Object} annotation - The annotation object to store.
+   */
   const dispatchReceiveAnnotation = (targetId, annoId, annotation) => dispatch(
     receiveAnnotation(targetId, annoId, annotation),
   );
@@ -171,7 +177,6 @@ export async function processTargetAction(
   errorCallBack,
 ) {
   try {
-    console.log(targetData);
     const response = await fetch(`${endpoint}iiif/target-action`, {
       body: JSON.stringify({
         action,
@@ -189,7 +194,6 @@ export async function processTargetAction(
 
     // The backend returns the IIIF Web Annotation object
     const newAnnotation = await response.json();
-    console.log('newAnnotation :', newAnnotation);
     successCallBack(newAnnotation);
   } catch (err) {
     console.error(`Targeted ${action} error:`, err);

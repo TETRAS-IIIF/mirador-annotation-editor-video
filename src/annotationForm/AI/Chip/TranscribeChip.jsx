@@ -13,6 +13,7 @@ export default function TranscribeChip({
   isLoading,
   target,
   handleSetAnnotationState,
+  hasMultipleShapes,
 }) {
   const [isPending, setIsPending] = useState(false);
   /** Calls the FastAPI target-action endpoint and dispatches resulting annotations. */
@@ -42,7 +43,7 @@ export default function TranscribeChip({
   };
 
   return (
-    <Tooltip title="Transcribe this">
+    <Tooltip title={hasMultipleShapes ? 'Transcription is not available with multiple shapes' : 'Transcribe this'}>
       <span>
         <Chip
           icon={
@@ -51,7 +52,7 @@ export default function TranscribeChip({
                 : <EditNoteIcon fontSize="small" />
             }
           onClick={handleTranscribe}
-          disabled={isLoading}
+          disabled={isLoading || hasMultipleShapes}
           clickable
           size="small"
           variant="outlined"
@@ -65,6 +66,7 @@ export default function TranscribeChip({
 TranscribeChip.propTypes = {
   endpoint: PropTypes.string.isRequired,
   handleSetAnnotationState: PropTypes.func,
+  hasMultipleShapes: PropTypes.bool,
   isLoading: PropTypes.bool.isRequired,
   manifestUrl: PropTypes.string,
   playerReferences: PropTypes.shape({
@@ -77,6 +79,7 @@ TranscribeChip.propTypes = {
 
 TranscribeChip.defaultProps = {
   handleSetAnnotationState: null,
+  hasMultipleShapes: false,
   manifestUrl: null,
   target: null,
 };

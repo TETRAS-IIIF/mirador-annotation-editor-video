@@ -13,6 +13,7 @@ export default function DescribeChip({
   setIsLoading,
   target,
   handleSetAnnotationState,
+  hasMultipleShapes,
 }) {
   const [isPending, setIsPending] = useState(false);
   /** Calls the FastAPI target-action endpoint and dispatches resulting annotations. */
@@ -45,7 +46,7 @@ export default function DescribeChip({
 
   return (
 
-    <Tooltip title="Describe this">
+    <Tooltip title={hasMultipleShapes ? 'Description is not available with multiple shapes' : 'Describe this'}>
       <span>
         <Chip
           icon={
@@ -54,7 +55,7 @@ export default function DescribeChip({
               : <AutoAwesomeIcon fontSize="small" />
           }
           onClick={handleDescribe}
-          disabled={isLoading || !target}
+          disabled={isLoading || hasMultipleShapes}
           clickable
           size="small"
           variant="outlined"
@@ -68,16 +69,19 @@ export default function DescribeChip({
 DescribeChip.propTypes = {
   endpoint: PropTypes.string.isRequired,
   handleSetAnnotationState: PropTypes.func.isRequired,
+  hasMultipleShapes: PropTypes.bool,
   isLoading: PropTypes.bool.isRequired,
   manifestUrl: PropTypes.string,
   playerReferences: PropTypes.shape({
     getCanvases: PropTypes.func,
   }).isRequired,
   setIsLoading: PropTypes.func.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
   target: PropTypes.object,
 };
 
 DescribeChip.defaultProps = {
+  hasMultipleShapes: false,
   manifestUrl: null,
   target: null,
 };

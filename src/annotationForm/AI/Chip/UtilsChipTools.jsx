@@ -5,46 +5,50 @@ import { useSelector } from 'react-redux';
 import TranslateChip from './TranslateChip';
 import TranscribeChip from './TranscribeChip';
 import DescribeChip from '../../DescribeChip';
+import OverwriteConfirmDialog from './OverwriteConfirmDialog';
 
-/** Toolbar grouping the four AI action chips (Translate, Transcribe, Describe, Annotate). */
+/**
+ * Toolbar grouping the AI action chips (Translate, Transcribe, Describe).
+ *
+ * Wraps all chips inside an `OverwriteConfirmDialog` so that any AI result
+ * that would overwrite existing annotation content triggers a confirmation
+ * dialog before being applied.
+ */
 export default function UtilsChipTools({
   manifestUrl,
   playerReferences,
   isLoading,
   setIsLoading,
   setAnnotationState,
+  annotationState,
   target,
 }) {
+  const hasMultipleShapes = (target?.drawingState?.shapes?.length ?? 0) > 1;
   const endpoint = useSelector((state) => state.config?.llm?.endpoint);
+
   /**
-   * Updates the annotation state with the result of an AI-generated annotation.
-   * Extracts the text value from the annotation body, ensures exactly one AI tag
-   * with the given label exists, and updates the text body value.
-   *
-   * @param {object} aiAnnotation - The IIIF Web Annotation object returned by the AI action.
-   * @param {Array|object} aiAnnotation.body - The annotation body, either an array of bodies
-   *   or a single body object containing a `value` string.
-   * @param {string} [aiTagLabel='IA Generated'] - The label and value used for the AI tag.
-   *   Any existing tag with this exact value will be replaced to avoid duplicates.
-   * @returns {void} Returns early if no text value can be extracted from the annotation body.
+   * Applies an AI-generated annotation to the local annotation state.
+   * Extracts the text value from the annotation body, updates the text body,
+   * and ensures the AI tag is present exactly once in the tags list.
+   * @param {Object} aiAnnotation - The AI-generated annotation object.
+   * @param {string} [aiTagLabel='IA Generated'] - The tag label to attach to the annotation.
    */
-  const handleSetAnnotationState = (aiAnnotation, aiTagLabel = 'IA Generated') => {
-    const aiTextValue = Array.isArray(aiAnnotation.body)
-      ? aiAnnotation.body.find((b) => b.purpose !== 'tagging')?.value || aiAnnotation.body[0]?.value
-      : aiAnnotation.body?.value;
+  const applyAnnotation = (aiAnnotation, aiTagLabel = 'IA Generated') => {
+    const { body } = aiAnnotation;
+    const aiTextValue = Array.isArray(body)
+      ? body.find((b) => b.purpose !== 'tagging')?.value || body[0]?.value
+      : body?.value;
 
     if (!aiTextValue) return;
 
     setAnnotationState((prevState) => {
       const currentTags = prevState.maeData?.tags || [];
-
       const filteredTags = currentTags.filter((tag) => tag.value !== aiTagLabel);
-      const newTags = [...filteredTags, { label: aiTagLabel, value: aiTagLabel }];
       return {
         ...prevState,
         maeData: {
           ...prevState.maeData,
-          tags: newTags,
+          tags: [...filteredTags, { label: aiTagLabel, value: aiTagLabel }],
           textBody: {
             ...prevState.maeData.textBody,
             value: aiTextValue,
@@ -56,40 +60,52 @@ export default function UtilsChipTools({
 
   return (
     <Box sx={{ pt: 1.5, px: 2 }}>
-      <Stack direction="row" spacing={1} useFlexGap sx={{ flexWrap: 'wrap' }}>
-        <TranslateChip
-          endpoint={endpoint}
-          manifestUrl={manifestUrl}
-          playerReferences={playerReferences}
-          isLoading={isLoading}
-          setIsLoading={setIsLoading}
-          target={target}
-          handleSetAnnotationState={handleSetAnnotationState}
-        />
-        <TranscribeChip
-          endpoint={endpoint}
-          manifestUrl={manifestUrl}
-          playerReferences={playerReferences}
-          isLoading={isLoading}
-          setIsLoading={setIsLoading}
-          target={target}
-          handleSetAnnotationState={handleSetAnnotationState}
-        />
-        <DescribeChip
-          endpoint={endpoint}
-          manifestUrl={manifestUrl}
-          playerReferences={playerReferences}
-          isLoading={isLoading}
-          setIsLoading={setIsLoading}
-          target={target}
-          handleSetAnnotationState={handleSetAnnotationState}
-        />
-      </Stack>
+      <OverwriteConfirmDialog
+        currentValue={annotationState?.maeData?.textBody?.value}
+        onApply={applyAnnotation}
+      >
+        {(trigger) => (
+          <Stack direction="row" spacing={1} useFlexGap sx={{ flexWrap: 'wrap' }}>
+            <TranslateChip
+              endpoint={endpoint}
+              manifestUrl={manifestUrl}
+              playerReferences={playerReferences}
+              isLoading={isLoading}
+              setIsLoading={setIsLoading}
+              target={target}
+              handleSetAnnotationState={trigger}
+              hasMultipleShapes={hasMultipleShapes}
+            />
+            <TranscribeChip
+              endpoint={endpoint}
+              manifestUrl={manifestUrl}
+              playerReferences={playerReferences}
+              isLoading={isLoading}
+              setIsLoading={setIsLoading}
+              target={target}
+              handleSetAnnotationState={trigger}
+              hasMultipleShapes={hasMultipleShapes}
+            />
+            <DescribeChip
+              endpoint={endpoint}
+              manifestUrl={manifestUrl}
+              playerReferences={playerReferences}
+              isLoading={isLoading}
+              setIsLoading={setIsLoading}
+              target={target}
+              handleSetAnnotationState={trigger}
+              hasMultipleShapes={hasMultipleShapes}
+            />
+          </Stack>
+        )}
+      </OverwriteConfirmDialog>
     </Box>
   );
 }
 
 UtilsChipTools.propTypes = {
+  // eslint-disable-next-line react/forbid-prop-types
+  annotationState: PropTypes.object,
   isLoading: PropTypes.bool.isRequired,
   manifestUrl: PropTypes.string,
   playerReferences: PropTypes.shape({
@@ -102,6 +118,7 @@ UtilsChipTools.propTypes = {
 };
 
 UtilsChipTools.defaultProps = {
+  annotationState: null,
   manifestUrl: null,
   target: null,
 };

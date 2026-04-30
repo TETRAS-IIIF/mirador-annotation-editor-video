@@ -13,6 +13,7 @@ export default function TranslateChip({
   isLoading,
   setIsLoading,
   handleSetAnnotationState,
+  hasMultipleShapes,
 }) {
   const [isPending, setIsPending] = useState(false);
   /** Calls the FastAPI target-action endpoint and dispatches resulting annotations. */
@@ -42,7 +43,7 @@ export default function TranslateChip({
   };
 
   return (
-    <Tooltip title="Translate this">
+    <Tooltip title={hasMultipleShapes ? 'Translation is not available with multiple shapes' : 'Translate this'}>
       <span>
         <Chip
           icon={
@@ -51,7 +52,7 @@ export default function TranslateChip({
               : <TranslateIcon fontSize="small" />
           }
           onClick={handleTranslate}
-          disabled={isLoading || !target}
+          disabled={isLoading || hasMultipleShapes}
           clickable
           size="small"
           variant="outlined"
@@ -65,6 +66,7 @@ export default function TranslateChip({
 TranslateChip.propTypes = {
   endpoint: PropTypes.string.isRequired,
   handleSetAnnotationState: PropTypes.func,
+  hasMultipleShapes: PropTypes.bool,
   isLoading: PropTypes.bool.isRequired,
   manifestUrl: PropTypes.string,
   playerReferences: PropTypes.shape({
@@ -77,6 +79,7 @@ TranslateChip.propTypes = {
 
 TranslateChip.defaultProps = {
   handleSetAnnotationState: null,
+  hasMultipleShapes: false,
   manifestUrl: null,
   target: null,
 };
