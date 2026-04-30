@@ -1,9 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Chip } from '@mui/material';
-import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
-import { useDispatch, useSelector } from 'react-redux';
-import { processTargetAction, transcribe } from '../UtilsLLMAPI';
+import { Chip, Tooltip, CircularProgress } from '@mui/material';
+import EditNoteIcon from '@mui/icons-material/EditNote';
+import { processTargetAction } from '../UtilsLLMAPI';
 
 /** Chip that triggers transcription of the current canvas. */
 export default function TranscribeChip({
@@ -13,13 +12,15 @@ export default function TranscribeChip({
   setIsLoading,
   isLoading,
   target,
+  handleSetAnnotationState,
 }) {
-  const dispatch = useDispatch();
-  const storageAdapter = useSelector((state) => state.config.annotation.adapter);
+  const [isPending, setIsPending] = useState(false);
+  /** Calls the FastAPI target-action endpoint and dispatches resulting annotations. */
   const handleTranscribe = async () => {
     const activeCanvases = playerReferences.getCanvases?.() || [];
     if (!activeCanvases.length || !manifestUrl) return;
 
+    setIsPending(true);
     setIsLoading(true);
     await processTargetAction(
       manifestUrl,
@@ -27,34 +28,43 @@ export default function TranscribeChip({
       target,
       'transcribe',
       endpoint,
-      storageAdapter,
-      dispatch,
-      () => {
+      (newAnnotation) => {
+        handleSetAnnotationState?.(newAnnotation);
+        setIsPending(false);
         setIsLoading(false);
       },
       (err) => {
-        console.error('Translation failed:', err);
+        console.error('Transcription failed:', err);
+        setIsPending(false);
         setIsLoading(false);
       },
     );
   };
 
   return (
-    <Chip
-      icon={<AutoAwesomeIcon fontSize="small" />}
-      label="Transcribe this"
-      onClick={handleTranscribe}
-      disabled={isLoading}
-      clickable
-      size="small"
-      variant="outlined"
-      color="primary"
-    />
+    <Tooltip title="Transcribe this">
+      <span>
+        <Chip
+          icon={
+              isPending
+                ? <CircularProgress size={14} color="inherit" />
+                : <EditNoteIcon fontSize="small" />
+            }
+          onClick={handleTranscribe}
+          disabled={isLoading}
+          clickable
+          size="small"
+          variant="outlined"
+          color="primary"
+        />
+      </span>
+    </Tooltip>
   );
 }
 
 TranscribeChip.propTypes = {
   endpoint: PropTypes.string.isRequired,
+  handleSetAnnotationState: PropTypes.func,
   isLoading: PropTypes.bool.isRequired,
   manifestUrl: PropTypes.string,
   playerReferences: PropTypes.shape({
@@ -66,5 +76,7 @@ TranscribeChip.propTypes = {
 };
 
 TranscribeChip.defaultProps = {
+  handleSetAnnotationState: null,
   manifestUrl: null,
+  target: null,
 };

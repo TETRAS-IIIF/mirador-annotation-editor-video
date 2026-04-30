@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Chip } from '@mui/material';
+import { Chip, CircularProgress, Tooltip } from '@mui/material';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import { processTargetAction } from './AI/UtilsLLMAPI';
 
@@ -14,14 +14,17 @@ export default function DescribeChip({
   target,
   handleSetAnnotationState,
 }) {
+  const [isPending, setIsPending] = useState(false);
+  /** Calls the FastAPI target-action endpoint and dispatches resulting annotations. */
   const handleDescribe = async () => {
     const activeCanvases = playerReferences.getCanvases?.() || [];
     if (!activeCanvases.length || !manifestUrl || !target) return;
 
     const canvas = activeCanvases[0];
+
+    setIsPending(true);
     setIsLoading(true);
 
-    // Call the centralized API function for 'describe'
     await processTargetAction(
       manifestUrl,
       canvas,
@@ -29,12 +32,11 @@ export default function DescribeChip({
       'describe',
       endpoint,
       (newAnnotation) => {
-        // SUCCESS CALLBACK: Update the UI state with the tag label 'IA Described'
-        handleSetAnnotationState(newAnnotation, 'IA Described');
+        setIsPending(false);
+        handleSetAnnotationState(newAnnotation);
         setIsLoading(false);
       },
       (error) => {
-        // ERROR CALLBACK
         console.error('Description error:', error);
         setIsLoading(false);
       },
@@ -42,16 +44,24 @@ export default function DescribeChip({
   };
 
   return (
-    <Chip
-      icon={<AutoAwesomeIcon fontSize="small" />}
-      label="Describe target"
-      onClick={handleDescribe}
-      disabled={isLoading || !target}
-      clickable
-      size="small"
-      variant="outlined"
-      color="primary"
-    />
+
+    <Tooltip title="Describe this">
+      <span>
+        <Chip
+          icon={
+            isPending
+              ? <CircularProgress size={14} color="inherit" />
+              : <AutoAwesomeIcon fontSize="small" />
+          }
+          onClick={handleDescribe}
+          disabled={isLoading || !target}
+          clickable
+          size="small"
+          variant="outlined"
+          color="primary"
+        />
+      </span>
+    </Tooltip>
   );
 }
 

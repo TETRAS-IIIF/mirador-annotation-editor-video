@@ -1,8 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Chip } from '@mui/material';
+import { Chip, CircularProgress, Tooltip } from '@mui/material';
 import TranslateIcon from '@mui/icons-material/Translate';
-import { useSelector, useDispatch } from 'react-redux';
 import { processTargetAction } from '../UtilsLLMAPI';
 
 /** Chip that triggers translation of a targeted region on the current canvas. */
@@ -13,14 +12,15 @@ export default function TranslateChip({
   target,
   isLoading,
   setIsLoading,
+  handleSetAnnotationState,
 }) {
-  const storageAdapter = useSelector((state) => state.config.annotation.adapter);
-  const dispatch = useDispatch();
+  const [isPending, setIsPending] = useState(false);
   /** Calls the FastAPI target-action endpoint and dispatches resulting annotations. */
   const handleTranslate = async () => {
     const activeCanvases = playerReferences.getCanvases?.() || [];
     if (!activeCanvases.length || !manifestUrl || !target) return;
 
+    setIsPending(true);
     setIsLoading(true);
 
     await processTargetAction(
@@ -29,9 +29,9 @@ export default function TranslateChip({
       target,
       'translate',
       endpoint,
-      storageAdapter,
-      dispatch,
-      () => {
+      (newAnnotation) => {
+        handleSetAnnotationState?.(newAnnotation);
+        setIsPending(false);
         setIsLoading(false);
       },
       (err) => {
@@ -42,21 +42,29 @@ export default function TranslateChip({
   };
 
   return (
-    <Chip
-      icon={<TranslateIcon fontSize="small" />}
-      label="Translate this"
-      onClick={handleTranslate}
-      disabled={isLoading || !target}
-      clickable
-      size="small"
-      variant="outlined"
-      color="primary"
-    />
+    <Tooltip title="Translate this">
+      <span>
+        <Chip
+          icon={
+            isPending
+              ? <CircularProgress size={14} color="inherit" />
+              : <TranslateIcon fontSize="small" />
+          }
+          onClick={handleTranslate}
+          disabled={isLoading || !target}
+          clickable
+          size="small"
+          variant="outlined"
+          color="primary"
+        />
+      </span>
+    </Tooltip>
   );
 }
 
 TranslateChip.propTypes = {
   endpoint: PropTypes.string.isRequired,
+  handleSetAnnotationState: PropTypes.func,
   isLoading: PropTypes.bool.isRequired,
   manifestUrl: PropTypes.string,
   playerReferences: PropTypes.shape({
@@ -68,6 +76,7 @@ TranslateChip.propTypes = {
 };
 
 TranslateChip.defaultProps = {
+  handleSetAnnotationState: null,
   manifestUrl: null,
   target: null,
 };

@@ -16,7 +16,18 @@ export default function UtilsChipTools({
   target,
 }) {
   const endpoint = useSelector((state) => state.config?.llm?.endpoint);
-
+  /**
+   * Updates the annotation state with the result of an AI-generated annotation.
+   * Extracts the text value from the annotation body, ensures exactly one AI tag
+   * with the given label exists, and updates the text body value.
+   *
+   * @param {object} aiAnnotation - The IIIF Web Annotation object returned by the AI action.
+   * @param {Array|object} aiAnnotation.body - The annotation body, either an array of bodies
+   *   or a single body object containing a `value` string.
+   * @param {string} [aiTagLabel='IA Generated'] - The label and value used for the AI tag.
+   *   Any existing tag with this exact value will be replaced to avoid duplicates.
+   * @returns {void} Returns early if no text value can be extracted from the annotation body.
+   */
   const handleSetAnnotationState = (aiAnnotation, aiTagLabel = 'IA Generated') => {
     const aiTextValue = Array.isArray(aiAnnotation.body)
       ? aiAnnotation.body.find((b) => b.purpose !== 'tagging')?.value || aiAnnotation.body[0]?.value
@@ -24,14 +35,11 @@ export default function UtilsChipTools({
 
     if (!aiTextValue) return;
 
-    // Use prevState to calculate the new tags safely
     setAnnotationState((prevState) => {
       const currentTags = prevState.maeData?.tags || [];
-      const hasIATag = currentTags.some((tag) => tag.value === aiTagLabel);
-      const newTags = hasIATag
-        ? currentTags
-        : [...currentTags, { label: aiTagLabel, value: aiTagLabel }];
 
+      const filteredTags = currentTags.filter((tag) => tag.value !== aiTagLabel);
+      const newTags = [...filteredTags, { label: aiTagLabel, value: aiTagLabel }];
       return {
         ...prevState,
         maeData: {
@@ -89,6 +97,7 @@ UtilsChipTools.propTypes = {
   }).isRequired,
   setAnnotationState: PropTypes.func.isRequired,
   setIsLoading: PropTypes.func.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
   target: PropTypes.object,
 };
 

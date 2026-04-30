@@ -44,7 +44,7 @@ function saveIAAnnotations(annotationPages, canvasId, storageAdapter, dispatch, 
         maeData: IA_MAE_DATA,
       };
 
-      console.log("annoToSave",annoToSave)
+      console.log('annoToSave', annoToSave);
       return saveAnnotationInStorageAdapter(
         canvasId,
         storageAdapter,
@@ -162,21 +162,22 @@ export async function annotate(
  * @returns {Promise<void>}
  */
 export async function processTargetAction(
-    manifestUrl,
-    canvas,
-    targetData,
-    action,
-    endpoint,
-    successCallBack,
-    errorCallBack,
+  manifestUrl,
+  canvas,
+  targetData,
+  action,
+  endpoint,
+  successCallBack,
+  errorCallBack,
 ) {
   try {
+    console.log(targetData);
     const response = await fetch(`${endpoint}iiif/target-action`, {
       body: JSON.stringify({
         action,
         canvas_index: canvas.index,
         manifest_url: manifestUrl,
-        target_data: targetData, // { x, y, w, h } etc.
+        target_data: targetData,
       }),
       headers: { 'Content-Type': 'application/json' },
       method: 'POST',
@@ -188,12 +189,10 @@ export async function processTargetAction(
 
     // The backend returns the IIIF Web Annotation object
     const newAnnotation = await response.json();
-
-    // Just pass the generated annotation back to the UI!
+    console.log('newAnnotation :', newAnnotation);
     successCallBack(newAnnotation);
   } catch (err) {
     console.error(`Targeted ${action} error:`, err);
     errorCallBack(err);
   }
 }
-
