@@ -8,6 +8,7 @@ import DeleteIcon from '@mui/icons-material/DeleteForever';
 import { styled } from '@mui/material/styles';
 import MenuList from '@mui/material/MenuList';
 import MenuItem from '@mui/material/MenuItem';
+import HotkeyTooltip from "../../hotkeys/HotkeyTooltip";
 
 /**
  * Accordion presentation of shapes
@@ -55,7 +56,7 @@ function ShapesList({
               >
                 {t(shape.type)}
               </Typography>
-              <Tooltip title={t('delete')}>
+              <Tooltip title={<HotkeyTooltip label={t('delete')} action="delete" />}>
                 <IconButton onClick={() => deleteShape(shape.id)} edge="end" aria-label="delete">
                   <DeleteIcon />
                 </IconButton>

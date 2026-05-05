@@ -82,7 +82,7 @@ export default function ColorPicker({
           >
             <Tooltip title={t('fill_color')}>
               <span>
-                <FormatColorFillIcon style={{ fill: toolState.fillColor }} />
+                <FormatColorFillIcon />
               </span>
             </Tooltip>
             <ArrowDropDownIcon />

@@ -1,13 +1,18 @@
-import React, { useEffect, useReducer, useState } from 'react';
+import React, {
+  useCallback, useEffect, useReducer, useRef, useState,
+} from 'react';
 import { ConnectedCompanionWindow } from 'mirador';
 import PropTypes from 'prop-types';
 import { Grid } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import { convertAnnotationStateToBeSaved } from '../IIIFUtils';
 import AnnotationFormTemplateSelector from './AnnotationFormTemplateSelector';
-import { getTemplateType, saveAnnotationInStorageAdapter, TEMPLATE } from './AnnotationFormUtils';
+import {
+  getTemplateType, saveAnnotationInStorageAdapter, TEMPLATE, DEFAULT_FORM_MAP,
+} from './AnnotationFormUtils';
+import { getContextParams } from '../contextParams';
 import AnnotationFormHeader from './AnnotationFormHeader';
 import AnnotationFormBody from './AnnotationFormBody';
-import { convertAnnotationStateToBeSaved } from '../IIIFUtils';
 import '../custom.css';
 import UnsupportedMedia from './UnsupportedMedia';
 
@@ -59,12 +64,19 @@ function AnnotationForm(
         // Annotation has been created with other IIIF annotation editor
         setTemplateType(getTemplateType(t, TEMPLATE.IIIF_TYPE));
       }
+    } else {
+      // Use defaultForm if configured, otherwise show selector
+      const { defaultForm } = getContextParams(config);
+      if (defaultForm && DEFAULT_FORM_MAP[defaultForm]) {
+        setTemplateType(getTemplateType(t, DEFAULT_FORM_MAP[defaultForm]));
+      }
     }
   }
 
   useEffect(() => {
     setTemplateType(null);
     setMediaType(playerReferences.getMediaType());
+    // eslint-disable-next-line react/prop-types
   }, [canvases[0].index]);
 
   // Listen to window resize event
@@ -101,35 +113,61 @@ function AnnotationForm(
    *
    * @returns {void}
    */
-  const closeFormCompanionWindow = () => {
+  const closeFormCompanionWindow = useCallback(() => {
     closeCompanionWindow('annotationCreation', {
       id,
       position: 'right',
     });
-  };
+  }, [closeCompanionWindow, id]);
+
+  const annotationRef = useRef(annotation);
+  annotationRef.current = annotation;
+
+  // useEffect(() => {
+  //   /** Action when all annotation shapes have been deleted */
+  //   const handleAnnotationEmpty = () => {
+  //     const anno = annotationRef.current;
+  //
+  //     if (anno?.id) {
+  //       // Existing annotation: delete from storage
+  //       canvases.forEach((canvas) => {
+  //         const storageAdapter = config.annotation.adapter(canvas.id);
+  //         storageAdapter.delete(anno.id).then((annoPage) => {
+  //           receiveAnnotation(canvas.id, storageAdapter.annotationPageId, annoPage);
+  //         });
+  //       });
+  //     }
+  //
+  //     closeFormCompanionWindow();
+  //   };
+  //
+  //   // Listen for MAE_ANNOTATION_EMPTY_EVENT
+  //   document.addEventListener(MAE_ANNOTATION_EMPTY_EVENT, handleAnnotationEmpty);
+  //   return () => document.removeEventListener(MAE_ANNOTATION_EMPTY_EVENT, handleAnnotationEmpty);
+  // }, [canvases, config, receiveAnnotation, closeFormCompanionWindow]);
 
   /**
    * Save the annotation
-   * @param annotationState
+   * @param {Object} annotationState - The annotation state to save
+   * @returns {Promise} Promise that resolves when all annotations are saved
    */
   const saveAnnotation = (annotationState) => {
-    console.log('save annotation', annotationState);
+    const annotationProps = annotationState;
+
     const promises = playerReferences.getCanvases()
       .map(async (canvas) => {
         let annotationStateToBeSaved;
-        if (annotationState?.maeData && annotationState.maeData.templateType) {
-          console.log('before convert')
+        if (annotationProps?.maeData && annotationProps.maeData.templateType) {
           annotationStateToBeSaved = await convertAnnotationStateToBeSaved(
-            annotationState,
+            annotationProps,
             canvas,
             windowId,
             playerReferences,
           );
         } else {
-          annotationStateToBeSaved = annotationState;
+          annotationStateToBeSaved = annotationProps;
         }
         const storageAdapter = config.annotation.adapter(canvas.id);
-        console.log('annotation to be saved', annotationStateToBeSaved);
         return saveAnnotationInStorageAdapter(
           canvas.id,
           storageAdapter,
@@ -138,12 +176,11 @@ function AnnotationForm(
         );
       });
 
-    Promise.all(promises)
+    return Promise.all(promises)
       .then(() => {
         closeFormCompanionWindow();
       });
   };
-
   return (
     <ConnectedCompanionWindow
       title={annotation.id ? t('edit_annotation') : t('new_annotation')}
@@ -210,7 +247,7 @@ AnnotationForm.propTypes = {
       adapter: PropTypes.func,
       debug: PropTypes.bool,
       defaults: PropTypes.objectOf(
-        PropTypes.oneOfType([PropTypes.bool, PropTypes.func, PropTypes.number, PropTypes.string])
+        PropTypes.oneOfType([PropTypes.bool, PropTypes.func, PropTypes.number, PropTypes.string]),
       ),
     }),
     language: PropTypes.string,

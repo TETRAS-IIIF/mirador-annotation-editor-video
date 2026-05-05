@@ -9,6 +9,11 @@ Entries types:
 - `FIXED` for any bug fixes.
 - `SECURITY` to invite users to upgrade in case of vulnerabilities.
 
+## [ 1.2.3 ]
+
+- CHANGED : UX improvement when drawing shape
+- FIXED : default body annotation value when value left empty
+
 ## [ 1.2.2]
 
 - CHANGED : UX improvement when drawing shape

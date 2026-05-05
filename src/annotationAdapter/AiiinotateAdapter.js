@@ -220,6 +220,7 @@ export default class AiiinotateAdapter {
     let nextPage = this.annotationPageId;
     let r;
     let rBody;  // annotationList / annotationPage.
+
     while ( nextPage && nextPage.length ) {
       r = await fetch(this.annotationPageId);
       rBody = await r.json();
@@ -229,7 +230,8 @@ export default class AiiinotateAdapter {
     const annotationPage = await this.iiifPresentationVersion === 2
       ? createAnnotationPage(annotationArray, this.annotationPageId)
       : annotationArray;
-    annotationPage.items.map(convertIIIFAnnoToMaeData);
+
+    annotationPage.items = annotationPage.items.map(convertIIIFAnnoToMaeData);
     return annotationPage;
   }
 }

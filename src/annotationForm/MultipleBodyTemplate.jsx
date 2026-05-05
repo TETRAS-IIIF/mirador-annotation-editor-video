@@ -8,6 +8,7 @@ import { TEMPLATE } from './AnnotationFormUtils';
 import TargetFormSection from './TargetFormSection';
 import { resizeKonvaStage } from './AnnotationFormOverlay/KonvaDrawing/KonvaUtils';
 import { MultiTagsInput } from './MultiTagsInput';
+import { getContextParams } from '../contextParams';
 import { TextCommentInput } from './TextCommentInput';
 import UtilsChipTools from './AI/Chip/UtilsChipTools';
 
@@ -23,7 +24,8 @@ export default function MultipleBodyTemplate(
   },
 ) {
   const windows = useSelector((state) => state.windows);
-  const annotationConfig = useSelector((state) => getConfig(state)).annotation;
+  const config = useSelector((state) => getConfig(state));
+  const annotationConfig = config.annotation;
   const tagsSuggestions = annotationConfig.tagsSuggestions ?? [];
   const manifestUrl = windows[windowId]?.manifestId;
   const [isLoading, setIsLoading] = useState(false);
@@ -31,11 +33,14 @@ export default function MultipleBodyTemplate(
   let maeAnnotation = annotation;
 
   if (!maeAnnotation.id) {
+    const { defaultTags } = getContextParams(config);
+    const initialTags = defaultTags.map((tag) => ({ label: tag, value: tag }));
+
     // If the annotation does not have maeData, the annotation was not created with mae
     maeAnnotation = {
       body: [],
       maeData: {
-        tags: [],
+        tags: initialTags,
         target: null,
         templateType: TEMPLATE.MULTIPLE_BODY_TYPE,
         textBody: {
@@ -52,6 +57,11 @@ export default function MultipleBodyTemplate(
       maeAnnotation.maeData.target.drawingState = JSON.parse(
         maeAnnotation.maeData.target.drawingState,
       );
+      console.debug("Parsed drawingState:", maeAnnotation.maeData.target.drawingState);
+      maeAnnotation.maeData.target.drawingState = {
+        ...maeAnnotation.maeData.target.drawingState,
+        currentShape: null,
+      }
     }
 
     // We support only one textual body
@@ -61,6 +71,14 @@ export default function MultipleBodyTemplate(
         label: tag.value,
         value: tag.value,
       }));
+    // if the textBody was removed by the above block, add an empty body. otherwise, there will be errors.
+    if ( maeAnnotation.maeData.textBody === undefined ) {
+      maeAnnotation.maeData.textBody = {
+        purpose: "describing",
+        type: "TextualBody",
+        value: ""
+      }
+    }
   }
 
   const [annotationState, setAnnotationState] = useState(maeAnnotation);
@@ -103,10 +121,8 @@ export default function MultipleBodyTemplate(
     }));
   };
 
-
   /** Save function * */
   const saveFunction = async () => {
-    console.log("annotationState in multipleBodyTemplate",annotationState);
     resizeKonvaStage(
       windowId,
       playerReferences.getMediaTrueWidth(),
