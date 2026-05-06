@@ -54,7 +54,7 @@ export default function TranscribeChip({
           onClick={handleTranscribe}
           disabled={isLoading || hasMultipleShapes}
           clickable
-          size="small"
+          size="medium"
           variant="outlined"
           color="primary"
         />

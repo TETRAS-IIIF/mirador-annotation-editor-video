@@ -54,7 +54,7 @@ export default function TranslateChip({
           onClick={handleTranslate}
           disabled={isLoading || hasMultipleShapes}
           clickable
-          size="small"
+          size="medium"
           variant="outlined"
           color="primary"
         />

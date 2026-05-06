@@ -61,7 +61,7 @@ export default function DescribeChip({
       onClick={handleDescribe}
       disabled={isLoading}
       clickable
-      size="small"
+      size="medium"
       variant="outlined"
       color="primary"
     />

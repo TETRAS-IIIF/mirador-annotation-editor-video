@@ -46,7 +46,7 @@ export default function AnnotateChip({
       onClick={handleAnnotate}
       disabled={isLoading}
       clickable
-      size="small"
+      size="medium"
       variant="outlined"
       color="secondary"
     />
