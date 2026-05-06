@@ -13,7 +13,6 @@ export default function CleanStorageChip({
   const cleanStorage = () => {
     localStorage.removeItem('mirador_llm_conversations');
     setConversation([]);
-    console.log('Clean storage removed');
   };
 
   return (

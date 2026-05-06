@@ -20,8 +20,10 @@ import AIConversation from './AIConversation';
 import { AITextInput } from './AITextInput';
 
 /**
- * AITemplate component provides an interface for AI-assisted annotation creation. It manages the conversation state,
- * handles user input, communicates with the LLM API, and saves AI-generated annotations to the current canvas.
+ * AITemplate component provides an interface for AI-assisted a
+ * nnotation creation. It manages the conversation state,
+ * handles user input, communicates with the LLM API, and saves
+ * AI-generated annotations to the current canvas.
  * @param param0
  * @param param0.annotation
  * @param param0.canvases
@@ -111,6 +113,7 @@ export default function AITemplate({
     const canvas = activeCanvases[0];
 
     const storageAdapter = config.annotation.adapter(canvas.id);
+    // eslint-disable-next-line no-restricted-syntax
     for (const segment of segments) {
       try {
         const annotationToSave = {
@@ -118,6 +121,7 @@ export default function AITemplate({
           target: { ...segment.target, source: canvas.id },
 
         };
+        // eslint-disable-next-line no-await-in-loop
         const annoPage = await storageAdapter.create(annotationToSave);
         if (annoPage) {
           dispatch(receiveAnnotation(canvas.id, storageAdapter.annotationPageId, annoPage));
@@ -162,7 +166,6 @@ export default function AITemplate({
 
       const canvasIndex = activeCanvases[0].index;
       const reply = await llmApi.callLLM(formattedConversation, manifestUrl, canvasIndex);
-      console.log('reply', reply);
       if (reply.tool_output?.type === 'AnnotationPage' && reply.tool_output?.items?.length) {
         await saveAISegments(reply.tool_output.items);
       }

@@ -50,7 +50,6 @@ function saveIAAnnotations(annotationPages, canvasId, storageAdapter, dispatch, 
         maeData: IA_MAE_DATA,
       };
 
-      console.log('annoToSave', annoToSave);
       return saveAnnotationInStorageAdapter(
         canvasId,
         storageAdapter,

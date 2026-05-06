@@ -111,7 +111,7 @@ UtilsChipTools.propTypes = {
   playerReferences: PropTypes.shape({
     getCanvases: PropTypes.func,
   }).isRequired,
-  setAnnotationState: PropTypes.func.isRequired,
+  setAnnotationState: PropTypes.func,
   setIsLoading: PropTypes.func.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   target: PropTypes.object,
@@ -120,5 +120,6 @@ UtilsChipTools.propTypes = {
 UtilsChipTools.defaultProps = {
   annotationState: null,
   manifestUrl: null,
+  setAnnotationState: null,
   target: null,
 };
