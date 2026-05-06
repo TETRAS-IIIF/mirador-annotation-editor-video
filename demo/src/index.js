@@ -27,6 +27,9 @@ const config = {
   catalog: manifestsCatalog,
   id: 'demo',
   language: 'en',
+  llm: {
+    endpoint: 'http://localhost:8000/',
+  },
   themes: {
     dark: {
       typography: {
@@ -70,8 +73,8 @@ const config = {
     sideBarOpenByDefault: true,
   },
   windows: [
-    { manifestId: 'https://files.tetras-libre.fr/dev/Clock/manifestWithAnnotationTemplates_MAE.json' },
-  ],
+    { manifestId: 'https://collections.library.yale.edu/manifests/2025329' }
+  ]
 };
 
 Mirador.viewer(config, [...annotationPlugins]);

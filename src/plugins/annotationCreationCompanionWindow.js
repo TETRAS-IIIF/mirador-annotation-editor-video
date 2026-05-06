@@ -80,12 +80,10 @@ function mapStateToProps(state, {
       translations,
     },
     currentTime,
+    llmEndpoint: state.config.llm?.endpoint,
     playerReferences,
   };
 }
-
-// TODO attention
-
 
 const annotationCreationCompanionWindow = {
   companionWindowKey: 'annotationCreation',

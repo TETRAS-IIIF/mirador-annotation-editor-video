@@ -3,6 +3,7 @@ import ImageIcon from '@mui/icons-material/Image';
 import CategoryIcon from '@mui/icons-material/Category';
 import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 import DataObjectIcon from '@mui/icons-material/DataObject';
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import React from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { styled } from '@mui/material/styles';
@@ -11,6 +12,7 @@ import { AddLink } from '@mui/icons-material';
 import { OVERLAY_TOOL } from './AnnotationFormOverlay/KonvaDrawing/KonvaUtils';
 
 export const TEMPLATE = {
+  AI: 'ai',
   IIIF_TYPE: 'iiif',
   IMAGE_TYPE: 'image',
   KONVA_TYPE: 'konva',
@@ -34,12 +36,6 @@ export const MEDIA_TYPES = {
   UNKNOWN: 'Unknown',
   VIDEO: 'Video',
 };
-
-/** Return template type * */
-export const getTemplateType = (t, templateType) => TEMPLATE_TYPES(t)
-  .find(
-    (type) => type.id === templateType,
-  );
 
 /**
  * List of the template types supported
@@ -151,6 +147,12 @@ export const IMAGE_TOOL_STATE = {
   strokeColor: 'rgba(20,82,168,1)',
   strokeWidth: 2,
 };
+
+/** Return template type * */
+export const getTemplateType = (t, templateType) => TEMPLATE_TYPES(t)
+  .find(
+    (type) => type.id === templateType,
+  );
 
 /**
  * Specific Tool state for the target SVG
@@ -268,6 +270,7 @@ export async function saveAnnotationInStorageAdapter(
         receiveAnnotation(canvasId, storageAdapter.annotationPageId, annoPage);
       });
   }
+  return annotation;
 }
 
 export const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
