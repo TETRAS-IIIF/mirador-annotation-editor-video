@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Chip, CircularProgress, Tooltip } from '@mui/material';
+import {
+  Chip, CircularProgress, Tooltip, Snackbar, Alert,
+} from '@mui/material';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import { processTargetAction } from './AI/UtilsLLMAPI';
 
@@ -16,6 +18,8 @@ export default function DescribeChip({
   hasMultipleShapes,
 }) {
   const [isPending, setIsPending] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(null);
+
   /** Calls the FastAPI target-action endpoint and dispatches resulting annotations. */
   const handleDescribe = async () => {
     const activeCanvases = playerReferences.getCanvases?.() || [];
@@ -25,6 +29,7 @@ export default function DescribeChip({
 
     setIsPending(true);
     setIsLoading(true);
+    setErrorMessage(null);
 
     await processTargetAction(
       manifestUrl,
@@ -39,30 +44,51 @@ export default function DescribeChip({
       },
       (error) => {
         console.error('Description error:', error);
+        setIsPending(false);
         setIsLoading(false);
+        setErrorMessage(
+          error?.message || 'Failed to describe the selected region. Please try again.',
+        );
       },
     );
   };
 
   return (
+    <>
+      <Tooltip title={hasMultipleShapes ? 'Description is not available with multiple shapes' : 'Describe this'}>
+        <span>
+          <Chip
+            icon={
+                isPending
+                  ? <CircularProgress size={14} color="inherit" />
+                  : <AutoAwesomeIcon fontSize="small" />
+              }
+            onClick={handleDescribe}
+            disabled={isLoading || hasMultipleShapes}
+            clickable
+            size="medium"
+            variant="outlined"
+            color="primary"
+          />
+        </span>
+      </Tooltip>
 
-    <Tooltip title={hasMultipleShapes ? 'Description is not available with multiple shapes' : 'Describe this'}>
-      <span>
-        <Chip
-          icon={
-            isPending
-              ? <CircularProgress size={14} color="inherit" />
-              : <AutoAwesomeIcon fontSize="small" />
-          }
-          onClick={handleDescribe}
-          disabled={isLoading || hasMultipleShapes}
-          clickable
-          size="medium"
-          variant="outlined"
-          color="primary"
-        />
-      </span>
-    </Tooltip>
+      <Snackbar
+        open={!!errorMessage}
+        autoHideDuration={6000}
+        onClose={() => setErrorMessage(null)}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert
+          onClose={() => setErrorMessage(null)}
+          severity="error"
+          variant="filled"
+          sx={{ width: '100%' }}
+        >
+          {errorMessage}
+        </Alert>
+      </Snackbar>
+    </>
   );
 }
 

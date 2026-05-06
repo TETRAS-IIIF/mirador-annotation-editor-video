@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Chip, CircularProgress, Tooltip } from '@mui/material';
+import {
+  Chip, CircularProgress, Tooltip, Snackbar, Alert,
+} from '@mui/material';
 import TranslateIcon from '@mui/icons-material/Translate';
 import { processTargetAction } from '../UtilsLLMAPI';
 
@@ -16,6 +18,8 @@ export default function TranslateChip({
   hasMultipleShapes,
 }) {
   const [isPending, setIsPending] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(null);
+
   /** Calls the FastAPI target-action endpoint and dispatches resulting annotations. */
   const handleTranslate = async () => {
     const activeCanvases = playerReferences.getCanvases?.() || [];
@@ -23,6 +27,7 @@ export default function TranslateChip({
 
     setIsPending(true);
     setIsLoading(true);
+    setErrorMessage(null);
 
     await processTargetAction(
       manifestUrl,
@@ -37,29 +42,51 @@ export default function TranslateChip({
       },
       (err) => {
         console.error('Translation failed:', err);
+        setIsPending(false);
         setIsLoading(false);
+        setErrorMessage(
+          err?.message || 'Failed to translate the selected region. Please try again.',
+        );
       },
     );
   };
 
   return (
-    <Tooltip title={hasMultipleShapes ? 'Translation is not available with multiple shapes' : 'Translate this'}>
-      <span>
-        <Chip
-          icon={
-            isPending
-              ? <CircularProgress size={14} color="inherit" />
-              : <TranslateIcon fontSize="small" />
-          }
-          onClick={handleTranslate}
-          disabled={isLoading || hasMultipleShapes}
-          clickable
-          size="medium"
-          variant="outlined"
-          color="primary"
-        />
-      </span>
-    </Tooltip>
+    <>
+      <Tooltip title={hasMultipleShapes ? 'Translation is not available with multiple shapes' : 'Translate this'}>
+        <span>
+          <Chip
+            icon={
+                isPending
+                  ? <CircularProgress size={14} color="inherit" />
+                  : <TranslateIcon fontSize="small" />
+              }
+            onClick={handleTranslate}
+            disabled={isLoading || hasMultipleShapes}
+            clickable
+            size="medium"
+            variant="outlined"
+            color="primary"
+          />
+        </span>
+      </Tooltip>
+
+      <Snackbar
+        open={!!errorMessage}
+        autoHideDuration={6000}
+        onClose={() => setErrorMessage(null)}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert
+          onClose={() => setErrorMessage(null)}
+          severity="error"
+          variant="filled"
+          sx={{ width: '100%' }}
+        >
+          {errorMessage}
+        </Alert>
+      </Snackbar>
+    </>
   );
 }
 

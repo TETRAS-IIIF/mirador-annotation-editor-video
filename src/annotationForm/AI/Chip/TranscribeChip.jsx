@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Chip, Tooltip, CircularProgress } from '@mui/material';
+import {
+  Chip, Tooltip, CircularProgress, Snackbar, Alert,
+} from '@mui/material';
 import EditNoteIcon from '@mui/icons-material/EditNote';
 import { processTargetAction } from '../UtilsLLMAPI';
 
@@ -16,6 +18,8 @@ export default function TranscribeChip({
   hasMultipleShapes,
 }) {
   const [isPending, setIsPending] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(null);
+
   /** Calls the FastAPI target-action endpoint and dispatches resulting annotations. */
   const handleTranscribe = async () => {
     const activeCanvases = playerReferences.getCanvases?.() || [];
@@ -23,6 +27,8 @@ export default function TranscribeChip({
 
     setIsPending(true);
     setIsLoading(true);
+    setErrorMessage(null);
+
     await processTargetAction(
       manifestUrl,
       activeCanvases[0],
@@ -38,28 +44,49 @@ export default function TranscribeChip({
         console.error('Transcription failed:', err);
         setIsPending(false);
         setIsLoading(false);
+        setErrorMessage(
+          err?.message || 'Failed to transcribe the selected region. Please try again.',
+        );
       },
     );
   };
 
   return (
-    <Tooltip title={hasMultipleShapes ? 'Transcription is not available with multiple shapes' : 'Transcribe this'}>
-      <span>
-        <Chip
-          icon={
-              isPending
-                ? <CircularProgress size={14} color="inherit" />
-                : <EditNoteIcon fontSize="small" />
-            }
-          onClick={handleTranscribe}
-          disabled={isLoading || hasMultipleShapes}
-          clickable
-          size="medium"
-          variant="outlined"
-          color="primary"
-        />
-      </span>
-    </Tooltip>
+    <>
+      <Tooltip title={hasMultipleShapes ? 'Transcription is not available with multiple shapes' : 'Transcribe this'}>
+        <span>
+          <Chip
+            icon={
+                isPending
+                  ? <CircularProgress size={14} color="inherit" />
+                  : <EditNoteIcon fontSize="small" />
+              }
+            onClick={handleTranscribe}
+            disabled={isLoading || hasMultipleShapes}
+            clickable
+            size="medium"
+            variant="outlined"
+            color="primary"
+          />
+        </span>
+      </Tooltip>
+
+      <Snackbar
+        open={!!errorMessage}
+        autoHideDuration={6000}
+        onClose={() => setErrorMessage(null)}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert
+          onClose={() => setErrorMessage(null)}
+          severity="error"
+          variant="filled"
+          sx={{ width: '100%' }}
+        >
+          {errorMessage}
+        </Alert>
+      </Snackbar>
+    </>
   );
 }
 
