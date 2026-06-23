@@ -28,11 +28,15 @@ function isAnnotationExportableToImage(maeData) {
 
 /**
  * Check if the shape has the same stroke and fill colors as the TARGET_TOOL_STATE
+ * It's used to create SVG target instead simple target when user create only one shape
+ * and edit it.
  * @param shape
  * @returns {boolean}
  */
-const hasMatchingStrokeAndFillColors = (shape) => shape.strokeColor === TARGET_TOOL_STATE.strokeColor
-  && shape.fillColor === TARGET_TOOL_STATE.fillColor;
+const hasMatchingStrokeAndFillColors = (shape) => {
+  return shape.strokeColor === TARGET_TOOL_STATE.strokeColor
+    && shape.fillColor === TARGET_TOOL_STATE.fillColor;
+};
 
 /**
  * Check if the shape is a rectangle
@@ -43,6 +47,7 @@ const isRectangleShape = (shape) => shape.type === SHAPES_TOOL.RECTANGLE;
 
 /**
  * Check if the target is a simple rectangle with the same color as the tool
+ * If only one, check if target need to be an SVG Target
  * @param shapes
  * @returns {boolean}
  */
@@ -50,7 +55,8 @@ const isSimpleTarget = (shapes) => {
   if (shapes.length !== 1) return false;
   const shape = shapes[0];
 
-  return isRectangleShape(shape) && (!shape?.rotation || shape.rotation === 0);
+  return isRectangleShape(shape) && (!shape?.rotation || shape.rotation === 0)
+    && hasMatchingStrokeAndFillColors(shape);
 };
 
 /**
@@ -87,13 +93,13 @@ const getIIIFTargetFromRectangleShape = (maeTarget, canvasId, shape) => {
   // convert to ensure that x and y always describe the top-left corner of an annotation and that
   // `width` and `height` are positive.
   // (can be useful to use xywh in Cantaloupe, for example).
-  if ( width < 0 ) {
+  if (width < 0) {
     width = -width;
-    x = x-width;
+    x -= width;
   }
-  if ( height < 0 ) {
+  if (height < 0) {
     height = -height;
-    y = y-height;
+    y -= height;
   }
 
   // Image have not tstart and tend
@@ -281,12 +287,11 @@ const xywhToSvg = ({
   } else if (fullW) {
     fullW = parseFloat(fullW);
   }
-  const svgWh =
-    fullW && fullH
-      ? `width='${fullW}' height='${fullH}'`
-      : '';
-  if ( [x,y,w,h].some(val => typeof val !== "number") ) {
-    throw new Error(`xywhToSvg: x,y,w,h must be floats (got x=${x}, y=${y}, w=${w}, h=${h})`)
+  const svgWh = fullW && fullH
+    ? `width='${fullW}' height='${fullH}'`
+    : '';
+  if ([x, y, w, h].some((val) => typeof val !== 'number')) {
+    throw new Error(`xywhToSvg: x,y,w,h must be floats (got x=${x}, y=${y}, w=${w}, h=${h})`);
   }
 
   return `<svg
@@ -307,7 +312,7 @@ const xywhToSvg = ({
         stroke-dasharray=''
       />
     </g></g>
-  </svg>`
+  </svg>`;
 };
 
 const convertFragmentSelectorToMae = (selector) => {
@@ -318,8 +323,8 @@ const convertFragmentSelectorToMae = (selector) => {
     rotation: 0,
     scaleX: 1,
     scaleY: 1,
-    x: x,
-    y: y,
+    x,
+    y,
     width: w,
     height: h,
     type: SHAPES_TOOL.RECTANGLE,
