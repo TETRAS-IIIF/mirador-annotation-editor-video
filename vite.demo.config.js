@@ -8,6 +8,12 @@ export default defineConfig({
     ? (process.env.BASE_PATH || `/${process.env.npm_package_name}/`)
     : "/",
 
+  resolve: {
+    alias: {
+      mirador: fileURLToPath(new URL('./node_modules/mirador/src/index.js', import.meta.url)),
+    },
+  },
+
   ...(process.env.GITHUB_PAGES
     ? {
       build: {
