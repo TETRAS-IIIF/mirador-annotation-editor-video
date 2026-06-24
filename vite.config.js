@@ -24,6 +24,8 @@ export default {
         /^mirador(\/.*)?$/,
         'i18next',
         'react-i18next',
+        "__tests__/*",
+        "__mocks__/*",
       ],
       output: {
         assetFileNames: 'index.[ext]',
