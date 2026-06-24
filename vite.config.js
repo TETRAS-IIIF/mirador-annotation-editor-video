@@ -24,8 +24,8 @@ export default {
         /^mirador(\/.*)?$/,
         'i18next',
         'react-i18next',
-        "__tests__/*",
-        "__mocks__/*",
+        '__tests__/*',
+        '__mocks__/*',
       ],
       output: {
         assetFileNames: 'index.[ext]',
@@ -60,7 +60,10 @@ export default {
   },
   plugins: [react()],
   resolve: {
-    alias: { '@tests/': fileURLToPath(new URL('./__tests__', import.meta.url)) },
+    alias: {
+      '@tests/': fileURLToPath(new URL('./__tests__', import.meta.url)),
+      mirador: fileURLToPath(new URL('./node_modules/mirador/src/index.js', import.meta.url)),
+    },
     dedupe: [
       'react', 'react-dom',
       '@mui/material', '@mui/system',
