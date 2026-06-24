@@ -28,6 +28,7 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
+      mirador: fileURLToPath(new URL('./node_modules/mirador/src/index.js', import.meta.url)),
       '@tests': fileURLToPath(new URL('./__tests__', import.meta.url)),
     },
   },
@@ -35,6 +36,9 @@ export default defineConfig({
     coverage: {
       all: true,
       enabled: true,
+    },
+    deps: {
+      inline: ['mirador'],
     },
     environment: 'happy-dom',
     exclude: ['node_modules'],
