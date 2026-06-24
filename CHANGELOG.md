@@ -10,10 +10,15 @@ Entries types:
 - `SECURITY` to invite users to upgrade in case of vulnerabilities.
 - `CHORE` for maintenance tasks.
 
+## [ 1.3.1]
+
+- CHORE : support for Mirador video 4.1.1
+- SECURITY update npm deps
+
 ## [ 1.3.0]
 
 - MERGE : MAE 1.3.0
-- CHORE : support for Mirador 4.1.0
+- CHORE : support for Mirador vidéo 4.1.0
 
 ## [ 1.2.17]
 
