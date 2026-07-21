@@ -2,6 +2,8 @@ import {
   getVisibleCanvases,
   getVisibleCanvasAudioResources,
   getVisibleCanvasVideoResources,
+  OSDReferences,
+  VideosReferences,
 } from 'mirador';
 import { MEDIA_TYPES } from './annotationForm/AnnotationFormUtils';
 
@@ -38,26 +40,9 @@ export class WindowPlayer {
     this.windowId = windowId;
     this.isInitCorrectly = false;
 
-    if (this.isInitializedCorrectly()) {
-      switch (this.mediaType) {
-        case MEDIA_TYPES.IMAGE:
-          this.overlay = {
-            canvasHeight: this.media.current.canvas.clientHeight,
-            canvasWidth: this.media.current.canvas.clientWidth,
-            containerHeight: this.media.current.canvas.clientHeight,
-            containerWidth: this.media.current.canvas.clientWidth,
-          };
-          break;
-        case MEDIA_TYPES.VIDEO:
-          this.overlay = this.media.canvasOverlay;
-          break;
-        case MEDIA_TYPES.AUDIO:
-          this.audio = getVisibleCanvasAudioResources(state, { windowId });
-          break;
-        default:
-          console.error('Unknown media type');
-          break;
-      }
+    // isInitializedCorrectly() sets up the overlay for IMAGE/VIDEO once media is ready.
+    if (this.isInitializedCorrectly() && this.mediaType === MEDIA_TYPES.AUDIO) {
+      this.audio = getVisibleCanvasAudioResources(state, { windowId });
     }
   }
 
@@ -76,14 +61,36 @@ export class WindowPlayer {
 
   /**
    * Get player initialisation status
+   * The media reference passed at construction time can be stale (e.g. the video
+   * player hasn't registered itself in VideosReferences yet). Re-fetch it here so
+   * retries actually see the player once it becomes available, instead of being
+   * stuck checking the same missing reference forever.
    * // TODO in MAEV env add this.media.canvasOverlay check
-   * @returns {*|boolean}
+   * @returns {boolean}
    */
   isInitializedCorrectly() {
-    this.isInitCorrectly = this.media
+    if (!this.media) {
+      this.media = this.mediaType === MEDIA_TYPES.IMAGE
+        ? OSDReferences.get(this.windowId)
+        : VideosReferences.get(this.windowId);
+    }
+
+    this.isInitCorrectly = !!(this.media
       && ((this.mediaType === MEDIA_TYPES.IMAGE && this.media.current && this.media.current.canvas)
         || (this.mediaType === MEDIA_TYPES.VIDEO && this.media.video
-          && this.media.canvasOverlay));
+          && this.media.canvasOverlay)));
+
+    if (this.isInitCorrectly && !this.overlay && this.mediaType === MEDIA_TYPES.VIDEO) {
+      this.overlay = this.media.canvasOverlay;
+    }
+    if (this.isInitCorrectly && !this.overlay && this.mediaType === MEDIA_TYPES.IMAGE) {
+      this.overlay = {
+        canvasHeight: this.media.current.canvas.clientHeight,
+        canvasWidth: this.media.current.canvas.clientWidth,
+        containerHeight: this.media.current.canvas.clientHeight,
+        containerWidth: this.media.current.canvas.clientWidth,
+      };
+    }
 
     return this.isInitCorrectly;
   }
