@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import uuid from 'draft-js/lib/uuid';
+import { v4 as uuid } from 'uuid';
 import { Grid } from '@mui/material';
 import TextFormSection from './TextFormSection';
 import TargetFormSection from './TargetFormSection';
