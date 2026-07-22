@@ -1,6 +1,6 @@
 {
   "name": "maev-hotfix",
-  "version": "1.2.20",
+  "version": "1.2.21",
   "description": "Mirador annotation editor video plugin in a React component. Mirador 4 compatible",
   "repository": {
     "type": "git",
