@@ -10,6 +10,16 @@ Entries types:
 - `SECURITY` to invite users to upgrade in case of vulnerabilities.
 - `CHORE` for maintenance tasks.
 
+## [ 1.5.1]
+
+- MERGE : MAE 1.3.3
+- CHORE : mirador-video 4.2.1 support
+- CHANGED : merge branch jerry-hotfix 
+
+## [ 1.5.0]
+
+- MERGE : MAE 1.3.2
+
 ## [ 1.3.1]
 
 - CHORE : support for Mirador video 4.1.1

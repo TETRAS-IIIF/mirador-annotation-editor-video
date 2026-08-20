@@ -54,18 +54,20 @@ npm install mirador-annotation-editor-video
 
 ### Use in existing npm project with previous plugins
 
-You can override existing annotation plugin with your own versions by using npm. We support React 18 and MUI 5.
+You can override existing annotation plugin with your own versions by using npm. We support React 19 and MUI 7.
+This package is intended to be used instead `mirador-annotation-editor`, package exports are named in consequence. You can use the following snippet to override the existing annotation plugin in your project.
+
 
 Update your `package.json` file to include the following dependencies and devDependencies:
 
 ```js
-"mirador-annotations":"npm:mirador-annotation-editor-video@^1.2.12",
+"mirador-annotation-editor":"npm:mirador-annotation-editor-video@^1.5.1",
 ```
 
 You need also to use the custom version of Mirador 4.
 
 ```json
-"mirador" : "npm@mirador-video@^1.2.12",
+"mirador" : "npm@mirador-video@^4.2.1",
 ```
 
 [Mirador 4 integration example](https://github.com/ProjectMirador/mirador-integration)
