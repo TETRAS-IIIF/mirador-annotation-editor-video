@@ -5,13 +5,12 @@ import pkg from './package.json';
 
 const peers = Object.keys(pkg?.peerDependencies ?? {});
 
-// TODO use pkgname instead direct string
 export default {
   build: {
     lib: {
       cssFileName: 'index.css',
       entry: './src/index.js',
-      fileName: (format) => `mirador-annotation-editor-video.${format}.js`, // Better naming
+      fileName: (format) => `mirador-annotation-editor.${format}.js`, // Better naming
       formats: ['es', 'cjs'],
       name: 'MiradorAnnotationEditorVideo',
     },
