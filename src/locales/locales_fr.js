@@ -14,7 +14,6 @@ export const fr = {
   circle: 'Cercle',
   click_on_canvas_to_write: 'Cliquer sur le canvas pour écrire du texte',
   click_to_delete_shape: 'Cliquer sur une forme pour la supprimer',
-  confirmTemplateSelectionContent: 'Votre note contient déjà du texte. Consultez le modèle ci-dessous, puis modifiez votre note pour y fusionner ce dont vous avez besoin.',
   confirmTemplateSelectionTitle: 'Fusionner le modèle avec votre note',
   container_size: 'Taille du conteneur',
   create_annotation: 'Créer une annotation',

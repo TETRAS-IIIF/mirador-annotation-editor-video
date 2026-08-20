@@ -5,7 +5,6 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
   Grid,
   Typography,
@@ -15,6 +14,7 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { getConfig } from 'mirador';
 import TextEditor from '../TextEditor';
+import { isEmptyValue } from '../IIIFUtils';
 
 /**
  * TextCommentInput component
@@ -56,9 +56,9 @@ export function TextCommentInput({
   const onLocalChangeTemplate = (selectedOption) => {
     if (!selectedOption) return;
 
-    if (comment.trim().length > 0) {
+    if (!isEmptyValue(comment)) {
       setPendingTemplate(selectedOption);
-      setMergedComment(comment);
+      setMergedComment(selectedOption.value.content ?? '');
       return;
     }
 
@@ -128,12 +128,9 @@ export function TextCommentInput({
         </DialogTitle>
 
         <DialogContent>
-          <DialogContentText variant="body1" color="inherit">
-            {t('confirmTemplateSelectionContent')}
-          </DialogContentText>
 
           <Typography variant="subtitle2" sx={{ marginTop: '16px' }}>
-            {t('selectedTemplateContent')}
+            {t('currentNoteContent')}
           </Typography>
           <Box
             sx={{
@@ -145,11 +142,11 @@ export function TextCommentInput({
               padding: '8px 12px',
             }}
             // eslint-disable-next-line react/no-danger
-            dangerouslySetInnerHTML={{ __html: pendingTemplate?.value.content ?? '' }}
+            dangerouslySetInnerHTML={{ __html: comment ?? '' }}
           />
 
           <Typography variant="subtitle2">
-            {t('currentNoteContent')}
+            {t('selectedTemplateContent')}
           </Typography>
           <TextEditor
             text={mergedComment}
