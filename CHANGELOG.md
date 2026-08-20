@@ -57,6 +57,21 @@ Entries types:
 
 - MERGE : MAE 1.1.4
 
+## [1.3.3 ]
+
+- SECURITY : Update dependencies to fix vulnerabilities
+- FIXED : Fix white background on generated annotation
+- FIXED : Polygon tools
+
+## [1.3.2 ]
+
+- SECURITY : Update dependencies to fix vulnerabilities
+
+## [ 1.3.1 ]
+
+- SECURITY : Update dependencies to fix vulnerabilities
+- REMOVED : Draftsj deps removed from package.json
+
 ## [ 1.2.3 ]
 
 - MERGE : MAE 1.1.3
