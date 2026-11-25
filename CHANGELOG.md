@@ -10,6 +10,10 @@ Entries types:
 - `SECURITY` to invite users to upgrade in case of vulnerabilities.
 - `CHORE` for maintenance tasks.
 
+## [Unreleased]
+
+- ADDED : Draft annotations (`annotations.draftMarker`): badge and Accept / Reject in the annotation list, Accept all / Reject all, editor banner; Save publishes a draft. Drafts without `maeData` open in the regular editor. Ported from MAE (cherry-pick of the MAE draft commit; the full MAE 1.4.x merge is not done yet)
+
 ## [ 1.5.1]
 
 - MERGE : MAE 1.3.3
