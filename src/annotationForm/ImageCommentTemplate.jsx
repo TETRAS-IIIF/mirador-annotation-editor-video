@@ -178,12 +178,12 @@ export default function ImageCommentTemplate(
 
   return (
     <Grid container direction="column" spacing={1}>
-      <Grid item>
+      <Grid>
         <Typography variant="formSectionTitle">
           {t('image')}
         </Typography>
       </Grid>
-      <Grid item>
+      <Grid>
         <AnnotationDrawing
           annotation={annotation}
           closed={toolState.closedMode === 'closed'}
@@ -202,7 +202,7 @@ export default function ImageCommentTemplate(
           setToolState={setToolState}
         />
       </Grid>
-      <Grid item>
+      <Grid>
         <AnnotationFormOverlay
           toolState={toolState}
           deleteShape={deleteShape}
@@ -216,7 +216,7 @@ export default function ImageCommentTemplate(
           t={t}
         />
       </Grid>
-      <Grid item>
+      <Grid>
         <TextFormSection
           annoHtml={annotationState.body.value}
           updateAnnotationBody={updateAnnotationTextualBodyValue}
@@ -232,7 +232,7 @@ export default function ImageCommentTemplate(
         timeTarget
         windowId={windowId}
       />
-      <Grid item>
+      <Grid>
         <AnnotationFormFooter
           closeFormCompanionWindow={closeFormCompanionWindow}
           saveAnnotation={saveFunction}

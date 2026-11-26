@@ -189,12 +189,12 @@ export default function DrawingTemplate(
 
   return (
     <Grid container direction="column" spacing={1}>
-      <Grid item>
+      <Grid>
         <Typography variant="formSectionTitle">
           {t('overlay')}
         </Typography>
       </Grid>
-      <Grid item>
+      <Grid>
         <AnnotationDrawing
           displayMode={KONVA_MODE.DRAW}
           drawingState={drawingState}
@@ -210,7 +210,7 @@ export default function DrawingTemplate(
           windowId={windowId}
         />
       </Grid>
-      <Grid item>
+      <Grid>
         <AnnotationFormOverlay
           toolState={toolState}
           deleteShape={deleteShape}
@@ -224,7 +224,7 @@ export default function DrawingTemplate(
           t={t}
         />
       </Grid>
-      <Grid item>
+      <Grid>
         <TextFormSection
           annoHtml={annotationState.body.value}
           updateAnnotationBody={updateAnnotationTextualBodyValue}
@@ -240,7 +240,7 @@ export default function DrawingTemplate(
         spatialTarget={false}
         windowId={windowId}
       />
-      <Grid item>
+      <Grid>
         <AnnotationFormFooter
           annotationState={annotationState}
           closeFormCompanionWindow={closeFormCompanionWindow}
