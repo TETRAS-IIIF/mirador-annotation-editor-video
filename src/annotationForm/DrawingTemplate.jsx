@@ -6,9 +6,9 @@ import AnnotationDrawing from './AnnotationFormOverlay/AnnotationDrawing';
 
 import { DEFAULT_TOOL_STATE, TARGET_VIEW, TEMPLATE } from './AnnotationFormUtils';
 import AnnotationFormOverlay from './AnnotationFormOverlay/AnnotationFormOverlay';
-import TextFormSection from './TextFormSection';
-import TargetFormSection from './TargetFormSection';
-import AnnotationFormFooter from './AnnotationFormFooter';
+import TextFormSection from './templates/templateComponents/TextFormSection';
+import TargetFormSection from './templates/templateComponents/TargetFormSection';
+import AnnotationFormFooter from './templates/templateComponents/AnnotationFormFooter';
 import { KONVA_MODE, resizeKonvaStage } from './AnnotationFormOverlay/KonvaDrawing/KonvaUtils';
 
 /**

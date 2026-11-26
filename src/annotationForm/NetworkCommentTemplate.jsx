@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { v4 as uuid } from 'uuid';
 import { Grid } from '@mui/material';
-import TextFormSection from './TextFormSection';
-import TargetFormSection from './TargetFormSection';
+import TextFormSection from './templates/templateComponents/TextFormSection';
+import TargetFormSection from './templates/templateComponents/TargetFormSection';
 import ManifestNetworkFormSection from './ManifestNetworkFormSection';
 import { TEMPLATE } from './AnnotationFormUtils';
-import AnnotationFormFooter from './AnnotationFormFooter';
+import AnnotationFormFooter from './templates/templateComponents/AnnotationFormFooter';
 import { resizeKonvaStage } from './AnnotationFormOverlay/KonvaDrawing/KonvaUtils';
 
 /** Form part for edit annotation content and body */

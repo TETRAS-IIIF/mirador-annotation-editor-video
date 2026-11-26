@@ -13,6 +13,7 @@ import annotationForm from '../annotationForm/AnnotationForm';
 import { checkMediaType, WindowPlayer } from '../playerReferences';
 import { MEDIA_TYPES } from '../annotationForm/AnnotationFormUtils';
 import translations from '../locales/locales';
+import { getDraftMarker, prepareDraftForEditing } from '../draftUtils';
 
 /** */
 const mapDispatchToProps = (dispatch, {
@@ -61,6 +62,9 @@ function mapStateToProps(state, {
   let annotation = getPresentAnnotationsOnSelectedCanvases(state, { windowId })
     .flatMap((annoPage) => annoPage.json.items || [])
     .find((annot) => annot.id === annotationid);
+
+  // Drafts written outside MAE get maeData so they open in the regular editor.
+  annotation = prepareDraftForEditing(annotation, getDraftMarker(state.config));
 
   // New annotation has no ID and no templateType defined
   if (!annotation) {

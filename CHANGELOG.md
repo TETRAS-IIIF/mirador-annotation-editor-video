@@ -10,6 +10,29 @@ Entries types:
 - `SECURITY` to invite users to upgrade in case of vulnerabilities.
 - `CHORE` for maintenance tasks.
 
+## [Unreleased]
+
+- MERGE : MAE 1.4.1 and MAE main (draft annotations, #196 upstream fixes)
+- CHANGED : Templates now come from MAE's template registry. MAEV's image, drawing and manifest-link templates are registered in it, and the template picker offers the same templates per media as before (tag stays hidden). Annotations saved by earlier versions open and save exactly as before (`__tests__/templateBackwardCompat.test.js`)
+- CHORE : MUI stays at 7 (MAEV runs on mirador-video 4.2.x); MAE's Mirador 4.3 / MUI 9 note below does not apply here
+- SECURITY : The current note shown in the template merge dialog is sanitized too
+- ADDED : Draft annotations (`annotations.draftMarker`): badge and Accept / Reject in the annotation list, Accept all / Reject all, editor banner; Save publishes a draft. Drafts without `maeData` open in the regular editor
+
+- FIXED : Compatibility with Mirador 4.3 / MUI 9 (#273). Drop the `@mui/system` peer dependency so the MUI version follows Mirador's (MUI 7 for Mirador 4.2.x, MUI 9 for Mirador 4.3+)
+- SECURITY : Sanitize comment-template HTML before rendering it in the merge-confirmation dialog (stored XSS) (#196)
+- ADDED : Ask for confirmation before deleting an annotation, from the Delete/Backspace hotkey and the annotation list (#196)
+- ADDED : Export `convertIIIFAnnoToMaeData` from the package entry point (#196)
+- ADDED : `build:watch` npm script (#196)
+- CHANGED : `react-redux` is now a peer dependency (`^8 || ^9`, same as Mirador) instead of being bundled (#196)
+- CHANGED : Annotation template files grouped under `src/annotationForm/templates/` (`builtin/`, `examples/`, `templateComponents/`, `kit.js`, `registry.jsx`) (#196)
+- CHANGED : `LocalStorageAdapter.all()` adds `maeData` to annotations not created through MAE so they are editable (#196)
+- FIXED : Backspace/Delete typed in a text field no longer deletes the selected shape (#196)
+- FIXED : Saga-only plugin no longer enters Mirador's Window render chain (#196)
+- FIXED : `CanvasListItem` forwarded ref lost by `withTranslation()` (MUI focus warning, `t` prop leaked onto `<li>`) (#196)
+- FIXED : `types` condition added to the package `exports` map (#196)
+- FIXED : Wrong `toolState` / `selectedShapeId` prop types (#196)
+- REMOVED : Unused `AdvancedAnnotationEditor` component (#196)
+
 ## [ 1.5.1]
 
 - MERGE : MAE 1.3.3
