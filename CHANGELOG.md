@@ -12,9 +12,15 @@ Entries types:
 
 ## [Unreleased]
 
+## [1.6.0]
+
+- MERGE : MAE main after 1.4.1 (MUI 9 layout props, hotkey hints: TETRAS-IIIF/mirador-annotation-editor#277)
+- CHANGED : Runs on mirador-video 4.3 / MUI 9. The peer range stays `mirador-video@^4.2.1`: 4.2 / MUI 7 still works
+- FIXED : MUI 9: MAEV's own forms (video time range, drawing, image, network, manifest link) no longer pass Grid's legacy `item` / `xs` props, which MUI 9 sends to the DOM. MUI 7 already ignored them, so the layout is unchanged
+- FIXED : MUI 9: layout props (`alignItems`, `justifyContent`, `padding`) moved into `sx` in the draft actions, the annotation form header and footer, and the unsupported-media panel; they were reaching the DOM
+- FIXED : Hotkey hints in tooltips render as `<kbd>` (they rendered an unknown `<hotkey>` element)
 - MERGE : MAE 1.4.1 and MAE main (draft annotations, #196 upstream fixes)
 - CHANGED : Templates now come from MAE's template registry. MAEV's image, drawing and manifest-link templates are registered in it, and the template picker offers the same templates per media as before (tag stays hidden). Annotations saved by earlier versions open and save exactly as before (`__tests__/templateBackwardCompat.test.js`)
-- CHORE : MUI stays at 7 (MAEV runs on mirador-video 4.2.x); MAE's Mirador 4.3 / MUI 9 note below does not apply here
 - SECURITY : The current note shown in the template merge dialog is sanitized too
 - ADDED : Draft annotations (`annotations.draftMarker`): badge and Accept / Reject in the annotation list, Accept all / Reject all, editor banner; Save publishes a draft. Drafts without `maeData` open in the regular editor
 

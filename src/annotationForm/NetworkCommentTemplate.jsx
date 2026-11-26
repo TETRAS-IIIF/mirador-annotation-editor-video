@@ -110,14 +110,14 @@ function NetworkCommentTemplate(
 
   return (
     <Grid container direction="column" spacing={2}>
-      <Grid item>
+      <Grid>
         <ManifestNetworkFormSection
           manifestNetwork={annotation.maeData.manifestNetwork}
           onChange={updateManifestNetwork}
           t={t}
         />
       </Grid>
-      <Grid item>
+      <Grid>
         <TextFormSection
           annoHtml={annotationState.body.value}
           updateAnnotationBody={updateAnnotationTextBody}
@@ -133,7 +133,7 @@ function NetworkCommentTemplate(
         timeTarget
         windowId={windowId}
       />
-      <Grid item>
+      <Grid>
         <AnnotationFormFooter
           closeFormCompanionWindow={closeFormCompanionWindow}
           saveAnnotation={saveFunction}

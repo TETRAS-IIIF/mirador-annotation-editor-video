@@ -21,13 +21,13 @@ export default function ManifestNetworkFormSection(
   },
 ) {
   return (
-    <Grid item container direction="column" spacing={1}>
-      <Grid item>
+    <Grid container direction="column" spacing={1}>
+      <Grid>
         <Typography variant="formSectionTitle">
           {t('document')}
         </Typography>
       </Grid>
-      <Grid item>
+      <Grid>
         <TextField
           value={manifestNetwork}
           onChange={(event) => onChange(event.target.value.trim())}
@@ -36,14 +36,14 @@ export default function ManifestNetworkFormSection(
           error={!isValidUrl(manifestNetwork)}
         />
       </Grid>
-      <Grid item>
+      <Grid>
         {isValidUrl(manifestNetwork) && (
           <Link href={manifestNetwork} target="_blank" rel="noreferrer">
             {manifestNetwork}
           </Link>
         )}
       </Grid>
-      <Grid item>
+      <Grid>
         {!isValidUrl(manifestNetwork) && (
           <Typography variant="caption" color="error">
             {t('invalid_url')}

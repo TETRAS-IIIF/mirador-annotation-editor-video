@@ -108,15 +108,14 @@ playerReferences,
   return (
     <Grid container direction="column" spacing={1}>
       <Grid
-        item
         container
         direction="column"
         spacing={1}
       >
-        <Grid item>
+        <Grid>
           <Typography variant="subFormSectionTitle">Time</Typography>
         </Grid>
-        <Grid container item>
+        <Grid container>
           <Slider
             sx={{
               marginLeft: '5px',
@@ -133,18 +132,17 @@ playerReferences,
           />
         </Grid>
       </Grid>
-      <Grid item container spacing={2} direction="column">
-        <Grid item container>
-          <Grid item container direction="column" xs={3}>
+      <Grid container spacing={2} direction="column">
+        <Grid container>
+          <Grid container direction="column">
             <Grid
-              item
-              alignItems="center"
+              sx={{ alignItems: 'center' }}
             >
               <StyledLabelSelector>
                 Start
               </StyledLabelSelector>
             </Grid>
-            <Grid item>
+            <Grid>
               <StyledToggleButton
                 value="true"
                 title="Set current time"
@@ -157,22 +155,19 @@ playerReferences,
           </Grid>
           <HMSInput seconds={tstart} onChange={updateTstart} duration={duration} />
         </Grid>
-        <Grid item container>
+        <Grid container>
           <Grid
-            item
             container
             direction="column"
-            xs={3}
           >
             <Grid
-              item
-              alignItems="center"
+              sx={{ alignItems: 'center' }}
             >
               <StyledLabelSelector>
                 End
               </StyledLabelSelector>
             </Grid>
-            <Grid item>
+            <Grid>
               <StyledToggleButton
                 value="true"
                 title="Set current time"
