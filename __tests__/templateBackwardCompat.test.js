@@ -58,8 +58,12 @@ const states = {
 };
 
 describe('backward compatibility: each template saves exactly as MAEV 1.5.1 did', () => {
-  beforeAll(() => { vi.useFakeTimers(); vi.setSystemTime(new Date('2026-11-26T10:00:00Z')); });
-  afterAll(() => vi.useRealTimers());
+  // Empty notes default to the current date, formatted with the machine's locale and time
+  // zone: fixed here so the snapshots don't depend on where the tests run.
+  beforeAll(() => {
+    vi.spyOn(Date.prototype, 'toLocaleString').mockReturnValue('11/26/2026, 11:00:00 AM');
+  });
+  afterAll(() => vi.restoreAllMocks());
 
   Object.entries(states).forEach(([templateType, cases]) => {
     cases.forEach((state, i) => {
