@@ -13,8 +13,18 @@ import CreatableSelect from 'react-select/creatable';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { getConfig } from 'mirador';
-import TextEditor from '../TextEditor';
-import { isEmptyValue } from '../IIIFUtils';
+import DOMPurify from 'dompurify';
+import TextEditor from '../../../TextEditor';
+import { isEmptyValue } from '../../../IIIFUtils';
+
+/**
+ * Sanitizes comment-template HTML before it's rendered in the merge-confirmation preview.
+ * Templates can come from admin-supplied config or external annotation adapters, so their
+ * `content` is untrusted third-party HTML, not first-party markup.
+ * @param {string} html
+ * @returns {string}
+ */
+export const sanitizeTemplateHtml = (html) => DOMPurify.sanitize(html);
 
 /**
  * TextCommentInput component
@@ -142,7 +152,8 @@ export function TextCommentInput({
               padding: '8px 12px',
             }}
             // eslint-disable-next-line react/no-danger
-            dangerouslySetInnerHTML={{ __html: comment ?? '' }}
+            // MAEV shows the current note here (user HTML): sanitized like templates.
+            dangerouslySetInnerHTML={{ __html: sanitizeTemplateHtml(comment ?? '') }}
           />
 
           <Typography variant="subtitle2">

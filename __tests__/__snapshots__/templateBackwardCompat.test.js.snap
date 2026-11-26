@@ -1,0 +1,296 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`backward compatibility: each template saves exactly as MAEV 1.5.1 did > iiif #1 saves exactly as before 1`] = `
+{
+  "body": {
+    "value": "raw",
+  },
+  "maeData": {
+    "target": {
+      "selector": {
+        "type": "FragmentSelector",
+        "value": "xywh=1,2,3,4",
+      },
+      "source": "c",
+    },
+    "templateType": "iiif",
+  },
+  "target": "c#xywh=1,2,3,4",
+  "type": "Annotation",
+}
+`;
+
+exports[`backward compatibility: each template saves exactly as MAEV 1.5.1 did > image #1 saves exactly as before 1`] = `
+{
+  "body": {
+    "id": "https://example.org/i.png",
+    "type": "Image",
+    "value": "11/26/2026, 11:00:00 AM",
+  },
+  "maeData": {
+    "target": {
+      "drawingState": "{"currentShape":null,"isDrawing":false,"shapes":[{"id":"img","type":"image","url":"https://example.org/i.png","x":5,"y":6}]}",
+      "fullCanvaXYWH": "0,0,1000,800",
+      "scale": 2,
+      "tend": 12,
+      "tstart": 3,
+    },
+    "templateType": "image",
+    "textBody": {
+      "value": "11/26/2026, 11:00:00 AM",
+    },
+  },
+  "target": "https://example.org/canvas/1#xywh=5,6,120,100&t=3,12",
+  "type": "Annotation",
+}
+`;
+
+exports[`backward compatibility: each template saves exactly as MAEV 1.5.1 did > image #2 saves exactly as before 1`] = `
+{
+  "body": {
+    "type": "Image",
+    "value": "11/26/2026, 11:00:00 AM",
+  },
+  "maeData": {
+    "target": {
+      "drawingState": "{"currentShape":null,"isDrawing":false,"shapes":[]}",
+      "fullCanvaXYWH": "0,0,1000,800",
+      "scale": 2,
+      "tend": undefined,
+      "tstart": undefined,
+    },
+    "templateType": "image",
+    "textBody": {
+      "value": "<p>x</p>",
+    },
+  },
+  "target": "https://example.org/canvas/1#xywh=0,0,1000,800",
+  "type": "Annotation",
+}
+`;
+
+exports[`backward compatibility: each template saves exactly as MAEV 1.5.1 did > konva #1 saves exactly as before 1`] = `
+{
+  "body": {
+    "type": "Image",
+    "value": "11/26/2026, 11:00:00 AM",
+  },
+  "maeData": {
+    "target": {
+      "drawingState": "{"currentShape":null,"isDrawing":false,"shapes":[{"fill":"red","fillColor":"red","height":40,"id":"s1","rotation":0,"scaleX":1,"scaleY":1,"stroke":"rgba(255,0, 0, 0.5)","strokeColor":"rgba(255,0, 0, 0.5)","type":"rectangle","width":30,"x":10,"y":20}]}",
+      "fullCanvaXYWH": "0,0,1000,800",
+      "scale": 2,
+      "tend": 12,
+      "tstart": 3,
+    },
+    "templateType": "konva",
+    "textBody": {
+      "value": "<p>d</p>",
+    },
+  },
+  "target": "https://example.org/canvas/1#xywh=0,0,1000,800&t=3,12",
+  "type": "Annotation",
+}
+`;
+
+exports[`backward compatibility: each template saves exactly as MAEV 1.5.1 did > manifest #1 saves exactly as before 1`] = `
+{
+  "body": {
+    "type": "TextualBody",
+    "value": "<p>see</p>",
+  },
+  "maeData": {
+    "manifestNetwork": "https://example.org/m.json",
+    "target": {
+      "drawingState": "{"currentShape":null,"isDrawing":false,"shapes":[{"fill":"rgba(100,100,100, 0)","fillColor":"rgba(100,100,100, 0)","height":40,"id":"s1","rotation":0,"scaleX":1,"scaleY":1,"stroke":"rgba(255,0, 0, 0.5)","strokeColor":"rgba(255,0, 0, 0.5)","type":"rectangle","width":30,"x":10,"y":20},{"fill":"rgba(100,100,100, 0)","fillColor":"rgba(100,100,100, 0)","height":40,"id":"s2","rotation":0,"scaleX":1,"scaleY":1,"stroke":"rgba(255,0, 0, 0.5)","strokeColor":"rgba(255,0, 0, 0.5)","type":"rectangle","width":30,"x":300,"y":20}]}",
+      "fullCanvaXYWH": "0,0,1000,800",
+      "scale": 2,
+      "svg": "<svg>mock</svg>",
+      "tend": 12,
+      "tstart": 3,
+    },
+    "templateType": "manifest",
+    "textBody": {
+      "value": "11/26/2026, 11:00:00 AM",
+    },
+  },
+  "target": {
+    "selector": [
+      {
+        "type": "SvgSelector",
+        "value": "<svg>mock</svg>",
+      },
+      {
+        "type": "FragmentSelector",
+        "value": "https://example.org/canvas/1#t=3,12",
+      },
+    ],
+    "source": "https://example.org/canvas/1",
+  },
+  "type": "Annotation",
+}
+`;
+
+exports[`backward compatibility: each template saves exactly as MAEV 1.5.1 did > manifest #2 saves exactly as before 1`] = `
+{
+  "body": {
+    "type": "TextualBody",
+    "value": "11/26/2026, 11:00:00 AM",
+  },
+  "maeData": {
+    "manifestNetwork": "https://example.org/m.json",
+    "target": {
+      "drawingState": "{"currentShape":null,"isDrawing":false,"shapes":[{"fill":"rgba(100,100,100, 0)","fillColor":"rgba(100,100,100, 0)","height":40,"id":"s1","rotation":0,"scaleX":1,"scaleY":1,"stroke":"rgba(255,0, 0, 0.5)","strokeColor":"rgba(255,0, 0, 0.5)","type":"rectangle","width":30,"x":10,"y":20}]}",
+      "fullCanvaXYWH": "0,0,1000,800",
+      "scale": 2,
+      "svg": "<svg>mock</svg>",
+      "tend": undefined,
+      "tstart": undefined,
+    },
+    "templateType": "manifest",
+  },
+  "target": "https://example.org/canvas/1#xywh=10,20,30,40",
+  "type": "Annotation",
+}
+`;
+
+exports[`backward compatibility: each template saves exactly as MAEV 1.5.1 did > multiple_body #1 saves exactly as before 1`] = `
+{
+  "body": [
+    {
+      "purpose": "describing",
+      "type": "TextualBody",
+      "value": "<p>Hi</p>",
+    },
+    {
+      "id": "date",
+      "purpose": "tagging",
+      "type": "TextualBody",
+      "value": "date",
+    },
+  ],
+  "maeData": {
+    "tags": [
+      {
+        "value": "date",
+      },
+    ],
+    "target": {
+      "drawingState": "{"currentShape":null,"isDrawing":false,"shapes":[{"fill":"rgba(100,100,100, 0)","fillColor":"rgba(100,100,100, 0)","height":40,"id":"s1","rotation":0,"scaleX":1,"scaleY":1,"stroke":"rgba(255,0, 0, 0.5)","strokeColor":"rgba(255,0, 0, 0.5)","type":"rectangle","width":30,"x":10,"y":20}]}",
+      "fullCanvaXYWH": "0,0,1000,800",
+      "scale": 2,
+      "svg": "<svg>mock</svg>",
+      "tend": undefined,
+      "tstart": undefined,
+    },
+    "templateType": "multiple_body",
+    "textBody": {
+      "purpose": "describing",
+      "type": "TextualBody",
+      "value": "<p>Hi</p>",
+    },
+  },
+  "motivation": "commenting",
+  "target": "https://example.org/canvas/1#xywh=10,20,30,40",
+  "type": "Annotation",
+}
+`;
+
+exports[`backward compatibility: each template saves exactly as MAEV 1.5.1 did > multiple_body #2 saves exactly as before 1`] = `
+{
+  "body": [
+    {
+      "purpose": "describing",
+      "type": "TextualBody",
+      "value": "11/26/2026, 11:00:00 AM",
+    },
+  ],
+  "maeData": {
+    "tags": [],
+    "target": {
+      "drawingState": "{"currentShape":null,"isDrawing":false,"shapes":[{"fill":"rgba(100,100,100, 0)","fillColor":"rgba(100,100,100, 0)","height":40,"id":"s1","rotation":0,"scaleX":1,"scaleY":1,"stroke":"rgba(255,0, 0, 0.5)","strokeColor":"rgba(255,0, 0, 0.5)","type":"rectangle","width":30,"x":10,"y":20},{"fill":"rgba(100,100,100, 0)","fillColor":"rgba(100,100,100, 0)","height":40,"id":"s2","rotation":0,"scaleX":1,"scaleY":1,"stroke":"rgba(255,0, 0, 0.5)","strokeColor":"rgba(255,0, 0, 0.5)","type":"rectangle","width":30,"x":300,"y":20}]}",
+      "fullCanvaXYWH": "0,0,1000,800",
+      "scale": 2,
+      "svg": "<svg>mock</svg>",
+      "tend": 12,
+      "tstart": 3,
+    },
+    "templateType": "multiple_body",
+    "textBody": {
+      "purpose": "describing",
+      "type": "TextualBody",
+      "value": "11/26/2026, 11:00:00 AM",
+    },
+  },
+  "target": {
+    "selector": [
+      {
+        "type": "SvgSelector",
+        "value": "<svg>mock</svg>",
+      },
+      {
+        "type": "FragmentSelector",
+        "value": "https://example.org/canvas/1#t=3,12",
+      },
+    ],
+    "source": "https://example.org/canvas/1",
+  },
+  "type": "Annotation",
+}
+`;
+
+exports[`backward compatibility: each template saves exactly as MAEV 1.5.1 did > tagging #1 saves exactly as before 1`] = `
+{
+  "body": {
+    "purpose": "tagging",
+    "type": "TextualBody",
+    "value": "tag",
+  },
+  "maeData": {
+    "target": {
+      "drawingState": "{"currentShape":null,"isDrawing":false,"shapes":[{"fill":"rgba(100,100,100, 0)","fillColor":"rgba(100,100,100, 0)","height":40,"id":"s1","rotation":0,"scaleX":1,"scaleY":1,"stroke":"rgba(255,0, 0, 0.5)","strokeColor":"rgba(255,0, 0, 0.5)","type":"rectangle","width":30,"x":10,"y":20}]}",
+      "fullCanvaXYWH": "0,0,1000,800",
+      "scale": 2,
+      "svg": "<svg>mock</svg>",
+      "tend": 12,
+      "tstart": 3,
+    },
+    "templateType": "tagging",
+  },
+  "target": "https://example.org/canvas/1#xywh=10,20,30,40&t=3,12",
+  "type": "Annotation",
+}
+`;
+
+exports[`backward compatibility: each template saves exactly as MAEV 1.5.1 did > text #1 saves exactly as before 1`] = `
+{
+  "body": {
+    "type": "TextualBody",
+    "value": "11/26/2026, 11:00:00 AM",
+  },
+  "maeData": {
+    "target": {
+      "drawingState": "{"currentShape":null,"isDrawing":false,"shapes":[]}",
+      "fullCanvaXYWH": "0,0,1000,800",
+      "scale": 2,
+      "tend": undefined,
+      "tstart": undefined,
+    },
+    "templateType": "text",
+  },
+  "target": {
+    "selector": [
+      {
+        "type": "SvgSelector",
+        "value": undefined,
+      },
+      {
+        "type": "FragmentSelector",
+        "value": "https://example.org/canvas/1#",
+      },
+    ],
+    "source": "https://example.org/canvas/1",
+  },
+  "type": "Annotation",
+}
+`;

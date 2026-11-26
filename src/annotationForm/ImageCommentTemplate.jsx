@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Grid } from '@mui/material';
 import Typography from '@mui/material/Typography';
-import TextFormSection from './TextFormSection';
-import TargetFormSection from './TargetFormSection';
+import TextFormSection from './templates/templateComponents/TextFormSection';
+import TargetFormSection from './templates/templateComponents/TargetFormSection';
 import { IMAGE_TOOL_STATE, TARGET_VIEW, TEMPLATE } from './AnnotationFormUtils';
 import { KONVA_MODE, resizeKonvaStage } from './AnnotationFormOverlay/KonvaDrawing/KonvaUtils';
 import AnnotationDrawing from './AnnotationFormOverlay/AnnotationDrawing';
 import AnnotationFormOverlay from './AnnotationFormOverlay/AnnotationFormOverlay';
-import AnnotationFormFooter from './AnnotationFormFooter';
+import AnnotationFormFooter from './templates/templateComponents/AnnotationFormFooter';
 
 /**
  * Image Comment template

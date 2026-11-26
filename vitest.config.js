@@ -37,8 +37,16 @@ export default defineConfig({
       all: true,
       enabled: true,
     },
-    deps: {
-      inline: ['mirador'],
+    server: {
+      deps: {
+        // mirador-video is used from source (extensionless imports): let Vite transform it.
+        inline: ['mirador'],
+      },
+    },
+    env: {
+      // Node's native --experimental-webstorage global shadows happy-dom's
+      // window.localStorage, leaving `localStorage` undefined in tests.
+      NODE_OPTIONS: '--no-experimental-webstorage',
     },
     environment: 'happy-dom',
     exclude: ['node_modules'],
