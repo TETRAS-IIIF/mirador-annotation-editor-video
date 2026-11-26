@@ -12,6 +12,8 @@ Entries types:
 
 ## [Unreleased]
 
+## [1.6.0]
+
 - MERGE : MAE main after 1.4.1 (MUI 9 layout props, hotkey hints: TETRAS-IIIF/mirador-annotation-editor#277)
 - CHANGED : Runs on mirador-video 4.3 / MUI 9. The peer range stays `mirador-video@^4.2.1`: 4.2 / MUI 7 still works
 - FIXED : MUI 9: MAEV's own forms (video time range, drawing, image, network, manifest link) no longer pass Grid's legacy `item` / `xs` props, which MUI 9 sends to the DOM. MUI 7 already ignored them, so the layout is unchanged
