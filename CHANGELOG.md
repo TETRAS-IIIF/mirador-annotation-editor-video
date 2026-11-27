@@ -12,6 +12,11 @@ Entries types:
 
 ## [Unreleased]
 
+## [1.6.1]
+
+- MERGE : MAE main after 1.4.1 (overlay tool bar Grid props: TETRAS-IIIF/mirador-annotation-editor#278)
+- FIXED : MUI 9: the overlay tool bar no longer passes Grid's legacy `item` / `xs` props, which reached the DOM. MUI 7 already ignored them, so the layout is unchanged
+
 ## [1.6.0]
 
 - MERGE : MAE main after 1.4.1 (MUI 9 layout props, hotkey hints: TETRAS-IIIF/mirador-annotation-editor#277)
